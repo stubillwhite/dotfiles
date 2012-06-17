@@ -1,0 +1,4 @@
+--regex-ant=/<\s*target\s*name\s*=\s*"([a-zA-Z0-9 -.]+)"/\1/,target/i
+--regex-ant=/<\s*property\s*name\s*=\s*"([a-zA-Z0-9 -.]+)"/\1/,property/i
+--regex-ant=/<\s*macrodef\s*name\s*=\s*"([a-zA-Z0-9 -.]+)"/\1/,macrodef/i
+--regex-ant=/<\s*path\s*id\s*=\s*"([a-zA-Z0-9 -.]+)"/\1/,macrodef/i
