@@ -29,7 +29,7 @@
 		<styles caption="1" resizable="1" taskbar_button="1" border="0" inside_border="2" tray_icon="0">
 			<selection_color r="255" g="255" b="255"/>
 		</styles>
-		<position x="1498" y="104" dock="-1" snap="-1" z_order="0" save_position="1"/>
+		<position x="1435" y="129" dock="-1" snap="-1" z_order="0" save_position="1"/>
 		<transparency type="0" active_alpha="255" inactive_alpha="255" r="0" g="0" b="0"/>
 	</appearance>
 	<behavior>
@@ -100,26 +100,8 @@
 			</background>
 		</tab>
 		<tab title="DAL" use_default_icon="0">
-			<console shell="%windir%\system32\cmd.exe /k &quot;pushd .. &amp;&amp; bootstrap ApolloDataAccessLayer -pathonly &amp;&amp; popd&quot;" init_dir="c:\dev\Apollo_DAL\ApolloDataAccessLayer" run_as_user="0" user=""/>
+			<console shell="%windir%\system32\cmd.exe /k &quot;bootstrap -pathonly&quot;" init_dir="c:\dev\Apollo_DAL" run_as_user="0" user=""/>
 			<cursor style="5" r="192" g="192" b="192"/>
-			<background type="0" r="0" g="0" b="0">
-				<image file="" relative="0" extend="0" position="0">
-					<tint opacity="0" r="0" g="0" b="0"/>
-				</image>
-			</background>
-		</tab>
-		<tab title="Service" use_default_icon="0">
-			<console shell="%windir%\system32\cmd.exe /k &quot;pushd .. &amp;&amp; bootstrap ApolloService -pathonly &amp;&amp; popd&quot;" init_dir="c:\dev\Apollo_DAL\ApolloService" run_as_user="0" user=""/>
-			<cursor style="5" r="192" g="192" b="192"/>
-			<background type="0" r="0" g="0" b="0">
-				<image file="" relative="0" extend="0" position="0">
-					<tint opacity="0" r="0" g="0" b="0"/>
-				</image>
-			</background>
-		</tab>
-		<tab title="ServiceTest" use_default_icon="0">
-			<console shell="%windir%\system32\cmd.exe /k &quot;pushd .. &amp;&amp; bootstrap ApolloServiceTest -pathonly &amp;&amp; popd&quot;" init_dir="c:\dev\Apollo_DAL\ApolloServiceTest" run_as_user="0" user=""/>
-			<cursor style="5" r="255" g="255" b="255"/>
 			<background type="0" r="0" g="0" b="0">
 				<image file="" relative="0" extend="0" position="0">
 					<tint opacity="0" r="0" g="0" b="0"/>
@@ -128,6 +110,15 @@
 		</tab>
 		<tab title="DataAcquisition" use_default_icon="0">
 			<console shell="%windir%\system32\cmd.exe /k &quot;pushd .. &amp;&amp; bootstrap -pathonly &amp;&amp; popd&quot;" init_dir="c:\dev\Apollo_Data_Acquisition\ApolloDataAcquisition" run_as_user="0" user=""/>
+			<cursor style="5" r="255" g="255" b="255"/>
+			<background type="0" r="0" g="0" b="0">
+				<image file="" relative="0" extend="0" position="0">
+					<tint opacity="0" r="0" g="0" b="0"/>
+				</image>
+			</background>
+		</tab>
+		<tab title="ServiceTest" use_default_icon="0">
+			<console shell="%windir%\system32\cmd.exe /k &quot;pushd .. &amp;&amp; bootstrap ApolloServiceTest -pathonly &amp;&amp; popd&quot;" init_dir="c:\dev\Apollo_Platform_Test\ApolloServiceTest" run_as_user="0" user=""/>
 			<cursor style="5" r="255" g="255" b="255"/>
 			<background type="0" r="0" g="0" b="0">
 				<image file="" relative="0" extend="0" position="0">
@@ -155,6 +146,15 @@
 		</tab>
 		<tab title="Git" use_default_icon="0">
 			<console shell="C:\Windows\SysWOW64\cmd.exe /c &quot;&quot;C:\Program Files (x86)\Git\bin\sh.exe&quot; --login -i&quot;" init_dir="%HOMEDRIVE%%HOMEPATH%" run_as_user="0" user=""/>
+			<cursor style="5" r="192" g="192" b="192"/>
+			<background type="0" r="0" g="0" b="0">
+				<image file="" relative="0" extend="0" position="0">
+					<tint opacity="0" r="0" g="0" b="0"/>
+				</image>
+			</background>
+		</tab>
+		<tab title="DB2" use_default_icon="0">
+			<console shell="C:\Windows\SysWOW64\cmd.exe /c &quot;C:\PROGRA~1\IBM\SQLLIB\BIN\db2cmd.exe -i -w -c &quot;db2&quot;&quot;" init_dir="%HOMEDRIVE%%HOMEPATH%" run_as_user="0" user=""/>
 			<cursor style="5" r="192" g="192" b="192"/>
 			<background type="0" r="0" g="0" b="0">
 				<image file="" relative="0" extend="0" position="0">
