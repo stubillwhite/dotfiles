@@ -1,2 +1,6 @@
-{:user {:plugins [[lein-marginalia "0.7.1"]
-                  [lein-midje "2.0.4"]]}}
+{:user 
+ {:plugins [ [lein-midje "3.0.1"]
+             [codox "0.6.4"] 
+             [cider/cider-nrepl "0.7.0"] ]
+ }
+}
