@@ -29,7 +29,7 @@
 		<styles caption="1" resizable="1" taskbar_button="1" border="0" inside_border="2" tray_icon="0">
 			<selection_color r="255" g="255" b="255"/>
 		</styles>
-		<position x="1450" y="126" dock="-1" snap="-1" z_order="0" save_position="1"/>
+		<position x="2135" y="153" dock="-1" snap="-1" z_order="0" save_position="1"/>
 		<transparency type="0" active_alpha="255" inactive_alpha="255" r="0" g="0" b="0"/>
 	</appearance>
 	<behavior>
@@ -99,6 +99,33 @@
 				</image>
 			</background>
 		</tab>
+		<tab title="ProjectX" use_default_icon="0">
+			<console shell="%windir%\system32\cmd.exe /k &quot;bootstrap -pathonly&quot;" init_dir="c:\dev_x\ProjectX_Core" run_as_user="0" user=""/>
+			<cursor style="5" r="192" g="192" b="192"/>
+			<background type="0" r="0" g="0" b="0">
+				<image file="" relative="0" extend="0" position="0">
+					<tint opacity="0" r="0" g="0" b="0"/>
+				</image>
+			</background>
+		</tab>
+		<tab title="ProjectXRTC" use_default_icon="0">
+			<console shell="%windir%\system32\cmd.exe /k &quot;bootstrap -pathonly&quot;" init_dir="C:\rtc\ProjectX_Server_Component" run_as_user="0" user=""/>
+			<cursor style="5" r="192" g="192" b="192"/>
+			<background type="0" r="0" g="0" b="0">
+				<image file="" relative="0" extend="0" position="0">
+					<tint opacity="0" r="0" g="0" b="0"/>
+				</image>
+			</background>
+		</tab>
+		<tab title="DevEssentials" use_default_icon="0">
+			<console shell="%windir%\system32\cmd.exe /k &quot;bootstrap -pathonly&quot;" init_dir="c:\dev_fp\Apollo_Dev_Examples" run_as_user="0" user=""/>
+			<cursor style="5" r="192" g="192" b="192"/>
+			<background type="0" r="0" g="0" b="0">
+				<image file="" relative="0" extend="0" position="0">
+					<tint opacity="0" r="0" g="0" b="0"/>
+				</image>
+			</background>
+		</tab>
 		<tab title="DAL" use_default_icon="0">
 			<console shell="%windir%\system32\cmd.exe /k &quot;bootstrap -pathonly&quot;" init_dir="c:\dev\Apollo_DAL" run_as_user="0" user=""/>
 			<cursor style="5" r="192" g="192" b="192"/>
@@ -117,7 +144,16 @@
 				</image>
 			</background>
 		</tab>
-		<tab title="Web_UI" use_default_icon="0">
+		<tab title="DataAcquisition" use_default_icon="0">
+			<console shell="%windir%\system32\cmd.exe /k &quot;pushd .. &amp;&amp; bootstrap -pathonly &amp;&amp; popd&quot;" init_dir="c:\dev\Apollo_Data_Acquisition\ApolloDataAcquisition" run_as_user="0" user=""/>
+			<cursor style="5" r="255" g="255" b="255"/>
+			<background type="0" r="0" g="0" b="0">
+				<image file="" relative="0" extend="0" position="0">
+					<tint opacity="0" r="0" g="0" b="0"/>
+				</image>
+			</background>
+		</tab>
+		<tab title="WebUI" use_default_icon="0">
 			<console shell="%windir%\system32\cmd.exe /k &quot;pushd .. &amp;&amp; bootstrap -pathonly &amp;&amp; popd&quot;" init_dir="c:\dev\Apollo_Web_UI\ApolloWebUIDeployment" run_as_user="0" user=""/>
 			<cursor style="5" r="192" g="192" b="192"/>
 			<background type="0" r="0" g="0" b="0">
@@ -135,9 +171,9 @@
 				</image>
 			</background>
 		</tab>
-		<tab title="DataAcquisition" use_default_icon="0">
-			<console shell="%windir%\system32\cmd.exe /k &quot;pushd .. &amp;&amp; bootstrap -pathonly &amp;&amp; popd&quot;" init_dir="c:\dev\Apollo_Data_Acquisition\ApolloDataAcquisition" run_as_user="0" user=""/>
-			<cursor style="5" r="255" g="255" b="255"/>
+		<tab title="HostedWAS" use_default_icon="0">
+			<console shell="%windir%\system32\cmd.exe /k &quot;pushd .. &amp;&amp; bootstrap -pathonly &amp;&amp; popd&quot;" init_dir="c:\dev\Apollo_Hosted_WAS\ApolloHosted" run_as_user="0" user=""/>
+			<cursor style="5" r="192" g="192" b="192"/>
 			<background type="0" r="0" g="0" b="0">
 				<image file="" relative="0" extend="0" position="0">
 					<tint opacity="0" r="0" g="0" b="0"/>
@@ -146,6 +182,15 @@
 		</tab>
 		<tab title="Clojure" use_default_icon="0">
 			<console shell="%windir%\system32\cmd.exe /k &quot;setup-environment.bat&quot;" init_dir="c:\dev\MyProjects\Clojure" run_as_user="0" user=""/>
+			<cursor style="5" r="192" g="192" b="192"/>
+			<background type="0" r="0" g="0" b="0">
+				<image file="" relative="0" extend="0" position="0">
+					<tint opacity="0" r="0" g="0" b="0"/>
+				</image>
+			</background>
+		</tab>
+		<tab title="Scala" use_default_icon="0">
+			<console shell="%windir%\system32\cmd.exe /k &quot;setup-environment.bat&quot;" init_dir="c:\dev\MyProjects\Scala" run_as_user="0" user=""/>
 			<cursor style="5" r="192" g="192" b="192"/>
 			<background type="0" r="0" g="0" b="0">
 				<image file="" relative="0" extend="0" position="0">
