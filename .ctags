@@ -15,3 +15,11 @@
 --regex-groovy=/^[ \t]*public def[ \t]+([A-Za-z0-9_]+)[ \t]*/\1/u,public,public variables/
 --regex-groovy=/^[ \t]*[abstract ( \t)]*[(private|public) ( \t)]*class[ \t]+([A-Za-z0-9_]+)[ \t]*/\1/c,class,classes/
 --regex-groovy=/^[ \t]*[abstract ( \t)]*[(private|public) ( \t)]*enum[ \t]+([A-Za-z0-9_]+)[ \t]*/\1/c,class,classes/
+--langdef=gradle
+--langmap=gradle:.gradle
+--regex-gradle=/^[ \t]*task[ \t]+([A-Za-z0-9_]+)[ \t]*/\1/u,task,tasks/
+--regex-gradle=/^[ \t]*[(private|public|protected) ( \t)]*def[ \t]+([A-Za-z0-9_]+)[ \t()=]*\{/\1/f,function,functions/
+--regex-gradle=/^[ \t]*private def[ \t]+([A-Za-z0-9_]+)[ \t]*/\1/v,private,private variables/
+--regex-gradle=/^[ \t]*public def[ \t]+([A-Za-z0-9_]+)[ \t]*/\1/u,public,public variables/
+--regex-gradle=/^[ \t]*[abstract ( \t)]*[(private|public) ( \t)]*class[ \t]+([A-Za-z0-9_]+)[ \t]*/\1/c,class,classes/
+--regex-gradle=/^[ \t]*[abstract ( \t)]*[(private|public) ( \t)]*enum[ \t]+([A-Za-z0-9_]+)[ \t]*/\1/c,class,classes/
