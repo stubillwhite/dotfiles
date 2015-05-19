@@ -1,0 +1,93 @@
+# Can't seem to make this work in Ubuntu 15.04 and all own_window_type options have different issues
+# 
+# override 
+#   Clicking on the desktop results in text overwriting itself if own_window_transparent is set to yes. This doesn't
+#   happen if set to no but then the window overlays all other windows
+#
+# dock
+#   Window sticks to the left of the screen and overlays icons
+#
+# normal
+#   Alt-tab to show the desktop removes the window but clicking on the desktop works
+#
+# desktop
+#   Clicking on the desktop removes the window but alt-tab to show the desktop works
+#
+# panel
+#   Totally screwed up menus and desktop and pushed everything off the bottom of the screen
+#
+# Of all of these, normal seems the most benign so use that and just accept that the built-in show desktop functionality
+# will kill the window.
+own_window yes
+own_window_transparent yes
+own_window_type normal
+own_window_hints undecorated,below,sticky,skip_taskbar,skip_pager
+
+use_xft yes
+xftfont verdana:size=10
+override_utf8_locale yes
+alignment top_right
+double_buffer yes
+draw_shades no
+draw_outline no
+draw_borders no
+draw_graph_borders no
+stippled_borders 10
+border_outer_margin 10
+border_width 1
+default_shade_color grey
+default_outline_color black
+default_color white
+use_spacer none
+top_name_width 10
+no_buffers yes
+update_interval 2
+update_interval_on_battery 5
+uppercase no
+color1 21A6D2
+color2 white
+gap_x 10
+gap_y 10
+
+TEXT
+
+${font verdana:size=12}${color1}System ${hr 2}${color}${font}
+
+ Uptime $alignr ${uptime_short}
+
+${font verdana:size=12}${color1}Processor ${hr 2}${color}${font}
+
+ CPU1  ${cpu cpu1}%${alignc 35}${cpubar cpu1}
+ CPU2  ${cpu cpu2}%${alignc 35}${cpubar cpu2}
+ CPU3  ${cpu cpu3}%${alignc 35}${cpubar cpu3}
+ CPU4  ${cpu cpu4}%${alignc 35}${cpubar cpu4}
+
+  ${top name 1}$alignr${top cpu 1}
+  ${top name 2}$alignr${top cpu 2}
+  ${top name 3}$alignr${top cpu 3}
+
+${font verdana:size=12}${color1}Memory ${hr 2}${color}${font}
+
+ RAM:${alignc}${memperc}%${alignr}${mem} / ${memmax}
+ $membar
+ Swap:${alignc}${swapperc}%${alignr}${swap} / ${swapmax}
+ $swapbar
+
+  ${top_mem name 1}$alignr${top mem 1}
+  ${top_mem name 2}$alignr${top mem 2}
+  ${top_mem name 3}$alignr${top mem 3}
+
+${font verdana:size=12}${color1}Disk ${hr 2}${color}${font}
+
+ /:${alignc}${fs_used_perc /}%${alignr}${fs_used /} / ${fs_size /}
+ ${fs_bar 6 /}
+ 
+${font verdana:size=12}${color1}WiFi ${hr 2}${color}${font}
+
+ Network    $alignr ${wireless_essid wlan0}
+ IP    $alignr ${addr wlan0}
+ Download speed    $alignr ${downspeed wlan0}
+ Upload speed    $alignr ${upspeed wlan0}
+
+ Signal     $alignr ${wireless_link_qual_perc wlan0}
+ ${wireless_link_bar wlan0}
