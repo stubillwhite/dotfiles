@@ -73,9 +73,9 @@ ${font verdana:size=12}${color1}Memory ${hr 2}${color}${font}
  Swap:${alignc}${swapperc}%${alignr}${swap} / ${swapmax}
  $swapbar
 
-  ${top_mem name 1}$alignr${top mem 1}
-  ${top_mem name 2}$alignr${top mem 2}
-  ${top_mem name 3}$alignr${top mem 3}
+  ${top_mem name 1}$alignr${top_mem mem 1}
+  ${top_mem name 2}$alignr${top_mem mem 2}
+  ${top_mem name 3}$alignr${top_mem mem 3}
 
 ${font verdana:size=12}${color1}Disk ${hr 2}${color}${font}
 
