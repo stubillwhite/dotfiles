@@ -1,0 +1,2 @@
+application/vnd.ms-excel; C:/Program Files (x86)/Microsoft Office/Office15/excel.exe" %s
+application/pdf;          "C:/Program Files (x86)/Adobe/Reader 11.0/Reader/AcroRd32.exe" "`cygpath -w %s`"
