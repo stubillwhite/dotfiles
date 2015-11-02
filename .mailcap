@@ -1,2 +1,5 @@
-application/vnd.ms-excel; C:/Program Files (x86)/Microsoft Office/Office15/excel.exe" %s
-application/pdf;          "C:/Program Files (x86)/Adobe/Reader 11.0/Reader/AcroRd32.exe" "`cygpath -w %s`"
+application/vnd.openxmlformats-officedocument.wordprocessingml.document;  "C:/Program Files (x86)/Microsoft Office/Office15/winword.exe" "`cygpath -w %s`"
+application/msword;                                                       "C:/Program Files (x86)/Microsoft Office/Office15/winword.exe" "`cygpath -w %s`"
+application/vnd.ms-excel;                                                 "C:/Program Files (x86)/Microsoft Office/Office15/excel.exe" "`cygpath -w %s`"
+application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;        "C:/Program Files (x86)/Microsoft Office/Office15/excel.exe" "`cygpath -w %s`"
+application/pdf;                                                          "C:/Program Files (x86)/Adobe/Acrobat Reader DC/Reader/AcroRd32.exe" "`cygpath -w %s`"
