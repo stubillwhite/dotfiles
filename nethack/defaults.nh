@@ -1,0 +1,7 @@
+OPTIONS=name:White
+OPTIONS=nonews
+OPTIONS=IBMGraphics,color,hilite_pet,boulder:0
+OPTIONS=number_pad=0,extmenu,menustyle:combination
+OPTIONS=autopickup,pickup_types:$,pushweapon
+OPTIONS=showexp,showscore,time,toptenwin
+
