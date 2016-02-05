@@ -1,4 +1,4 @@
-{:user {:plugins     [[cider/cider-nrepl "0.10.0-SNAPSHOT"]
+{:user {:plugins     [[cider/cider-nrepl "0.11.0-SNAPSHOT"]
                       [jonase/eastwood "0.2.2"]
                       [lein-ancient "0.6.8"]
                       [lein-kibit "0.1.2"]
@@ -11,5 +11,5 @@
         
         :dependencies [[org.clojure/tools.nrepl "0.2.12"]]
                        
-        :aliases      { "jfdi" ["do" ["clean"] ["ancient"] ["kibit"]]}}
+        :aliases      { "sanity-check" ["do" ["clean"] ["ancient"] ["kibit"]]}}
  }
