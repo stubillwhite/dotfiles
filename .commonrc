@@ -1,0 +1,48 @@
+function source_if_exists { 
+    if [[ -s $1 ]]; then
+        source $1
+    else
+        echo "Skipping sourcing $1 as it does not exist"
+    fi
+}
+
+# Unlimited history
+
+export HISTFILESIZE=
+export HISTSIZE=
+
+# Perl
+
+PATH="/Users/white1/perl5/bin${PATH:+:${PATH}}"; export PATH;
+PERL5LIB="/Users/white1/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
+PERL_LOCAL_LIB_ROOT="/Users/white1/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
+PERL_MB_OPT="--install_base \"/Users/white1/perl5\""; export PERL_MB_OPT;
+PERL_MM_OPT="INSTALL_BASE=/Users/white1/perl5"; export PERL_MM_OPT;
+
+# Other tools
+
+export PATH=$PATH:/Applications/Beyond\ Compare.app/Contents/MacOS
+export PATH=$PATH:~/Dev/tools/spark-1.6.2-bin-hadoop2.6/bin
+export PATH=$PATH:~/Dev/my-stuff/utils
+export PATH=$PATH:/usr/bin
+
+# SSH
+
+SSH_ENV_FILE="$HOME/.ssh/environment"
+
+function start_agent {
+    echo "Initialising new SSH agent..."
+    /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV_FILE}"
+    chmod 600 "${SSH_ENV_FILE}"
+    . "${SSH_ENV_FILE}" > /dev/null
+    /usr/bin/ssh-add;
+}
+
+if [ -f "${SSH_ENV_FILE}" ]; then
+    . "${SSH_ENV_FILE}" > /dev/null
+    ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
+    start_agent;
+}
+else
+    start_agent;
+fi
