@@ -8,6 +8,7 @@ FILES=(
     ".commonrc"
     ".gitconfig"
     ".lein"
+    ".ssh"
 )
 
 realpath() {
@@ -18,6 +19,6 @@ for FILE in "${FILES[@]}"
 do
     HOME_FILE="$HOME/`basename $FILE`"
     echo Creating link $HOME_FILE
-    rm -f $HOME_FILE 2> /dev/null || true
+    rm -rf $HOME_FILE 2> /dev/null || true
     ln -s `realpath $FILE` $HOME_FILE
 done
