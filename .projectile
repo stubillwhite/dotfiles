@@ -1,2 +1,2 @@
--/.lein/self-installs
--\.lein\self-installs
+-/leiningen/.lein/self-installs
+-\leiningen\.lein\self-installs
