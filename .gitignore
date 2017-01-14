@@ -1,1 +1,2 @@
-/.lein/self-installs
+/leiningen/.lein/self-installs
+/leiningen/.lein/repl-port

@@ -28,8 +28,7 @@ PERL_MM_OPT="INSTALL_BASE=/Users/white1/perl5"; export PERL_MM_OPT;
 
 export PATH=$PATH:/Applications/Beyond\ Compare.app/Contents/MacOS
 export PATH=$PATH:~/Dev/tools/spark-2.0.0-bin-hadoop2.7/bin
-export PATH=$PATH:~/Dev/tools
-export PATH=$PATH:~/Dev/my-stuff/utils
+export PATH=$PATH:~/Dev/tools/bin
 export PATH=$PATH:~/Dev/my-stuff/utils
 export PATH=$PATH:/usr/bin
 
@@ -37,7 +36,7 @@ export PATH=$PATH:/usr/bin
 
 SSH_ENV_FILE="$HOME/.ssh/environment"
 
-function ssh_start_agent {
+function ssh-start-agent {
     echo "Initialising new SSH agent..."
     /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV_FILE}"
     chmod 600 "${SSH_ENV_FILE}"
@@ -48,20 +47,20 @@ function ssh_start_agent {
 if [ -f "${SSH_ENV_FILE}" ]; then
     . "${SSH_ENV_FILE}" > /dev/null
     ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
-    ssh_start_agent;
+    ssh-start-agent;
 }
 else
-    ssh_start_agent;
+    ssh-start-agent;
 fi
 
-function ssh_add_keys {
+function ssh-add-keys {
     for FILE in $HOME/.ssh/*.pem; do
         ssh-add $FILE
     done
     ssh-add $HOME/.ssh/stuart.white
 }
 
-function docker_machine_start {
+function docker-machine-start {
     ~/docker_setup_mac.bash
     docker-machine start
     eval $(docker-machine env default)
@@ -92,3 +91,4 @@ function awssh() {
         echo "$servers" | xargs csshX --login stuart.white
     fi
 }
+

@@ -1,0 +1,21 @@
+#compdef execute-on-remote-host
+
+_execute-on-remote-host () { 
+    local curcontext="$curcontext" state line
+    typeset -A opt_args
+
+    _arguments \
+        '1:remote:->remote'\
+        '*:file:->file'
+
+    case $state in
+        remote)
+            _hosts
+            ;;
+        *)
+            _files 
+            ;;
+    esac
+}
+
+_execute-on-remote-host "$@"

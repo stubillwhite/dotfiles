@@ -7,6 +7,7 @@ FILES=(
     ".bashrc.machine.sh"
     ".zshrc"
     ".zshrc.machine.sh"
+    ".zsh-completion"
     ".common.sh"
     ".gitconfig"
     ".ssh"

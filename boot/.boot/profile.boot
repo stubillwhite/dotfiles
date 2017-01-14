@@ -5,3 +5,6 @@
 
 (swap! boot.repl/*default-middleware*
        conj 'cider.nrepl/cider-middleware)
+
+(swap! boot.repl/*default-middleware*
+       conj 'refactor-nrepl.middleware/wrap-refactor)
