@@ -1,9 +1,9 @@
 {:user {:plugins      [[jonase/eastwood "0.2.3"]
                        [lein-ancient "0.6.10"]
-                       [lein-kibit "0.1.2"]
+                       [lein-kibit "0.1.3"]
                        [slamhound "1.5.5"]
                        [criterium "0.4.4"]
-                       [com.jakemccrary/lein-test-refresh "0.16.0"]]
+                       [com.jakemccrary/lein-test-refresh "0.18.1"]]
 
         :dependencies [[pjstadig/humane-test-output "0.8.1"]
                        [org.clojure/tools.nrepl "0.2.12"]]

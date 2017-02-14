@@ -8,9 +8,9 @@ compinit
 
 # Include Prezto, but remove unhelpful configuration
 source_if_exists "$HOME/.zprezto/init.zsh"
-unalias cp                      # Standard behaviour
-unalias rm                      # Standard behaviour
-unalias mv                      # Standard behaviour
+unalias cp &> /dev/null         # Standard behaviour
+unalias rm &> /dev/null         # Standard behaviour
+unalias mv &> /dev/null         # Standard behaviour
 setopt clobber                  # Happily clobber files 
 setopt interactivecomments      # Allow comments in interactive shells
 unsetopt AUTO_CD                # Don't change directory autmatically
@@ -28,6 +28,9 @@ source_if_exists "$HOME/.zshrc.machine.sh"
 
 # Bash regex support
 setopt BASH_REMATCH
+
+# Clean up after annoying Emacs 25.1 crash on OSX
+alias clean-emacs=rm\ -rf\ ~/.emacs-backup\ ~/.emacs-undo-tree
 
 # SSH tunnelling helpers
 function tunnel-open() {
@@ -89,11 +92,6 @@ function tunnel-close() {
     ssh -S ${connectionFile} -O exit ${host}
 }
 compdef '_files -g "~/.ssh-tunnel-*"' tunnel-close
-
-alias tunnel-staging-solr='tunnel-open 8983 solr-staging.els.vpc.local 8983 admin@bastion-elb-staging-50509670.us-east-1.elb.amazonaws.com'
-alias tunnel-staging-zk='tunnel-open 2181 10.93.32.243 2181 admin@bastion-elb-staging-50509670.us-east-1.elb.amazonaws.com'
-alias tunnel-staging-aurora='tunnel-open 3307 aurora-newsflo-staging.cluster-cb2nmxldkcq1.us-east-1.rds.amazonaws.com 3306 admin@bastion-elb-staging-50509670.us-east-1.elb.amazonaws.com'
-alias tunnel-live-aurora='tunnel-open 3306 aurora-newsflo-live.cluster-ro-cyva1uzg7p7h.us-east-1.rds.amazonaws.com 3306 s.white@bastion.live.newsflo'
 
 # Executing scripts remotely
 function execute-on-remote-host() {
