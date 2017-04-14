@@ -128,3 +128,92 @@ function execute-on-remote-host() {
     echo "  tmux attach -t $sessionName"
     echo "Note that the session will automatically close when the script terminates"
 }
+
+# function progress-bar() {
+# 	local duration=${1}
+
+#     gauge_start()  { printf "["; }
+# 	already_done() { for ((done=0; done<$elapsed; done++)); do printf "="; done; }
+# 	remaining()    { for ((remain=$elapsed; remain<$duration; remain++)); do printf " "; done; }
+# 	percentage()   { printf " %s%%" $(( (($elapsed)*100)/($duration)*100/100 )); }
+#     gauge_end()    { printf "]"; }
+# 	clean_line()   { printf "\r"; }
+
+# 	for (( elapsed=1; elapsed<=$duration; elapsed++ )); do
+# 		clean_line; gauge_start; already_done; remaining; gauge_end; percentage
+# 		sleep 0.1
+# 	done
+# }
+
+function ds-anonymise-dataset() {
+    if read -q '?Rename all files in directory to UUIDs. Are you sure? '
+    then
+        for i in * 
+        do 
+            local uuid=$(uuidgen | tr "[:upper:]" "[:lower:]")
+            mv -v $i $uuid.${i##*.}
+        done
+    fi
+}
+
+function ds-download-files() {
+    if [[ $# -lt 1 ]] ; then
+        echo 'Download files from URLs in URLFILE'
+        echo 'Usage: ds-download-files URLFILE'
+        return -1
+    fi
+
+    wget --tries=1 --timeout=1 -i $1
+}
+
+# Git
+
+# For each directory within the current directory, display whether the 
+# directory is a dirty or clean Git repository
+function git-modified-repos() {
+    for fnam in *; do
+        if [[ -d $fnam ]]; then
+            pushd $fnam
+            if git rev-parse --git-dir > /dev/null 2>&1; then
+                if [[ `git status --porcelain` ]]; then
+                    printf "${fnam} -- ${COLOR_RED}modified${COLOR_NONE}\n"
+                else
+                    printf "${fnam} -- ${COLOR_GREEN}clean${COLOR_NONE}\n"
+                fi
+            else
+                # Not a Git repository
+            fi
+            popd
+        fi
+    done
+}
+
+function prompt-help() {
+  #zstyle ':prezto:module:git:info' verbose 'yes'
+  #zstyle ':prezto:module:git:info:action' format '%F{7}:%f%%B%F{9}%s%f%%b'
+  #zstyle ':prezto:module:git:info:added' format ' %%B%F{2}✚%f%%b'
+  #zstyle ':prezto:module:git:info:ahead' format ' %%B%F{13}⬆%f%%b'
+  #zstyle ':prezto:module:git:info:behind' format ' %%B%F{13}⬇%f%%b'
+  #zstyle ':prezto:module:git:info:branch' format ' %%B%F{2}%b%f%%b'
+  #zstyle ':prezto:module:git:info:commit' format ' %%B%F{3}%.7c%f%%b'
+  #zstyle ':prezto:module:git:info:deleted' format ' %%B%F{1}✖%f%%b'
+  #zstyle ':prezto:module:git:info:modified' format ' %%B%F{4}✱%f%%b'
+  #zstyle ':prezto:module:git:info:position' format ' %%B%F{13}%p%f%%b'
+  #zstyle ':prezto:module:git:info:renamed' format ' %%B%F{5}➜%f%%b'
+  #zstyle ':prezto:module:git:info:stashed' format ' %%B%F{6}✭%f%%b'
+  #zstyle ':prezto:module:git:info:unmerged' format ' %%B%F{3}═%f%%b'
+  #zstyle ':prezto:module:git:info:untracked' format ' %%B%F{7}◼%f%%b'
+  #zstyle ':prezto:module:git:info:keys' format \
+    #'status' '$(coalesce "%b" "%p" "%c")%s%A%B%S%a%d%m%r%U%u'
+    
+  #The square signifies that there are untracked changes.
+#The = signifies there are unmergerd changes.
+#The -> signifies that something has been renamed.
+#The 6-pointed blue star signifies that there is a modification.
+#The red X signifies that something has been deleted.
+#The green + signifies that something is added.
+#The blue 5-pointed star signifies that something is stashed.
+#The arrow pointing down means you are behind.
+#The arrow pointing up means you are ahead.
+#Not quite sure about the green V and the red arrow... they are listed as Vim and "overwrite."
+}

@@ -32,6 +32,14 @@ export PATH=$PATH:~/Dev/tools/bin
 export PATH=$PATH:~/Dev/my-stuff/utils
 export PATH=$PATH:/usr/bin
 
+# Constants
+
+export COLOR_RED='\033[0;31m'
+export COLOR_GREEN='\033[0;32m'
+export COLOR_YELLOW='\033[0;33m'
+export COLOR_NONE='\033[0m'
+export COLOR_CLEAR_LINE='\r\033[K'
+
 # SSH
 
 SSH_ENV_FILE="$HOME/.ssh/environment"

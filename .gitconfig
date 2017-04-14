@@ -9,3 +9,7 @@
 [core]
 	editor = nvim
 	autocrlf = input
+[diff]
+	tool = bc3
+[merge]
+	tool = bc3
