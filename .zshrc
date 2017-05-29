@@ -22,6 +22,8 @@ alias untarf=tar\ -zxvf
 alias assume-role=source\ ~/Dev/my-stuff/utils/assume-role.sh
 alias eject=diskutil\ eject
 alias env=env\ \|\ sort
+alias tree=tree\ -A
+alias ssh-purge-key=ssh-keygen\ -R
 
 # Include machine-specific configuration
 source_if_exists "$HOME/.zshrc.machine.sh"
@@ -157,7 +159,7 @@ function ds-anonymise-dataset() {
 }
 
 function ds-download-files() {
-    if [[ $# -lt 1 ]] ; then
+    if [[ $# -ne 1 ]] ; then
         echo 'Download files from URLs in URLFILE'
         echo 'Usage: ds-download-files URLFILE'
         return -1
@@ -175,7 +177,7 @@ function git-modified-repos() {
         if [[ -d $fnam ]]; then
             pushd $fnam
             if git rev-parse --git-dir > /dev/null 2>&1; then
-                if [[ `git status --porcelain` ]]; then
+                if [[ `git status --porcelain --untracked-files=no` ]]; then
                     printf "${fnam} -- ${COLOR_RED}modified${COLOR_NONE}\n"
                 else
                     printf "${fnam} -- ${COLOR_GREEN}clean${COLOR_NONE}\n"
@@ -186,6 +188,18 @@ function git-modified-repos() {
             popd
         fi
     done
+}
+
+# Archive the Git branch by tagging the deleting it
+function git-archive-branch() {
+    if [[ $# -ne 1 ]] ; then
+        echo 'Archive Git branch by tagging then deleting it'
+        echo 'Usage: git-archive-branch BRANCH'
+        return -1
+    fi
+
+    git tag archive/$1 $1
+    git branch -D $1
 }
 
 function prompt-help() {
