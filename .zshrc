@@ -24,6 +24,7 @@ alias eject=diskutil\ eject
 alias env=env\ \|\ sort
 alias tree=tree\ -A
 alias ssh-purge-key=ssh-keygen\ -R
+alias vim=nvim
 
 # Include machine-specific configuration
 source_if_exists "$HOME/.zshrc.machine.sh"
@@ -190,7 +191,20 @@ function git-modified-repos() {
     done
 }
 
-# Archive the Git branch by tagging the deleting it
+# Open the git repo in the browser
+function git-open() {
+    URL=$(git config remote.origin.url)
+    echo "Opening $URL"
+    if [[ $URL =~ "git@" ]]; then
+        echo $URL | sed -e 's/:/\//' | sed -e 's/git@/http:\/\//' | xargs open
+    elif [[ $URL =~ "^https:" ]]; then
+        echo $URL | xargs open
+    else
+        echo "Failed to open due to unrecognised URL $URL"
+    fi
+}
+
+# Archive the Git branch by tagging then deleting it
 function git-archive-branch() {
     if [[ $# -ne 1 ]] ; then
         echo 'Archive Git branch by tagging then deleting it'
@@ -231,3 +245,20 @@ function prompt-help() {
 #The arrow pointing up means you are ahead.
 #Not quite sure about the green V and the red arrow... they are listed as Vim and "overwrite."
 }
+
+# AWS
+
+function plot-aws-s3-size() {
+    if [[ $# -ne 3 ]] ; then
+        echo 'Plot the size of the AWS S3 bucket and prefix'
+        echo 'Usage: plot-aws-s3-size PROFILE PREFIX PERIOD'
+        return -1
+    fi
+
+    profile=$1
+    prefix=$2
+    period=$3
+
+    interval -t $period "aws --profile '$profile' s3 ls --summarize --recursive '$prefix' | grep 'Total Size' | awk '"'{ print $3 }'"'" | plot
+}
+
