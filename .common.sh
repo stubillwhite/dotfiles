@@ -30,6 +30,7 @@ export PATH=$PATH:/Applications/Beyond\ Compare.app/Contents/MacOS
 export PATH=$PATH:~/Dev/tools/spark-2.0.0-bin-hadoop2.7/bin
 export PATH=$PATH:~/Dev/tools/bin
 export PATH=$PATH:~/Dev/my-stuff/utils
+export PATH=$PATH:~/Dev/my-stuff/shell-utils
 export PATH=$PATH:/usr/bin
 
 # Constants
@@ -39,6 +40,10 @@ export COLOR_GREEN='\033[0;32m'
 export COLOR_YELLOW='\033[0;33m'
 export COLOR_NONE='\033[0m'
 export COLOR_CLEAR_LINE='\r\033[K'
+
+# Local Spark instances
+
+export SPARK_LOCAL_IP=127.0.0.1
 
 # SSH
 
