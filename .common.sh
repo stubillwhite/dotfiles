@@ -52,14 +52,14 @@ SSH_ENV_FILE="$HOME/.ssh/environment"
 function ssh-start-agent {
     echo "Initialising new SSH agent..."
     /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV_FILE}"
-    chmod 600 "${SSH_ENV_FILE}"
+    /bin/chmod 600 "${SSH_ENV_FILE}"
     . "${SSH_ENV_FILE}" > /dev/null
     /usr/bin/ssh-add;
 }
 
 if [ -f "${SSH_ENV_FILE}" ]; then
     . "${SSH_ENV_FILE}" > /dev/null
-    ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
+    /bin/ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
     ssh-start-agent;
 }
 else
