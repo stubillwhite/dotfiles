@@ -1,3 +1,8 @@
+# vim:fdm=marker
+
+# Included scripts                                                          {{{1
+# ==============================================================================
+
 # Include common configuration
 source $HOME/.common.sh
 
@@ -11,14 +16,15 @@ source_if_exists "$HOME/.zprezto/init.zsh"
 unalias cp &> /dev/null         # Standard behaviour
 unalias rm &> /dev/null         # Standard behaviour
 unalias mv &> /dev/null         # Standard behaviour
-setopt clobber                  # Happily clobber files 
+setopt clobber                  # Happily clobber files
 setopt interactivecomments      # Allow comments in interactive shells
 unsetopt AUTO_CD                # Don't change directory autmatically
 unsetopt AUTO_PUSHD             # Don't push directory automatically
 
+# Aliases                                                                   {{{1
+# ==============================================================================
+
 # Helper aliases
-alias tarf='tar -zcvf'
-alias untarf='tar -zxvf'
 alias assume-role='source ~/Dev/my-stuff/utils/assume-role.sh'
 alias eject='diskutil eject'
 alias env='env | sort'
@@ -29,14 +35,56 @@ alias vi='nvim'
 alias vim='nvim'
 alias show-files='defaults write com.apple.finder AppleShowAllFiles YES; killall Finder /System/Library/CoreServices/Finder.app'
 alias hide-files='defaults write com.apple.finder AppleShowAllFiles NO; killall Finder /System/Library/CoreServices/Finder.app'
-
-# Include machine-specific configuration
-source_if_exists "$HOME/.zshrc.machine.sh"
+alias python-env-activate='source env/bin/activate'
 
 # Bash regex support
 setopt BASH_REMATCH
 
-# SSH tunnelling helpers
+# SBT
+export SBT_OPTS=-Xmx2G
+
+# Specific tools                                                            {{{1
+# ==============================================================================
+
+# Shellcheck                        {{{2
+# ======================================
+
+export SHELLCHECK_OPTS=""
+SHELLCHECK_OPTS+="-e SC2039 "    # Allow dash in function names
+SHELLCHECK_OPTS+="-e SC2112 "    # Allow 'function' keyword
+
+# General file helpers              {{{2
+# ======================================
+
+function full-path() {
+    declare fnam=$1
+
+    if [ -d "$fnam" ]; then
+        (cd "$fnam"; pwd)
+    elif [ -f "$fnam" ]; then
+        if [[ $fnam == */* ]]; then
+            echo "$(cd "${1%/*}"; pwd)/${1##*/}"
+        else
+            echo "$(pwd)/$fnam"
+        fi
+    fi
+}
+
+# Tar a file
+function tarf() {
+    declare fnam=$1
+    tar -zcvf ${fnam%/}.tar.gz $1
+}
+
+# Untar a file
+function untarf() {
+    declare fnam=$1
+    tar -zxvf $1
+}
+
+# SSH tunneling                     {{{2
+# ======================================
+
 function tunnel-open() {
     if [[ $# -ne 4 ]] ; then
         echo 'Usage: tunnel-open LOCALPORT HOST HOSTPORT SERVER'
@@ -97,7 +145,9 @@ function tunnel-close() {
 }
 compdef '_files -g "~/.ssh-tunnel-*"' tunnel-close
 
-# Executing scripts remotely
+# Executing scripts remotely        {{{2
+# ======================================
+
 function execute-on-remote-host() {
     if [[ $# -lt 2 ]] ; then
         echo 'Asynchronously execute a script on a remote host in a tmux session'
@@ -115,7 +165,7 @@ function execute-on-remote-host() {
     sessionName=${scriptName%.*}
 
     echo
-    echo "Copying $scriptPath to $remoteHost" 
+    echo "Copying $scriptPath to $remoteHost"
     echo scp $scriptPath $remoteHost:$scriptName
     scp $scriptPath $remoteHost:$scriptName
 
@@ -150,10 +200,9 @@ function execute-on-remote-host() {
 # }
 
 function ds-anonymise-dataset() {
-    if read -q '?Rename all files in directory to UUIDs. Are you sure? '
-    then
-        for i in * 
-        do 
+    if read -q '?Rename all files in directory to UUIDs. Are you sure? '; then
+        for i in *
+        do
             local uuid=$(uuidgen | tr "[:upper:]" "[:lower:]")
             mv -v $i $uuid.${i##*.}
         done
@@ -170,9 +219,10 @@ function ds-download-files() {
     wget --tries=1 --timeout=1 -i $1
 }
 
-# Git
+# Git                               {{{2
+# ======================================
 
-# For each directory within the current directory, display whether the 
+# For each directory within the current directory, display whether the
 # directory is a dirty or clean Git repository
 function git-modified-repos() {
     for fnam in *; do
@@ -190,7 +240,7 @@ function git-modified-repos() {
     done
 }
 
-# For each directory within the current directory, display whether the 
+# For each directory within the current directory, display whether the
 # directory is on master or a branch
 function git-branched-repos() {
     for fnam in *; do
@@ -252,10 +302,6 @@ function prompt-help() {
     echo $promptKey
 }
 
-# Python
-
-alias python-env-activate='source env/bin/activate'
-
 # AWS
 
 function plot-aws-s3-size() {
@@ -272,6 +318,10 @@ function plot-aws-s3-size() {
     interval -t $period "aws --profile '$profile' s3 ls --summarize --recursive '$prefix' | grep 'Total Size' | awk '"'{ print $3 }'"'" | plot
 }
 
+function aws-current-credentials() {
+    echo "export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} && export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}"
+}
+
 # Docker
 
 function docker-remove-dangling-imgaes() {
@@ -281,3 +331,8 @@ function docker-remove-dangling-imgaes() {
     docker images | grep "<none>" | awk '{print $3}' | xargs docker rmi
     docker volume rm $(docker volume ls -qf dangling=true)
 }
+
+# Machine-specific configuration                                            {{{1
+# ==============================================================================
+
+source_if_exists "$HOME/.zshrc.machine.sh"
