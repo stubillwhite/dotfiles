@@ -70,6 +70,7 @@ function ssh-add-keys {
         ssh-add $FILE
     done
     ssh-add $HOME/.ssh/stuart.white
+    ssh-add $HOME/.ssh/id_rsa
 }
 
 function docker-machine-start {

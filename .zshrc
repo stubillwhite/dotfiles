@@ -21,6 +21,15 @@ setopt interactivecomments      # Allow comments in interactive shells
 unsetopt AUTO_CD                # Don't change directory autmatically
 unsetopt AUTO_PUSHD             # Don't push directory automatically
 
+# AWS tools
+source_if_exists "/usr/local/bin/aws_zsh_completer.sh"
+
+# General options                                                           {{{1
+# ==============================================================================
+
+setopt BASH_REMATCH             # Bash regex support
+setopt menu_complete            # Tab autocompletes first option even if ambiguous
+
 # Aliases                                                                   {{{1
 # ==============================================================================
 
@@ -36,9 +45,6 @@ alias vim='nvim'
 alias show-files='defaults write com.apple.finder AppleShowAllFiles YES; killall Finder /System/Library/CoreServices/Finder.app'
 alias hide-files='defaults write com.apple.finder AppleShowAllFiles NO; killall Finder /System/Library/CoreServices/Finder.app'
 alias python-env-activate='source env/bin/activate'
-
-# Bash regex support
-setopt BASH_REMATCH
 
 # SBT
 export SBT_OPTS=-Xmx2G
@@ -112,7 +118,6 @@ function tunnel-check() {
         echo 'Usage: tunnel-check CONNECTIONFILE'
         return -1
     fi
-
     connectionFile=$1
 
     [[ ${connectionFile} =~ .ssh-tunnel-localhost:(.*)===(.*):(.*) ]]
@@ -144,6 +149,89 @@ function tunnel-close() {
     ssh -S ${connectionFile} -O exit ${host}
 }
 compdef '_files -g "~/.ssh-tunnel-*"' tunnel-close
+
+function tunnel-close-all() {
+    for connectionFile in ~/.ssh-tunnel-*
+    do
+        tunnel-close $connectionFile
+    done
+}
+
+# AWS                               {{{2
+# ======================================
+
+# list the values of tagged AWS instances
+function aws-tag-values() {
+    if [[ $# -ne 3 ]] ; then
+        echo 'Usage: aws-tag-values PROFILE REGION KEY'
+        return 1
+    fi
+
+    local profile=$1
+    local region=$2
+    local key=$3
+    
+    aws --profile $profile ec2 describe-instances --region $region | jq --raw-output '.Reservations[].Instances[].Tags[] | select(.Key=="'$key'") | .Value' | sort | uniq
+}
+compdef _aws-tag aws-tag-values
+
+# List the IPs for tagged AWS instances
+function aws-instance-ips() {
+    if [[ $# -ne 3 ]] ; then
+        echo 'Usage: aws-instance-ips PROFILE REGION TAG'
+        return 1
+    fi
+
+    local profile=$1
+    local region=$2
+    local tag=$3
+
+    aws --profile $profile ec2 describe-instances --region $region | jq --raw-output '.Reservations[].Instances[] | select(.Tags[].Value=="'$tag'") | select(.State.Name=="running") | .PrivateIpAddress' | sort | uniq
+}
+compdef _aws-tag aws-instance-ips
+
+# SSH into tagged AWS instances
+function aws-ssh() {
+    if [[ $# -ne 3 ]] ; then
+        echo 'Usage: aws-instance-ips PROFILE REGION TAG'
+        return 1
+    fi
+
+    local profile=$1
+    local region=$2
+    local tag=$3
+
+    local ip=$(aws-instance-ips $profile $region $tag)
+    ssh $ip
+}
+compdef _aws-tag aws-ssh
+
+# Fast AI course helpers            {{{2
+# ======================================
+
+function fast-ai-setup() {
+    export PATH=~/anaconda/bin:$PATH
+    export AWS_DEFAULT_PROFILE=stubillwhite
+    source_if_exists "/Users/white1/Dev/my-stuff/fast-ai/courses/setup/aws-alias.sh"
+    echo "Using anaconda tools and defaulting to AWS profile for fast-ai course"
+}
+
+function fast-ai-tunnel-open() {
+    if [[ $# -ne 3 ]] ; then
+        echo 'Usage: tunnel-open LOCALPORT SERVER SERVERPORT'
+        return -1
+    fi
+
+    localPort=$1
+    server=$2
+    serverPort=$3
+    connectionFile=~/.ssh-tunnel-localhost:${localPort}===${server:0:20}:${serverPort}
+
+    echo "Opening tunnel localhost:${localPort} -> ${server}:${serverPort}"
+    ssh -L ${localPort}:localhost:${serverPort} ${server} -i ~/.ssh/aws-key-fast-ai.pem -f -o ServerAliveInterval=30 -N -M -S ${connectionFile} || { echo "Failed to open tunnel"; return -1; }
+    echo "Tunnel open ${connectionFile}"
+}
+alias tunnel-fast-ai='fast-ai-tunnel-open 8888 fast-ai-server 8888'
 
 # Executing scripts remotely        {{{2
 # ======================================
@@ -318,7 +406,7 @@ function plot-aws-s3-size() {
     interval -t $period "aws --profile '$profile' s3 ls --summarize --recursive '$prefix' | grep 'Total Size' | awk '"'{ print $3 }'"'" | plot
 }
 
-function aws-current-credentials() {
+function aws-export-current-credentials() {
     echo "export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} && export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}"
 }
 
