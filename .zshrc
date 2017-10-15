@@ -160,6 +160,20 @@ function tunnel-close-all() {
 # AWS                               {{{2
 # ======================================
 
+function aws-instance-info() {
+    if [[ $# -ne 3 ]] ; then
+        echo 'Usage: aws-instance-info PROFILE REGION TAG'
+        return 1
+    fi
+
+    local profile=$1
+    local region=$2
+    local tag=$3
+
+    aws --profile $profile ec2 describe-instances --region $region | jq --raw-output '.Reservations[].Instances[] | select(.Tags[].Value=="'$tag'") | select(.State.Name=="running")'
+}
+compdef _aws-tag aws-instance-info
+
 # list the values of tagged AWS instances
 function aws-tag-values() {
     if [[ $# -ne 3 ]] ; then
