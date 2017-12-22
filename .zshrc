@@ -42,8 +42,8 @@ alias watch='watch -c'
 alias ssh-purge-key='ssh-keygen -R'
 alias vi='nvim'
 alias vim='nvim'
-alias show-files='defaults write com.apple.finder AppleShowAllFiles YES; killall Finder /System/Library/CoreServices/Finder.app'
-alias hide-files='defaults write com.apple.finder AppleShowAllFiles NO; killall Finder /System/Library/CoreServices/Finder.app'
+alias files-show='defaults write com.apple.finder AppleShowAllFiles YES; killall Finder /System/Library/CoreServices/Finder.app'
+alias files-hide='defaults write com.apple.finder AppleShowAllFiles NO; killall Finder /System/Library/CoreServices/Finder.app'
 alias python-env-activate='source env/bin/activate'
 
 # SBT
@@ -56,6 +56,7 @@ export SBT_OPTS=-Xmx2G
 # ======================================
 
 export SHELLCHECK_OPTS=""
+SHELLCHECK_OPTS+="-e SC1091 "    # Allow sourcing files from paths that do not exist yet
 SHELLCHECK_OPTS+="-e SC2039 "    # Allow dash in function names
 SHELLCHECK_OPTS+="-e SC2112 "    # Allow 'function' keyword
 
@@ -170,11 +171,11 @@ function aws-instance-info() {
     local region=$2
     local tag=$3
 
-    aws --profile $profile ec2 describe-instances --region $region | jq --raw-output '.Reservations[].Instances[] | select(.Tags[].Value=="'$tag'") | select(.State.Name=="running")'
+    aws --profile $profile ec2 describe-instances --region $region | jq --raw-output '.Reservations[].Instances[]? | select(.Tags[].Value=="'$tag'") | select(.State.Name=="running")'
 }
 compdef _aws-tag aws-instance-info
 
-# list the values of tagged AWS instances
+# List the values of tagged AWS instances
 function aws-tag-values() {
     if [[ $# -ne 3 ]] ; then
         echo 'Usage: aws-tag-values PROFILE REGION KEY'
@@ -185,7 +186,7 @@ function aws-tag-values() {
     local region=$2
     local key=$3
     
-    aws --profile $profile ec2 describe-instances --region $region | jq --raw-output '.Reservations[].Instances[].Tags[] | select(.Key=="'$key'") | .Value' | sort | uniq
+    aws --profile $profile ec2 describe-instances --region $region | jq --raw-output '.Reservations[].Instances[].Tags[]? | select(.Key=="'$key'") | .Value' | sort | uniq
 }
 compdef _aws-tag aws-tag-values
 
@@ -200,7 +201,7 @@ function aws-instance-ips() {
     local region=$2
     local tag=$3
 
-    aws --profile $profile ec2 describe-instances --region $region | jq --raw-output '.Reservations[].Instances[] | select(.Tags[].Value=="'$tag'") | select(.State.Name=="running") | .PrivateIpAddress' | sort | uniq
+    aws --profile $profile ec2 describe-instances --region $region | jq --raw-output '.Reservations[].Instances[] | select(.Tags[]?.Value=="'$tag'") | select(.State.Name=="running") | .PrivateIpAddress' | sort | uniq
 }
 compdef _aws-tag aws-instance-ips
 
@@ -283,42 +284,6 @@ function execute-on-remote-host() {
     echo "  ssh $remoteHost"
     echo "  tmux attach -t $sessionName"
     echo "Note that the session will automatically close when the script terminates"
-}
-
-# function progress-bar() {
-# 	local duration=${1}
-
-#     gauge_start()  { printf "["; }
-# 	already_done() { for ((done=0; done<$elapsed; done++)); do printf "="; done; }
-# 	remaining()    { for ((remain=$elapsed; remain<$duration; remain++)); do printf " "; done; }
-# 	percentage()   { printf " %s%%" $(( (($elapsed)*100)/($duration)*100/100 )); }
-#     gauge_end()    { printf "]"; }
-# 	clean_line()   { printf "\r"; }
-
-# 	for (( elapsed=1; elapsed<=$duration; elapsed++ )); do
-# 		clean_line; gauge_start; already_done; remaining; gauge_end; percentage
-# 		sleep 0.1
-# 	done
-# }
-
-function ds-anonymise-dataset() {
-    if read -q '?Rename all files in directory to UUIDs. Are you sure? '; then
-        for i in *
-        do
-            local uuid=$(uuidgen | tr "[:upper:]" "[:lower:]")
-            mv -v $i $uuid.${i##*.}
-        done
-    fi
-}
-
-function ds-download-files() {
-    if [[ $# -ne 1 ]] ; then
-        echo 'Download files from URLs in URLFILE'
-        echo 'Usage: ds-download-files URLFILE'
-        return -1
-    fi
-
-    wget --tries=1 --timeout=1 -i $1
 }
 
 # Git                               {{{2
