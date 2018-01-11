@@ -44,10 +44,8 @@ alias vi='nvim'
 alias vim='nvim'
 alias files-show='defaults write com.apple.finder AppleShowAllFiles YES; killall Finder /System/Library/CoreServices/Finder.app'
 alias files-hide='defaults write com.apple.finder AppleShowAllFiles NO; killall Finder /System/Library/CoreServices/Finder.app'
+alias ssh-rm-connections='rm /tmp/ssh-mux_*'
 alias python-env-activate='source env/bin/activate'
-
-# SBT
-export SBT_OPTS=-Xmx2G
 
 # Specific tools                                                            {{{1
 # ==============================================================================
@@ -59,6 +57,10 @@ export SHELLCHECK_OPTS=""
 SHELLCHECK_OPTS+="-e SC1091 "    # Allow sourcing files from paths that do not exist yet
 SHELLCHECK_OPTS+="-e SC2039 "    # Allow dash in function names
 SHELLCHECK_OPTS+="-e SC2112 "    # Allow 'function' keyword
+
+# SBT                               {{{2
+# ======================================
+export SBT_OPTS=-Xmx2G
 
 # General file helpers              {{{2
 # ======================================
@@ -319,6 +321,25 @@ function git-branched-repos() {
                     printf "${fnam} -- ${COLOR_GREEN}${branchName}${COLOR_NONE}\n"
                 else
                     printf "${fnam} -- ${COLOR_RED}${branchName}${COLOR_NONE}\n"
+                fi
+            fi
+            popd
+        fi
+    done
+}
+
+# For each directory within the current directory, display whether the
+# directory contains unmerged branches
+function git-unmerged-branches() {
+    for fnam in *; do
+        if [[ -d $fnam ]]; then
+            pushd $fnam
+            if git rev-parse --git-dir > /dev/null 2>&1; then
+                unmergedBranches=$(git branch --no-merged master) 
+                if [[ $unmergedBranches = *[![:space:]]* ]]; then
+                    echo $fnam
+                    git branch --no-merged
+                    echo
                 fi
             fi
             popd
