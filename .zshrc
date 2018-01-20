@@ -338,7 +338,7 @@ function git-unmerged-branches() {
                 unmergedBranches=$(git branch --no-merged master) 
                 if [[ $unmergedBranches = *[![:space:]]* ]]; then
                     echo $fnam
-                    git branch --no-merged
+                    git branch --no-merged master
                     echo
                 fi
             fi

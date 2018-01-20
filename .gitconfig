@@ -10,6 +10,12 @@
 	editor = nvim
 	autocrlf = input
 [diff]
-	tool = bc3
+	tool = vimdiff
+[difftool "vimdiff"]
+    cmd = nvim -d $BASE $LOCAL
 [merge]
-	tool = bc3
+    tool = vimmmerge
+[mergetool]
+    prompt = true
+[mergetool "vimmmerge"]
+    cmd = nvim -d $BASE $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'
