@@ -353,6 +353,8 @@ function git-open() {
     echo "Opening $URL"
     if [[ $URL =~ "git@" ]]; then
         echo $URL | sed -e 's/:/\//' | sed -e 's/git@/http:\/\//' | xargs open
+    elif [[ $URL =~ "^https:(.+)@bitbucket.org/(.+)" ]]; then
+        echo $URL | sed -e 's/.git$//' | xargs open
     elif [[ $URL =~ "^https:" ]]; then
         echo $URL | xargs open
     else
