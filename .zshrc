@@ -207,6 +207,19 @@ function aws-instance-ips() {
 }
 compdef _aws-tag aws-instance-ips
 
+function aws-all-instance-ips() {
+    if [[ $# -ne 2 ]] ; then
+        echo 'Usage: aws-all-instance-ips PROFILE REGION'
+        return 1
+    fi
+
+    local profile=$1
+    local region=$2
+
+    aws --profile $profile ec2 describe-instances --region $region | jq --raw-output '.Reservations[].Instances[]? | select(.State.Name=="running") | [ (.Tags[]? | (select(.Key=="Name")).Value) // "-", .NetworkInterfaces[].PrivateIpAddresses[].PrivateIpAddress ] | @csv' | sort | column -t -s "," | sed 's/\"//g'
+}
+compdef _aws-profile-region aws-all-instance-ips
+
 # SSH into tagged AWS instances
 function aws-ssh() {
     if [[ $# -ne 3 ]] ; then
