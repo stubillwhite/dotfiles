@@ -107,7 +107,7 @@ function tunnel-open() {
     connectionFile=~/.ssh-tunnel-localhost:${localPort}===${host:0:20}:${hostPort}
 
     echo "Opening tunnel localhost:${localPort} -> ${server} -> ${host}:${hostPort}"
-    ssh -L ${localPort}:${host}:${hostPort} ${server} -f -o ServerAliveInterval=30 -N -M -S ${connectionFile} || { echo "Failed to open tunnel"; return -1; }
+    ssh -AL ${localPort}:${host}:${hostPort} ${server} -f -o ServerAliveInterval=30 -N -M -S ${connectionFile} || { echo "Failed to open tunnel"; return -1; }
     echo "Tunnel open ${connectionFile}"
 }
 compdef _hosts tunnel-open
@@ -216,7 +216,7 @@ function aws-all-instance-ips() {
     local profile=$1
     local region=$2
 
-    aws --profile $profile ec2 describe-instances --region $region | jq --raw-output '.Reservations[].Instances[]? | select(.State.Name=="running") | [ (.Tags[]? | (select(.Key=="Name")).Value) // "-", .NetworkInterfaces[].PrivateIpAddresses[].PrivateIpAddress ] | @csv' | sort | column -t -s "," | sed 's/\"//g'
+    aws --profile $profile ec2 describe-instances --region $region | jq --raw-output '["Name", "Instance ID", "Launch time", "IP address"], (.Reservations[].Instances[]? | select(.State.Name=="running") | [ (.Tags[]? | (select(.Key=="Name")).Value) // "-", .InstanceId, .LaunchTime, .NetworkInterfaces[].PrivateIpAddresses[].PrivateIpAddress ]) | @csv' | sort | column -t -s "," | sed 's/\"//g'
 }
 compdef _aws-profile-region aws-all-instance-ips
 
