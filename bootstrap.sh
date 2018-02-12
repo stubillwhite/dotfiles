@@ -29,3 +29,6 @@ do
         ln -s `realpath $FILE` $HOME_FILE
     fi
 done
+
+mkdir -p ~/config/yamllint
+ln -s ./yamllint/config ~/config/yamllint/config

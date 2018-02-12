@@ -1,0 +1,2 @@
+30 9 * * 1-5 ~/Dev/tools/bin/slack-clear-do-not-disturb.sh
+ 0 5 * * 1-5 ~/Dev/tools/bin/slack-set-do-not-disturb.sh
