@@ -45,7 +45,10 @@ alias vim='nvim'
 alias files-show='defaults write com.apple.finder AppleShowAllFiles YES; killall Finder /System/Library/CoreServices/Finder.app'
 alias files-hide='defaults write com.apple.finder AppleShowAllFiles NO; killall Finder /System/Library/CoreServices/Finder.app'
 alias ssh-rm-connections='rm /tmp/ssh-mux_*'
-alias python-env-activate='source env/bin/activate'
+alias python-env-init='virtualenv .'
+alias python-env-activate='source bin/activate'
+alias python-env-deactivate='deactivate'
+alias emacs-new='/usr/bin/env HOME=/Users/white1/Dev/my-stuff/.emacs.d.new emacs'
 
 # Specific tools                                                            {{{1
 # ==============================================================================
@@ -61,6 +64,7 @@ SHELLCHECK_OPTS+="-e SC2112 "    # Allow 'function' keyword
 # SBT                               {{{2
 # ======================================
 export SBT_OPTS=-Xmx2G
+alias sbt-no-test='sbt "set test in assembly := {}" clean assembly'
 
 # General file helpers              {{{2
 # ======================================
