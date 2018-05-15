@@ -64,7 +64,7 @@ SHELLCHECK_OPTS+="-e SC2112 "    # Allow 'function' keyword
 # SBT                               {{{2
 # ======================================
 export SBT_OPTS=-Xmx2G
-alias sbt-no-test='sbt "set test in assembly := {}" clean assembly'
+alias sbt-no-test='sbt "set test in assembly := {}"'
 
 # General file helpers              {{{2
 # ======================================
@@ -303,6 +303,29 @@ function execute-on-remote-host() {
     echo "  ssh $remoteHost"
     echo "  tmux attach -t $sessionName"
     echo "Note that the session will automatically close when the script terminates"
+}
+
+# Long running jobs                 {{{2
+# ======================================
+
+# Notify me when something completes
+# Usage: do-something-long-running ; tell-me "Long running job complete"
+function tell-me() {
+    exitCode="$?"
+
+    if [[ $exitCode -eq 0 ]]; then
+        exitStatus="SUCCEEDED"
+    else
+        exitStatus="FAILED"
+    fi
+
+    if [[ $# -lt 1 ]] ; then
+        msg="${exitStatus}"
+    else 
+        msg="${exitStatus} : $1"
+    fi
+
+    osascript -e "display notification \"$msg\" with title \"tell-me\""
 }
 
 # Git                               {{{2
