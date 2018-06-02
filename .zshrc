@@ -16,6 +16,7 @@ source_if_exists "$HOME/.zprezto/init.zsh"
 unalias cp &> /dev/null         # Standard behaviour
 unalias rm &> /dev/null         # Standard behaviour
 unalias mv &> /dev/null         # Standard behaviour
+unalias grep &> /dev/null       # Standard behaviour
 setopt clobber                  # Happily clobber files
 setopt interactivecomments      # Allow comments in interactive shells
 unsetopt AUTO_CD                # Don't change directory autmatically
@@ -309,7 +310,7 @@ function execute-on-remote-host() {
 # ======================================
 
 # Notify me when something completes
-# Usage: do-something-long-running ; tell-me "Long running job complete"
+# Usage: do-something-long-running ; tell-me "optional message"
 function tell-me() {
     exitCode="$?"
 
@@ -385,6 +386,11 @@ function git-unmerged-branches() {
             popd
         fi
     done
+}
+
+# Display remote branches which have been merged
+function git-merged-branches() {
+    git branch -r | xargs -t -n 1 git branch -r --contains
 }
 
 # Open the git repo in the browser
