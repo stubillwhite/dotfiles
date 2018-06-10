@@ -14,6 +14,7 @@ FILES=(
     "leiningen/.lein"
     "boot/.boot"
     "tmux/.tmux.conf"
+    "proselint/.proselintrc"
 )
 
 realpath() {
