@@ -50,6 +50,7 @@ alias python-env-init='virtualenv .'
 alias python-env-activate='source bin/activate'
 alias python-env-deactivate='deactivate'
 alias emacs-new='/usr/bin/env HOME=/Users/white1/Dev/my-stuff/.emacs.d.new emacs'
+alias gource='gource --auto-skip-seconds 1 --seconds-per-day 0.05'
 
 # Specific tools                                                            {{{1
 # ==============================================================================
@@ -471,4 +472,4 @@ function docker-remove-dangling-imgaes() {
 # Machine-specific configuration                                            {{{1
 # ==============================================================================
 
-source_if_exists "$HOME/.zshrc.machine.sh"
+source_if_exists "$HOME/.zshrc.local.sh"
