@@ -19,3 +19,5 @@
     prompt = true
 [mergetool "vimmmerge"]
     cmd = nvim -d $BASE $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'
+[credential]
+	helper = osxkeychain
