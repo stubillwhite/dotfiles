@@ -1,4 +1,4 @@
-{:user {:plugins      [[jonase/eastwood "0.2.8"]
+{:user {:plugins      [[jonase/eastwood "0.2.9"]
                        [lein-ancient "0.6.15"]
                        [lein-kibit "0.1.6"]
                        [slamhound "1.5.5"]
@@ -17,7 +17,7 @@
 
         :aliases      {"sanity-check" ["do" ["clean"] ["ancient"] ["kibit"]]}}
 
- :repl {:plugins      [[cider/cider-nrepl "0.18.0snapshot"]
+ :repl {:plugins      [[cider/cider-nrepl "0.18.0-SNAPSHOT"]
                        ;; [refactor-nrepl "2.3.0"] -- v2.3.0 seems to be incompatible with cider-nrepl 0.17.0
                        ]}}
 

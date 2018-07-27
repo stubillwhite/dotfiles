@@ -46,10 +46,12 @@ alias vim='nvim'
 alias files-show='defaults write com.apple.finder AppleShowAllFiles YES; killall Finder /System/Library/CoreServices/Finder.app'
 alias files-hide='defaults write com.apple.finder AppleShowAllFiles NO; killall Finder /System/Library/CoreServices/Finder.app'
 alias ssh-rm-connections='rm /tmp/ssh-mux_*'
+alias strip-ansi="perl -pe 's/\x1b\[[0-9;]*[mG]//g'"
 alias python-env-init='virtualenv .'
 alias python-env-activate='source bin/activate'
 alias python-env-deactivate='deactivate'
 alias emacs-new='/usr/bin/env HOME=/Users/white1/Dev/my-stuff/.emacs.d.new emacs'
+alias emacs-spacemacs='/usr/bin/env HOME=/Users/white1/Dev/my-stuff/.emacs.d.spacemacs emacs'
 alias gource='gource --auto-skip-seconds 1 --seconds-per-day 0.05'
 
 # Specific tools                                                            {{{1
