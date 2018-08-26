@@ -244,6 +244,19 @@ function aws-ssh() {
 }
 compdef _aws-tag aws-ssh
 
+# Copy my base machine config to a remote host
+function ssh-upload-skeleton-config() {
+    if [[ $# -ne 1 ]] ; then
+        echo 'Usage: ssh-upload-skeleton-config HOST'
+        exit -1
+    fi
+
+    pushd ~/Dev/my-stuff/dotfiles/skeleton-config || exit 1
+    for file in $(find . \! -name .); do
+        scp $file $1:$file
+    done
+}
+
 # Fast AI course helpers            {{{2
 # ======================================
 
@@ -373,7 +386,7 @@ function git-branched-repos() {
 }
 
 # For each directory within the current directory, display whether the
-# directory contains unmerged branches
+# directory contains unmerged branches locally
 function git-unmerged-branches() {
     for fnam in *; do
         if [[ -d $fnam ]]; then
@@ -383,6 +396,25 @@ function git-unmerged-branches() {
                 if [[ $unmergedBranches = *[![:space:]]* ]]; then
                     echo $fnam
                     git branch --no-merged master
+                    echo
+                fi
+            fi
+            popd
+        fi
+    done
+}
+
+# For each directory within the current directory, display whether the
+# directory contains unmerged branches locally and remote
+function git-unmerged-branches-all() {
+    for fnam in *; do
+        if [[ -d $fnam ]]; then
+            pushd $fnam
+            if git rev-parse --git-dir > /dev/null 2>&1; then
+                unmergedBranches=$(git branch --all --no-merged master) 
+                if [[ $unmergedBranches = *[![:space:]]* ]]; then
+                    echo $fnam
+                    git branch --all --no-merged master
                     echo
                 fi
             fi
