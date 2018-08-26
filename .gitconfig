@@ -8,6 +8,7 @@
     permission-reset = !git diff -p -R --no-color | grep -E \"^(diff|(old|new) mode)\" --color=never | git apply
     diff-base = !git diff $(git merge-base --fork-point master)
     difftool-base = !git difftool -y $(git merge-base --fork-point master)
+    push-branch = !git push --set-upstream origin $(git symbolic-ref --short HEAD)
 [core]
 	editor = nvim
 	autocrlf = input

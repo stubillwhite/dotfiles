@@ -53,6 +53,7 @@ alias python-env-deactivate='deactivate'
 alias emacs-new='/usr/bin/env HOME=/Users/white1/Dev/my-stuff/.emacs.d.new emacs'
 alias emacs-spacemacs='/usr/bin/env HOME=/Users/white1/Dev/my-stuff/.emacs.d.spacemacs emacs'
 alias gource='gource --auto-skip-seconds 1 --seconds-per-day 0.05'
+alias xmlformat='xmllint --format -'
 
 # Specific tools                                                            {{{1
 # ==============================================================================
@@ -224,7 +225,8 @@ function aws-all-instance-ips() {
     local profile=$1
     local region=$2
 
-    aws --profile $profile ec2 describe-instances --region $region | jq --raw-output '["Name", "Instance ID", "Launch time", "IP address"], (.Reservations[].Instances[]? | select(.State.Name=="running") | [ (.Tags[]? | (select(.Key=="Name")).Value) // "-", .InstanceId, .LaunchTime, .NetworkInterfaces[].PrivateIpAddresses[].PrivateIpAddress ]) | @csv' | sort | column -t -s "," | sed 's/\"//g'
+    #aws --profile $profile ec2 describe-instances --region $region | jq --raw-output '["Name", "Instance ID", "Launch time", "IP address"], (.Reservations[].Instances[]? | select(.State.Name=="running") | [ (.Tags[]? | (select(.Key=="Name")).Value) // "-", .InstanceId, .LaunchTime, .NetworkInterfaces[].PrivateIpAddresses[].PrivateIpAddress ]) | @csv' | sort | column -t -s "," | sed 's/\"//g'
+    aws --profile $profile ec2 describe-instances --region $region | jq --raw-output '["Name", "Solr ID", "Instance ID", "Launch time", "IP address"], (.Reservations[].Instances[]? | select(.State.Name=="running") | [ (.Tags[]? | (select(.Key=="Name")).Value) // "-", (.Tags[]? | (select(.Key=="SolrId")).Value) // "-", .InstanceId, .LaunchTime, .NetworkInterfaces[].PrivateIpAddresses[].PrivateIpAddress ]) | @csv' | sort | column -t -s "," | sed 's/\"//g'
 }
 compdef _aws-profile-region aws-all-instance-ips
 
