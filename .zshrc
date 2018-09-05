@@ -54,6 +54,7 @@ alias emacs-new='/usr/bin/env HOME=/Users/white1/Dev/my-stuff/.emacs.d.new emacs
 alias emacs-spacemacs='/usr/bin/env HOME=/Users/white1/Dev/my-stuff/.emacs.d.spacemacs emacs'
 alias gource='gource --auto-skip-seconds 1 --seconds-per-day 0.05'
 alias xmlformat='xmllint --format -'
+alias jsonformat='jq "."'
 
 # Specific tools                                                            {{{1
 # ==============================================================================
@@ -254,10 +255,13 @@ function ssh-upload-skeleton-config() {
     fi
 
     pushd ~/Dev/my-stuff/dotfiles/skeleton-config || exit 1
+    echo "Uploading config to $1"
     for file in $(find . \! -name .); do
         scp $file $1:$file
     done
+    popd || exit 1
 }
+compdef _ssh ssh-upload-skeleton-config=ssh
 
 # Fast AI course helpers            {{{2
 # ======================================
