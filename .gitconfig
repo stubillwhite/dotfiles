@@ -1,6 +1,6 @@
 [user]
 	name = Stu W
-	email = stubillwhite@gmail.com
+	useConfigOnly = true
 [push]
     default = simple
 [alias]

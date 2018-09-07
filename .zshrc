@@ -461,6 +461,16 @@ function git-archive-branch() {
     git branch -D $1
 }
 
+# Configure personal email
+function git-config-personal-email() {
+    git config user.email "stubillwhite@gmail.com"
+}
+
+# Configure work email
+function git-config-work-email() {
+    git config user.email "s.white.1@elsevier.com"
+}
+
 # Display the meaning of characters used for the prompt markers
 function prompt-help() {
     # TODO: Would be neater to do this dynamically based on info_format
