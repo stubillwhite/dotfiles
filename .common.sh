@@ -31,6 +31,7 @@ export PATH=$PATH:/Applications/Beyond\ Compare.app/Contents/MacOS
 export PATH=$PATH:~/Dev/my-stuff/utils
 export PATH=$PATH:~/Dev/my-stuff/shell-utils
 export PATH=$PATH:/usr/bin
+export PATH=$PATH:~/.local/bin
 
 # Constants
 
