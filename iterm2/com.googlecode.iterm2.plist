@@ -1227,15 +1227,15 @@
 	<key>NSWindow Frame SUUpdateAlert</key>
 	<string>410 364 620 392 0 0 1440 877 </string>
 	<key>NSWindow Frame SessionsPreferences</key>
-	<string>115 14 606 469 0 0 1440 877 </string>
+	<string>269 33 606 469 0 0 2560 1417 </string>
 	<key>NSWindow Frame SharedPreferences</key>
 	<string>0 932 918 485 0 0 2560 1417 </string>
 	<key>NSWindow Frame UKCrashReporter</key>
 	<string>99 293 592 584 0 0 1440 877 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>0 27 2560 1390 0 0 2560 1417 </string>
+	<string>0 4 2552 1413 0 0 2560 1417 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
-	<string>1525 740 585 452 0 0 2560 1417 </string>
+	<string>660 326 585 452 0 0 1440 877 </string>
 	<key>NSWindow Frame iTerm Window 2</key>
 	<string>-2308 155 2057 1186 -2560 0 2560 1417 </string>
 	<key>NeverWarnAboutShortLivedSessions_FEA25B18-67D5-4101-896D-D446EFE7D6B6</key>
@@ -3551,6 +3551,8 @@
 	<string>9C03094D-A7ED-4331-AC3D-ADF338793BA8</string>
 	<key>NoSyncLastTipTime</key>
 	<real>528281996.85116899</real>
+	<key>NoSyncNeverAskAboutSettingAlternateMouseScroll</key>
+	<true/>
 	<key>NoSyncPermissionToShowTip</key>
 	<true/>
 	<key>NoSyncSilenceAnnoyingBellAutomatically</key>
@@ -3711,13 +3713,13 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2018-07-14T12:52:34Z</date>
+	<date>2018-08-19T20:15:16Z</date>
 	<key>SavePasteHistory</key>
 	<false/>
 	<key>ShowBookmarkName</key>
 	<false/>
 	<key>ShowFullScreenTabBar</key>
-	<true/>
+	<false/>
 	<key>ShowPaneTitles</key>
 	<true/>
 	<key>SmartPlacement</key>

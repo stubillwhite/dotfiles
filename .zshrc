@@ -56,6 +56,7 @@ alias gource='gource --auto-skip-seconds 1 --seconds-per-day 0.05'
 alias xmlformat='xmllint --format -'
 alias jsonformat='jq "."'
 
+
 # Specific tools                                                            {{{1
 # ==============================================================================
 
@@ -351,6 +352,14 @@ function tell-me() {
     osascript -e "display notification \"$msg\" with title \"tell-me\""
 }
 
+# jq                                {{{2
+# ======================================
+
+function jq-paths() {
+    # Taken from https://github.com/stedolan/jq/issues/243 
+    jq '[path(..)|map(if type=="number" then "[]" else tostring end)|join(".")|split(".[]")|join("[]")]|unique|map("."+.)|.[]'
+}
+
 # Git                               {{{2
 # ======================================
 
@@ -437,15 +446,15 @@ function git-merged-branches() {
 # Open the git repo in the browser
 function git-open() {
     URL=$(git config remote.origin.url)
-    echo "Opening $URL"
+    echo "Opening '$URL'"
     if [[ $URL =~ "git@" ]]; then
-        echo $URL | sed -e 's/:/\//' | sed -e 's/git@/http:\/\//' | xargs open
-    elif [[ $URL =~ "^https:(.+)@bitbucket.org/(.+)" ]]; then
-        echo $URL | sed -e 's/.git$//' | xargs open
+        echo "$URL" | sed -e 's/:/\//' | sed -e 's/git@/http:\/\//' | xargs open
+    elif [[ $URL =~ ^https:(.+)@bitbucket.org/(.+) ]]; then
+        echo "$URL" | sed -e 's/.git$//' | xargs open
     elif [[ $URL =~ "^https:" ]]; then
-        echo $URL | xargs open
+        echo "$URL" | xargs open
     else
-        echo "Failed to open due to unrecognised URL $URL"
+        echo "Failed to open due to unrecognised URL '$URL'"
     fi
 }
 
@@ -454,7 +463,7 @@ function git-archive-branch() {
     if [[ $# -ne 1 ]] ; then
         echo 'Archive Git branch by tagging then deleting it'
         echo 'Usage: git-archive-branch BRANCH'
-        return -1
+        return 1
     fi
 
     git tag archive/$1 $1
