@@ -50,6 +50,7 @@ alias strip-ansi="perl -pe 's/\x1b\[[0-9;]*[mG]//g'"
 alias python-env-init='virtualenv .'
 alias python-env-activate='source bin/activate'
 alias python-env-deactivate='deactivate'
+alias cookiecutter='~/Library/Python/3.7/bin/cookiecutter'
 alias emacs-new='/usr/bin/env HOME=/Users/white1/Dev/my-stuff/.emacs.d.new emacs'
 alias emacs-spacemacs='/usr/bin/env HOME=/Users/white1/Dev/my-stuff/.emacs.d.spacemacs emacs'
 alias gource='gource --auto-skip-seconds 1 --seconds-per-day 0.05'
@@ -249,9 +250,9 @@ function aws-ssh() {
 compdef _aws-tag aws-ssh
 
 # Copy my base machine config to a remote host
-function ssh-upload-skeleton-config() {
+function scp-skeleton-config() {
     if [[ $# -ne 1 ]] ; then
-        echo 'Usage: ssh-upload-skeleton-config HOST'
+        echo 'Usage: scp-skeleton-config HOST'
         exit -1
     fi
 
