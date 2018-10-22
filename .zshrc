@@ -105,15 +105,16 @@ function untarf() {
 # Colorize output
 function colorize() {
     if [[ $# -ne 2 ]] ; then
-        echo 'Usage: colorize PATTERN (red|yellow|green)'
+        echo 'Usage: colorize COLOR PATTERN'
         return 1
     fi
 
-    pattern=$1
-    color=$2
+    color=$1
+    pattern=$2
 
-    awk -v pattern=$pattern -v color=$color -f ~/Dev/my-stuff/shell-utils/colorize.awk
+    awk -v color=$color -v pattern=$pattern -f ~/Dev/my-stuff/shell-utils/colorize.awk
 }
+compdef '_alternative "arguments:custom arg:(red green yellow blue magenta cyan)"' colorize
 
 # SSH tunneling                     {{{2
 # ======================================
