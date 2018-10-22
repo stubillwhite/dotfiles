@@ -57,7 +57,6 @@ alias gource='gource --auto-skip-seconds 1 --seconds-per-day 0.05'
 alias xmlformat='xmllint --format -'
 alias jsonformat='jq "."'
 
-
 # Specific tools                                                            {{{1
 # ==============================================================================
 
@@ -94,13 +93,26 @@ function full-path() {
 # Tar a file
 function tarf() {
     declare fnam=$1
-    tar -zcvf ${fnam%/}.tar.gz $1
+    tar -zcvf "${fnam%/}".tar.gz "$1"
 }
 
 # Untar a file
 function untarf() {
     declare fnam=$1
-    tar -zxvf $1
+    tar -zxvf "$1"
+}
+
+# Colorize output
+function colorize() {
+    if [[ $# -ne 2 ]] ; then
+        echo 'Usage: colorize PATTERN (red|yellow|green)'
+        return 1
+    fi
+
+    pattern=$1
+    color=$2
+
+    awk -v pattern=$pattern -v color=$color -f ~/Dev/my-stuff/shell-utils/colorize.awk
 }
 
 # SSH tunneling                     {{{2
@@ -263,7 +275,7 @@ function scp-skeleton-config() {
     done
     popd || exit 1
 }
-compdef _ssh ssh-upload-skeleton-config=ssh
+compdef _ssh scp-skeleton-config=ssh
 
 # Fast AI course helpers            {{{2
 # ======================================
