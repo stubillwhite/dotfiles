@@ -112,7 +112,7 @@ function colorize() {
     color=$1
     pattern=$2
 
-    awk -v color=$color -v pattern=$pattern -f ~/Dev/my-stuff/shell-utils/colorize.awk
+    awk -v color=$color -v pattern=$pattern -f ~/Dev/my-stuff/shell-utils/colorize
 }
 compdef '_alternative "arguments:custom arg:(red green yellow blue magenta cyan)"' colorize
 
