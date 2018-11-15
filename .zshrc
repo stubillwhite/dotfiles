@@ -73,6 +73,12 @@ SHELLCHECK_OPTS+="-e SC2112 "    # Allow 'function' keyword
 export SBT_OPTS=-Xmx2G
 alias sbt-no-test='sbt "set test in assembly := {}"'
 
+# jenv                              {{{2
+# ======================================
+
+eval "$(jenv init - zsh)" 
+export PATH="$HOME/.jenv/shims:$PATH"
+
 # General file helpers              {{{2
 # ======================================
 
@@ -492,6 +498,16 @@ function git-config-personal-email() {
 # Configure work email
 function git-config-work-email() {
     git config user.email "s.white.1@elsevier.com"
+}
+
+# Git stats for the current repo
+function git-contributor-stats() {
+    echo "Commit count"
+    git shortlog -sn
+
+    echo
+    echo "Line count"
+    git ls-tree -r -z --name-only HEAD | xargs -0 -n1 git blame --line-porcelain HEAD | grep  "^author " | sort | uniq -c | sort -nr
 }
 
 # Display the meaning of characters used for the prompt markers

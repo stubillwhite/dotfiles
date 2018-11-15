@@ -26,6 +26,8 @@ command -nargs=1 TabStop call s:TabStop(<f-args>)
 " ==============================================================================
 
 " General settings
+set nobackup                                " Don't use backup files
+set hidden                                  " Keep buffers open when not displayed
 set ruler                                   " Show the file position
 set copyindent                              " Copy indentation characters
 set showcmd                                 " Show incomplete commands

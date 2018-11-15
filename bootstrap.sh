@@ -14,6 +14,7 @@ FILES=(
     "leiningen/.lein"
     "boot/.boot"
     "tmux/.tmux.conf"
+    "pylint/.pylintrc"
     "proselint/.proselintrc"
 )
 
