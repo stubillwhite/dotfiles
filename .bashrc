@@ -5,5 +5,4 @@ source $HOME/.common.sh
 stty -ixon
 
 # Include machine-specific configuration
-source_if_exists "$HOME/.bashrc.machine.sh"
-
+source_if_exists "$HOME/.bashrc.local.sh"

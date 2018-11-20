@@ -248,7 +248,7 @@ function aws-all-instance-ips() {
     local region=$2
 
     #aws --profile $profile ec2 describe-instances --region $region | jq --raw-output '["Name", "Instance ID", "Launch time", "IP address"], (.Reservations[].Instances[]? | select(.State.Name=="running") | [ (.Tags[]? | (select(.Key=="Name")).Value) // "-", .InstanceId, .LaunchTime, .NetworkInterfaces[].PrivateIpAddresses[].PrivateIpAddress ]) | @csv' | sort | column -t -s "," | sed 's/\"//g'
-    aws --profile $profile ec2 describe-instances --region $region | jq --raw-output '["Name", "Solr ID", "Instance ID", "Launch time", "IP address"], (.Reservations[].Instances[]? | select(.State.Name=="running") | [ (.Tags[]? | (select(.Key=="Name")).Value) // "-", (.Tags[]? | (select(.Key=="SolrId")).Value) // "-", .InstanceId, .LaunchTime, .NetworkInterfaces[].PrivateIpAddresses[].PrivateIpAddress ]) | @csv' | sort | column -t -s "," | sed 's/\"//g'
+    aws --profile $profile ec2 describe-instances --region $region | jq --raw-output '["Name", "Solr ID", "Instance ID", "Instance type", "Launch time", "IP address"], (.Reservations[].Instances[]? | select(.State.Name=="running") | [ (.Tags[]? | (select(.Key=="Name")).Value) // "-", (.Tags[]? | (select(.Key=="SolrId")).Value) // "-", .InstanceId, .InstanceType, .LaunchTime, .NetworkInterfaces[].PrivateIpAddresses[].PrivateIpAddress ]) | @csv' | sort | column -t -s "," | sed 's/\"//g'
 }
 compdef _aws-profile-region aws-all-instance-ips
 
