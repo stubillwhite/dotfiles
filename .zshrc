@@ -73,12 +73,6 @@ SHELLCHECK_OPTS+="-e SC2112 "    # Allow 'function' keyword
 export SBT_OPTS=-Xmx2G
 alias sbt-no-test='sbt "set test in assembly := {}"'
 
-# jenv                              {{{2
-# ======================================
-
-eval "$(jenv init - zsh)" 
-export PATH="$HOME/.jenv/shims:$PATH"
-
 # General file helpers              {{{2
 # ======================================
 
@@ -311,14 +305,64 @@ function fast-ai-tunnel-open() {
 }
 alias tunnel-fast-ai='fast-ai-tunnel-open 8888 fast-ai-server 8888'
 
+# Java certificate management       {{{2
+# ======================================
+
+export JAVA_CERT_LOCATION=$(/usr/libexec/java_home)/jre/lib/security/cacerts
+#export JAVA_CERT_LOCATION=$JAVA_HOME/jre/lib/security/cacerts
+
+function cert-download() {
+    if [[ $# -ne 1 ]] ; then
+        echo 'Download a certificate'
+        echo 'Usage: cert-download HOST'
+        return 1
+    fi
+
+    declare host=$1
+    echo "Downloading certificate to $host.crt"
+    openssl x509 -in <(openssl s_client -connect "$host":443 -prexit 2>/dev/null) -out "$host".crt
+}
+
+function cert-import() {
+    if [[ $# -ne 2 ]] ; then
+        echo 'Import a certificate'
+        echo 'Usage: cert-import FNAM ALIAS'
+        return 1
+    fi
+
+    declare fnam=$1 alias=$2
+    echo "Importing certificate $fnam as $alias"
+    sudo keytool -importcert -file "$fnam" -alias "$alias" -keystore $JAVA_CERT_LOCATION -storepass changeit
+}
+
+function cert-delete() {
+    if [[ $# -ne 1 ]] ; then
+        echo 'Delete a certificate'
+        echo 'Usage: cert-delete ALIAS'
+        return 1
+    fi
+
+    declare alias=$1
+    echo "Deleting certificate $alias"
+    sudo keytool -delete -alias "$alias" -keystore $JAVA_CERT_LOCATION -storepass changeit
+}
+
+function cert-list() {
+    sudo keytool -list -keystore $JAVA_CERT_LOCATION -storepass changeit
+}
+
+function cert-store-path() {
+    echo "Keystore is $JAVA_CERT_LOCATION"
+}
+
 # Executing scripts remotely        {{{2
 # ======================================
 
 function execute-on-remote-host() {
-    if [[ $# -lt 2 ]] ; then
+    if [[ $# -ne 2 ]] ; then
         echo 'Asynchronously execute a script on a remote host in a tmux session'
         echo 'Usage: execute-on-remote-host HOST SCRIPT [ARGS]'
-        return -1
+        return 1
     fi
 
     remoteHost=$1

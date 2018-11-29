@@ -5,6 +5,8 @@
                        [criterium "0.4.4"]
                        [com.jakemccrary/lein-test-refresh "0.23.0"]]
 
+        ;; :jvm-opts     ["-Djava.security.debug=certpath"] 
+
         :dependencies [[pjstadig/humane-test-output "0.8.3"]
                        [org.clojure/tools.nrepl "0.2.13"]]
 
