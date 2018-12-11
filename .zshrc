@@ -465,6 +465,25 @@ function git-branched-repos() {
 }
 
 # For each directory within the current directory, display whether the
+# directory contains unpushed commits
+function git-unpushed-commits() {
+    for fnam in *; do
+        if [[ -d $fnam ]]; then
+            pushd $fnam
+            if git cherry -v > /dev/null 2>&1; then
+                unpushedChanged=$(git cherry -v) 
+                if [[ $unpushedChanged = *[![:space:]]* ]]; then
+                    echo $fnam
+                    git cherry -v
+                    echo
+                fi
+            fi
+            popd
+        fi
+    done
+}
+
+# For each directory within the current directory, display whether the
 # directory contains unmerged branches locally
 function git-unmerged-branches() {
     for fnam in *; do
