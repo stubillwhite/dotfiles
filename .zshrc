@@ -613,7 +613,18 @@ function aws-export-current-credentials() {
 
 # Docker
 
-function docker-remove-dangling-imgaes() {
+function docker-rm-instances() {
+    docker ps -a -q | xargs docker stop
+    docker ps -a -q | xargs docker rm
+}
+
+function docker-rm-images() {
+    docker-rm-instances
+    docker images -q | xargs docker rmi
+    docker images | grep "<none>" | awk '{print $3}' | xargs docker rmi
+}
+
+function docker-rm-dangling-images() {
     docker ps -a -q | xargs docker stop
     docker ps -a -q | xargs docker rm -v
     docker images -q | xargs docker rmi
