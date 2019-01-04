@@ -41,6 +41,10 @@ export COLOR_YELLOW='\033[0;33m'
 export COLOR_NONE='\033[0m'
 export COLOR_CLEAR_LINE='\r\033[K'
 
+# Leiningen
+
+export LEIN_JVM_OPTS='-Xms4G -Xmx4G'
+
 # Local Spark instances
 
 export SPARK_LOCAL_IP=127.0.0.1
