@@ -1,3 +1,7 @@
+# vim:fdm=marker
+
+# Conditional inclusion {{{1
+
 function source_if_exists { 
     if [[ -s $1 ]]; then
         source $1
@@ -5,6 +9,12 @@ function source_if_exists {
         #echo "Skipping sourcing $1 as it does not exist"
     fi
 }
+
+source_if_exists "$HOME/.common-shell-utils.sh"
+
+# 1}}}
+
+# General settings {{{1
 
 # Unlimited history
 
@@ -33,23 +43,17 @@ export PATH=$PATH:~/Dev/my-stuff/shell-utils
 export PATH=$PATH:/usr/bin
 export PATH=$PATH:~/.local/bin
 
-# Constants
-
-export COLOR_RED='\033[0;31m'
-export COLOR_GREEN='\033[0;32m'
-export COLOR_YELLOW='\033[0;33m'
-export COLOR_NONE='\033[0m'
-export COLOR_CLEAR_LINE='\r\033[K'
-
 # Leiningen
 
 export LEIN_JVM_OPTS='-Xms4G -Xmx4G'
 
-# Local Spark instances
+# Spark
 
 export SPARK_LOCAL_IP=127.0.0.1
 
-# SSH
+# 1}}}
+
+# SSH {{{1
 
 SSH_ENV_FILE="$HOME/.ssh/environment"
 
@@ -78,6 +82,16 @@ function ssh-add-keys {
     ssh-add $HOME/.ssh/id_rsa
 }
 
+# 1}}}
+
+# TODO Random things to rationalise {{{1
+
+export COLOR_RED='\033[0;31m'
+export COLOR_GREEN='\033[0;32m'
+export COLOR_YELLOW='\033[0;33m'
+export COLOR_NONE='\033[0m'
+export COLOR_CLEAR_LINE='\r\033[K'
+
 function docker-machine-start {
     ~/docker_setup_mac.bash
     docker-machine start
@@ -97,8 +111,6 @@ function docker-ips() {
 done;
 }
 
-#docker ps | tail -n +2 | cut -d " " -f 1 | docker inspect | jq '.[0].NetworkSettings.IPAddress'
-
 function awssh() {
     servers=$(aws ec2 describe-instances --region eu-west-1 --profile newsflo --output json | jq '.Reservations[].Instances[] | select(.Tags != null) | select(.Tags[].Value | select(. != null) | contains("'$1'")) | .PrivateIpAddress'|  sort | uniq | head -n 10)
     num=$(echo "$servers" | wc -l)
@@ -109,4 +121,6 @@ function awssh() {
         echo "$servers" | xargs csshX --login stuart.white
     fi
 }
+
+# 1}}}
 

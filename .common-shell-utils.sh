@@ -1,4 +1,3 @@
-#!/bin/sh
 # vim:fdm=marker
 
 # Constants {{{1

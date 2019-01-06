@@ -9,6 +9,7 @@ FILES=(
     ".zshrc.machine.sh"
     ".zsh-completion"
     ".common.sh"
+    ".common-shell-utils.sh"
     ".gitconfig"
     ".ssh"
     "leiningen/.lein"
