@@ -13,14 +13,65 @@ CLEAR_LINE='\r\033[K'
 
 # Functions {{{1
 
+# Dump the current stacktrace
+function dump_stacktrace () {
+    echo 'Stacktrace:'
+    if [[ $BASH_VERSION ]]; then
+        local file=${BASH_SOURCE[1]##*/} func=${FUNCNAME[1]} line=${BASH_LINENO[0]}
+        for ((i=1; i<${#FUNCNAME[@]}-1; i++))
+        do
+            echo "  ${BASH_SOURCE[$i+1]}:${BASH_LINENO[$i]} ${FUNCNAME[$i]}(...)"
+        done
+    else  # zsh
+        emulate -L zsh  # because we may be sourced by zsh `emulate bash -c`
+        # $funcfiletrace has format:  file:line
+        [[ $func =~ / ]] && func=source  # $func may be filename. Use bash behaviour
+        for ((i=1; i<${#funcfiletrace[@]}-1; i++))
+        do
+            local file=${funcfiletrace[$i+1]%:*} line=${funcfiletrace[$i+1]##*:}
+            local func=${funcstack[$i+1]}
+            echo "  ${file}:${line} ${func}(...)"
+        done
+    fi
+}
+
+# Assert that there are N arguments, exiting if this is not the case
+# assert_arg_count_is N $*
+function assert_arg_count_is() {
+    count=$1
+    if [ "$((count + 1))" -eq $#  ]; then 
+        return 0 
+    else 
+        if [[ $BASH_VERSION ]]; then
+            echo bash
+            func="${FUNCNAME[1]}"
+        else
+            echo zsh
+            emulate -L zsh  # because we may be sourced by zsh `emulate bash -c`
+            # $funcfiletrace has format:  file:line
+            [[ $func =~ / ]] && func=source  # $func may be filename. Use bash behaviour
+            func="${funcstack[2]}"
+        fi
+
+        shift
+        echo "${func} expected $count arguments but recieved '$*'"
+        dump_stacktrace
+        return 1
+    fi
+}
+
+# Set the script to exit on error
 function set_exit_on_error() {
     set -e
 }
 
+# Set the script to continue on error
 function set_continue_on_error() {
     set +e
 }
 
+# Display a normal message
+# msg_normal "Something happened"
 function msg_normal() {
     msg=$1
     printf "${CLEAR_LINE}${msg}\n"
@@ -31,6 +82,8 @@ function on_nonzero_exit() {
     if [[ $exitCode != 0 ]]; then "$@"; fi
 }
 
+# Display a progress message
+# msg_in_progress "Installing something" 1 3
 function msg_in_progress() {
     msg=$1
     curr=$2
@@ -39,24 +92,32 @@ function msg_in_progress() {
     if [[ $curr = $steps ]]; then printf "\n"; fi
 }
 
+# Display success message
+# msg_success "Something succeeded"
 function msg_success() {
     msg=$1
-    printf "${CLEAR_LINE}${GREEN}✔   ${msg}${NO_COLOR}\n"
+    printf "${CLEAR_LINE}${GREEN}✔ ${msg}${NO_COLOR}\n"
 }
 
+# Display an info message
+# msg_info "Something happened"
 function msg_info() {
     msg=$1
-    printf "${CLEAR_LINE}ⓘ   ${msg}\n"
+    printf "${CLEAR_LINE}ⓘ ${msg}\n"
 }
 
+# Display a warning message
+# msg_warn "Something possibly bad happened"
 function msg_warning() {
     msg=$1
-    printf "${CLEAR_LINE}${YELLOW}⚠   ${msg}${NO_COLOR}\n"
+    printf "${CLEAR_LINE}${YELLOW}⚠ ${msg}${NO_COLOR}\n"
 }
 
+# Display a warning message
+# msg_error "An error occurred"
 function msg_error() {
     msg=$1
-    printf "${CLEAR_LINE}${RED}✘   ${msg}${NO_COLOR}\n"
+    printf "${CLEAR_LINE}${RED}✘ ${msg}${NO_COLOR}\n"
 }
 
 # 1}}}
@@ -69,11 +130,11 @@ function example_usage() {
     msg_normal "Installing pre-requisites"
 
     msg_in_progress "Installing something" 1 3
-    sleep 1.5
+    sleep 1
     msg_in_progress "Installing something else" 2 3
-    sleep 1.5
+    sleep 1
     msg_in_progress "Installing another thing" 3 3
-    sleep 1.5
+    sleep 1
 
     set_continue_on_error
     ls foo > /dev/null
@@ -88,6 +149,14 @@ function example_usage() {
     msg_success "This is a success"
 }
 
+function foo() {
+    assert_arg_count_is 2 $*
+}
+
+#example_usage
+#set_continue_on_error
+#foo b c d
+#on_nonzero_exit msg_error "Failed to execute script"
+
 # }}}
 
-example_usage
