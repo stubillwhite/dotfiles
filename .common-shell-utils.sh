@@ -1,19 +1,22 @@
 # vim:fdm=marker
 
-# Constants {{{1
+# Constants                                                                 {{{1
+# ==============================================================================
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[0;33m'
+BLUE='\033[0;34m'
+MAGENTA='\033[0;35m'
+CYAN='\033[0;36m'
 NO_COLOR='\033[0m'
 CLEAR_LINE='\r\033[K'
 
-# 1}}}
-
-# Functions {{{1
+# Functions                                                                 {{{1
+# ==============================================================================
 
 # Dump the current stacktrace
-function dump_stacktrace () {
+function dump_stacktrace() {
     echo 'Stacktrace:'
     if [[ $BASH_VERSION ]]; then
         local file=${BASH_SOURCE[1]##*/} func=${FUNCNAME[1]} line=${BASH_LINENO[0]}
@@ -35,24 +38,24 @@ function dump_stacktrace () {
 }
 
 # Assert that there are N arguments, exiting if this is not the case
-# assert_arg_count_is N $*
+# assert_arg_count_is 2 $*
 function assert_arg_count_is() {
-    count=$1
-    if [ "$((count + 1))" -eq $#  ]; then 
+    declare count=$1
+    
+    shift
+
+    if [ "$((count))" -eq $# ]; then 
         return 0 
     else 
         if [[ $BASH_VERSION ]]; then
-            echo bash
             func="${FUNCNAME[1]}"
         else
-            echo zsh
             emulate -L zsh  # because we may be sourced by zsh `emulate bash -c`
             # $funcfiletrace has format:  file:line
             [[ $func =~ / ]] && func=source  # $func may be filename. Use bash behaviour
             func="${funcstack[2]}"
         fi
 
-        shift
         echo "${func} expected $count arguments but recieved '$*'"
         dump_stacktrace
         return 1
@@ -119,9 +122,25 @@ function msg_error() {
     printf "${CLEAR_LINE}${RED}✘ ${msg}${NO_COLOR}\n"
 }
 
-# 1}}}
+# Validate the arguments match the function requirements, displaying usage and returning error if not
+# validate_usage "my-cmd a b c" 3 "$@" || return 1
+function validate_usage() {
+    declare usage="$1" count="$2"
 
-# Example {{{1
+    shift
+    shift
+
+    if [ "$((count))" -eq $# ]; then 
+        return 0 
+    else 
+        echo "${usage}"
+        echo "Expected $count argument(s) but recieved '$*'"
+        return 1
+    fi
+}
+
+# Test code                                                                 {{{1
+# ==============================================================================
 
 function example_usage() {
     set_exit_on_error
@@ -129,16 +148,16 @@ function example_usage() {
     msg_normal "Installing pre-requisites"
 
     msg_in_progress "Installing something" 1 3
-    sleep 1
+    sleep 0.25
     msg_in_progress "Installing something else" 2 3
-    sleep 1
+    sleep 0.25
     msg_in_progress "Installing another thing" 3 3
-    sleep 1
+    sleep 0.25
 
     set_continue_on_error
     ls foo > /dev/null
     on_nonzero_exit msg_error "Tool foo not installed"
-    set_exit_on_error
+    #set_exit_on_error
 
     msg_normal "Done"
 
@@ -157,5 +176,24 @@ function foo() {
 #foo b c d
 #on_nonzero_exit msg_error "Failed to execute script"
 
-# }}}
 
+#function git-foreach-repo() {
+    #local f=$1
+    #for fnam in *; do
+        #if [[ -d $fnam ]]; then
+            #pushd "$fnam" || return 1
+            #if git rev-parse --git-dir > /dev/null 2>&1; then
+                #$f
+            #fi
+            #popd
+        #fi
+    #done
+#}
+
+#function list-files() {
+    #ls
+#}
+
+#function white-test() {
+    #git-foreach-repo list-files
+#} 

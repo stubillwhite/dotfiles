@@ -6,10 +6,20 @@
 # Include common configuration
 source $HOME/.common.sh
 
+# No flow control, so C-s is free for C-r/C-s back/forward incremental search
+stty -ixon
+
 # Include completion functions
 fpath=(~/.zsh-completion $fpath)
 autoload -U compinit
 compinit
+
+# Pyenv
+## export PYENV_ROOT="$HOME/Dev/tools/pyenv"
+## export PATH="$PYENV_ROOT/bin:$PATH"
+## if command -v pyenv 1>/dev/null 2>&1; then
+##     eval "$(pyenv init -)"
+## fi
 
 # Include Prezto, but remove unhelpful configuration
 source_if_exists "$HOME/.zprezto/init.zsh"
@@ -47,7 +57,6 @@ alias files-show='defaults write com.apple.finder AppleShowAllFiles YES; killall
 alias files-hide='defaults write com.apple.finder AppleShowAllFiles NO; killall Finder /System/Library/CoreServices/Finder.app'
 alias ssh-rm-connections='rm /tmp/ssh-mux_*'
 alias strip-ansi="perl -pe 's/\x1b\[[0-9;]*[mG]//g'"
-#alias python-env-init='virtualenv .'
 alias python-env-init='python3 -m venv .'
 alias python-env-activate='source bin/activate'
 alias python-env-deactivate='deactivate'
@@ -58,6 +67,7 @@ alias gource='gource -f --auto-skip-seconds 1 --seconds-per-day 0.05'
 alias xmlformat='xmllint --format -'
 alias jsonformat='jq "."'
 alias entr='entr -c'
+alias list-ports='netstat -anv'
 
 # Specific tools                                                            {{{1
 # ==============================================================================
@@ -105,6 +115,7 @@ function untarf() {
 }
 
 # Colorize output
+# ls | colorize green *.log
 function colorize() {
     if [[ $# -ne 2 ]] ; then
         echo 'Usage: colorize COLOR PATTERN'
@@ -117,6 +128,17 @@ function colorize() {
     awk -v color=$color -v pattern=$pattern -f ~/Dev/my-stuff/shell-utils/colorize
 }
 compdef '_alternative "arguments:custom arg:(red green yellow blue magenta cyan)"' colorize
+
+# Go to the directory where the finder window is currently looking
+function finder() {
+    target=$(osascript -e 'tell application "Finder" to if (count of Finder windows) > 0 then get POSIX path of (target of front Finder window as text)')
+    if [ "$target" != "" ]; then
+        cd "$target"
+        pwd
+    else
+        echo 'No Finder window found' >&2
+    fi
+}
 
 # SSH tunneling                     {{{2
 # ======================================
@@ -243,8 +265,7 @@ function aws-all-instance-ips() {
     local profile=$1
     local region=$2
 
-    #aws --profile $profile ec2 describe-instances --region $region | jq --raw-output '["Name", "Instance ID", "Launch time", "IP address"], (.Reservations[].Instances[]? | select(.State.Name=="running") | [ (.Tags[]? | (select(.Key=="Name")).Value) // "-", .InstanceId, .LaunchTime, .NetworkInterfaces[].PrivateIpAddresses[].PrivateIpAddress ]) | @csv' | sort | column -t -s "," | sed 's/\"//g'
-    aws --profile $profile ec2 describe-instances --region $region | jq --raw-output '["Name", "Solr ID", "Instance ID", "Instance type", "Launch time", "IP address"], (.Reservations[].Instances[]? | select(.State.Name=="running") | [ (.Tags[]? | (select(.Key=="Name")).Value) // "-", (.Tags[]? | (select(.Key=="SolrId")).Value) // "-", .InstanceId, .InstanceType, .LaunchTime, .NetworkInterfaces[].PrivateIpAddresses[].PrivateIpAddress ]) | @csv' | sort | column -t -s "," | sed 's/\"//g'
+    aws --profile $profile ec2 describe-instances --region $region | jq --raw-output '["Name", "Solr ID", "Instance ID", "Instance type", "Launch time", "IP address", "Monitoring"], (.Reservations[].Instances[]? | select(.State.Name=="running") | [ (.Tags[]? | (select(.Key=="Name")).Value) // "-", (.Tags[]? | (select(.Key=="SolrId")).Value) // "-", .InstanceId, .InstanceType, .LaunchTime, .NetworkInterfaces[].PrivateIpAddresses[].PrivateIpAddress, .Monitoring.State ]) | @csv' | sort | column -t -s "," | sed 's/\"//g'
 }
 compdef _aws-profile-region aws-all-instance-ips
 
@@ -314,11 +335,8 @@ export JAVA_CERT_LOCATION=$(/usr/libexec/java_home)/jre/lib/security/cacerts
 #export JAVA_CERT_LOCATION=$JAVA_HOME/jre/lib/security/cacerts
 
 function cert-download() {
-    if [[ $# -ne 1 ]] ; then
-        echo 'Download a certificate'
-        echo 'Usage: cert-download HOST'
-        return 1
-    fi
+    local usage='Download a certificate\nUsage:\n  cert-download HOST'
+    validate_usage "${usage}" 1 "$@" || return 1
 
     declare host=$1
     echo "Downloading certificate to $host.crt"
@@ -326,11 +344,8 @@ function cert-download() {
 }
 
 function cert-import() {
-    if [[ $# -ne 2 ]] ; then
-        echo 'Import a certificate'
-        echo 'Usage: cert-import FNAM ALIAS'
-        return 1
-    fi
+    local usage='Import a certificate\nUsage:\n  cert-import FNAM ALIAS'
+    validate_usage "${usage}" 2 "$@" || return 1
 
     declare fnam=$1 alias=$2
     echo "Importing certificate $fnam as $alias"
@@ -338,11 +353,8 @@ function cert-import() {
 }
 
 function cert-delete() {
-    if [[ $# -ne 1 ]] ; then
-        echo 'Delete a certificate'
-        echo 'Usage: cert-delete ALIAS'
-        return 1
-    fi
+    local usage='Delete a certificate\nUsage:\n  cert-delete ALIAS'
+    validate_usage "${usage}" 1 "$@" || return 1
 
     declare alias=$1
     echo "Deleting certificate $alias"
@@ -568,12 +580,24 @@ function git-config-work-email() {
 # Git stats for the current repo
 function git-contributor-stats() {
     echo "Commit count"
-    git shortlog -sn
+    git shortlog -sn --no-merges
 
     echo
     echo "Line count"
-    git ls-tree -r -z --name-only HEAD | xargs -0 -n1 git blame --line-porcelain HEAD | grep  "^author " | sort | uniq -c | sort -nr
+    git ls-tree -r --name-only HEAD | grep -ve "\(\.json\|\.sql\)" | xargs -n1 git blame --line-porcelain HEAD | grep "^author " | sort | uniq -c | sort -nr
+    #git log --no-merges --pretty='@%an' --shortstat | tr '\n' ' ' | tr '@' '\n'
 }
+
+# Display the size of objects in the Git log
+# https://stackoverflow.com/a/42544963
+function git-large-objects() {
+    git rev-list --objects --all \
+        | git cat-file --batch-check='%(objecttype) %(objectname) %(objectsize) %(rest)' \
+        | sed -n 's/^blob //p' \
+        | sort --numeric-sort --key=2 \
+        | cut -c 1-12,41- \
+        | $(command -v gnumfmt || echo numfmt) --field=2 --to=iec-i --suffix=B --padding=7 --round=nearest
+    }
 
 # Display the meaning of characters used for the prompt markers
 function prompt-help() {
