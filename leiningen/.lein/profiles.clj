@@ -1,4 +1,4 @@
-{:user {:plugins      [[jonase/eastwood "0.2.9"]
+{:user {:plugins      [[jonase/eastwood "0.3.5"]
                        [lein-ancient "0.6.15"]
                        [lein-kibit "0.1.6"]
                        [slamhound "1.5.5"]
@@ -7,8 +7,8 @@
 
         ;; :jvm-opts     ["-Djava.security.debug=certpath"] 
 
-        :dependencies [[pjstadig/humane-test-output "0.8.3"]
-                       [org.clojure/tools.nrepl "0.2.13"]]
+        :dependencies [[pjstadig/humane-test-output "0.9.0"]
+                       [nrepl "0.6.0"]]
 
         :injections   [(require 'pjstadig.humane-test-output)
                        (pjstadig.humane-test-output/activate!)]
@@ -19,7 +19,7 @@
 
         :aliases      {"sanity-check" ["do" ["clean"] ["ancient"] ["kibit"]]}}
 
- :repl {:plugins      [[cider/cider-nrepl "0.18.0-SNAPSHOT"]
+ :repl {:plugins      [[cider/cider-nrepl "0.21.1"]
                        ;; [refactor-nrepl "2.3.0"] -- v2.3.0 seems to be incompatible with cider-nrepl 0.17.0
                        ]}}
 
