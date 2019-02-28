@@ -444,6 +444,7 @@ function jq-paths() {
 # For each directory within the current directory, display whether the
 # directory is a dirty or clean Git repository
 function git-modified-repos() {
+    setopt local_options glob_dots
     for fnam in *; do
         if [[ -d $fnam ]]; then
             pushd $fnam
@@ -462,6 +463,7 @@ function git-modified-repos() {
 # For each directory within the current directory, display whether the
 # directory is on master or a branch
 function git-branched-repos() {
+    setopt local_options glob_dots
     for fnam in *; do
         if [[ -d $fnam ]]; then
             pushd $fnam
@@ -481,6 +483,7 @@ function git-branched-repos() {
 # For each directory within the current directory, display whether the
 # directory contains unpushed commits
 function git-unpushed-commits() {
+    setopt local_options glob_dots
     for fnam in *; do
         if [[ -d $fnam ]]; then
             pushd $fnam
@@ -500,6 +503,7 @@ function git-unpushed-commits() {
 # For each directory within the current directory, display whether the
 # directory contains unmerged branches locally
 function git-unmerged-branches() {
+    setopt local_options glob_dots
     for fnam in *; do
         if [[ -d $fnam ]]; then
             pushd $fnam
@@ -519,6 +523,7 @@ function git-unmerged-branches() {
 # For each directory within the current directory, display whether the
 # directory contains unmerged branches locally and remote
 function git-unmerged-branches-all() {
+    setopt local_options glob_dots
     for fnam in *; do
         if [[ -d $fnam ]]; then
             pushd $fnam
