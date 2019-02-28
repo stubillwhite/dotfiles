@@ -1,0 +1,14 @@
+#compdef aws-tag
+
+_aws-profile() { 
+    local state
+
+    _arguments \
+        '*: :->profile'
+
+    case $state in
+        (*) _arguments '1:profiles:(newsflo newsflo-prod)' ;;
+    esac
+}
+
+_aws-profile "$@"
