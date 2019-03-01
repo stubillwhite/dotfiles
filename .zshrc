@@ -502,11 +502,13 @@ function git-update-repos() (
 # directory contains unpushed commits
 function git-unpushed-commits() (
     display-unpushed-commits() {
-        unpushedChanged=$(git cherry -v) 
-        if [[ $unpushedChanged = *[![:space:]]* ]]; then
-            echo "$fnam"
-            git cherry -v
-            echo
+        if git cherry -v > /dev/null 2>&1; then
+            unpushedChanged=$(git cherry -v) 
+            if [[ $unpushedChanged = *[![:space:]]* ]]; then
+                echo $fnam
+                git cherry -v
+                echo
+            fi
         fi
     }
 
