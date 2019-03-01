@@ -441,103 +441,106 @@ function jq-paths() {
 # Git                               {{{2
 # ======================================
 
-# For each directory within the current directory, display whether the
-# directory is a dirty or clean Git repository
-function git-modified-repos() {
+# For each directory within the current directory, if the directory is a Git
+# repository then execute the supplied function 
+function git-for-each-repo() {
     setopt local_options glob_dots
     for fnam in *; do
         if [[ -d $fnam ]]; then
-            pushd $fnam
+            pushd "$fnam" > /dev/null || return 1
             if git rev-parse --git-dir > /dev/null 2>&1; then
-                if [[ `git status --porcelain --untracked-files=no` ]]; then
-                    printf "${fnam} -- ${COLOR_RED}modified${COLOR_NONE}\n"
-                else
-                    printf "${fnam} -- ${COLOR_GREEN}clean${COLOR_NONE}\n"
-                fi
+                "$@"
             fi
-            popd
+            popd > /dev/null || return 1
         fi
     done
 }
+
+# For each directory within the current directory, display whether the
+# directory is a dirty or clean Git repository
+function git-modified-repos() (
+    display-modified-status() {
+        if git rev-parse --git-dir > /dev/null 2>&1; then
+            if [[ `git status --porcelain --untracked-files=no` ]]; then
+                printf "${fnam} -- ${COLOR_RED}modified${COLOR_NONE}\n"
+            else
+                printf "${fnam} -- ${COLOR_GREEN}clean${COLOR_NONE}\n"
+            fi
+        fi
+    }
+
+    git-for-each-repo display-modified-status
+)
 
 # For each directory within the current directory, display whether the
 # directory is on master or a branch
-function git-branched-repos() {
-    setopt local_options glob_dots
-    for fnam in *; do
-        if [[ -d $fnam ]]; then
-            pushd $fnam
-            if git rev-parse --git-dir > /dev/null 2>&1; then
-                branchName=$(git rev-parse --abbrev-ref HEAD)
-                if [[ $branchName == "master" ]]; then
-                    printf "${fnam} -- ${COLOR_GREEN}${branchName}${COLOR_NONE}\n"
-                else
-                    printf "${fnam} -- ${COLOR_RED}${branchName}${COLOR_NONE}\n"
-                fi
-            fi
-            popd
+function git-branched-repos() (
+    display-branch-status() {
+        branchName=$(git rev-parse --abbrev-ref HEAD)
+        if [[ $branchName == "master" ]]; then
+            printf "${fnam} -- ${COLOR_GREEN}${branchName}${COLOR_NONE}\n"
+        else
+            printf "${fnam} -- ${COLOR_RED}${branchName}${COLOR_NONE}\n"
         fi
-    done
-}
+    }
+
+    git-for-each-repo display-branch-status
+)
+
+# For each directory within the current directory, update the repo
+function git-update-repos() (
+    update-repo() {
+        echo "Updating $(pwd)"
+        git pull -r --autostash
+        echo
+    }
+
+    git-for-each-repo update-repo 
+)
 
 # For each directory within the current directory, display whether the
 # directory contains unpushed commits
-function git-unpushed-commits() {
-    setopt local_options glob_dots
-    for fnam in *; do
-        if [[ -d $fnam ]]; then
-            pushd $fnam
-            if git cherry -v > /dev/null 2>&1; then
-                unpushedChanged=$(git cherry -v) 
-                if [[ $unpushedChanged = *[![:space:]]* ]]; then
-                    echo $fnam
-                    git cherry -v
-                    echo
-                fi
-            fi
-            popd
+function git-unpushed-commits() (
+    display-unpushed-commits() {
+        unpushedChanged=$(git cherry -v) 
+        if [[ $unpushedChanged = *[![:space:]]* ]]; then
+            echo "$fnam"
+            git cherry -v
+            echo
         fi
-    done
-}
+    }
+
+    git-for-each-repo display-unpushed-commits
+)
 
 # For each directory within the current directory, display whether the
 # directory contains unmerged branches locally
-function git-unmerged-branches() {
-    setopt local_options glob_dots
-    for fnam in *; do
-        if [[ -d $fnam ]]; then
-            pushd $fnam
-            if git rev-parse --git-dir > /dev/null 2>&1; then
-                unmergedBranches=$(git branch --no-merged master) 
-                if [[ $unmergedBranches = *[![:space:]]* ]]; then
-                    echo $fnam
-                    git branch --no-merged master
-                    echo
-                fi
-            fi
-            popd
+function git-unmerged-branches() (
+    display-unmerged-branches() {
+        unmergedBranches=$(git branch --no-merged master) 
+        if [[ $unmergedBranches = *[![:space:]]* ]]; then
+            echo "$fnam"
+            git branch --no-merged master
+            echo
         fi
-    done
-}
+    }
+
+    git-for-each-repo display-unmerged-branches
+)
 
 # For each directory within the current directory, display whether the
 # directory contains unmerged branches locally and remote
 function git-unmerged-branches-all() {
-    setopt local_options glob_dots
-    for fnam in *; do
-        if [[ -d $fnam ]]; then
-            pushd $fnam
-            if git rev-parse --git-dir > /dev/null 2>&1; then
-                unmergedBranches=$(git branch --all --no-merged master) 
-                if [[ $unmergedBranches = *[![:space:]]* ]]; then
-                    echo $fnam
-                    git branch --all --no-merged master
-                    echo
-                fi
-            fi
-            popd
+    display-unmerged-branches-all() {
+        unmergedBranches=$(git branch --no-merged master) 
+        if [[ $unmergedBranches = *[![:space:]]* ]]; then
+            echo "$fnam"
+            git branch --all --no-merged master
+            echo
         fi
-    done
+    }
+
+    git-for-each-repo display-unmerged-branches-all
 }
 
 # Display remote branches which have been merged
