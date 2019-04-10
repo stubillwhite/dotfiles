@@ -68,6 +68,10 @@ alias xmlformat='xmllint --format -'
 alias jsonformat='jq "."'
 alias entr='entr -c'
 alias list-ports='netstat -anv'
+alias tabulate-by-tab='column -t -s $''\t'' '
+alias tabulate-by-comma='column -t -s '','' '
+alias git-init-and-commit='git init ; git-config-personal-email ; git add . ; git commit -am "Initial version"'
+alias i2cssh='i2cssh -p stuw --iterm2'
 
 # Specific tools                                                            {{{1
 # ==============================================================================
@@ -212,6 +216,21 @@ function tunnel-close-all() {
 # AWS                               {{{2
 # ======================================
 
+function sshx-tagged-aws-machines() {
+    if [[ $# -ne 3 ]] ; then
+        echo 'Usage: sshx-tagged-aws-machines PROFILE REGION TAG'
+        return 1
+    fi
+
+    declare profile=$1 region=$2 tag=$3
+
+    echo 'Finding machines'
+    machines=($(aws --profile $profile ec2 describe-instances --region $region | jq --raw-output '.Reservations[].Instances[]? | select(.State.Name=="running") | select(.Tags[] | select((.Key=="Role") and (.Value=="'$tag'"))) | .NetworkInterfaces[].PrivateIpAddresses[].PrivateIpAddress'))
+
+    echo "Opening SSH to $machines[*]"
+    i2cssh $machines[*]
+}
+
 function aws-instance-info() {
     if [[ $# -ne 3 ]] ; then
         echo 'Usage: aws-instance-info PROFILE REGION TAG'
@@ -265,7 +284,7 @@ function aws-all-instance-ips() {
     local profile=$1
     local region=$2
 
-    aws --profile $profile ec2 describe-instances --region $region | jq --raw-output '["Name", "Solr ID", "Instance ID", "Instance type", "Launch time", "IP address", "Monitoring"], (.Reservations[].Instances[]? | select(.State.Name=="running") | [ (.Tags[]? | (select(.Key=="Name")).Value) // "-", (.Tags[]? | (select(.Key=="SolrId")).Value) // "-", .InstanceId, .InstanceType, .LaunchTime, .NetworkInterfaces[].PrivateIpAddresses[].PrivateIpAddress, .Monitoring.State ]) | @csv' | sort | column -t -s "," | sed 's/\"//g'
+    aws --profile $profile ec2 describe-instances --region $region | jq --raw-output '["Name", "IP address", "Instance ID", "Instance type", "AMI ID", "Launch time", "Monitoring"], (.Reservations[].Instances[]? | select(.State.Name=="running") | [ (.Tags[]? | (select(.Key=="Name")).Value) // "-", .NetworkInterfaces[].PrivateIpAddresses[].PrivateIpAddress, .InstanceId, .InstanceType, .ImageId, .LaunchTime, .Monitoring.State]) | @csv' | sort | column -t -s "," | sed 's/\"//g'
 }
 compdef _aws-profile-region aws-all-instance-ips
 
