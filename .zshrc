@@ -72,6 +72,7 @@ alias tabulate-by-tab='column -t -s $''\t'' '
 alias tabulate-by-comma='column -t -s '','' '
 alias git-init-and-commit='git init ; git-config-personal-email ; git add . ; git commit -am "Initial version"'
 alias i2cssh='i2cssh -p stuw --iterm2'
+alias gif-recorder='/Applications/LICEcap.app/Contents/MacOS/licecap'
 
 # Specific tools                                                            {{{1
 # ==============================================================================
