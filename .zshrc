@@ -29,7 +29,7 @@ unalias mv &> /dev/null         # Standard behaviour
 unalias grep &> /dev/null       # Standard behaviour
 setopt clobber                  # Happily clobber files
 setopt interactivecomments      # Allow comments in interactive shells
-unsetopt AUTO_CD                # Don't change directory autmatically
+unsetopt AUTO_CD                # Don't change directory automatically
 unsetopt AUTO_PUSHD             # Don't push directory automatically
 
 # AWS tools
@@ -73,6 +73,8 @@ alias tabulate-by-comma='column -t -s '','' '
 alias git-init-and-commit='git init ; git-config-personal-email ; git add . ; git commit -am "Initial version"'
 alias i2cssh='i2cssh -p stuw --iterm2'
 alias gif-recorder='/Applications/LICEcap.app/Contents/MacOS/licecap'
+alias sum='paste -s -d+ - | bc'
+alias emacs='/Applications/Emacs.app/Contents/MacOS/Emacs'
 
 # Specific tools                                                            {{{1
 # ==============================================================================
@@ -226,7 +228,7 @@ function sshx-tagged-aws-machines() {
     declare profile=$1 region=$2 tag=$3
 
     echo 'Finding machines'
-    machines=($(aws --profile $profile ec2 describe-instances --region $region | jq --raw-output '.Reservations[].Instances[]? | select(.State.Name=="running") | select(.Tags[] | select((.Key=="Role") and (.Value=="'$tag'"))) | .NetworkInterfaces[].PrivateIpAddresses[].PrivateIpAddress'))
+    machines=($(aws --profile $profile ec2 describe-instances --region $region | jq --raw-output '.Reservations[].Instances[]? | select(.State.Name=="running") | select(.Tags[] | select((.Key=="Name") and (.Value=="'$tag'"))) | .NetworkInterfaces[].PrivateIpAddresses[].PrivateIpAddress'))
 
     echo "Opening SSH to $machines[*]"
     i2cssh $machines[*]

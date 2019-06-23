@@ -37,6 +37,7 @@ PERL_MM_OPT="INSTALL_BASE=/Users/white1/perl5"; export PERL_MM_OPT;
 # Other tools
 
 export PATH=~/Dev/tools/bin:$PATH
+export PATH=/usr/local/opt/ruby/bin:$PATH
 export PATH=$PATH:/Applications/Beyond\ Compare.app/Contents/MacOS
 export PATH=$PATH:~/Dev/my-stuff/utils
 export PATH=$PATH:~/Dev/my-stuff/shell-utils
