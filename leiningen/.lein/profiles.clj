@@ -1,11 +1,10 @@
 {:user {:plugins      [[jonase/eastwood "0.3.5"]
                        [lein-ancient "0.6.15"]
                        [lein-kibit "0.1.6"]
+                       [lein-cloverage "1.1.1"]
                        [slamhound "1.5.5"]
                        [criterium "0.4.4"]
                        [com.jakemccrary/lein-test-refresh "0.23.0"]]
-
-        ;; :jvm-opts     ["-Djava.security.debug=certpath"] 
 
         :dependencies [[pjstadig/humane-test-output "0.9.0"]
                        [nrepl "0.6.0"]]
