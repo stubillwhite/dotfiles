@@ -9,6 +9,8 @@
         :dependencies [[pjstadig/humane-test-output "0.9.0"]
                        [nrepl "0.6.0"]]
 
+        :cloverage    {:ns-exclude-regex [#"user"]}
+
         :injections   [(require 'pjstadig.humane-test-output)
                        (pjstadig.humane-test-output/activate!)]
 
