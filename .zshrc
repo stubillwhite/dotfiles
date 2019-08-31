@@ -121,6 +121,12 @@ function untarf() {
     tar -zxvf "$1"
 }
 
+# Grep zipped logs
+function zgrep-logs() {
+    declare pattern=$1
+    zgrep -iR "${pattern}" . --context 10
+}
+
 # Colorize output
 # ls | colorize green *.log
 function colorize() {
@@ -565,6 +571,22 @@ function git-unmerged-branches-all() {
     }
 
     git-for-each-repo display-unmerged-branches-all
+}
+
+# For each directory within the current directory, generate a hacky lines of
+# code count 
+function git-hacky-line-count() {
+    display-hacky-line-count() {
+        git ls-files > ../file-list.txt
+        lineCount=$(cat < ../file-list.txt | grep -e "\(scala\|py\|java\|sql\|elm\|tf\|yaml\|pp\|yml\)" | xargs cat | wc -l)
+        echo "$fnam $lineCount"
+        totalCount=$((totalCount + lineCount))
+    }
+
+    totalCount=0
+    git-for-each-repo display-hacky-line-count
+    echo
+    echo "Total $totalCount"
 }
 
 # Display remote branches which have been merged
