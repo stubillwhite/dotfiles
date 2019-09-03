@@ -6,6 +6,8 @@ FILES=(
     ".bashrc"
     ".bashrc.machine.sh"
     ".zshrc"
+    ".zshrc.darwin"
+    ".zshrc.linux"
     ".zshrc.machine.sh"
     ".zsh-completion"
     ".common.sh"

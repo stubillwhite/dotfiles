@@ -89,6 +89,7 @@ SHELLCHECK_OPTS+="-e SC2112 "    # Allow 'function' keyword
 
 # SBT                               {{{2
 # ======================================
+
 export SBT_OPTS=-Xmx2G
 alias sbt-no-test='sbt "set test in assembly := {}"'
 
@@ -141,17 +142,6 @@ function colorize() {
     awk -v color=$color -v pattern=$pattern -f ~/Dev/my-stuff/shell-utils/colorize
 }
 compdef '_alternative "arguments:custom arg:(red green yellow blue magenta cyan)"' colorize
-
-# Go to the directory where the finder window is currently looking
-function finder() {
-    target=$(osascript -e 'tell application "Finder" to if (count of Finder windows) > 0 then get POSIX path of (target of front Finder window as text)')
-    if [ "$target" != "" ]; then
-        cd "$target"
-        pwd
-    else
-        echo 'No Finder window found' >&2
-    fi
-}
 
 # SSH tunneling                     {{{2
 # ======================================
@@ -599,11 +589,11 @@ function git-open() {
     URL=$(git config remote.origin.url)
     echo "Opening '$URL'"
     if [[ $URL =~ "git@" ]]; then
-        echo "$URL" | sed -e 's/:/\//' | sed -e 's/git@/http:\/\//' | xargs open
+        echo "$URL" | sed -e 's/:/\//' | sed -e 's/git@/http:\/\//' | xargs $OPEN_CMD
     elif [[ $URL =~ ^https:(.+)@bitbucket.org/(.+) ]]; then
-        echo "$URL" | sed -e 's/.git$//' | xargs open
+        echo "$URL" | sed -e 's/.git$//' | xargs $OPEN_CMD 
     elif [[ $URL =~ "^https:" ]]; then
-        echo "$URL" | xargs open
+        echo "$URL" | xargs $OPEN_CMD
     else
         echo "Failed to open due to unrecognised URL '$URL'"
     fi
@@ -714,5 +704,13 @@ function docker-rm-dangling-images() {
 
 # Machine-specific configuration                                            {{{1
 # ==============================================================================
+
+if_linux && {
+    source_if_exists "$HOME/.zshrc.linux"
+}
+
+if_darwin && {
+    source_if_exists "$HOME/.zshrc.darwin"
+}
 
 source_if_exists "$HOME/.zshrc.local.sh"
