@@ -74,7 +74,7 @@ alias git-init-and-commit='git init ; git-config-personal-email ; git add . ; gi
 alias i2cssh='i2cssh -p stuw --iterm2'
 alias gif-recorder='/Applications/LICEcap.app/Contents/MacOS/licecap'
 alias sum='paste -s -d+ - | bc'
-alias emacs='/Applications/Emacs.app/Contents/MacOS/Emacs'
+alias emacs='/usr/local/opt/emacs-head/Emacs.app/Contents/MacOS/Emacs'
 
 # Specific tools                                                            {{{1
 # ==============================================================================
