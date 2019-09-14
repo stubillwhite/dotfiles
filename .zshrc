@@ -1,5 +1,11 @@
 # vim:fdm=marker
 
+# Profiling for startup                                                     {{{1
+# ==============================================================================
+# Enable profiling (display report with `zprof`)
+
+zmodload zsh/zprof
+
 # Included scripts                                                          {{{1
 # ==============================================================================
 
@@ -505,15 +511,38 @@ function git-branched-repos() (
     git-for-each-repo display-branch-status
 )
 
-# For each directory within the current directory, update the repo
-function git-update-repos() (
-    update-repo() {
-        echo "Updating $(pwd)"
+# For each directory within the current directory, pull the repo
+function git-pull-repos() (
+    pull-repo() {
+        echo "Pulling $(basename $PWD)"
         git pull -r --autostash
         echo
     }
 
-    git-for-each-repo update-repo 
+    git-for-each-repo pull-repo 
+)
+
+# For each directory within the current directory, fetch the repo
+function git-fetch-repos() (
+    fetch-repo() {
+        echo "Fetching $(basename $PWD)"
+        git fetch
+        echo
+    }
+
+    git-for-each-repo fetch-repo 
+)
+
+# For each directory within the current directory, display the status line for the repo
+# Requires Prezto prompt to work
+function git-status-repos() (
+    display-status() {
+        git-info
+        print -P "$(basename $PWD) ${git_info[status]}"
+    }
+
+    prompt-help
+    git-for-each-repo display-status | column -t -s ' '
 )
 
 # For each directory within the current directory, display whether the
@@ -713,4 +742,4 @@ if_darwin && {
     source_if_exists "$HOME/.zshrc.darwin"
 }
 
-source_if_exists "$HOME/.zshrc.local.sh"
+source_if_exists "$HOME/.zshrc.$(uname -n)"
