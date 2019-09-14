@@ -50,37 +50,40 @@ setopt menu_complete            # Tab autocompletes first option even if ambiguo
 # Aliases                                                                   {{{1
 # ==============================================================================
 
-# Helper aliases
-alias assume-role='source ~/Dev/my-stuff/utils/assume-role.sh'
+if_darwin && {
+    alias files-show='defaults write com.apple.finder AppleShowAllFiles YES; killall Finder /System/Library/CoreServices/Finder.app'
+    alias files-hide='defaults write com.apple.finder AppleShowAllFiles NO; killall Finder /System/Library/CoreServices/Finder.app'
+    alias cookiecutter='~/Library/Python/3.7/bin/cookiecutter'
+    alias gif-recorder='/Applications/LICEcap.app/Contents/MacOS/licecap'
+    alias assume-role='source ~/Dev/my-stuff/utils/assume-role.sh'
+}
+
 alias eject='diskutil eject'
 alias env='env | sort'
 alias tree='tree -A'
 alias watch='watch -c'
 alias ssh-purge-key='ssh-keygen -R'
-alias vi='nvim'
-alias vim='nvim'
-alias files-show='defaults write com.apple.finder AppleShowAllFiles YES; killall Finder /System/Library/CoreServices/Finder.app'
-alias files-hide='defaults write com.apple.finder AppleShowAllFiles NO; killall Finder /System/Library/CoreServices/Finder.app'
 alias ssh-rm-connections='rm /tmp/ssh-mux_*'
 alias strip-ansi="perl -pe 's/\x1b\[[0-9;]*[mG]//g'"
 alias python-env-init='python3 -m venv .'
 alias python-env-activate='source bin/activate'
 alias python-env-deactivate='deactivate'
-alias cookiecutter='~/Library/Python/3.7/bin/cookiecutter'
-alias emacs-new='/usr/bin/env HOME=/Users/white1/Dev/my-stuff/.emacs.d.new emacs'
-alias emacs-spacemacs='/usr/bin/env HOME=/Users/white1/Dev/my-stuff/.emacs.d.spacemacs emacs'
 alias gource='gource -f --auto-skip-seconds 1 --seconds-per-day 0.05'
-alias xmlformat='xmllint --format -'
-alias jsonformat='jq "."'
+alias fmt-xml='xmllint --format -'
+alias fmt-json='jq "."'
 alias entr='entr -c'
 alias list-ports='netstat -anv'
 alias tabulate-by-tab='column -t -s $''\t'' '
 alias tabulate-by-comma='column -t -s '','' '
-alias git-init-and-commit='git init ; git-config-personal-email ; git add . ; git commit -am "Initial version"'
 alias i2cssh='i2cssh -p stuw --iterm2'
-alias gif-recorder='/Applications/LICEcap.app/Contents/MacOS/licecap'
 alias sum='paste -s -d+ - | bc'
+alias shred='shred -vuz --iterations=10'
+
+alias vi='nvim'
+alias vim='nvim'
 alias emacs='/usr/local/opt/emacs-head/Emacs.app/Contents/MacOS/Emacs'
+alias emacs-new='/usr/bin/env HOME=/Users/white1/Dev/my-stuff/.emacs.d.new emacs'
+alias emacs-spacemacs='/usr/bin/env HOME=/Users/white1/Dev/my-stuff/.emacs.d.spacemacs emacs'
 
 # Specific tools                                                            {{{1
 # ==============================================================================

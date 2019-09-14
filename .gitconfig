@@ -25,4 +25,5 @@
 [mergetool "vimmmerge"]
     cmd = nvim -d $BASE $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'
 [credential]
-	helper = osxkeychain
+    ;; helper = osxkeychain
+    ;; helper = /usr/share/doc/git/contrib/credential/libsecret/git-credential-libsecret

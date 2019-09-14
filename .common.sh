@@ -15,9 +15,23 @@ function source_if_exists {
 
 source_if_exists "$HOME/.common-shell-utils.sh"
 
+# Usage: if_darwin && { echo foo }
+function if_darwin() { [[ "$(uname)" == "Darwin" ]]; }
+function if_linux() { [[ "$(expr substr $(uname -s) 1 5)" == "Linux" ]]; }
+
 # 1}}}
 
 # General settings {{{1
+
+# Misc differences between systems
+
+if_darwin && {
+    OPEN_CMD=open
+}
+
+if_linux && {
+    OPEN_CMD=xdg-open
+}
 
 # Unlimited history
 
