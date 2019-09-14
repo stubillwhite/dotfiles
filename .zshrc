@@ -355,8 +355,13 @@ alias tunnel-fast-ai='fast-ai-tunnel-open 8888 fast-ai-server 8888'
 # Java certificate management       {{{2
 # ======================================
 
-export JAVA_CERT_LOCATION=$(/usr/libexec/java_home)/jre/lib/security/cacerts
-#export JAVA_CERT_LOCATION=$JAVA_HOME/jre/lib/security/cacerts
+if_darwin && {
+    export JAVA_CERT_LOCATION=$(/usr/libexec/java_home)/jre/lib/security/cacerts
+}
+
+if_linux && {
+    export JAVA_CERT_LOCATION=$JAVA_HOME/jre/lib/security/cacerts
+}
 
 function cert-download() {
     local usage='Download a certificate\nUsage:\n  cert-download HOST'
@@ -393,44 +398,6 @@ function cert-store-path() {
     echo "Keystore is $JAVA_CERT_LOCATION"
 }
 
-# Executing scripts remotely        {{{2
-# ======================================
-
-function execute-on-remote-host() {
-    if [[ $# -ne 2 ]] ; then
-        echo 'Asynchronously execute a script on a remote host in a tmux session'
-        echo 'Usage: execute-on-remote-host HOST SCRIPT [ARGS]'
-        return 1
-    fi
-
-    remoteHost=$1
-    scriptPath=$2
-    shift
-    shift
-    args=$*
-
-    scriptName=$(basename $scriptPath)
-    sessionName=${scriptName%.*}
-
-    echo
-    echo "Copying $scriptPath to $remoteHost"
-    echo scp $scriptPath $remoteHost:$scriptName
-    scp $scriptPath $remoteHost:$scriptName
-
-    echo
-    echo "Connecting to machine and executing script under tmux session $sessionName"
-    tmuxCmd="./$scriptName $args"
-    sshCmd="tmux new -d -s $sessionName \"$tmuxCmd\""
-    echo ssh -t $remoteHost "$sshCmd"
-    ssh -t $remoteHost "$sshCmd"
-
-    echo
-    echo "To connect to the session"
-    echo "  ssh $remoteHost"
-    echo "  tmux attach -t $sessionName"
-    echo "Note that the session will automatically close when the script terminates"
-}
-
 # Long running jobs                 {{{2
 # ======================================
 
@@ -451,7 +418,13 @@ function tell-me() {
         msg="${exitStatus} : $1"
     fi
 
-    osascript -e "display notification \"$msg\" with title \"tell-me\""
+    if_darwin && {
+        osascript -e "display notification \"$msg\" with title \"tell-me\""
+    }
+
+    if_linux && {
+        notify-send -t 2000 "tell-me" "$msg"
+    }
 }
 
 # jq                                {{{2
