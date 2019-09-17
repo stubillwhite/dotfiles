@@ -26,12 +26,12 @@ function if_linux() { [[ "$(expr substr $(uname -s) 1 5)" == "Linux" ]]; }
 # Misc differences between systems
 
 if_darwin && {
-    OPEN_CMD=open
+    export OPEN_CMD=open
 }
 
-if_linux && {
-    OPEN_CMD=xdg-open
-}
+## if_linux && {
+##     export OPEN_CMD="xdg-open"
+## }
 
 # Unlimited history
 
