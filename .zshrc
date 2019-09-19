@@ -460,12 +460,10 @@ function git-for-each-repo() {
 # directory is a dirty or clean Git repository
 function git-modified-repos() (
     display-modified-status() {
-        if git rev-parse --git-dir > /dev/null 2>&1; then
-            if [[ `git status --porcelain --untracked-files=no` ]]; then
-                printf "${fnam} -- ${COLOR_RED}modified${COLOR_NONE}\n"
-            else
-                printf "${fnam} -- ${COLOR_GREEN}clean${COLOR_NONE}\n"
-            fi
+        if [[ `git status --porcelain --untracked-files=no` ]]; then
+            printf "${fnam} -- ${COLOR_RED}modified${COLOR_NONE}\n"
+        else
+            printf "${fnam} -- ${COLOR_GREEN}clean${COLOR_NONE}\n"
         fi
     }
 
@@ -511,13 +509,27 @@ function git-fetch-repos() (
 
 # For each directory within the current directory, display the status line for the repo
 # Requires Prezto prompt to work
-function git-status-repos() (
+function git-status-detailed-repos() (
     display-status() {
         git-info
         print -P "$(basename $PWD) ${git_info[status]}"
     }
 
     prompt-help
+    git-for-each-repo display-status | column -t -s ' '
+)
+
+# For each directory within the current directory, display the status 
+function git-status-repos() (
+    display-status() {
+        branchName=$(git rev-parse --abbrev-ref HEAD)
+        branch=$(if [[ $branchName == "master" ]]; then echo "${COLOR_GREEN}${branchName}${COLOR_NONE}"; else echo "${COLOR_RED}${branchName}${COLOR_NONE}"; fi)
+        modified=$(if [[ `git status --porcelain --untracked-files=no` ]]; then echo "${COLOR_RED}modified${COLOR_NONE}"; else echo "${COLOR_GREEN}clean${COLOR_NONE}"; fi)
+        repo=$(basename $PWD) 
+
+        print "$branch $modified $repo"
+    }
+
     git-for-each-repo display-status | column -t -s ' '
 )
 
