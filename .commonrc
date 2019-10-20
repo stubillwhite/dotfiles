@@ -2,8 +2,9 @@
 
 # Conditional inclusion {{{1
 
+# Usage: if_darwin && { echo foo }
 function if_darwin() { [[ "$(uname)" == "Darwin" ]]; }
-function if_linux() { [[ "$(expr substr $(uname -s) 1 5)" == "Linux" ]]; }
+function if_linux() { [[ "$(uname)" == "Linux" ]]; }
 
 function source_if_exists { 
     if [[ -s $1 ]]; then
@@ -15,10 +16,6 @@ function source_if_exists {
 
 source_if_exists "$HOME/.common-shell-utils.sh"
 
-# Usage: if_darwin && { echo foo }
-function if_darwin() { [[ "$(uname)" == "Darwin" ]]; }
-function if_linux() { [[ "$(expr substr $(uname -s) 1 5)" == "Linux" ]]; }
-
 # 1}}}
 
 # General settings {{{1
@@ -29,9 +26,9 @@ if_darwin && {
     export OPEN_CMD=open
 }
 
-## if_linux && {
-##     export OPEN_CMD="xdg-open"
-## }
+if_linux && {
+    export OPEN_CMD="xdg-open"
+}
 
 # Unlimited history
 
@@ -57,10 +54,10 @@ export PATH=~/Dev/tools/bin:$PATH
 export PATH=/usr/local/opt/ruby/bin:$PATH
 export PATH=/usr/local/opt/coreutils/libexec/gnubin:$PATH
 export PATH=$PATH:/Applications/Beyond\ Compare.app/Contents/MacOS
-export PATH=$PATH:~/Dev/my-stuff/utils
 export PATH=$PATH:~/Dev/my-stuff/shell-utils
 export PATH=$PATH:/usr/bin
 export PATH=$PATH:~/.local/bin
+export PATH=$PATH:/usr/local/lib/ruby/gems/2.6.0/bin
 
 # Leiningen
 

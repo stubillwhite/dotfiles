@@ -4,13 +4,12 @@ setopt EXTENDED_GLOB
 
 FILES=(
     ".bashrc"
-    ".bashrc.machine.sh"
     ".zshrc"
     ".zshrc.darwin"
     ".zshrc.linux"
-    "$HOME/.zshrc.$(uname -n)"
+    ".zshrc.$(uname -n)"
     ".zsh-completion"
-    ".common.sh"
+    ".commonrc"
     ".common-shell-utils.sh"
     ".gitconfig"
     "leiningen/.lein"
@@ -26,7 +25,7 @@ realpath() {
 
 for FILE in "${FILES[@]}"
 do
-    HOME_FILE="$HOME/`basename $FILE`"
+    HOME_FILE="$HOME/$(basename $FILE)"
     if [[ -e $FILE ]]; then
         echo Creating link $HOME_FILE
         rm -f $HOME_FILE 2> /dev/null || true

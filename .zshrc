@@ -10,7 +10,7 @@ zmodload zsh/zprof
 # ==============================================================================
 
 # Include common configuration
-source $HOME/.common.sh
+source $HOME/.commonrc
 
 # No flow control, so C-s is free for C-r/C-s back/forward incremental search
 stty -ixon
@@ -58,6 +58,11 @@ if_darwin && {
     alias assume-role='source ~/Dev/my-stuff/utils/assume-role.sh'
 }
 
+if_linux && {
+    alias gsed='sed'
+    alias open='xdg-open'
+}
+
 alias eject='diskutil eject'
 alias env='env | sort'
 alias tree='tree -A'
@@ -81,7 +86,6 @@ alias shred='shred -vuz --iterations=10'
 
 alias vi='nvim'
 alias vim='nvim'
-alias emacs='/usr/local/opt/emacs-head/Emacs.app/Contents/MacOS/Emacs'
 alias emacs-new='/usr/bin/env HOME=/Users/white1/Dev/my-stuff/.emacs.d.new emacs'
 alias emacs-spacemacs='/usr/bin/env HOME=/Users/white1/Dev/my-stuff/.emacs.d.spacemacs emacs'
 
@@ -312,6 +316,11 @@ function aws-ssh() {
 }
 compdef _aws-tag aws-ssh
 
+# Display AWS instance limits
+function aws-ec2-instance-limits() {
+    aws service-quotas list-service-quotas --service-code ec2 | jq --raw-output '(.Quotas[] | ([.QuotaName, .Value])) | @csv' | column -t -s "," | sed 's/\"//g'
+}
+
 # Copy my base machine config to a remote host
 function scp-skeleton-config() {
     if [[ $# -ne 1 ]] ; then
@@ -456,37 +465,8 @@ function git-for-each-repo() {
     done
 }
 
-# For each directory within the current directory, display whether the
-# directory is a dirty or clean Git repository
-function git-modified-repos() (
-    display-modified-status() {
-        if [[ `git status --porcelain --untracked-files=no` ]]; then
-            printf "${fnam} -- ${COLOR_RED}modified${COLOR_NONE}\n"
-        else
-            printf "${fnam} -- ${COLOR_GREEN}clean${COLOR_NONE}\n"
-        fi
-    }
-
-    git-for-each-repo display-modified-status
-)
-
-# For each directory within the current directory, display whether the
-# directory is on master or a branch
-function git-branched-repos() (
-    display-branch-status() {
-        branchName=$(git rev-parse --abbrev-ref HEAD)
-        if [[ $branchName == "master" ]]; then
-            printf "${fnam} -- ${COLOR_GREEN}${branchName}${COLOR_NONE}\n"
-        else
-            printf "${fnam} -- ${COLOR_RED}${branchName}${COLOR_NONE}\n"
-        fi
-    }
-
-    git-for-each-repo display-branch-status
-)
-
 # For each directory within the current directory, pull the repo
-function git-pull-repos() (
+function git-repos-pull() (
     pull-repo() {
         echo "Pulling $(basename $PWD)"
         git pull -r --autostash
@@ -497,10 +477,12 @@ function git-pull-repos() (
 )
 
 # For each directory within the current directory, fetch the repo
-function git-fetch-repos() (
+function git-repos-fetch() (
+    local args=$*
+
     fetch-repo() {
         echo "Fetching $(basename $PWD)"
-        git fetch
+        git fetch ${args}
         echo
     }
 
@@ -509,7 +491,7 @@ function git-fetch-repos() (
 
 # For each directory within the current directory, display the status line for the repo
 # Requires Prezto prompt to work
-function git-status-detailed-repos() (
+function git-repos-status-detailed() (
     display-status() {
         git-info
         print -P "$(basename $PWD) ${git_info[status]}"
@@ -519,40 +501,82 @@ function git-status-detailed-repos() (
     git-for-each-repo display-status | column -t -s ' '
 )
 
-# For each directory within the current directory, display the status 
-function git-status-repos() (
+# Parse Git status into a Zsh associative array
+function git-parse-repo-status() {
+    local aheadAndBehind
+    local ahead=0
+    local behind=0
+    local added=0
+    local modified=0
+    local deleted=0
+    local renamed=0
+    local untracked=0
+    local stashed=0
+
+    branch=$(git rev-parse --abbrev-ref HEAD)
+
+    aheadAndBehind=$(git status --porcelain=v1 --branch | perl -ne '/\[(.+)\]/ && print $1' )
+    ahead=$(echo $aheadAndBehind | perl -ne '/ahead (\d+)/ && print $1' )
+    [[ -z "$ahead" ]] && ahead=0
+    behind=$(echo $aheadAndBehind | perl -ne '/behind (\d+)/ && print $1' )
+    [[ -z "$behind" ]] && behind=0
+
+    # See https://git-scm.com/docs/git-status for output format
+    while read -r line; do
+      # echo "$line"
+      echo "$line" | gsed -r '/^[A][MD]? .*/!{q1}'   > /dev/null && (( added++ ))
+      echo "$line" | gsed -r '/^[M][MD]? .*/!{q1}'   > /dev/null && (( modified++ ))
+      echo "$line" | gsed -r '/^[D][RCDU]? .*/!{q1}' > /dev/null && (( deleted++ ))
+      echo "$line" | gsed -r '/^[R][MD]? .*/!{q1}'   > /dev/null && (( renamed++ ))
+      echo "$line" | gsed -r '/^[\?][\?] .*/!{q1}'   > /dev/null && (( untracked++ ))
+    done < <(git status --porcelain)
+
+    stashed=$(git stash list | wc -l)
+
+    unset gitRepoStatus
+    typeset -gA gitRepoStatus
+    gitRepoStatus[branch]=$branch
+    gitRepoStatus[ahead]=$ahead
+    gitRepoStatus[behind]=$behind
+    gitRepoStatus[added]=$added
+    gitRepoStatus[modified]=$modified
+    gitRepoStatus[deleted]=$deleted
+    gitRepoStatus[renamed]=$renamed
+    gitRepoStatus[untracked]=$untracked
+    gitRepoStatus[stashed]=$stashed
+}
+
+function git-repos-status() (
     display-status() {
-        branchName=$(git rev-parse --abbrev-ref HEAD)
-        branch=$(if [[ $branchName == "master" ]]; then echo "${COLOR_GREEN}${branchName}${COLOR_NONE}"; else echo "${COLOR_RED}${branchName}${COLOR_NONE}"; fi)
-        modified=$(if [[ `git status --porcelain --untracked-files=no` ]]; then echo "${COLOR_RED}modified${COLOR_NONE}"; else echo "${COLOR_GREEN}clean${COLOR_NONE}"; fi)
+        git-parse-repo-status
         repo=$(basename $PWD) 
 
-        print "$branch $modified $repo"
-    }
-
-    git-for-each-repo display-status | column -t -s ' '
-)
-
-# For each directory within the current directory, display whether the
-# directory contains unpushed commits
-function git-unpushed-commits() (
-    display-unpushed-commits() {
-        if git cherry -v > /dev/null 2>&1; then
-            unpushedChanged=$(git cherry -v) 
-            if [[ $unpushedChanged = *[![:space:]]* ]]; then
-                echo $fnam
-                git cherry -v
-                echo
-            fi
+        local branch="${COLOR_GREEN}master${COLOR_NONE}"
+        if [[ ! $gitRepoStatus[branch] == "master" ]]; then
+            branch="${COLOR_RED}$gitRepoStatus[branch]${COLOR_NONE}"
         fi
+
+        local sync="${COLOR_GREEN}in-sync${COLOR_NONE}"
+        if (( $gitRepoStatus[ahead] > 0 )) && (( $gitRepoStatus[behind] > 0 )); then
+            sync="${COLOR_RED}ahead/behind${COLOR_NONE}"
+        elif (( $gitRepoStatus[ahead] > 0 )); then
+            sync="${COLOR_RED}ahead${COLOR_NONE}"
+        elif (( $gitRepoStatus[behind] > 0 )); then
+            sync="${COLOR_RED}behind${COLOR_NONE}"
+        fi
+
+        local dirty="${COLOR_GREEN}clean${COLOR_NONE}"
+        (($gitRepoStatus[added] + $gitRepoStatus[modified] + $gitRepoStatus[deleted] + $gitRepoStatus[renamed] > 0)) && dirty="${COLOR_RED}dirty${COLOR_NONE}"
+
+        echo "${branch},${sync},${dirty},${repo}"
     }
 
-    git-for-each-repo display-unpushed-commits
+    git-for-each-repo display-status | column -t -s ','
 )
 
 # For each directory within the current directory, display whether the
 # directory contains unmerged branches locally
-function git-unmerged-branches() (
+function git-repos-unmerged-branches() (
     display-unmerged-branches() {
         unmergedBranches=$(git branch --no-merged master) 
         if [[ $unmergedBranches = *[![:space:]]* ]]; then
@@ -567,7 +591,7 @@ function git-unmerged-branches() (
 
 # For each directory within the current directory, display whether the
 # directory contains unmerged branches locally and remote
-function git-unmerged-branches-all() {
+function git-repos-unmerged-branches-all() {
     display-unmerged-branches-all() {
         unmergedBranches=$(git branch --no-merged master) 
         if [[ $unmergedBranches = *[![:space:]]* ]]; then
@@ -582,7 +606,7 @@ function git-unmerged-branches-all() {
 
 # For each directory within the current directory, generate a hacky lines of
 # code count 
-function git-hacky-line-count() {
+function git-repos-hacky-line-count() {
     display-hacky-line-count() {
         git ls-files > ../file-list.txt
         lineCount=$(cat < ../file-list.txt | grep -e "\(scala\|py\|java\|sql\|elm\|tf\|yaml\|pp\|yml\)" | xargs cat | wc -l)
@@ -590,10 +614,7 @@ function git-hacky-line-count() {
         totalCount=$((totalCount + lineCount))
     }
 
-    totalCount=0
-    git-for-each-repo display-hacky-line-count
-    echo
-    echo "Total $totalCount"
+    git-for-each-repo display-hacky-line-count | column -t -s ' ' | sort -b -k 2.1 -n --reverse
 }
 
 # Display remote branches which have been merged
@@ -680,6 +701,22 @@ function prompt-help() {
 
 # AWS
 
+function aws-datapipeline-requirements() {
+    while IFS=, read -rA x 
+    do
+        pipelineId=${x[@]:0:1}
+        pipelineName=${x[@]:1:1}
+        aws datapipeline get-pipeline-definition --pipeline-id $pipelineId \
+            | jq --raw-output ".values | [\"$pipelineName\", .my_master_instance_type, \"1\", .my_core_instance_type, .my_core_instance_count]| @csv"
+    done < <(aws datapipeline list-pipelines | jq --raw-output '.pipelineIdList[] | [.id, .name] | @csv' | sed 's/"//g') \
+        | sed 's/"//g' \
+        | column -t -s '','' 
+}
+
+function aws-service-quotas() {
+    aws service-quotas list-service-quotas --service-code ec2 | jq --raw-output '(.Quotas[] | ([.QuotaName, .Value])) | @csv' | column -t -s "," | sed 's/\"//g'
+}
+
 function plot-aws-s3-size() {
     if [[ $# -ne 3 ]] ; then
         echo 'Plot the size of the AWS S3 bucket and prefix'
@@ -724,10 +761,16 @@ function docker-rm-dangling-images() {
 
 if_linux && {
     source_if_exists "$HOME/.zshrc.linux"
+
+    # Link trash at ~/trash
+    if [ ! -d "$HOME/trash" ]; then ln -s "$HOME/.local/share/Trash" "$HOME/trash"; fi
 }
 
 if_darwin && {
     source_if_exists "$HOME/.zshrc.darwin"
+
+    # Link trash at ~/trash
+    if [ ! -d "$HOME/trash" ]; then ln -s "$HOME/.Trash" "$HOME/trash"; fi
 }
 
 source_if_exists "$HOME/.zshrc.$(uname -n)"
