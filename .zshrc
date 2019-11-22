@@ -141,8 +141,16 @@ function zgrep-logs() {
     zgrep -iR "${pattern}" . --context 10
 }
 
+# Run gunzip on all files under the current directory
+function gunzip-logs() {
+    while read -r line; do
+        echo "$line"
+        gunzip "$line"
+    done < <(find . -name "*.gz")
+}
+
 # Colorize output
-# ls | colorize green *.log
+# cat my-log.txt | colorize red ERROR
 function colorize() {
     if [[ $# -ne 2 ]] ; then
         echo 'Usage: colorize COLOR PATTERN'
