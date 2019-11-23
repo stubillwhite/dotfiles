@@ -86,8 +86,6 @@ alias shred='shred -vuz --iterations=10'
 
 alias vi='nvim'
 alias vim='nvim'
-alias emacs-new='/usr/bin/env HOME=/Users/white1/Dev/my-stuff/.emacs.d.new emacs'
-alias emacs-spacemacs='/usr/bin/env HOME=/Users/white1/Dev/my-stuff/.emacs.d.spacemacs emacs'
 
 # Specific tools                                                            {{{1
 # ==============================================================================

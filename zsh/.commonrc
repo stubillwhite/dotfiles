@@ -58,6 +58,7 @@ export PATH=$PATH:~/Dev/my-stuff/shell-utils
 export PATH=$PATH:/usr/bin
 export PATH=$PATH:~/.local/bin
 export PATH=$PATH:/usr/local/lib/ruby/gems/2.6.0/bin
+export PATH=/Applications/Emacs.app/Contents/MacOS/:$PATH
 
 # Leiningen
 
