@@ -96,6 +96,6 @@ function create-links-for-files() {
     done
 }
 
-mkdir -p $HOME/config/
+mkdir -p $HOME/.config/
 create-links-for-files $HOME         "$FILES[@]"
 create-links-for-files $HOME/.config "$CONFIG_DIRS[@]"
