@@ -10,7 +10,7 @@ setopt EXTENDED_GLOB
 # Constants                                                                 {{{1
 # ==============================================================================
 
-# Files to link to
+# Files to link to in $HOME
 FILES=(
     "boot/.boot"
     "chemacs/.emacs-profiles.el"
@@ -28,9 +28,14 @@ FILES=(
     "zsh/.zshrc.linux"
 )
 
+# Files to link to in $HOME/.config
+CONFIG_DIRS=(
+    "yamllint/yamllint"
+    "tmuxinator/tmuxinator"
+)
+
 RED='\033[0;31m'
 GREEN='\033[0;32m'
-YELLOW='\033[0;33m'
 NO_COLOR='\033[0m'
 CLEAR_LINE='\r\033[K'
 
@@ -56,10 +61,10 @@ function relative-path() {
 }
 
 function create-link() {
-    declare file=$1
+    declare targetDir=$1 file=$2
 
     local localPath=$(relative-path $file)
-    local homePath="$HOME/$(basename $localPath)"
+    local homePath="$targetDir/$(basename $localPath)"
 
     if [[ -L "$homePath" ]]; then
         local linkTarget=$(readlink -- "$homePath")
@@ -76,15 +81,21 @@ function create-link() {
     fi
 }
 
-for FILE in "${FILES[@]}"
-do
-    if [[ -e $FILE ]]; then
-        create-link $FILE
-    else
-        msg_error "Error:   $FILE not found"
-    fi
-done
+function create-links-for-files() {
+    local targetDir=$1 
+    shift
+    local files=($@)
 
-# TODO: Commonise code and add a config section
-mkdir -p ~/config/yamllint
-ln -s ./yamllint/config ~/config/yamllint/config
+    for file in "${files[@]}"
+    do
+        if [[ -e $file ]]; then
+            create-link $targetDir $file
+        else
+            msg_error "Error:   $file not found"
+        fi
+    done
+}
+
+mkdir -p $HOME/config/
+create-links-for-files $HOME         "$FILES[@]"
+create-links-for-files $HOME/.config "$CONFIG_DIRS[@]"
