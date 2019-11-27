@@ -41,6 +41,9 @@ unsetopt AUTO_PUSHD             # Don't push directory automatically
 # AWS tools
 source_if_exists "/usr/local/bin/aws_zsh_completer.sh"
 
+# Tmuxinator
+source_if_exists "$HOME/Dev/my-stuff/dotfiles/tmuxinator/tmuxinator.zsh"
+
 # General options                                                           {{{1
 # ==============================================================================
 
