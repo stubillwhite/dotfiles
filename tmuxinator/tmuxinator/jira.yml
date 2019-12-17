@@ -1,0 +1,8 @@
+# /Users/white1/.config/tmuxinator/jira.yml
+
+name: jira
+root: ~/Dev/my-stuff/jira-reporter/
+
+windows:
+  - console:
+      layout: main

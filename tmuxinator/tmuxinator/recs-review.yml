@@ -1,0 +1,16 @@
+# /Users/white1/.config/tmuxinator/recs-review.yml
+
+name: recs-review
+root: ~/Dev/code-review/recommenders/
+
+windows:
+  - recs-review:
+      layout: even-horizontal
+      panes:
+        - main:
+            - git-repos-fetch
+            - git-repos-status
+        - infra:
+            - pushd infra
+            - git-repos-fetch
+            - git-repos-status
