@@ -15,6 +15,7 @@ FILES=(
     "boot/.boot"
     "chemacs/.emacs-profiles.el"
     "git/.gitconfig"
+    "nethack/.nethackrc"
     "leiningen/.lein"
     "proselint/.proselintrc"
     "pylint/.pylintrc"
