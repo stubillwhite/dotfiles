@@ -13,6 +13,7 @@ setopt EXTENDED_GLOB
 # Files to link to in $HOME
 FILES=(
     "boot/.boot"
+    "ssh/.ssh"
     "chemacs/.emacs-profiles.el"
     "git/.gitconfig"
     "nethack/.nethackrc"
