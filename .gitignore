@@ -1,3 +1,4 @@
 /leiningen/.lein/self-installs
 /leiningen/.lein/repl-port
 /ssh/.ssh/environment
+/homebrew/Brewfile.lock.json
