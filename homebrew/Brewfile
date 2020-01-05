@@ -53,6 +53,7 @@ brew "wget"
 brew "yamllint"
 brew "zsh"
 
+cask "anki"
 cask "beyond-compare"
 cask "dropbox"
 cask "google-chrome"
