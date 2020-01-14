@@ -1,3 +1,7 @@
+################################################################################
+# Prerequisites
+################################################################################
+
 tap "adoptopenjdk/openjdk"
 tap "homebrew/bundle"
 tap "homebrew/cask"
@@ -5,54 +9,9 @@ tap "homebrew/core"
 
 cask "adoptopenjdk8"
 
-brew "aspell"
-brew "python"
-brew "awscli"
-brew "cabal-install"
-brew "cmake"
-brew "cataclysm"
-brew "elm"
-brew "entr"
-brew "exercism"
-brew "findutils"
-brew "git"
-brew "gnupg"
-brew "git-secret"
-brew "gnu-sed"
-brew "gource"
-brew "gradle"
-brew "graphviz"
-brew "haskell-stack"
-brew "htop"
-brew "imagemagick"
-brew "jq"
-brew "kubernetes-cli"
-brew "leiningen"
-brew "maven"
-brew "mill"
-brew "ncdu"
-brew "neovim"
-brew "nethack"
-brew "node"
-brew "openssh"
-brew "pandoc"
-brew "python@2"
-brew "ruby"
-brew "sbt"
-brew "scala"
-brew "shellcheck"
-brew "slackcat"
-brew "terraform", link: false
-brew "tfenv"
-brew "the_silver_searcher"
-brew "tig"
-brew "tmux"
-brew "tmuxinator"
-brew "tree"
-brew "watch"
-brew "wget"
-brew "yamllint"
-brew "zsh"
+################################################################################
+# Applications
+################################################################################
 
 cask "anki"
 cask "beyond-compare"
@@ -61,7 +20,94 @@ cask "google-chrome"
 cask "iterm2"
 cask "keybase"
 cask "licecap"
+
+################################################################################
+# Utilities
+################################################################################
+
+brew "cmake"
+brew "entr"
+brew "findutils"
+brew "gnu-sed"
+brew "graphviz"
+brew "htop"
+brew "imagemagick"
+brew "jq"
+brew "ncdu"
+brew "neovim"
+brew "openssh"
+brew "pandoc"
+brew "slackcat"
+brew "the_silver_searcher"
+brew "tig"
+brew "tmux"
+brew "tmuxinator"
+brew "tree"
+brew "watch"
+brew "wget"
+brew "zsh"
 cask "scroll-reverser"
+
+################################################################################
+# Development
+################################################################################
+
+# Version control
+brew "git"
+brew "git-secret"
+brew "gnupg"
+
+# Java
+cask "visualvm"
+brew "maven"
+brew "gradle"
+
+# Clojure
+brew "leiningen"
+
+# Scala
+brew "mill"
+brew "sbt"
+brew "scala"
+
+# Haskell
+brew "cabal-install"
+brew "haskell-stack"
+
+# Python
+brew "python"
+brew "python@2"
+
+# Elm
+brew "elm"
+
+# Ruby
+brew "ruby"
+
+# Node
+brew "node"
+
+# AWS
+brew "awscli"
+brew "terraform", link: false
+brew "tfenv"
+
+# SQL
 cask "sequel-pro"
 cask "sqlworkbenchj"
-cask "visualvm"
+
+# Containers
+brew "docker"
+brew "kubernetes-cli"
+
+# Linters
+brew "aspell"
+brew "shellcheck"
+brew "yamllint"
+
+################################################################################
+# Fun
+################################################################################
+
+brew "cataclysm"
+brew "nethack"
