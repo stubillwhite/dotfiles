@@ -1,7 +1,12 @@
 # vim:fdm=marker
 
-# General OS helper functions       {{{2
-# ======================================
+# Aliases                                                                   {{{1
+# ==============================================================================
+
+alias sqlworkbenchj='java -jar  /Applications/SQLWorkbenchJ.app/Contents/Java/sqlworkbench.jar &'
+
+# General OS helper functions                                               {{{1
+# ==============================================================================
 
 # Go to the directory where the finder window is currently looking
 function finder() {
@@ -14,8 +19,8 @@ function finder() {
     fi
 }
 
-# Git                               {{{2
-# ======================================
+# Git                                                                       {{{1
+# ==============================================================================
 
 # Show the current credentials
 function git-credentials-show() {
