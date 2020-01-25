@@ -8,9 +8,9 @@ windows:
       layout: even-horizontal
       panes:
         - main:
-            - git-repos-fetch
+            - git-repos-pull
             - git-repos-status
         - infra:
             - pushd infra
-            - git-repos-fetch
+            - git-repos-pull
             - git-repos-status
