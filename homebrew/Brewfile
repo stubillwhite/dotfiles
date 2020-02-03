@@ -18,7 +18,7 @@ cask "beyond-compare"
 cask "dropbox"
 cask "google-chrome"
 cask "iterm2"
-cask "keybase"
+#cask "keybase"
 cask "licecap"
 
 ################################################################################
@@ -33,10 +33,12 @@ brew "graphviz"
 brew "htop"
 brew "imagemagick"
 brew "jq"
+brew "lazydocker"
 brew "ncdu"
 brew "neovim"
 brew "openssh"
 brew "pandoc"
+brew "sampler"
 brew "slackcat"
 brew "the_silver_searcher"
 brew "tig"
@@ -98,6 +100,8 @@ cask "sqlworkbenchj"
 
 # Containers
 brew "docker"
+brew "docker-machine"
+brew "docker-compose"
 brew "kubernetes-cli"
 
 # Linters
