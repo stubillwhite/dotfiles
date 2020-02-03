@@ -4,7 +4,7 @@ name: recs
 root: ~/Dev/recommenders
 
 windows:
-  - recs-review:
+  - recs:
       layout: even-horizontal
       panes:
         - main:
