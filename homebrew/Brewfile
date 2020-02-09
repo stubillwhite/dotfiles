@@ -33,7 +33,6 @@ brew "graphviz"
 brew "htop"
 brew "imagemagick"
 brew "jq"
-brew "lazydocker"
 brew "ncdu"
 brew "neovim"
 brew "openssh"
@@ -97,12 +96,6 @@ brew "tfenv"
 # SQL
 cask "sequel-pro"
 cask "sqlworkbenchj"
-
-# Containers
-brew "docker"
-brew "docker-machine"
-brew "docker-compose"
-brew "kubernetes-cli"
 
 # Linters
 brew "aspell"

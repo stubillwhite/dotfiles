@@ -1,0 +1,10 @@
+################################################################################
+# Development
+################################################################################
+
+# Containers
+brew "docker"
+brew "docker-machine"
+brew "docker-compose"
+brew "lazydocker"
+brew "kubernetes-cli"
