@@ -31,22 +31,28 @@ brew "findutils"
 brew "gnu-sed"
 brew "graphviz"
 brew "htop"
-brew "imagemagick"
 brew "jq"
 brew "ncdu"
 brew "neovim"
 brew "openssh"
-brew "pandoc"
+brew "sampler"
 brew "slackcat"
 brew "the_silver_searcher"
 brew "tig"
-brew "tmux"
-brew "tmuxinator"
 brew "tree"
 brew "watch"
 brew "wget"
 brew "zsh"
 cask "scroll-reverser"
+
+# Document and image manipulation
+brew "imagemagick"
+brew "pandoc"
+
+# tmux
+brew "tmux"
+brew "tmuxinator"
+brew 'reattach-to-user-namespace'
 
 ################################################################################
 # Development
