@@ -14,6 +14,7 @@
 [core]
 	editor = nvim
 	autocrlf = input
+	hooksPath = ~/.githooks
 [diff]
 	tool = vimdiff
 [difftool "vimdiff"]

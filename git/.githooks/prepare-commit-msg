@@ -1,0 +1,25 @@
+#!/bin/bash
+
+msgFile=$1
+src=$2
+sha1=$3
+
+if [[ -n "$src" ]]; then
+    # Accept the standard Git message for the following actions:
+    #   message / template / merge / squash / commit
+    true
+
+else
+    shopt -s nocasematch
+
+    ref=$(git rev-parse --abbrev-ref HEAD)
+
+    if [[ $ref =~ ^.*((SDPR|NEW)-[0-9]+).* ]]; then
+        jiraTicket="${BASH_REMATCH[1]}"
+        originalContent=$(cat "$msgFile")
+        echo "${jiraTicket} " | tr '[:lower:]' '[:upper:]' > "$msgFile"
+        echo "$originalContent" >> "$msgFile"
+    fi
+
+    shopt -u nocasematch
+fi
