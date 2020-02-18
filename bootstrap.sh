@@ -16,6 +16,7 @@ FILES=(
     "ssh/.ssh"
     "chemacs/.emacs-profiles.el"
     "git/.gitconfig"
+    "git/.githooks"
     "nethack/.nethackrc"
     "leiningen/.lein"
     "proselint/.proselintrc"
