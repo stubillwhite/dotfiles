@@ -56,7 +56,6 @@ setopt menu_complete            # Tab autocompletes first option even if ambiguo
 if_darwin && {
     alias files-show='defaults write com.apple.finder AppleShowAllFiles YES; killall Finder /System/Library/CoreServices/Finder.app'
     alias files-hide='defaults write com.apple.finder AppleShowAllFiles NO; killall Finder /System/Library/CoreServices/Finder.app'
-    alias cookiecutter='~/Library/Python/3.7/bin/cookiecutter'
     alias gif-recorder='/Applications/LICEcap.app/Contents/MacOS/licecap'
     alias assume-role='source ~/Dev/my-stuff/utils/assume-role.sh'
 }
@@ -73,9 +72,8 @@ alias watch='watch -c'
 alias ssh-purge-key='ssh-keygen -R'
 alias ssh-rm-connections='rm /tmp/ssh-mux_*'
 alias strip-ansi="perl -pe 's/\x1b\[[0-9;]*[mG]//g'"
-alias python-env-init='python3 -m venv .'
-alias python-env-activate='source bin/activate'
-alias python-env-deactivate='deactivate'
+alias py-env-activate='source bin/activate'
+alias py-env-deactivate='deactivate'
 alias gource='gource -f --auto-skip-seconds 1 --seconds-per-day 0.05'
 alias fmt-xml='xmllint --format -'
 alias fmt-json='jq "."'
@@ -456,6 +454,16 @@ function jq-paths() {
     jq '[path(..)|map(if type=="number" then "[]" else tostring end)|join(".")|split(".[]")|join("[]")]|unique|map("."+.)|.[]'
 }
 
+# Python                            {{{2
+# ======================================
+
+# Initialise the Python virtual environment
+function py-env-init() {
+    python3 -m venv .
+    touch requirements.txt
+    py-env-activate
+}
+
 # Git                               {{{2
 # ======================================
 
@@ -522,7 +530,8 @@ function git-parse-repo-status() {
     local untracked=0
     local stashed=0
 
-    branch=$(git rev-parse --abbrev-ref HEAD)
+    branch=$(git rev-parse --abbrev-ref HEAD 2> /dev/null)
+    ([[ $? -ne 0 ]] || [[ -z "$branch" ]]) && branch="unknown"
 
     aheadAndBehind=$(git status --porcelain=v1 --branch | perl -ne '/\[(.+)\]/ && print $1' )
     ahead=$(echo $aheadAndBehind | perl -ne '/ahead (\d+)/ && print $1' )
@@ -716,7 +725,39 @@ function aws-datapipeline-requirements() {
         pipelineId=${x[@]:0:1}
         pipelineName=${x[@]:1:1}
         aws datapipeline get-pipeline-definition --pipeline-id $pipelineId \
-            | jq --raw-output ".values | [\"$pipelineName\", .my_master_instance_type, \"1\", .my_core_instance_type, .my_core_instance_count]| @csv"
+            | jq --raw-output ".values | [\"$pipelineName\", .my_master_instance_type, \"1\", .my_core_instance_type, .my_core_instance_count, .my_env_subnet_private]| @csv"
+    done < <(aws datapipeline list-pipelines | jq --raw-output '.pipelineIdList[] | [.id, .name] | @csv' | sed 's/"//g') \
+        | sed 's/"//g' \
+        | column -t -s '','' 
+}
+
+function aws-datapipeline-amis() {
+    while IFS=, read -rA x 
+    do
+        pipelineId=${x[@]:0:1}
+        pipelineName=${x[@]:1:1}
+        aws datapipeline get-pipeline-definition --pipeline-id $pipelineId \
+            | jq --raw-output "                                            \
+                    .objects[]                                             \
+                    | select(has(\"imageId\"))                             \
+                    | [\"$pipelineName\", .[\"imageId\"]]                  \
+                    | @csv"
+    done < <(aws datapipeline list-pipelines | jq --raw-output '.pipelineIdList[] | [.id, .name] | @csv' | sed 's/"//g') \
+        | sed 's/"//g' \
+        | column -t -s '','' 
+}
+
+function aws-datapipeline-amis() {
+    while IFS=, read -rA x 
+    do
+        pipelineId=${x[@]:0:1}
+        pipelineName=${x[@]:1:1}
+        aws datapipeline get-pipeline-definition --pipeline-id $pipelineId      \
+            | jq --raw-output "                                                 \
+                    [\"$pipelineName\",                                         \
+                     (.objects[] | select(has(\"imageId\")) | .[\"imageId\"]),  \
+                     (.values[\"my_ec2_machine_ami_id\"])]                      \
+                    | @csv"
     done < <(aws datapipeline list-pipelines | jq --raw-output '.pipelineIdList[] | [.id, .name] | @csv' | sed 's/"//g') \
         | sed 's/"//g' \
         | column -t -s '','' 
@@ -742,6 +783,17 @@ function plot-aws-s3-size() {
 
 function aws-export-current-credentials() {
     echo "export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} && export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}"
+}
+
+# Open the specified S3 bucket
+function aws-s3-open() {
+    local s3Path=$1
+    echo "Opening '$s3Path'"
+    echo "$s3Path" \
+        | sed -e 's/^.*s3:\/\/\(.*\)/\1/' \
+        | sed -e 's/^/https:\/\/s3.console.aws.amazon.com\/s3\/buckets\//' \
+        | sed -e 's/$/?region=us-east-1/' \
+        | xargs "$OPEN_CMD"
 }
 
 # Docker
