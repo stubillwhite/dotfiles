@@ -26,6 +26,7 @@ cask "licecap"
 ################################################################################
 
 brew "cmake"
+brew "coreutils"
 brew "entr"
 brew "findutils"
 brew "gnu-sed"
@@ -96,7 +97,7 @@ brew "node"
 # AWS
 brew "awscli"
 brew "terraform", link: false
-brew "tfenv"
+brew "tfenv", link: true
 
 # SQL
 cask "sequel-pro"

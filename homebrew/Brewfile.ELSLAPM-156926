@@ -15,6 +15,9 @@ brew "sampler"
 # Development
 ################################################################################
 
+# Conda
+cask "miniconda"
+
 # Containers
 brew "docker"
 brew "docker-machine"

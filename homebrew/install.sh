@@ -5,7 +5,7 @@ function execute-command() {
 
     if [[ -s "${file}" ]]; then
         echo "Checking ${file}"
-        brew bundle --file="${file}" install --verbose
+        brew bundle --file="${file}" install --verbose --no-upgrade
         echo 
     fi
 }
