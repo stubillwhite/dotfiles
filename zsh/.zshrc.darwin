@@ -29,13 +29,17 @@ function git-credentials-show() {
 
 # Switch the current credentials
 function git-credentials-switch() {
-    read "?  Username: " GITHUB_USER
-    read -s "?  Token: " GITHUB_TOKEN
-    echo
+    local user=$1
+    local token=$(cat ~/.git-cli-tokens | grep "${user}" | cut -f 2)
 
-    echo "Erasing current credentials"
-    printf "protocol=https\nhost=github.com\n" | git credential-osxkeychain erase
+    if [ "${token}" != "" ]; then
+        echo "Erasing current credentials"
+        printf "protocol=https\nhost=github.com\n" | git credential-osxkeychain erase
 
-    echo "Setting new credentials"
-    printf "protocol=https\nhost=github.com\nusername=%s\npassword=%s\n" "$GITHUB_USER" "$GITHUB_TOKEN" | git credential-osxkeychain store
+        echo "Setting new credentials to those for user ${user}"
+        printf "protocol=https\nhost=github.com\nusername=%s\npassword=%s\n" "${user}" "${token}" | git credential-osxkeychain store
+    else
+        echo "User '${user}' not found"
+    fi
 }
+compdef '_alternative "arguments:custom arg:(stuw-els stubillwhite)"' git-credentials-switch
