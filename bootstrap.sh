@@ -21,6 +21,7 @@ FILES=(
     "leiningen/.lein"
     "proselint/.proselintrc"
     "pylint/.pylintrc"
+    "tig/.tigrc"
     "tmux/.tmux.conf"
     "zsh/.bashrc"
     "zsh/.commonrc"
