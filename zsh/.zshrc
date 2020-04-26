@@ -491,6 +491,7 @@ function git-repos-pull() (
     }
 
     git-for-each-repo pull-repo 
+    git-repos-status
 )
 
 # For each directory within the current directory, fetch the repo
@@ -504,6 +505,7 @@ function git-repos-fetch() (
     }
 
     git-for-each-repo fetch-repo 
+    git-repos-status
 )
 
 # For each directory within the current directory, display the status line for the repo
