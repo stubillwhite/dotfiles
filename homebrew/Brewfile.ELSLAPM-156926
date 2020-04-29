@@ -10,6 +10,7 @@ cask "hook"
 
 brew "borkdude/brew/babashka"
 brew "sampler"
+brew "eddieantonio/eddieantonio/imgcat"
 
 ################################################################################
 # Development
@@ -24,6 +25,8 @@ brew "docker-machine"
 brew "docker-compose"
 brew "lazydocker"
 brew "kubernetes-cli"
+brew "derailed/k9s/k9s"
+brew "aws-iam-authenticator"
 
 # Android
 cask "android-platform-tools"
