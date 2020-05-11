@@ -31,3 +31,6 @@ brew "aws-iam-authenticator"
 # Android
 cask "android-platform-tools"
 brew "scrcpy"
+
+# Kafka
+brew "kafkacat"
