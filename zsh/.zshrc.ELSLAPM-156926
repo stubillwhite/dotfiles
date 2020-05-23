@@ -27,9 +27,13 @@ alias emacs='/Applications/Emacs.app/Contents/MacOS/Emacs'
 alias sqlworkbenchj='java -jar /Applications/SQLWorkbenchJ.app/Contents/Java/sqlworkbench.jar &'
 
 function recs-get-k8s() {
-    declare recsEnv=$1
-    aws s3 cp s3://com-elsevier-recs-${recsEnv}-certs/eks/recs-eks-main-${recsEnv}.conf ~/.kube/
-    export KUBECONFIG=~/.kube/recs-eks-main-${recsEnv}.conf
+    if [[ $# -ne 1 ]] ; then
+        echo "Usage: recs-get-k8s (dev|live)"
+    else
+        declare recsEnv=$1
+        aws s3 cp s3://com-elsevier-recs-${recsEnv}-certs/eks/recs-eks-main-${recsEnv}.conf ~/.kube/
+        export KUBECONFIG=~/.kube/recs-eks-main-${recsEnv}.conf
+    fi
 }
 compdef '_alternative "arguments:custom arg:(dev live)"' recs-get-k8s
 

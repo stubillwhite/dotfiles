@@ -148,6 +148,20 @@ function gunzip-logs() {
     done < <(find . -name "*.gz")
 }
 
+# Prompt for confirmation
+# confirm "Delete [y/n]?" && rm -rf *
+function confirm() {
+    read response\?"${1:-Are you sure?} [y/N] "
+    case "$response" in
+        [Yy][Ee][Ss]|[Yy]) 
+            true
+            ;;
+        *)
+            false
+            ;;
+    esac
+}
+
 # Colorize output
 # cat my-log.txt | colorize red ERROR
 function colorize() {
@@ -806,17 +820,21 @@ function docker-rm-instances() {
 }
 
 function docker-rm-images() {
-    docker-rm-instances
-    docker images -q | xargs docker rmi
-    docker images | grep "<none>" | awk '{print $3}' | xargs docker rmi
+    if confirm; then
+        docker-rm-instances
+        docker images -q | xargs docker rmi
+        docker images | grep "<none>" | awk '{print $3}' | xargs docker rmi
+    fi
 }
 
 function docker-rm-dangling-images() {
-    docker ps -a -q | xargs docker stop
-    docker ps -a -q | xargs docker rm -v
-    docker images -q | xargs docker rmi
-    docker images | grep "<none>" | awk '{print $3}' | xargs docker rmi
-    docker volume rm $(docker volume ls -qf dangling=true)
+    if confirm; then
+        docker ps -a -q | xargs docker stop
+        docker ps -a -q | xargs docker rm -v
+        docker images -q | xargs docker rmi
+        docker images | grep "<none>" | awk '{print $3}' | xargs docker rmi
+        docker volume rm $(docker volume ls -qf dangling=true)
+    fi
 }
 
 # Machine-specific configuration                                            {{{1
@@ -837,3 +855,12 @@ if_darwin && {
 }
 
 source_if_exists "$HOME/.zshrc.$(uname -n)"
+
+# TODO: Remove me
+
+migrate(){
+    SEARCH='git@gitlab.et-scm.com:recs\/'
+    REPLACE='https:\/\/github.com\/elsevier-research\/kd-'
+    GITHUBURL=$(git remote get-url origin | grep "$SEARCH" | sed "s/$SEARCH/$REPLACE/g")
+    [ -z "$GITHUBURL" ] || git remote set-url origin "$GITHUBURL"
+}
