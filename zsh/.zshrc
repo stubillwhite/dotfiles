@@ -827,16 +827,6 @@ function docker-rm-images() {
     fi
 }
 
-function docker-rm-dangling-images() {
-    if confirm; then
-        docker ps -a -q | xargs docker stop
-        docker ps -a -q | xargs docker rm -v
-        docker images -q | xargs docker rmi
-        docker images | grep "<none>" | awk '{print $3}' | xargs docker rmi
-        docker volume rm $(docker volume ls -qf dangling=true)
-    fi
-}
-
 # Machine-specific configuration                                            {{{1
 # ==============================================================================
 
