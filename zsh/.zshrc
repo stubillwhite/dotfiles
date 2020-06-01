@@ -612,10 +612,11 @@ function git-repos-status() (
 # directory contains unmerged branches locally
 function git-repos-unmerged-branches() (
     display-unmerged-branches() {
-        unmergedBranches=$(git branch --no-merged master) 
+        local cmd="git branch --no-merged master"
+        unmergedBranches=$(eval "$cmd") 
         if [[ $unmergedBranches = *[![:space:]]* ]]; then
             echo "$fnam"
-            git branch --no-merged master
+            eval "$cmd"
             echo
         fi
     }
@@ -627,10 +628,11 @@ function git-repos-unmerged-branches() (
 # directory contains unmerged branches locally and remote
 function git-repos-unmerged-branches-all() {
     display-unmerged-branches-all() {
-        unmergedBranches=$(git branch --no-merged master) 
+        local cmd="git branch --all --no-merged master"
+        unmergedBranches=$(eval "$cmd") 
         if [[ $unmergedBranches = *[![:space:]]* ]]; then
             echo "$fnam"
-            git branch --all --no-merged master
+            eval "$cmd"
             echo
         fi
     }
