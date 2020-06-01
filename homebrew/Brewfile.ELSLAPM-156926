@@ -4,6 +4,9 @@
 
 cask "hook"
 
+# OneDrive integration
+cask "onedrive"
+
 ################################################################################
 # Utilities
 ################################################################################
@@ -34,3 +37,7 @@ brew "scrcpy"
 
 # Kafka
 brew "kafkacat"
+
+# SBT dependency analysis
+brew "coursier/formulas/coursier"
+
