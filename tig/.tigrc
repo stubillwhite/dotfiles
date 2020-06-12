@@ -1,1 +1,4 @@
-bind generic D >git difftool --tool=vimdiff --no-prompt --trust-exit-code %(commit)^!
+bind main D >git difftool --no-prompt --trust-exit-code %(commit)^ %(commit)
+bind diff D >git difftool --no-prompt --trust-exit-code %(commit) %(file)
+# http://jonas.nitro.dk/tig/manual.html#commit-id
+
