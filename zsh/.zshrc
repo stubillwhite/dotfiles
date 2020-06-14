@@ -847,12 +847,3 @@ if_darwin && {
 }
 
 source_if_exists "$HOME/.zshrc.$(uname -n)"
-
-# TODO: Remove me
-
-migrate(){
-    SEARCH='git@gitlab.et-scm.com:recs\/'
-    REPLACE='https:\/\/github.com\/elsevier-research\/kd-'
-    GITHUBURL=$(git remote get-url origin | grep "$SEARCH" | sed "s/$SEARCH/$REPLACE/g")
-    [ -z "$GITHUBURL" ] || git remote set-url origin "$GITHUBURL"
-}
