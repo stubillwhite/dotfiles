@@ -15,7 +15,6 @@ FILES=(
     "boot/.boot"
     "ssh/.ssh"
     "chemacs/.emacs-profiles.el"
-    "doom/.doom.d"
     "git/.gitconfig"
     "git/.githooks"
     "nethack/.nethackrc"

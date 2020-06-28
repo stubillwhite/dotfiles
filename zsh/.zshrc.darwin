@@ -4,6 +4,7 @@
 # ==============================================================================
 
 alias sqlworkbenchj='java -jar  /Applications/SQLWorkbenchJ.app/Contents/Java/sqlworkbench.jar &'
+alias doom='emacs --with-profile doom'
 
 # General OS helper functions                                               {{{1
 # ==============================================================================
