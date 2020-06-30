@@ -41,3 +41,8 @@ brew "kafkacat"
 # SBT dependency analysis
 brew "coursier/formulas/coursier"
 
+# SonarScanner for SonarQube
+brew "sonar-scanner"
+
+# Git UI
+brew "gitui"
