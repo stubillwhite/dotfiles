@@ -9,8 +9,6 @@ windows:
       panes:
         - main:
             - git-repos-fetch
-            - git-repos-status
         - infra:
             - pushd infra
             - git-repos-fetch
-            - git-repos-status
