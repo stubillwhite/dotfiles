@@ -667,7 +667,7 @@ function git-open() {
     URL=$(git config remote.origin.url)
     echo "Opening '$URL'"
 
-    if [[ $URL =~ ^git@gitlab ]]; then
+    if [[ $URL =~ ^git@ ]]; then
         [[ -n "${filePath}" ]] && filePath="tree/master/${filePath}"
         echo "$URL" \
             | perl -e 'while (<STDIN>) { /git@(.*):(.*).git/ && print("https://$1/$2/@ARGV[0]") }' "$filePath" \
