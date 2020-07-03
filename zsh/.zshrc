@@ -658,8 +658,39 @@ function git-merged-branches() {
     git branch -r | xargs -t -n 1 git branch -r --contains
 }
 
-# Open the git repo in the browser
+# Open the Git repo in the browser
+#   Open repo: git-open 
+#   Open file: git-open foo/bar/baz.txt
 function git-open() {
+    local filePath=$1
+
+    URL=$(git config remote.origin.url)
+    echo "Opening '$URL'"
+
+    if [[ $URL =~ ^git@gitlab ]]; then
+        [[ -n "${filePath}" ]] && filePath="tree/master/${filePath}"
+        echo "$URL" \
+            | perl -e 'while (<STDIN>) { /git@(.*):(.*).git/ && print("https://$1/$2/@ARGV[0]") }' "$filePath" \
+            | xargs "${OPEN_CMD}"
+
+    elif [[ $URL =~ ^https://bitbucket.org ]]; then
+        echo "$URL" \
+            | perl -e 'while (<STDIN>) { /(.*).git/ && print("$1/src/master/@ARGV[0]") }' "$filePath" \
+            | xargs "${OPEN_CMD}"
+
+    elif [[ $URL =~ ^https://github.com ]]; then
+        [[ -n "${filePath}" ]] && filePath="tree/master/${filePath}"
+        echo "$URL" \
+            | perl -e 'while (<STDIN>) { /(.*).git/ && print("$1/@ARGV[0]") }' "$filePath" \
+            | xargs "${OPEN_CMD}"
+
+    else
+        echo "Failed to open due to unrecognised URL '$URL'"
+    fi
+}
+
+# Open the git repo in the browser
+function git-open-old() {
     URL=$(git config remote.origin.url)
     echo "Opening '$URL'"
     if [[ $URL =~ "git@" ]]; then
@@ -687,7 +718,7 @@ function git-archive-branch() {
 
 # Configure personal email
 function git-config-personal-email() {
-    git config user.email "stubillwhite@gmail.com"
+    git config user.email "1859323+stubillwhite@users.noreply.github.com"
 }
 
 # Configure work email
