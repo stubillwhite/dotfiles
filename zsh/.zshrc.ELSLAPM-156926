@@ -1,3 +1,8 @@
+# vim:fdm=marker
+
+# AWS authentication                                                        {{{1
+# ==============================================================================
+
 alias "aws-which"="env | grep AWS | sort"
 alias "aws-clear-variables"="for i in \$(aws-which | cut -d= -f1,1 | paste -); do unset \$i; done"
 alias aws-bos-utility="aws-developer-role 296214586505 ADFS-Developer aws-rap-bosutility"
@@ -23,8 +28,16 @@ function aws-developer-role() {
     aws-switch-role "arn:aws:iam::${accountId}:role/${role}" "${profile}"
 }
 
+# Machine specific aliases                                                  {{{1
+# ==============================================================================
+
 alias emacs='/Applications/Emacs.app/Contents/MacOS/Emacs'
 alias sqlworkbenchj='java -jar /Applications/SQLWorkbenchJ.app/Contents/Java/sqlworkbench.jar &'
+
+# Kubernetes                                                                {{{1
+# ==============================================================================
+
+source <(kubectl completion zsh)
 
 function recs-get-k8s() {
     if [[ $# -ne 1 ]] ; then
