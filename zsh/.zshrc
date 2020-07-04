@@ -662,10 +662,13 @@ function git-merged-branches() {
 #   Open repo: git-open 
 #   Open file: git-open foo/bar/baz.txt
 function git-open() {
-    local fileName=$1
+    local filename=$1
 
     local pathInRepo
-    [[ -n "${fileName}" ]] && pathInRepo=$(git ls-tree --full-name --name-only HEAD "${fileName}")
+    if [[ -n "${filename}" ]]; then
+        pushd $(dirname "${filename}")
+        pathInRepo=$(git ls-tree --full-name --name-only HEAD $(basename "${filename}"))
+    fi
 
     URL=$(git config remote.origin.url)
     echo "Opening '$URL'"
@@ -690,6 +693,8 @@ function git-open() {
     else
         echo "Failed to open due to unrecognised URL '$URL'"
     fi
+
+    [[ -n "${filename}" ]] && popd
 }
 
 # Open the git repo in the browser
