@@ -662,26 +662,29 @@ function git-merged-branches() {
 #   Open repo: git-open 
 #   Open file: git-open foo/bar/baz.txt
 function git-open() {
-    local filePath=$1
+    local fileName=$1
+
+    local pathInRepo
+    [[ -n "${fileName}" ]] && pathInRepo=$(git ls-tree --full-name --name-only HEAD "${fileName}")
 
     URL=$(git config remote.origin.url)
     echo "Opening '$URL'"
 
     if [[ $URL =~ ^git@ ]]; then
-        [[ -n "${filePath}" ]] && filePath="tree/master/${filePath}"
+        [[ -n "${pathInRepo}" ]] && pathInRepo="tree/master/${pathInRepo}"
         echo "$URL" \
-            | perl -e 'while (<STDIN>) { /git@(.*):(.*).git/ && print("https://$1/$2/@ARGV[0]") }' "$filePath" \
+            | perl -e 'while (<STDIN>) { /git@(.*):(.*).git/ && print("https://$1/$2/@ARGV[0]") }' "$pathInRepo" \
             | xargs "${OPEN_CMD}"
 
     elif [[ $URL =~ ^https://bitbucket.org ]]; then
         echo "$URL" \
-            | perl -e 'while (<STDIN>) { /(.*).git/ && print("$1/src/master/@ARGV[0]") }' "$filePath" \
+            | perl -e 'while (<STDIN>) { /(.*).git/ && print("$1/src/master/@ARGV[0]") }' "$pathInRepo" \
             | xargs "${OPEN_CMD}"
 
     elif [[ $URL =~ ^https://github.com ]]; then
-        [[ -n "${filePath}" ]] && filePath="tree/master/${filePath}"
+        [[ -n "${pathInRepo}" ]] && pathInRepo="tree/master/${pathInRepo}"
         echo "$URL" \
-            | perl -e 'while (<STDIN>) { /(.*).git/ && print("$1/@ARGV[0]") }' "$filePath" \
+            | perl -e 'while (<STDIN>) { /(.*).git/ && print("$1/@ARGV[0]") }' "$pathInRepo" \
             | xargs "${OPEN_CMD}"
 
     else
