@@ -105,6 +105,9 @@ brew "tfenv", link: true
 cask "sequel-pro"
 cask "sqlworkbenchj"
 
+# Shell
+brew "bats-core"
+
 # Linters
 brew "aspell"
 brew "shellcheck"

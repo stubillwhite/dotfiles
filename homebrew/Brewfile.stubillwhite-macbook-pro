@@ -10,3 +10,4 @@ cask "homebrew/cask-drivers/garmin-express"
 ################################################################################
 
 cask "steam"
+cask "parsec"
