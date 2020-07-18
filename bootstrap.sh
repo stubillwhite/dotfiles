@@ -101,6 +101,27 @@ function create-links-for-files() {
     done
 }
 
-mkdir -p $HOME/.config/
+function create-links-for-files-at-path() {
+    local targetDir=$1 
+    local sourceDir=$2 
+
+    for file in $(find "${sourceDir}" -type f)
+    do
+        if [[ -e $file ]]; then
+            create-link $targetDir $file
+        else
+            msg_error "Error:   $file not found"
+        fi
+    done
+}
+
+# Installation                                                              {{{1
+# ==============================================================================
+
 create-links-for-files $HOME         "$FILES[@]"
+
+mkdir -p $HOME/.config/
 create-links-for-files $HOME/.config "$CONFIG_DIRS[@]"
+
+create-links-for-files-at-path ~/Dev/my-stuff     git/my-stuff
+create-links-for-files-at-path ~/Dev/recommenders git/recommenders

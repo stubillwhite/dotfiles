@@ -1,0 +1,6 @@
+[user]
+    name = Stu W
+    email = stubillwhite@gmail.com
+
+[include]
+    path = .gitconfig.local

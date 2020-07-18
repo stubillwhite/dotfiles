@@ -1,8 +1,10 @@
 [user]
 	name = Stu W
 	useConfigOnly = true
+
 [push]
     default = simple
+
 [alias]
     logv = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
     permission-reset = !git diff -p -R --no-color | grep -E \"^(diff|(old|new) mode)\" --color=never | git apply
@@ -11,20 +13,33 @@
     push-branch = !git push --set-upstream origin $(git symbolic-ref --short HEAD)
     accept-ours = "!f() { [ -z \"$@\" ] && set - '.'; git checkout --ours -- \"$@\"; git add -u -- \"$@\"; }; f"
     accept-theirs = "!f() { [ -z \"$@\" ] && set - '.'; git checkout --theirs -- \"$@\"; git add -u -- \"$@\"; }; f"
+
 [core]
 	editor = nvim
 	autocrlf = input
 	hooksPath = ~/.githooks
+
 [diff]
 	tool = vimdiff
+
 [difftool "vimdiff"]
     cmd = nvim -d $BASE $LOCAL
+
 [merge]
     tool = vimmmerge
+
 [mergetool]
     prompt = true
+
 [mergetool "vimmmerge"]
     cmd = nvim -d $BASE $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'
+
 [credential]
     ;; helper = osxkeychain
     ;; helper = /usr/share/doc/git/contrib/credential/libsecret/git-credential-libsecret
+
+[includeIf "gitdir:~/Dev/my-stuff/"]
+ path = ~/Dev/my-stuff/.gitconfig
+
+[includeIf "gitdir:~/Dev/recommenders/"]
+ path = ~/Dev/recommenders/.gitconfig

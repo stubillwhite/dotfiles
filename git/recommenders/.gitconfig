@@ -1,0 +1,6 @@
+[user]
+    name = Stu W
+    email = s.white.1@elsevier.com
+
+[include]
+    path = .gitconfig.local
