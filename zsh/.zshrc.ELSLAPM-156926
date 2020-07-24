@@ -1,5 +1,9 @@
 # vim:fdm=marker
 
+# Newsflo                                                                   {{{1
+# ==============================================================================
+alias tunnel-live-aurora-WRITEABLE='tunnel-open 4306 aurora-newsflo-live.cluster-cyva1uzg7p7h.us-east-1.rds.amazonaws.com 3306 s.white@bastion.live.newsflo'
+
 # AWS authentication                                                        {{{1
 # ==============================================================================
 
