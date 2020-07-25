@@ -1,5 +1,4 @@
 [user]
-	name = Stu W
 	useConfigOnly = true
 
 [push]
@@ -39,7 +38,7 @@
     ;; helper = /usr/share/doc/git/contrib/credential/libsecret/git-credential-libsecret
 
 [includeIf "gitdir:~/Dev/my-stuff/"]
- path = ~/Dev/my-stuff/.gitconfig
+    path = ~/Dev/my-stuff/.gitconfig
 
 [includeIf "gitdir:~/Dev/recommenders/"]
- path = ~/Dev/recommenders/.gitconfig
+    path = ~/Dev/recommenders/.gitconfig
