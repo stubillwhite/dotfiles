@@ -30,6 +30,7 @@ brew "lazydocker"
 brew "kubernetes-cli"
 brew "derailed/k9s/k9s"
 brew "aws-iam-authenticator"
+cask "lens"
 
 # Android
 cask "android-platform-tools"
@@ -37,6 +38,7 @@ brew "scrcpy"
 
 # Kafka
 brew "kafkacat"
+brew "adevinta/homebrew-zoe/zoe"
 
 # SBT dependency analysis
 brew "coursier/formulas/coursier"
