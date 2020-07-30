@@ -44,6 +44,9 @@ source_if_exists "/usr/local/bin/aws_zsh_completer.sh"
 # Tmuxinator
 source_if_exists "$HOME/Dev/my-stuff/dotfiles/tmuxinator/tmuxinator.zsh"
 
+# GNU parallel
+source_if_exists "$(which env_parallel.zsh)"
+
 # General options                                                           {{{1
 # ==============================================================================
 
@@ -496,6 +499,20 @@ function git-for-each-repo() {
     done
 }
 
+function git-for-each-repo-parallel() {
+    local dirs=$(find . -type d -depth 1)
+
+    echo "$dirs" \
+        | env_parallel --env "$1" -j20 \
+            "
+            pushd {} > /dev/null;                               \
+            if git rev-parse --git-dir > /dev/null 2>&1; then   \
+                $@;                                             \
+            fi;                                                 \
+            popd > /dev/null;                                   \
+            "
+}
+
 # For each directory within the current directory, pull the repo
 function git-repos-pull() (
     pull-repo() {
@@ -504,7 +521,7 @@ function git-repos-pull() (
         echo
     }
 
-    git-for-each-repo pull-repo 
+    git-for-each-repo-parallel pull-repo 
     git-repos-status
 )
 
@@ -518,20 +535,8 @@ function git-repos-fetch() (
         echo
     }
 
-    git-for-each-repo fetch-repo 
+    git-for-each-repo-parallel fetch-repo 
     git-repos-status
-)
-
-# For each directory within the current directory, display the status line for the repo
-# Requires Prezto prompt to work
-function git-repos-status-detailed() (
-    display-status() {
-        git-info
-        print -P "$(basename $PWD) ${git_info[status]}"
-    }
-
-    prompt-help
-    git-for-each-repo display-status | column -t -s ' '
 )
 
 # Parse Git status into a Zsh associative array
@@ -675,19 +680,23 @@ function git-open() {
 
     if [[ $URL =~ ^git@ ]]; then
         [[ -n "${pathInRepo}" ]] && pathInRepo="tree/master/${pathInRepo}"
+
+        local hostAlias=$(echo "$URL" | sed -E "s|git@(.*):(.*).git|\1|")
+        local hostname=$(ssh -G "${hostAlias}" | awk '$1 == "hostname" { print $2 }')
+
         echo "$URL" \
-            | perl -e 'while (<STDIN>) { /git@(.*):(.*).git/ && print("https://$1/$2/@ARGV[0]") }' "$pathInRepo" \
+            | sed -E "s|git@(.*):(.*).git|https://${hostname}/\2/${pathInRepo}|" \
             | xargs "${OPEN_CMD}"
 
     elif [[ $URL =~ ^https://bitbucket.org ]]; then
         echo "$URL" \
-            | perl -e 'while (<STDIN>) { /(.*).git/ && print("$1/src/master/@ARGV[0]") }' "$pathInRepo" \
+            | sed -E "s|(.*).git|\1/src/master/${pathInRepo}|" \
             | xargs "${OPEN_CMD}"
 
     elif [[ $URL =~ ^https://github.com ]]; then
         [[ -n "${pathInRepo}" ]] && pathInRepo="tree/master/${pathInRepo}"
         echo "$URL" \
-            | perl -e 'while (<STDIN>) { /(.*).git/ && print("$1/@ARGV[0]") }' "$pathInRepo" \
+            | sed -E "s|(.*).git|\1/${pathInRepo}|" \
             | xargs "${OPEN_CMD}"
 
     else
@@ -726,12 +735,12 @@ function git-archive-branch() {
 
 # Configure personal email
 function git-config-personal-email() {
-    git config user.email "1859323+stubillwhite@users.noreply.github.com"
+    git config --replace-all user.email "stubillwhite@gmail.com"
 }
 
 # Configure work email
 function git-config-work-email() {
-    git config user.email "s.white.1@elsevier.com"
+    git config --replace-all user.email "s.white.1@elsevier.com"
 }
 
 # Git stats for the current repo

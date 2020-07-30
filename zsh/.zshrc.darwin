@@ -28,6 +28,14 @@ function git-credentials-show() {
     printf "protocol=https\nhost=github.com\n" | git credential-osxkeychain get | grep username
 }
 
+# Erase the current credentials
+function git-credentials-erase() {
+    echo "Erasing current credentials"
+    printf "protocol=https\nhost=github.com\n" | git credential-osxkeychain erase
+    printf "protocol=https\nhost=github-personal\n" | git credential-osxkeychain erase
+    printf "protocol=https\nhost=github-work\n" | git credential-osxkeychain erase
+}
+
 # Switch the current credentials
 function git-credentials-switch() {
     local user=$1
@@ -37,9 +45,7 @@ function git-credentials-switch() {
         echo "Please specify a user"
     else 
         if [[ "${token}" != "" ]]; then
-            echo "Erasing current credentials"
-            printf "protocol=https\nhost=github.com\n" | git credential-osxkeychain erase
-
+            git-credentials-erase
             echo "Setting new credentials to those for user ${user}"
             printf "protocol=https\nhost=github.com\nusername=%s\npassword=%s\n" "${user}" "${token}" | git credential-osxkeychain store
         else
