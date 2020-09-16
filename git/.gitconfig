@@ -42,3 +42,10 @@
 
 [includeIf "gitdir:~/Dev/recommenders/"]
     path = ~/Dev/recommenders/.gitconfig
+
+[includeIf "gitdir:~/Dev/code-review/recommenders/"]
+    path = ~/Dev/recommenders/.gitconfig
+
+[includeIf "gitdir:~/Dev/graduates/"]
+    path = ~/Dev/recommenders/.gitconfig
+
