@@ -2,49 +2,50 @@
 # Applications
 ################################################################################
 
-cask "hook"
+cask "hook"                                     # Hook
 
 # OneDrive integration
-cask "onedrive"
+cask "onedrive"                                 # Cloud storage client
 
 ################################################################################
 # Utilities
 ################################################################################
 
-brew "borkdude/brew/babashka"
-brew "sampler"
-brew "eddieantonio/eddieantonio/imgcat"
+brew "borkdude/brew/babashka"                   # A Clojure babushka for the grey areas of Bash.
+brew "sampler"                                  # Tool for shell commands execution, visualization and alerting
+brew "eddieantonio/eddieantonio/imgcat"         # It's like cat(1), but for images.
+brew "saulpw/vd/visidata"                       # Terminal utility for exploring and arranging tabular data
 
 ################################################################################
 # Development
 ################################################################################
 
 # Conda
-cask "miniconda"
+cask "miniconda"                                # Lighter version of Conda
 
 # Containers
-brew "docker"
-brew "docker-machine"
-brew "docker-compose"
-brew "lazydocker"
-brew "kubernetes-cli"
-brew "derailed/k9s/k9s"
-brew "aws-iam-authenticator"
-cask "lens"
+brew "aws-iam-authenticator"                    # Use AWS IAM credentials to authenticate to Kubernetes
+brew "derailed/k9s/k9s"                         # Kubernetes CLI To Manage Your Clusters In Style!
+brew "docker"                                   # Pack, ship and run any application as a lightweight container
+brew "docker-compose"                           # Isolated development environments using Docker
+brew "docker-machine"                           # Create Docker hosts locally and on cloud providers
+brew "kubernetes-cli"                           # Kubernetes command-line interface
+brew "lazydocker"                               # The lazier way to manage everything docker
+cask "lens"                                     # Kubernetes IDE
 
 # Android
 cask "android-platform-tools"
-brew "scrcpy"
+brew "scrcpy"                                   # Display and control your Android device
 
 # Kafka
-brew "kafkacat"
-brew "adevinta/homebrew-zoe/zoe"
+brew "kafkacat"                                 # Generic command-line non-JVM Apache Kafka producer and consumer
+brew "adevinta/homebrew-zoe/zoe"                # The missing companion for Kafka
 
 # SBT dependency analysis
 brew "coursier/formulas/coursier"
 
 # SonarScanner for SonarQube
-brew "sonar-scanner"
+brew "sonar-scanner"                            # Launcher to analyze a project with SonarQube
 
 # Git UI
-brew "gitui"
+brew "gitui"                                    # Blazing fast terminal-ui for git written in rust

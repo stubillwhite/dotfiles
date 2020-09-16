@@ -2,12 +2,12 @@
 # Applications
 ################################################################################
 
-cask "zoomus"
-cask "homebrew/cask-drivers/garmin-express"
+cask "zoomus"                                   # Video communication and virtual meeting platform
+cask "homebrew/cask-drivers/garmin-express"     # Garmin desktop tool
 
 ################################################################################
 # Fun
 ################################################################################
 
-cask "steam"
-cask "parsec"
+cask "steam"                                    # Steam client
+cask "parsec"                                   # Online low latency gaming

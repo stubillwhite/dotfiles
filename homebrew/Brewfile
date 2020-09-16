@@ -7,116 +7,121 @@ tap "homebrew/bundle"
 tap "homebrew/cask"
 tap "homebrew/core"
 
-cask "adoptopenjdk8"
+cask "adoptopenjdk8"                            # AdoptOpenJDK 8
 
 ################################################################################
 # Applications
 ################################################################################
 
-cask "anki"
-cask "beyond-compare"
-cask "dropbox"
-cask "google-chrome"
-cask "iterm2"
-cask "keybase"
-cask "licecap"
+cask "beyond-compare"                           # Compare files and folders
+cask "dropbox"                                  # Client for the Dropbox cloud storage service
+cask "google-chrome"                            # Cross-platform web browser
+cask "iterm2"                                   # Terminal emulator as alternative to Apple's Terminal app
+cask "licecap"                                  # Animated screen capture application
+
+# Encryption
+brew "gnupg"                                    # GNU Pretty Good Privacy (PGP) package
+cask "keybase"                                  # End-to-end encryption software
 
 ################################################################################
 # Utilities
 ################################################################################
 
-brew "cmake"
-brew "coreutils"
-brew "entr"
-brew "findutils"
-brew "gnu-sed"
-brew "graphviz"
-brew "htop"
-brew "jq"
-brew "ncdu"
-brew "neovim"
-brew "openssh"
-brew "parallel"
-brew "pkg-config"
-brew "sampler"
-brew "slackcat"
-brew "the_silver_searcher"
-brew "tig"
-brew "tree"
-brew "watch"
-brew "wget"
-brew "zsh"
-cask "scroll-reverser"
+brew "cmake"                                    # Cross-platform make
+brew "coreutils"                                # GNU File, Shell, and Text utilities
+brew "entr"                                     # Run arbitrary commands when files change
+brew "findutils"                                # Collection of GNU find, xargs, and locate
+brew "gnu-sed"                                  # GNU implementation of the famous stream editor
+brew "graphviz"                                 # Graph visualization software from AT&T and Bell Labs
+brew "htop"                                     # Improved top (interactive process viewer)
+brew "jq"                                       # Lightweight and flexible command-line JSON processor
+brew "q"                                        # Run SQL directly on CSV or TSV files
+brew "ncdu"                                     # NCurses Disk Usage
+brew "neovim"                                   # Ambitious Vim-fork focused on extensibility and agility
+brew "openssh"                                  # OpenBSD freely-licensed SSH connectivity tools
+brew "parallel"                                 # Shell command parallelization utility
+brew "pkg-config"                               # Manage compile and link flags for libraries
+brew "sampler"                                  # Tool for shell commands execution, visualization and alerting
+brew "slackcat"                                 # Command-line utility for posting snippets to Slack
+brew "the_silver_searcher"                      # Code-search similar to ack
+brew "tree"                                     # Display directories as trees (with optional color/HTML output)
+brew "watch"                                    # Executes a program periodically, showing output fullscreen
+brew "wget"                                     # Internet file retriever
+brew "zsh"                                      # UNIX shell (command interpreter)
+cask "scroll-reverser"                          # Tool to reverse the direction of scrolling
 
 # Document and image manipulation
-brew "imagemagick"
-brew "pandoc"
+brew "imagemagick"                              # Tools and libraries to manipulate images in many formats
+brew "pandoc"                                   # Swiss-army knife of markup format conversion
 
 # tmux
-brew "tmux"
-brew "tmuxinator"
-brew 'reattach-to-user-namespace'
+brew "tmux"                                     # Terminal multiplexer
+brew "tmuxinator"                               # Manage complex tmux sessions easily
+brew 'reattach-to-user-namespace'               # Reattach process (e.g., tmux) to background
 
 ################################################################################
 # Development
 ################################################################################
 
 # Version control
-brew "git"
-brew "git-secret"
-brew "gnupg"
+brew "git"                                      # Distributed revision control system
+brew "git-secret"                               # Bash-tool to store the private data inside a git repo
+brew "gh"                                       # GitHub command-line tool
+brew "tig"                                      # Text interface for Git repositories
 
 # Java
-cask "visualvm"
-brew "maven"
-brew "gradle"
+cask "visualvm"                                 # JVM visualiser
+brew "maven"                                    # Java-based project management
+brew "gradle"                                   # Open-source build automation tool based on the Groovy and Kotlin DSL
 
 # Clojure
-brew "leiningen"
+brew "leiningen"                                # Build tool for Clojure
 
 # Scala
-brew "mill"
-brew "sbt"
-brew "scala"
-brew "ammonite-repl"
+brew "mill"                                     # Scala build tool
+brew "sbt"                                      # Build tool for Scala projects
+brew "scala"                                    # JVM-based programming language
+brew "ammonite-repl"                            # Ammonite is a cleanroom re-implementation of the Scala REPL
 
 # Haskell
-brew "cabal-install"
-brew "haskell-stack"
+brew "cabal-install"                            # Command-line interface for Cabal and Hackage
+brew "haskell-stack"                            # The Haskell Tool Stack
 
 # Python
-brew "python"
-brew "python@2"
+brew "python"                                   # Interpreted, interactive, object-oriented programming language
+brew "python@2"                                 # Interpreted, interactive, object-oriented programming language
 
 # Elm
-brew "elm"
+brew "elm"                                      # Functional programming language for building browser-based GUIs
 
 # Ruby
-brew "ruby"
+brew "ruby"       
 
 # Node
-brew "node"
+brew "node"                                     # Platform built on V8 to build network applications
 
 # AWS
-brew "awscli"
-brew "terraform", link: false
-brew "tfenv", link: true
+brew "awscli"                                   # Official Amazon AWS command-line interface
+brew "terraform", link: false                   # Tool to build, change, and version infrastructure
+brew "tfenv", link: true                        # Terraform version manager inspired by rbenv
 
 # SQL
-cask "sequel-pro"
-cask "sqlworkbenchj"
+cask "sequel-pro"                               # MySQL/MariaDB database management platform
+cask "sqlworkbenchj"                            # Java-based SQL client
 
 # Shell
-brew "bats-core"
+brew "bats-core"                                # Bash Automated Testing System
 
 # Linters
-brew "aspell"
-brew "shellcheck"
-brew "yamllint"
+brew "aspell"                                   # Spell checker with better logic than ispell
+brew "shellcheck"                               # Static analysis and lint tool, for (ba)sh scripts
+brew "yamllint"                                 # Linter for YAML files
 
 ################################################################################
 # Fun
 ################################################################################
 
-brew "cataclysm"
-brew "nethack"
+cask "anki"                                     # Memory training application
+
+brew "cataclysm"                                # Fork/variant of Cataclysm Roguelike
+brew "nethack"                                  # Single-player roguelike video game
