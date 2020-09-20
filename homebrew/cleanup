@@ -1,4 +1,6 @@
 #!/bin/bash
 
 cat "Brewfile" "Brewfile.$(uname -n)" \
-    | brew bundle --file=- cleanup
+    | brew bundle --file=- cleanup "$@"
+
+[[ $# -eq 0 ]] && echo 'Run with -f to force clean up of the above formulae'

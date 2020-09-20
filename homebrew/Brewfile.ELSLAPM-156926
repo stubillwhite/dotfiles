@@ -7,13 +7,20 @@ cask "hook"                                     # Hook
 # OneDrive integration
 cask "onedrive"                                 # Cloud storage client
 
+# Database clients
+cask "dbeaver-community"                        # Free universal database tool and SQL client
+
 ################################################################################
 # Utilities
 ################################################################################
 
-brew "borkdude/brew/babashka"                   # A Clojure babushka for the grey areas of Bash.
+brew "babashka"                                 # A Clojure babushka for the grey areas of Bash.
 brew "sampler"                                  # Tool for shell commands execution, visualization and alerting
+
+tap 'eddieantonio/eddieantonio'
 brew "eddieantonio/eddieantonio/imgcat"         # It's like cat(1), but for images.
+
+tap 'saulpw/vd'
 brew "saulpw/vd/visidata"                       # Terminal utility for exploring and arranging tabular data
 
 ################################################################################
@@ -25,7 +32,6 @@ cask "miniconda"                                # Lighter version of Conda
 
 # Containers
 brew "aws-iam-authenticator"                    # Use AWS IAM credentials to authenticate to Kubernetes
-brew "derailed/k9s/k9s"                         # Kubernetes CLI To Manage Your Clusters In Style!
 brew "docker"                                   # Pack, ship and run any application as a lightweight container
 brew "docker-compose"                           # Isolated development environments using Docker
 brew "docker-machine"                           # Create Docker hosts locally and on cloud providers
@@ -33,15 +39,21 @@ brew "kubernetes-cli"                           # Kubernetes command-line interf
 brew "lazydocker"                               # The lazier way to manage everything docker
 cask "lens"                                     # Kubernetes IDE
 
+tap 'derailed/k9s'
+brew "derailed/k9s/k9s"                         # Kubernetes CLI To Manage Your Clusters In Style!
+
 # Android
 cask "android-platform-tools"                   # Android SDK Platform-Tools
 brew "scrcpy"                                   # Display and control your Android device
 
 # Kafka
 brew "kafkacat"                                 # Generic command-line non-JVM Apache Kafka producer and consumer
+
+tap 'adevinta/zoe'
 brew "adevinta/homebrew-zoe/zoe"                # The missing companion for Kafka
 
 # SBT dependency analysis
+tap 'coursier/formulas'
 brew "coursier/formulas/coursier"               # Coursier launcher
 
 # SonarScanner for SonarQube

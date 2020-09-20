@@ -2,7 +2,6 @@
 # Prerequisites
 ################################################################################
 
-tap "adoptopenjdk/openjdk"
 tap "homebrew/bundle"
 tap "homebrew/cask"
 tap "homebrew/core"
@@ -11,8 +10,11 @@ tap "homebrew/core"
 # Applications
 ################################################################################
 
-# Basics
+# Java
+tap "adoptopenjdk/openjdk"
 cask "adoptopenjdk8"                            # AdoptOpenJDK 8
+
+# Basics
 cask "beyond-compare"                           # Compare files and folders
 cask "dropbox"                                  # Client for the Dropbox cloud storage service
 cask "google-chrome"                            # Cross-platform web browser
