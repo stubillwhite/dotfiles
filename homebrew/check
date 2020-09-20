@@ -1,0 +1,4 @@
+#!/bin/bash
+
+cat "Brewfile" "Brewfile.$(uname -n)" \
+    | brew bundle --file=- check --verbose --no-upgrade

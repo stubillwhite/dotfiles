@@ -34,7 +34,7 @@ brew "lazydocker"                               # The lazier way to manage every
 cask "lens"                                     # Kubernetes IDE
 
 # Android
-cask "android-platform-tools"
+cask "android-platform-tools"                   # Android SDK Platform-Tools
 brew "scrcpy"                                   # Display and control your Android device
 
 # Kafka
@@ -42,10 +42,7 @@ brew "kafkacat"                                 # Generic command-line non-JVM A
 brew "adevinta/homebrew-zoe/zoe"                # The missing companion for Kafka
 
 # SBT dependency analysis
-brew "coursier/formulas/coursier"
+brew "coursier/formulas/coursier"               # Coursier launcher
 
 # SonarScanner for SonarQube
 brew "sonar-scanner"                            # Launcher to analyze a project with SonarQube
-
-# Git UI
-brew "gitui"                                    # Blazing fast terminal-ui for git written in rust

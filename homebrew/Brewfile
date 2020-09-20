@@ -7,16 +7,18 @@ tap "homebrew/bundle"
 tap "homebrew/cask"
 tap "homebrew/core"
 
-cask "adoptopenjdk8"                            # AdoptOpenJDK 8
-
 ################################################################################
 # Applications
 ################################################################################
 
+# Basics
+cask "adoptopenjdk8"                            # AdoptOpenJDK 8
 cask "beyond-compare"                           # Compare files and folders
 cask "dropbox"                                  # Client for the Dropbox cloud storage service
 cask "google-chrome"                            # Cross-platform web browser
 cask "iterm2"                                   # Terminal emulator as alternative to Apple's Terminal app
+
+# Screen capture
 cask "licecap"                                  # Animated screen capture application
 
 # Encryption
@@ -95,7 +97,7 @@ brew "python@2"                                 # Interpreted, interactive, obje
 brew "elm"                                      # Functional programming language for building browser-based GUIs
 
 # Ruby
-brew "ruby"       
+brew "ruby"                                     # Powerful, clean, object-oriented scripting language
 
 # Node
 brew "node"                                     # Platform built on V8 to build network applications
@@ -123,5 +125,4 @@ brew "yamllint"                                 # Linter for YAML files
 
 cask "anki"                                     # Memory training application
 
-brew "cataclysm"                                # Fork/variant of Cataclysm Roguelike
 brew "nethack"                                  # Single-player roguelike video game
