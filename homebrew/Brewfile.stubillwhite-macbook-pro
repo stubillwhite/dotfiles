@@ -6,6 +6,16 @@ cask "zoomus"                                   # Video communication and virtua
 cask "homebrew/cask-drivers/garmin-express"     # Garmin desktop tool
 
 ################################################################################
+# Development
+################################################################################
+
+# Containers
+brew "docker"                                   # Pack, ship and run any application as a lightweight container
+brew "docker-compose"                           # Isolated development environments using Docker
+brew "docker-machine"                           # Create Docker hosts locally and on cloud providers
+brew "lazydocker"                               # The lazier way to manage everything docker
+
+################################################################################
 # Fun
 ################################################################################
 

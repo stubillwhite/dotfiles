@@ -35,8 +35,10 @@ brew "aws-iam-authenticator"                    # Use AWS IAM credentials to aut
 brew "docker"                                   # Pack, ship and run any application as a lightweight container
 brew "docker-compose"                           # Isolated development environments using Docker
 brew "docker-machine"                           # Create Docker hosts locally and on cloud providers
-brew "kubernetes-cli"                           # Kubernetes command-line interface
 brew "lazydocker"                               # The lazier way to manage everything docker
+
+# Kubernetes
+brew "kubernetes-cli"                           # Kubernetes command-line interface
 cask "lens"                                     # Kubernetes IDE
 
 tap 'derailed/k9s'
