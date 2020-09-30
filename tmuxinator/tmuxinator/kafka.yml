@@ -1,0 +1,20 @@
+# /Users/white1/.config/tmuxinator/kafka.yml
+
+name: kafka
+root: ~/Dev/recommenders/kd-recs-sutd-kafka-producer
+
+windows:
+  - kafka:
+      layout: even-vertical
+      panes:
+        - docker-compose logs -f kafka
+        - docker-compose logs -f kafka-connect
+  - vim:
+      layout: even-horizontal
+      panes:
+        - nvim docker-compose.yml kafka-connector/user-signals-ingestion-config.json
+  - shell:
+      root: ./kafka-connector/
+      layout: even-horizontal
+      panes:
+        - #
