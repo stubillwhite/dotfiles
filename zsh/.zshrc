@@ -38,6 +38,12 @@ setopt interactivecomments      # Allow comments in interactive shells
 unsetopt AUTO_CD                # Don't change directory automatically
 unsetopt AUTO_PUSHD             # Don't push directory automatically
 
+# https://github.com/zsh-users/zsh-completions/issues/314
+#zstyle ':completion::users' ignored-patterns '*'
+#zstyle ':completion:*:*:*:users' ignored-patterns '*'
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path ~/.zsh/cache
+
 # AWS tools
 source_if_exists "/usr/local/bin/aws_zsh_completer.sh"
 
@@ -87,6 +93,9 @@ alias tabulate-by-comma='column -t -s '','' '
 alias i2cssh='i2cssh -p stuw --iterm2'
 alias sum='paste -s -d+ - | bc'
 alias shred='shred -vuz --iterations=10'
+alias git-clean='git clean -X -f -d'
+alias git-scrub='git clean -x -f -d'
+alias gh='NO_COLOR=1 gh'
 
 alias vi='nvim'
 alias vim='nvim'
@@ -514,7 +523,7 @@ function git-for-each-repo-parallel() {
 }
 
 # For each directory within the current directory, pull the repo
-function git-repos-pull() (
+function git-repos-pull() {
     pull-repo() {
         echo "Pulling $(basename $PWD)"
         git pull -r --autostash
@@ -523,10 +532,10 @@ function git-repos-pull() (
 
     git-for-each-repo-parallel pull-repo 
     git-repos-status
-)
+}
 
 # For each directory within the current directory, fetch the repo
-function git-repos-fetch() (
+function git-repos-fetch() {
     local args=$*
 
     fetch-repo() {
@@ -537,7 +546,7 @@ function git-repos-fetch() (
 
     git-for-each-repo-parallel fetch-repo 
     git-repos-status
-)
+}
 
 # Parse Git status into a Zsh associative array
 function git-parse-repo-status() {
@@ -585,7 +594,7 @@ function git-parse-repo-status() {
     gitRepoStatus[stashed]=$stashed
 }
 
-function git-repos-status() (
+function git-repos-status() {
     display-status() {
         git-parse-repo-status
         repo=$(basename $PWD) 
@@ -611,11 +620,11 @@ function git-repos-status() (
     }
 
     git-for-each-repo display-status | column -t -s ','
-)
+}
 
 # For each directory within the current directory, display whether the
 # directory contains unmerged branches locally
-function git-repos-unmerged-branches() (
+function git-repos-unmerged-branches() {
     display-unmerged-branches() {
         local cmd="git branch --no-merged master"
         unmergedBranches=$(eval "$cmd") 
@@ -627,7 +636,7 @@ function git-repos-unmerged-branches() (
     }
 
     git-for-each-repo display-unmerged-branches
-)
+}
 
 # For each directory within the current directory, display whether the
 # directory contains unmerged branches locally and remote
@@ -833,6 +842,21 @@ function aws-service-quotas() {
     aws service-quotas list-service-quotas --service-code ec2 | jq --raw-output '(.Quotas[] | ([.QuotaName, .Value])) | @csv' | column -t -s "," | sed 's/\"//g'
 }
 
+function aws-datapipeline-record-loader-versions() {
+    while IFS=, read -rA x 
+    do
+        pipelineId=${x[@]:0:1}
+        pipelineName=${x[@]:1:1}
+        aws datapipeline get-pipeline-definition --pipeline-id $pipelineId      \
+            | jq --raw-output "                                                 \
+                    [\"$pipelineName\",                                         \
+                     (.values[\"my_record_loader_version\"])]                   \
+                    | @csv"
+    done < <(aws datapipeline list-pipelines | jq --raw-output '.pipelineIdList[] | [.id, .name] | @csv' | sed 's/"//g') \
+        | sed 's/"//g' \
+        | column -t -s '','' 
+}
+
 function plot-aws-s3-size() {
     if [[ $# -ne 3 ]] ; then
         echo 'Plot the size of the AWS S3 bucket and prefix'
@@ -895,3 +919,90 @@ if_darwin && {
 }
 
 source_if_exists "$HOME/.zshrc.$(uname -n)"
+
+
+
+
+function git-parse-repo-status-new() {
+    local varName=$1
+
+    local -A gitRepoStatus
+    local aheadAndBehind
+    local ahead=0
+    local behind=0
+    local added=0
+    local modified=0
+    local deleted=0
+    local renamed=0
+    local untracked=0
+    local stashed=0
+
+    branch=$(git rev-parse --abbrev-ref HEAD 2> /dev/null)
+    ([[ $? -ne 0 ]] || [[ -z "$branch" ]]) && branch="unknown"
+
+    aheadAndBehind=$(git status --porcelain=v1 --branch | perl -ne '/\[(.+)\]/ && print $1' )
+    ahead=$(echo $aheadAndBehind | perl -ne '/ahead (\d+)/ && print $1' )
+    [[ -z "$ahead" ]] && ahead=0
+    behind=$(echo $aheadAndBehind | perl -ne '/behind (\d+)/ && print $1' )
+    [[ -z "$behind" ]] && behind=0
+
+    # See https://git-scm.com/docs/git-status for output format
+    while read -r line; do
+      # echo "$line"
+      echo "$line" | gsed -r '/^[A][MD]? .*/!{q1}'   > /dev/null && (( added++ ))
+      echo "$line" | gsed -r '/^[M][MD]? .*/!{q1}'   > /dev/null && (( modified++ ))
+      echo "$line" | gsed -r '/^[D][RCDU]? .*/!{q1}' > /dev/null && (( deleted++ ))
+      echo "$line" | gsed -r '/^[R][MD]? .*/!{q1}'   > /dev/null && (( renamed++ ))
+      echo "$line" | gsed -r '/^[\?][\?] .*/!{q1}'   > /dev/null && (( untracked++ ))
+    done < <(git status --porcelain)
+
+    stashed=$(git stash list | wc -l)
+
+    gitRepoStatus[branch]=$branch
+    gitRepoStatus[ahead]=$ahead
+    gitRepoStatus[behind]=$behind
+    gitRepoStatus[added]=$added
+    gitRepoStatus[modified]=$modified
+    gitRepoStatus[deleted]=$deleted
+    gitRepoStatus[renamed]=$renamed
+    gitRepoStatus[untracked]=$untracked
+    gitRepoStatus[stashed]=$stashed
+
+    echo "${(kv)gitRepoStatus}"
+    eval "$varName=( ${(kv)gitRepoStatus} )"
+}
+
+function git-repos-status-new() {
+    display-status() {
+        local -A gitRepoStatus
+        git-parse-repo-status-new gitRepoStatus
+        #echo "${(kv)gitRepoStatus}"
+
+        repo=$(basename $PWD) 
+
+        local branch="${COLOR_GREEN}master${COLOR_NONE}"
+        if [[ ! gitRepoStatus[branch] == "master" ]]; then
+            branch="${COLOR_RED}${gitRepoStatus[branch]}${COLOR_NONE}"
+        fi
+
+        local sync="${COLOR_GREEN}in-sync${COLOR_NONE}"
+        if (( gitRepoStatus[ahead] > 0 )) && (( gitRepoStatus[behind] > 0 )); then
+            sync="${COLOR_RED}ahead/behind${COLOR_NONE}"
+        elif (( gitRepoStatus[ahead] > 0 )); then
+            sync="${COLOR_RED}ahead${COLOR_NONE}"
+        elif (( gitRepoStatus[behind] > 0 )); then
+            sync="${COLOR_RED}behind${COLOR_NONE}"
+        fi
+
+        local dirty="${COLOR_GREEN}clean${COLOR_NONE}"
+        ((gitRepoStatus[added] + gitRepoStatus[modified] + gitRepoStatus[deleted] + gitRepoStatus[renamed] > 0)) && dirty="${COLOR_RED}dirty${COLOR_NONE}"
+
+        echo "${branch},${sync},${dirty},${repo}"
+    }
+
+    git-parse-repo-status-new gitRepoStatus
+    #git-for-each-repo-parallel display-status
+    git-for-each-repo display-status
+    #git-for-each-repo-parallel display-status | column -t -s ','
+}
+

@@ -6,13 +6,29 @@
 function if_darwin() { [[ "$(uname)" == "Darwin" ]]; }
 function if_linux() { [[ "$(uname)" == "Linux" ]]; }
 
-function source_if_exists { 
-    if [[ -s $1 ]]; then
-        source $1
-    #else
-        #echo "Skipping sourcing $1 as it does not exist"
+# Source script if it exists
+# Usage: source_if_exists ".my-functions"
+function source_if_exists() { 
+    local fnam=$1
+
+    if [[ -s "${fnam}" ]]; then
+        source "${fnam}"
     fi
 }
+
+# Source script if it exists
+# Usage: source_or_warn ".my-functions"
+function source_or_warn() { 
+    local fnam=$1
+    local msg=$2
+
+    if [[ -s "${fnam}" ]]; then
+        source "${fnam}"
+    else
+        echo "Skipping sourcing ${fnam} as it does not exist"
+    fi
+}
+
 
 source_if_exists "$HOME/Dev/my-stuff/shell-utils/.shell-helper-functions"
 
@@ -90,14 +106,6 @@ if [ -f "${SSH_ENV_FILE}" ]; then
 else
     ssh-start-agent;
 fi
-
-function ssh-add-keys {
-    for FILE in $HOME/.ssh/*.pem; do
-        ssh-add $FILE
-    done
-    ssh-add $HOME/.ssh/stuart.white
-    ssh-add $HOME/.ssh/id_rsa
-}
 
 # 1}}}
 

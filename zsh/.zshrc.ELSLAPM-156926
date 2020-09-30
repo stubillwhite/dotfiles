@@ -54,7 +54,27 @@ function recs-get-k8s() {
 }
 compdef '_alternative "arguments:custom arg:(dev live)"' recs-get-k8s
 
-# Conda
+# SonarQube                                                                 {{{1
+# ==============================================================================
+
+function sonarqube-run() {
+    if [[ $# -ne 1 ]] ; then
+        echo "Usage: sonarqube-run TOKEN"
+        echo "  Token can be retrieved from recs-secrets"
+    else
+        local sonarToken=$1
+
+        local sonarServer="https://eols.sq.tio-cloud.com"
+        local sonarScannerHome="/usr/local/Cellar/sonar-scanner/4.3.0.2102"
+        local sonarOpts="-Dsonar.host.url=\"${sonarServer}\" -DsonarScanner.home=\"${sonarScannerHome}\" -Dsonar.login=\"${sonarToken}\""
+
+        #sbt clean coverage test coverageReport
+        sbt "-Dsonar.verbose=true ${sonarOpts} sonarScan"
+    fi
+}
+
+# Conda                                                                     {{{1
+# ==============================================================================
 
 function conda-insinuate() {
     # >>> conda initialize >>>
