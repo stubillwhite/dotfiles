@@ -20,6 +20,17 @@ function finder() {
     fi
 }
 
+# Display power usage
+function power-usage() {
+    echo 'Power usage'
+    pmset -g batt
+    echo
+
+    echo 'Top 20 power consuming tasks'
+    echo
+    top -l5 -n20 -stats pid,command,power -o power | tail -n21
+}
+
 # Git                                                                       {{{1
 # ==============================================================================
 
