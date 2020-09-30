@@ -49,3 +49,6 @@
 [includeIf "gitdir:~/Dev/graduates/"]
     path = ~/Dev/recommenders/.gitconfig
 
+[includeIf "gitdir:~/Dev/newsflo/"]
+    path = ~/Dev/recommenders/.gitconfig
+
