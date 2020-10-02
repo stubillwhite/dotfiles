@@ -29,7 +29,6 @@ function source_or_warn() {
     fi
 }
 
-
 source_if_exists "$HOME/Dev/my-stuff/shell-utils/.shell-helper-functions"
 
 # 1}}}
@@ -75,6 +74,12 @@ export PATH=$PATH:/usr/bin
 export PATH=$PATH:~/.local/bin
 export PATH=$PATH:/usr/local/lib/ruby/gems/2.6.0/bin
 export PATH=/Applications/Emacs.app/Contents/MacOS:$PATH
+
+# Java                                                                      {{{1
+# ==============================================================================
+
+export PATH=~/.jenv/bin:$PATH
+eval "$(jenv init -)"
 
 # Leiningen
 
