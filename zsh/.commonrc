@@ -1,6 +1,7 @@
 # vim:fdm=marker
 
-# Conditional inclusion {{{1
+# Conditional inclusion                                                     {{{1
+# ==============================================================================
 
 # Usage: if_darwin && { echo foo }
 function if_darwin() { [[ "$(uname)" == "Darwin" ]]; }
@@ -31,9 +32,8 @@ function source_or_warn() {
 
 source_if_exists "$HOME/Dev/my-stuff/shell-utils/.shell-helper-functions"
 
-# 1}}}
-
-# General settings {{{1
+# General settings                                                          {{{1
+# ==============================================================================
 
 # Misc differences between systems
 
@@ -78,8 +78,8 @@ export PATH=/Applications/Emacs.app/Contents/MacOS:$PATH
 # Java                                                                      {{{1
 # ==============================================================================
 
-export PATH=~/.jenv/bin:$PATH
-eval "$(jenv init -)"
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/adoptopenjdk-8.jdk/Contents/Home/
+export PATH=$JAVA_HOME:$PATH
 
 # Leiningen
 
@@ -89,9 +89,8 @@ export LEIN_JVM_OPTS='-Xms4G -Xmx4G'
 
 export SPARK_LOCAL_IP=127.0.0.1
 
-# 1}}}
-
-# SSH {{{1
+# SSH                                                                       {{{1
+# ==============================================================================
 
 SSH_ENV_FILE="$HOME/.ssh/environment"
 
@@ -112,9 +111,8 @@ else
     ssh-start-agent;
 fi
 
-# 1}}}
-
-# TODO Random things to rationalise {{{1
+# Random things to rationalise                                              {{{1
+# ==============================================================================
 
 export COLOR_RED='\033[0;31m'
 export COLOR_GREEN='\033[0;32m'

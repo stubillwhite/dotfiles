@@ -13,7 +13,6 @@ tap "homebrew/core"
 # Java
 tap "AdoptOpenJDK/openjdk"
 cask "adoptopenjdk8"                            # AdoptOpenJDK 8
-brew "jenv"                                     # Manage your Java environment
 
 # Basics
 cask "beyond-compare"                           # Compare files and folders
