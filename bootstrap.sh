@@ -13,6 +13,7 @@ setopt EXTENDED_GLOB
 # Files to link to in $HOME
 FILES=(
     "boot/.boot"
+    "ctags/.ctags"
     "ssh/.ssh"
     "chemacs/.emacs-profiles.el"
     "doom/.doom.d"
