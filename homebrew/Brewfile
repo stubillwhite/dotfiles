@@ -39,6 +39,7 @@ brew "gnu-sed"                                  # GNU implementation of the famo
 brew "graphviz"                                 # Graph visualization software from AT&T and Bell Labs
 brew "htop"                                     # Improved top (interactive process viewer)
 brew "jq"                                       # Lightweight and flexible command-line JSON processor
+brew "ctags"                                    # Reimplementation of ctags(1)
 brew "q"                                        # Run SQL directly on CSV or TSV files
 brew "ncdu"                                     # NCurses Disk Usage
 brew "neovim"                                   # Ambitious Vim-fork focused on extensibility and agility
@@ -102,8 +103,9 @@ brew "elm"                                      # Functional programming languag
 # Ruby
 brew "ruby"                                     # Powerful, clean, object-oriented scripting language
 
-# Node
+# Javascript
 brew "node"                                     # Platform built on V8 to build network applications
+cask "visual-studio-code"                       # Open-source code editor
 
 # AWS
 brew "awscli"                                   # Official Amazon AWS command-line interface
