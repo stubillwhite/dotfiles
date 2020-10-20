@@ -74,28 +74,32 @@ if_linux && {
     alias open='xdg-open'
 }
 
-alias eject='diskutil eject'
-alias env='env | sort'
-alias tree='tree -A'
-alias watch='watch -c'
-alias ssh-purge-key='ssh-keygen -R'
+alias eject='diskutil eject'                                                # Eject disk
+alias env='env | sort'                                                      # env should be sorted
+alias tree='tree -A'                                                        # tree should be ascii
+alias watch='watch -c'                                                      # watch should be colourised
+alias entr='entr -c'                                                        # entr should be colourised
+alias gh='NO_COLOR=1 gh'                                                    # gh should not be colourised
+
+alias ssh-purge-key='ssh-keygen -R'                                         # Remove key from SSH files
 alias ssh-rm-connections='rm /tmp/ssh-mux_*'
 alias strip-ansi="perl -pe 's/\x1b\[[0-9;]*[mG]//g'"
 alias py-env-activate='source bin/activate'
 alias py-env-deactivate='deactivate'
-alias gource='gource -f --auto-skip-seconds 1 --seconds-per-day 0.05'
-alias fmt-xml='xmllint --format -'
-alias fmt-json='jq "."'
-alias entr='entr -c'
+
+alias fmt-xml='xmllint --format -'                                          # Prettify XML (cat foo.xml | fmt-xml)
+alias fmt-json='jq "."'                                                     # Prettify JSON (cat foo.json | fmt-json)
+alias tabulate-by-tab='column -t -s $''\t'' '                               # Tabluate TSV (cat foo.tsv | tabulate-by-tab)
+alias tabulate-by-comma='column -t -s '','' '                               # Tabluate CSV (cat foo.csv | tabulate-by-comma)
+alias as-stream='stdbuf -o0'                                                # Turn pipes to streams (tail -F foo.log | as-stream grep "bar")
+
 alias list-ports='netstat -anv'
-alias tabulate-by-tab='column -t -s $''\t'' '
-alias tabulate-by-comma='column -t -s '','' '
 alias i2cssh='i2cssh -p stuw --iterm2'
 alias sum='paste -s -d+ - | bc'
 alias shred='shred -vuz --iterations=10'
 alias git-clean='git clean -X -f -d'
 alias git-scrub='git clean -x -f -d'
-alias gh='NO_COLOR=1 gh'
+alias docker-entrypoint='docker inspect --format="{{.Config.Cmd}}"'
 
 alias vi='nvim'
 alias vim='nvim'
@@ -599,10 +603,11 @@ function git-repos-status() {
         git-parse-repo-status
         repo=$(basename $PWD) 
 
-        local branch="${COLOR_GREEN}master${COLOR_NONE}"
-        if [[ ! $gitRepoStatus[branch] == "master" ]]; then
-            branch="${COLOR_RED}$gitRepoStatus[branch]${COLOR_NONE}"
+        local branchColor="${COLOR_RED}"
+        if [[ "$gitRepoStatus[branch]" =~ (master|main) ]]; then
+            branchColor="${COLOR_GREEN}"
         fi
+        local branch="${branchColor}$gitRepoStatus[branch]${COLOR_NONE}"
 
         local sync="${COLOR_GREEN}in-sync${COLOR_NONE}"
         if (( $gitRepoStatus[ahead] > 0 )) && (( $gitRepoStatus[behind] > 0 )); then
