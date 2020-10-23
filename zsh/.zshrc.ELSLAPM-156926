@@ -44,15 +44,19 @@ alias sqlworkbenchj='java -jar /Applications/SQLWorkbenchJ.app/Contents/Java/sql
 source <(kubectl completion zsh)
 
 function recs-get-k8s() {
-    if [[ $# -ne 1 ]] ; then
-        echo "Usage: recs-get-k8s (dev|live)"
+    if [[ $# -ne 2 ]] ; then
+        echo "Usage: recs-get-k8s (dev|live) (util|main)"
     else
         declare recsEnv=$1
-        aws s3 cp s3://com-elsevier-recs-${recsEnv}-certs/eks/recs-eks-main-${recsEnv}.conf ~/.kube/
-        export KUBECONFIG=~/.kube/recs-eks-main-${recsEnv}.conf
+        declare recsSubEnv=$2
+        aws s3 cp s3://com-elsevier-recs-${recsEnv}-certs/eks/recs-eks-${recsSubEnv}-${recsEnv}.conf ~/.kube/
+        export KUBECONFIG=~/.kube/recs-eks-${recsSubEnv}-${recsEnv}.conf
     fi
 }
-compdef '_alternative "arguments:custom arg:(dev live)"' recs-get-k8s
+compdef "_arguments \
+    '1:environment arg:(dev live)' \
+    '2:sub-environment arg:(util main)'" \
+    recs-get-k8s
 
 # SonarQube                                                                 {{{1
 # ==============================================================================
