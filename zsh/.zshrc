@@ -604,7 +604,7 @@ function git-repos-status() {
         repo=$(basename $PWD) 
 
         local branchColor="${COLOR_RED}"
-        if [[ "$gitRepoStatus[branch]" =~ (master|main) ]]; then
+        if [[ "$gitRepoStatus[branch]" =~ (main) ]]; then
             branchColor="${COLOR_GREEN}"
         fi
         local branch="${branchColor}$gitRepoStatus[branch]${COLOR_NONE}"
@@ -631,7 +631,7 @@ function git-repos-status() {
 # directory contains unmerged branches locally
 function git-repos-unmerged-branches() {
     display-unmerged-branches() {
-        local cmd="git branch --no-merged master"
+        local cmd="git branch --no-merged main"
         unmergedBranches=$(eval "$cmd") 
         if [[ $unmergedBranches = *[![:space:]]* ]]; then
             echo "$fnam"
@@ -647,7 +647,7 @@ function git-repos-unmerged-branches() {
 # directory contains unmerged branches locally and remote
 function git-repos-unmerged-branches-all() {
     display-unmerged-branches-all() {
-        local cmd="git branch --all --no-merged master"
+        local cmd="git branch --all --no-merged main"
         unmergedBranches=$(eval "$cmd") 
         if [[ $unmergedBranches = *[![:space:]]* ]]; then
             echo "$fnam"
@@ -683,6 +683,9 @@ function git-merged-branches() {
 function git-open() {
     local filename=$1
 
+    local branch=$(git rev-parse --abbrev-ref HEAD 2> /dev/null)
+    ([[ $? -ne 0 ]] || [[ -z "$branch" ]]) && branch="master"
+
     local pathInRepo
     if [[ -n "${filename}" ]]; then
         pushd $(dirname "${filename}")
@@ -693,7 +696,7 @@ function git-open() {
     echo "Opening '$URL'"
 
     if [[ $URL =~ ^git@ ]]; then
-        [[ -n "${pathInRepo}" ]] && pathInRepo="tree/master/${pathInRepo}"
+        [[ -n "${pathInRepo}" ]] && pathInRepo="tree/${branch}/${pathInRepo}"
 
         local hostAlias=$(echo "$URL" | sed -E "s|git@(.*):(.*).git|\1|")
         local hostname=$(ssh -G "${hostAlias}" | awk '$1 == "hostname" { print $2 }')
@@ -704,11 +707,11 @@ function git-open() {
 
     elif [[ $URL =~ ^https://bitbucket.org ]]; then
         echo "$URL" \
-            | sed -E "s|(.*).git|\1/src/master/${pathInRepo}|" \
+            | sed -E "s|(.*).git|\1/src/${branch}/${pathInRepo}|" \
             | xargs "${OPEN_CMD}"
 
     elif [[ $URL =~ ^https://github.com ]]; then
-        [[ -n "${pathInRepo}" ]] && pathInRepo="tree/master/${pathInRepo}"
+        [[ -n "${pathInRepo}" ]] && pathInRepo="tree/${branch}/${pathInRepo}"
         echo "$URL" \
             | sed -E "s|(.*).git|\1/${pathInRepo}|" \
             | xargs "${OPEN_CMD}"
@@ -976,38 +979,3 @@ function git-parse-repo-status-new() {
     echo "${(kv)gitRepoStatus}"
     eval "$varName=( ${(kv)gitRepoStatus} )"
 }
-
-function git-repos-status-new() {
-    display-status() {
-        local -A gitRepoStatus
-        git-parse-repo-status-new gitRepoStatus
-        #echo "${(kv)gitRepoStatus}"
-
-        repo=$(basename $PWD) 
-
-        local branch="${COLOR_GREEN}master${COLOR_NONE}"
-        if [[ ! gitRepoStatus[branch] == "master" ]]; then
-            branch="${COLOR_RED}${gitRepoStatus[branch]}${COLOR_NONE}"
-        fi
-
-        local sync="${COLOR_GREEN}in-sync${COLOR_NONE}"
-        if (( gitRepoStatus[ahead] > 0 )) && (( gitRepoStatus[behind] > 0 )); then
-            sync="${COLOR_RED}ahead/behind${COLOR_NONE}"
-        elif (( gitRepoStatus[ahead] > 0 )); then
-            sync="${COLOR_RED}ahead${COLOR_NONE}"
-        elif (( gitRepoStatus[behind] > 0 )); then
-            sync="${COLOR_RED}behind${COLOR_NONE}"
-        fi
-
-        local dirty="${COLOR_GREEN}clean${COLOR_NONE}"
-        ((gitRepoStatus[added] + gitRepoStatus[modified] + gitRepoStatus[deleted] + gitRepoStatus[renamed] > 0)) && dirty="${COLOR_RED}dirty${COLOR_NONE}"
-
-        echo "${branch},${sync},${dirty},${repo}"
-    }
-
-    git-parse-repo-status-new gitRepoStatus
-    #git-for-each-repo-parallel display-status
-    git-for-each-repo display-status
-    #git-for-each-repo-parallel display-status | column -t -s ','
-}
-
