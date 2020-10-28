@@ -47,8 +47,8 @@ function recs-get-k8s() {
     if [[ $# -ne 2 ]] ; then
         echo "Usage: recs-get-k8s (dev|live) (util|main)"
     else
-        declare recsEnv=$1
-        declare recsSubEnv=$2
+        local recsEnv=$1
+        local recsSubEnv=$2
         aws s3 cp s3://com-elsevier-recs-${recsEnv}-certs/eks/recs-eks-${recsSubEnv}-${recsEnv}.conf ~/.kube/
         export KUBECONFIG=~/.kube/recs-eks-${recsSubEnv}-${recsEnv}.conf
     fi
@@ -57,6 +57,36 @@ compdef "_arguments \
     '1:environment arg:(dev live)' \
     '2:sub-environment arg:(util main)'" \
     recs-get-k8s
+
+function recs-ecr-login() {
+    if [[ $# -ne 1 ]] ; then
+        echo "Usage: recs-get-k8s (dev|live)"
+    else
+        local recsEnv=$1
+        local region="us-east-1"
+
+        local accountId
+        case "${recsEnv}" in
+            dev*)
+                accountId=975165675840
+            ;;
+
+            live*)
+                accountId=589287149623
+            ;;
+
+            *)
+                echo "ERROR: Unrecognised environment ${recsEnv}"
+                return -1
+            ;;
+        esac
+
+        aws ecr get-login-password --region "${region}" | docker login --username AWS --password-stdin "${accountId}.dkr.ecr.${region}.amazonaws.com"
+    fi
+}
+compdef "_arguments \
+    '1:environment arg:(dev live)'" \
+    recs-ecr-login
 
 # SonarQube                                                                 {{{1
 # ==============================================================================
