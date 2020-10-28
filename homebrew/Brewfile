@@ -93,6 +93,9 @@ brew "ammonite-repl"                            # Ammonite is a cleanroom re-imp
 brew "cabal-install"                            # Command-line interface for Cabal and Hackage
 brew "haskell-stack"                            # The Haskell Tool Stack
 
+# Groovy
+brew "groovy"                                   # Java-based scripting language
+
 # Python
 brew "python"                                   # Interpreted, interactive, object-oriented programming language
 brew "python@2"                                 # Interpreted, interactive, object-oriented programming language
