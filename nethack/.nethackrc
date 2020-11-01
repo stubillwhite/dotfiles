@@ -1,8 +1,24 @@
 OPTIONS=name:White
 OPTIONS=nonews
-OPTIONS=color,hilite_pet,boulder:0
+OPTIONS=color,menucolors,statushilites
+OPTIONS=hilite_pet,boulder:0
 OPTIONS=number_pad=0,extmenu,menustyle:combination
 OPTIONS=autopickup,pickup_types:$,pushweapon
 OPTIONS=showexp,showscore,time,toptenwin
 OPTIONS=DECGraphics
 
+MENUCOLOR="blessed"=cyan&bold
+MENUCOLOR="cursed"=red&bold
+MENUCOLOR="uncursed"=green
+
+# Forgotten spells
+MENUCOLOR="[a-zA-Z] - [a-zA-Z ]+[ ]+[0-9]+\*[ ]+[a-z]+[ ]+[0-9]+%"=magenta
+
+# Percentage cutoffs for hitpoints.
+OPTIONS=hilite_status:hitpoints/100%/brightgreen
+OPTIONS=hilite_status:hitpoints/<100%/green
+OPTIONS=hilite_status:hitpoints/<60%/yellow
+OPTIONS=hilite_status:hitpoints/<40%/red
+
+# Hilight multiple encumbrance statuses.
+OPTIONS=hilite_status:carrying-capacity/burdened/yellow/stressed/orange
