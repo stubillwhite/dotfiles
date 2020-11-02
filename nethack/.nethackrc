@@ -1,24 +1,109 @@
+# https://alt.org/nethack/userdata/E/Eidolos/Eidolos.nh343rc
+
+########################################
+# Currently playing
+########################################
+
+OPTIONS=role:wizard
+OPTIONS=gender:female
+OPTIONS=race:elf
+OPTIONS=align:chaotic
+
+########################################
+# General options
+########################################
+
 OPTIONS=name:White
 OPTIONS=nonews
-OPTIONS=color,menucolors,statushilites
 OPTIONS=hilite_pet,boulder:0
 OPTIONS=number_pad=0,extmenu,menustyle:combination
 OPTIONS=autopickup,pickup_types:$,pushweapon
 OPTIONS=showexp,showscore,time,toptenwin
 OPTIONS=DECGraphics
+OPTIONS=color,menucolors,statushilites
 
-MENUCOLOR="blessed"=cyan&bold
+########################################
+# Colours
+########################################
+
+# red, green, brown, blue, magenta, cyan, gray, orange, bright-green,
+# yellow, bright-blue, bright-magenta, bright-cyan, white
+
+# Items
+MENUCOLOR="blessed"=cyan&underline
 MENUCOLOR="cursed"=red&bold
 MENUCOLOR="uncursed"=green
 
 # Forgotten spells
 MENUCOLOR="[a-zA-Z] - [a-zA-Z ]+[ ]+[0-9]+\*[ ]+[a-z]+[ ]+[0-9]+%"=magenta
 
-# Percentage cutoffs for hitpoints.
-OPTIONS=hilite_status:hitpoints/100%/brightgreen
+# Hitpoints and prayer threshold
+OPTIONS=hilite_status:hitpoints/100%/cyan&underline
 OPTIONS=hilite_status:hitpoints/<100%/green
 OPTIONS=hilite_status:hitpoints/<60%/yellow
 OPTIONS=hilite_status:hitpoints/<40%/red
+OPTIONS=hilite_status:hitpoints/<14%/magenta&underline
 
-# Hilight multiple encumbrance statuses.
-OPTIONS=hilite_status:carrying-capacity/burdened/yellow/stressed/orange
+# Power
+OPTIONS=hilite_status:power/100%/cyan&underline
+OPTIONS=hilite_status:power/<100%/green
+OPTIONS=hilite_status:power/<60%/yellow
+OPTIONS=hilite_status:power/<40%/red
+OPTIONS=hilite_status:power/<20%/magenta&underline
+
+# Encumbrance
+OPTIONS=hilite_status:carrying-capacity/burdened/yellow
+OPTIONS=hilite_status:carrying-capacity/stressed/red
+
+########################################
+# Messages
+########################################
+
+# Emergencies
+MSGTYPE=stop "The (couatl.*eel|kraken) swings itself around you!"
+MSGTYPE=stop "The python grabs you!"
+MSGTYPE=stop "You don't feel very well"
+MSGTYPE=stop "You are turning a little green"
+MSGTYPE=stop "Your limbs are getting oozy"
+MSGTYPE=stop "Your skin begins to peel away"
+MSGTYPE=stop "You are turning into a green slime"
+MSGTYPE=stop "You are slowing down"
+MSGTYPE=stop "Your limbs are stiffening"
+MSGTYPE=stop "It constricts your throat!"
+MSGTYPE=stop "You find it hard to breathe"
+MSGTYPE=stop "You're gasping for air"
+MSGTYPE=stop "Your blood is having trouble reaching your brain"
+MSGTYPE=stop "You can no longer breathe"
+MSGTYPE=stop "You're turning blue"
+MSGTYPE=stop "Your consciousness is fading"
+MSGTYPE=stop "You feel deathly sick"
+MSGTYPE=stop "You feel much worse"
+MSGTYPE=stop "You feel even worse"
+
+# Vibrating square
+MSGTYPE=stop "You feel a strange vibration beneath "
+MSGTYPE=stop "You feel a strange vibration under your "
+
+# Able to #enhance
+MSGTYPE=stop "You feel more confident "
+
+# Status effects
+MSGTYPE=stop "You feel hungry"
+MSGTYPE=stop "You are beginning to feel hungry"
+MSGTYPE=stop "You are getting the munchies"
+MSGTYPE=stop "You feel weak now"
+MSGTYPE=stop "You still have the munchies"
+MSGTYPE=stop "You feel weak"
+MSGTYPE=stop "You are beginning to feel weak"
+MSGTYPE=stop "The munchies are interfering with your motor capabilities"
+MSGTYPE=stop " needs food, badly!"
+MSGTYPE=stop "You only feel hungry now"
+MSGTYPE=stop "You now have a lesser case of the munchies"
+MSGTYPE=stop "You faint from lack of food"
+MSGTYPE=stop "You regain consciousness"
+MSGTYPE=stop "You die from starvation"
+MSGTYPE=stop "You die from hunger and exhaustion"
+MSGTYPE=stop "You feel deathly sick"
+MSGTYPE=stop "You feel even worse"
+MSGTYPE=stop "You feel much worse"
+MSGTYPE=stop "You die from your illness"
