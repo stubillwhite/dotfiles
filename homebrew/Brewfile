@@ -47,7 +47,6 @@ brew "openssh"                                  # OpenBSD freely-licensed SSH co
 brew "parallel"                                 # Shell command parallelization utility
 brew "pkg-config"                               # Manage compile and link flags for libraries
 brew "sampler"                                  # Tool for shell commands execution, visualization and alerting
-brew "selecta"                                  # Fuzzy text selector for files and anything else you need to select
 brew "slackcat"                                 # Command-line utility for posting snippets to Slack
 brew "the_silver_searcher"                      # Code-search similar to ack
 brew "tree"                                     # Display directories as trees (with optional color/HTML output)
