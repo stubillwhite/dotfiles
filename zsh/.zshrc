@@ -100,6 +100,7 @@ alias shred='shred -vuz --iterations=10'
 alias git-clean='git clean -X -f -d'
 alias git-scrub='git clean -x -f -d'
 alias docker-entrypoint='docker inspect --format="{{.Config.Cmd}}"'
+alias display-colours='msgcat --color=test'
 
 alias vi='nvim'
 alias vim='nvim'
@@ -683,14 +684,14 @@ function git-merged-branches() {
 function git-open() {
     local filename=$1
 
-    local branch=$(git rev-parse --abbrev-ref HEAD 2> /dev/null)
-    ([[ $? -ne 0 ]] || [[ -z "$branch" ]]) && branch="master"
-
     local pathInRepo
     if [[ -n "${filename}" ]]; then
         pushd $(dirname "${filename}")
         pathInRepo=$(git ls-tree --full-name --name-only HEAD $(basename "${filename}"))
     fi
+
+    local branch=$(git rev-parse --abbrev-ref HEAD 2> /dev/null)
+    ([[ $? -ne 0 ]] || [[ -z "$branch" ]]) && branch="master"
 
     URL=$(git config remote.origin.url)
     echo "Opening '$URL'"
