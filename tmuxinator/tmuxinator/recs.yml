@@ -1,0 +1,14 @@
+# /Users/white1/.config/tmuxinator/recs.yml
+
+name: recs
+root: ~/Dev/recommenders/
+
+windows:
+  - recs:
+      layout: even-horizontal
+      panes:
+        - main:
+            - git-repos-pull
+        - infra:
+            - pushd infra
+            - git-repos-pull
