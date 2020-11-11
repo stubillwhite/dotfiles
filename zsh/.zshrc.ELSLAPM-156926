@@ -60,7 +60,7 @@ compdef "_arguments \
 
 function recs-ecr-login() {
     if [[ $# -ne 1 ]] ; then
-        echo "Usage: recs-get-k8s (dev|live)"
+        echo "Usage: recs-ecr-login (dev|live)"
     else
         local recsEnv=$1
         local region="us-east-1"
