@@ -19,6 +19,9 @@ brew "docker-compose"                           # Isolated development environme
 brew "docker-machine"                           # Create Docker hosts locally and on cloud providers
 brew "lazydocker"                               # The lazier way to manage everything docker
 
+# Game dev
+cask "godot"                                    # The game engine you waited for
+
 ################################################################################
 # Fun
 ################################################################################
