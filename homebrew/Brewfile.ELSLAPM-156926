@@ -49,6 +49,7 @@ cask "android-platform-tools"                   # Android SDK Platform-Tools
 brew "scrcpy"                                   # Display and control your Android device
 
 # Kafka
+brew "kafka"                                    # Publish-subscribe messaging rethought as a distributed commit log
 brew "kafkacat"                                 # Generic command-line non-JVM Apache Kafka producer and consumer
 
 tap 'adevinta/zoe'
