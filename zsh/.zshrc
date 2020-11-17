@@ -92,6 +92,7 @@ alias fmt-json='jq "."'                                                     # Pr
 alias tabulate-by-tab='column -t -s $''\t'' '                               # Tabluate TSV (cat foo.tsv | tabulate-by-tab)
 alias tabulate-by-comma='column -t -s '','' '                               # Tabluate CSV (cat foo.csv | tabulate-by-comma)
 alias as-stream='stdbuf -o0'                                                # Turn pipes to streams (tail -F foo.log | as-stream grep "bar")
+alias no-color="gsed -r 's/\x1b\[[0-9;]*m//g'"                              # Strip ANSI colour codes
 
 alias list-ports='netstat -anv'
 alias i2cssh='i2cssh -p stuw --iterm2'
@@ -769,7 +770,6 @@ function git-contributor-stats() {
     echo
     echo "Line count"
     git ls-tree -r --name-only HEAD | grep -ve "\(\.json\|\.sql\)" | xargs -n1 git blame --line-porcelain HEAD | grep "^author " | sort | uniq -c | sort -nr
-    #git log --no-merges --pretty='@%an' --shortstat | tr '\n' ' ' | tr '@' '\n'
 }
 
 # Display the size of objects in the Git log
@@ -908,6 +908,12 @@ function docker-rm-images() {
         docker images -q | xargs docker rmi
         docker images | grep "<none>" | awk '{print $3}' | xargs docker rmi
     fi
+}
+
+# k9s
+
+function k9s-logs() {
+    echo "$(k9s info | no-color | grep Logs | gsed -r 's/^Logs:\s+//g' | xargs dirname)/k9s-screens-white1"
 }
 
 # Machine-specific configuration                                            {{{1
