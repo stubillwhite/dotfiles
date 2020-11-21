@@ -16,6 +16,7 @@ cask "dbeaver-community"                        # Free universal database tool a
 
 brew "babashka"                                 # A Clojure babushka for the grey areas of Bash.
 brew "sampler"                                  # Tool for shell commands execution, visualization and alerting
+cask "microsoft-teams"                          # Microsoft Teams is your hub for teamwork
 
 tap 'eddieantonio/eddieantonio'
 brew "eddieantonio/eddieantonio/imgcat"         # It's like cat(1), but for images.
