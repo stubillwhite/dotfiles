@@ -193,7 +193,7 @@ function highlight() {
     color=$1
     pattern=$2
 
-	declare -A colors
+    declare -A colors
     colors[red]="\033[0;31m"
     colors[green]="\033[0;32m"
     colors[yellow]="\033[0;33m"
@@ -203,11 +203,11 @@ function highlight() {
     colors[default]="\033[0m"
 
     colorOn=$(echo -e "${colors[$color]}")
-   	colorOff=$(echo -e "${colors[default]}")
+    colorOff=$(echo -e "${colors[default]}")
 
-	gsed -u s"/$pattern/$colorOn\0$colorOff/g"
+    gsed -u s"/$pattern/$colorOn\0$colorOff/g"
 }
-compdef '_alternative "arguments:custom arg:(red green yellow blue magenta cyan)"' colorize
+compdef '_alternative "arguments:custom arg:(red green yellow blue magenta cyan)"' highlight
 
 # SSH tunneling                     {{{2
 # ======================================
