@@ -180,18 +180,32 @@ function confirm() {
     esac
 }
 
-# Colorize output
-# cat my-log.txt | colorize red ERROR
-function colorize() {
+# Highlight output using sed regex
+# cat my-log.txt | highlight red ERROR | highlight yellow WARNING
+function highlight() {
     if [[ $# -ne 2 ]] ; then
-        echo 'Usage: colorize COLOR PATTERN'
+        echo 'Usage: highlight COLOR PATTERN'
+        echo '  COLOR   The color to use (red, green, yellow, blue, magenta, cyan)'
+        echo '  PATTERN The sed regular expression to match'
         return 1
     fi
 
     color=$1
     pattern=$2
 
-    awk -v color=$color -v pattern=$pattern -f ~/Dev/my-stuff/shell-utils/colorize
+	declare -A colors
+    colors[red]="\033[0;31m"
+    colors[green]="\033[0;32m"
+    colors[yellow]="\033[0;33m"
+    colors[blue]="\033[0;34m"
+    colors[magenta]="\033[0;35m"
+    colors[cyan]="\033[0;36m"
+    colors[default]="\033[0m"
+
+    colorOn=$(echo -e "${colors[$color]}")
+   	colorOff=$(echo -e "${colors[default]}")
+
+	gsed -u s"/$pattern/$colorOn\0$colorOff/g"
 }
 compdef '_alternative "arguments:custom arg:(red green yellow blue magenta cyan)"' colorize
 
@@ -552,6 +566,14 @@ function git-repos-fetch() {
 
     git-for-each-repo-parallel fetch-repo 
     git-repos-status
+}
+
+function git-repos-contributor-stats() {
+    pull-repo() {
+        git --no-pager log --format="%an" --no-merges
+    }
+
+    git-for-each-repo pull-repo | sort | uniq -c | sort -r
 }
 
 # Parse Git status into a Zsh associative array
