@@ -52,6 +52,7 @@ brew "the_silver_searcher"                      # Code-search similar to ack
 brew "tree"                                     # Display directories as trees (with optional color/HTML output)
 brew "watch"                                    # Executes a program periodically, showing output fullscreen
 brew "wget"                                     # Internet file retriever
+brew "xsv"                                      # Fast CSV toolkit written in Rust
 brew "zsh"                                      # UNIX shell (command interpreter)
 cask "scroll-reverser"                          # Tool to reverse the direction of scrolling
 
