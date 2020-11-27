@@ -18,6 +18,7 @@ FILES=(
     "chemacs/.emacs-profiles.el"
     "doom/.doom.d"
     "git/.gitconfig"
+    "k9s/.k9s"
     "git/.githooks"
     "nethack/.nethackrc"
     "leiningen/.lein"
