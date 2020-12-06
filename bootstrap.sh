@@ -26,6 +26,7 @@ FILES=(
     "pylint/.pylintrc"
     "tig/.tigrc"
     "tmux/.tmux.conf"
+    "vscode/.vscode"
     "zsh/.bashrc"
     "zsh/.commonrc"
     "zsh/.zsh-completion"
