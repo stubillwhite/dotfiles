@@ -78,6 +78,7 @@ export PATH=/Applications/Emacs.app/Contents/MacOS:$PATH
 # Java                                                                      {{{1
 # ==============================================================================
 
+#export JAVA_HOME=/Library/Java/JavaVirtualMachines/adoptopenjdk-14.jdk/Contents/Home/
 export JAVA_HOME=/Library/Java/JavaVirtualMachines/adoptopenjdk-8.jdk/Contents/Home/
 export PATH=$JAVA_HOME:$PATH
 
