@@ -27,9 +27,6 @@ cask "licecap"                                  # Animated screen capture applic
 brew "gnupg"                                    # GNU Pretty Good Privacy (PGP) package
 cask "keybase"                                  # End-to-end encryption software
 
-# 2FA
-cask "authy"                                    # Authy Desktop
-
 ################################################################################
 # Utilities
 ################################################################################
