@@ -55,3 +55,8 @@
 [includeIf "gitdir:~/Dev/vcs-tools/"]
     path = ~/Dev/recommenders/.gitconfig
 
+[mailmap]
+	file = /Users/white1/.mailmap
+
+[init]
+	defaultBranch = main
