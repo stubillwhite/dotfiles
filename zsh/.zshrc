@@ -74,19 +74,17 @@ if_linux && {
     alias open='xdg-open'
 }
 
+# Better command defaults
 alias eject='diskutil eject'                                                # Eject disk
 alias env='env | sort'                                                      # env should be sorted
 alias tree='tree -A'                                                        # tree should be ascii
 alias watch='watch -c -x zsh -ic'                                           # watch should be colourised, use interactive Zsh shell
 alias entr='entr -c'                                                        # entr should be colourised
 alias gh='NO_COLOR=1 gh'                                                    # gh should not be colourised
+alias vi='nvim'                                                             # Use nvim instead of vi
+alias vim='nvim'                                                            # Use nvim instead of vim
 
-alias ssh-purge-key='ssh-keygen -R'                                         # Remove key from SSH files
-alias ssh-rm-connections='rm /tmp/ssh-mux_*'
-alias strip-ansi="perl -pe 's/\x1b\[[0-9;]*[mG]//g'"
-alias py-env-activate='source bin/activate'
-alias py-env-deactivate='deactivate'
-
+# Useful things to pipe things into
 alias fmt-xml='xmllint --format -'                                          # Prettify XML (cat foo.xml | fmt-xml)
 alias fmt-json='jq "."'                                                     # Prettify JSON (cat foo.json | fmt-json)
 alias tabulate-by-tab='column -t -s $''\t'' '                               # Tabluate TSV (cat foo.tsv | tabulate-by-tab)
@@ -94,17 +92,20 @@ alias tabulate-by-comma='column -t -s '','' '                               # Ta
 alias as-stream='stdbuf -o0'                                                # Turn pipes to streams (tail -F foo.log | as-stream grep "bar")
 alias no-color="gsed -r 's/\x1b\[[0-9;]*m//g'"                              # Strip ANSI colour codes
 
+alias ssh-purge-key='ssh-keygen -R'                                         # Remove key from SSH files
+alias ssh-rm-connections='rm /tmp/ssh-mux_*'
+alias strip-ansi="perl -pe 's/\x1b\[[0-9;]*[mG]//g'"
+alias py-env-activate='source bin/activate'
+alias py-env-deactivate='deactivate'
+
 alias list-ports='netstat -anv'
 alias i2cssh='i2cssh -p stuw --iterm2'
-alias sum='paste -s -d+ - | bc'
 alias shred='shred -vuz --iterations=10'
 alias git-clean='git clean -X -f -d'
 alias git-scrub='git clean -x -f -d'
 alias docker-entrypoint='docker inspect --format="{{.Config.Cmd}}"'
 alias display-colours='msgcat --color=test'
 
-alias vi='nvim'
-alias vim='nvim'
 
 # Specific tools                                                            {{{1
 # ==============================================================================
@@ -122,6 +123,7 @@ SHELLCHECK_OPTS+="-e SC2112 "    # Allow 'function' keyword
 
 export SBT_OPTS=-Xmx2G
 alias sbt-no-test='sbt "set test in assembly := {}"'
+alias sbt-test='sbt test it:test'
 
 # General file helpers              {{{2
 # ======================================
@@ -555,6 +557,7 @@ function git-repos-pull() {
 }
 
 # For each directory within the current directory, fetch the repo
+# TODO: --prune
 function git-repos-fetch() {
     local args=$*
 
@@ -682,6 +685,34 @@ function git-repos-unmerged-branches-all() {
 
     git-for-each-repo display-unmerged-branches-all
 }
+
+function git-repos-recent() {
+    recent() {
+        local cmd="git --no-pager log-recent --author='Jenkins' --invert-grep"
+        local output=$(eval "$cmd") 
+        if [[ $output = *[![:space:]]* ]]; then
+            pwd
+            eval "$cmd"
+            echo
+            echo
+        fi
+    }
+
+    git-for-each-repo recent 
+}
+
+function git-repos-authors() {
+    authors() {
+        git --no-pager log | grep "Author:" | sort | uniq
+    }
+
+    git-for-each-repo authors \
+        | gsed 's/Author: //' \
+        | gsed -r 's/|(\S+), (.+)\([^<]+\)/\2\1/' \
+        | sort \
+        | uniq
+}
+
 
 # For each directory within the current directory, generate a hacky lines of
 # code count 
@@ -823,7 +854,26 @@ function prompt-help() {
     echo $promptKey
 }
 
-# AWS
+# GitHub                            {{{2
+# ======================================
+
+function github-notify-when-reviewed() {
+    {
+        while true
+        do
+            echo '.'
+            sleep 3
+            (github-list-pull-requests | grep -v 'Pull requests for' | grep -q -R '\(has-reviews\|has-comments\)') || break
+        done
+
+        if (github-list-pull-requests | grep -v 'Pull requests for' | grep -q -R '\(has-reviews\|has-comments\)') ; then
+            tell-me "GitHub PR reviewed or commented on"
+        fi
+    } #> /dev/null 2>&1 & disown
+}
+
+# AWS                               {{{2
+# ======================================
 
 function aws-datapipeline-requirements() {
     while IFS=, read -rA x 
@@ -1007,4 +1057,37 @@ function git-parse-repo-status-new() {
 
     echo "${(kv)gitRepoStatus}"
     eval "$varName=( ${(kv)gitRepoStatus} )"
+}
+
+function git_clean_local_branches {
+  OPTION="-d";
+  if [[ "$1" == "-f" ]]; then
+    echo "WARNING! Removing with force";
+    OPTION="-D";
+  fi;
+
+  TO_REMOVE=`git branch -r | awk "{print \\$1}" | egrep -v -f /dev/fd/0 <(git branch -vv | grep origin) | awk "{print \\$1}"`;
+  if [[ -n "$TO_REMOVE" ]]; then
+    echo "Removing branches...";
+    echo "";
+    printf "\n$TO_REMOVE\n\n";
+    echo "Proceed?";
+
+    select result in Yes No; do
+      if [[ "$result" == "Yes" ]]; then
+        echo "Removing in progress...";
+        echo "$TO_REMOVE" | xargs git branch "$OPTION";
+        if [[ "$?" -ne "0" ]]; then
+          echo ""
+          echo "Some branches was not removed, you have to do it manually!";
+        else
+          echo "All branches removed!";
+        fi
+      fi
+
+      break;
+    done;
+  else
+    echo "You have nothing to clean";
+  fi
 }
