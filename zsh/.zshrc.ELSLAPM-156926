@@ -70,6 +70,12 @@ function recs-k9s-live() {
     k9s
 }
 
+function recs-k9s-util() {
+    aws-recs-prod
+    recs-get-k8s live util
+    k9s
+}
+
 function recs-ecr-login() {
     if [[ $# -ne 1 ]] ; then
         echo "Usage: recs-ecr-login (dev|live)"
@@ -108,7 +114,6 @@ function recs-api-statuses() {
         article-recommendations-popular.api
         article-recommendations-tailored.api
         article-recommendations-trending.api
-        enhanced-reading.api
         fi-recommender.api
         funding-logged-email-events.api
         library-stats.api
@@ -157,6 +162,7 @@ function sonarqube-run() {
         local sonarOpts="-Dsonar.host.url=\"${sonarServer}\" -DsonarScanner.home=\"${sonarScannerHome}\" -Dsonar.login=\"${sonarToken}\""
 
         #sbt clean coverage test coverageReport
+        echo sbt "-Dsonar.verbose=true ${sonarOpts} sonarScan"
         sbt "-Dsonar.verbose=true ${sonarOpts} sonarScan"
     fi
 }
