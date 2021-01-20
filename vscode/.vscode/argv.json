@@ -1,5 +1,5 @@
 // This configuration file allows you to pass permanent command line arguments to VS Code.
-// Only a subset of arguments is currently supported to reduce the likelyhood of breaking
+// Only a subset of arguments is currently supported to reduce the likelihood of breaking
 // the installation.
 //
 // PLEASE DO NOT CHANGE WITHOUT UNDERSTANDING THE IMPACT
@@ -11,7 +11,7 @@
 	// "disable-hardware-acceleration": true,
 
 	// Enabled by default by VS Code to resolve color issues in the renderer
-	// See https://github.com/Microsoft/vscode/issues/51791 for details
+	// See https://github.com/microsoft/vscode/issues/51791 for details
 	"disable-color-correct-rendering": true,
 
 	// Allows to disable crash reporting.
@@ -20,5 +20,5 @@
 
 	// Unique id used for correlating crash reports sent from this instance.
 	// Do not edit this value.
-	"crash-reporter-id": "c98060f3-563f-437a-b611-1e8402e817fe"
+	"crash-reporter-id": "00bd768a-980e-434f-9368-cb2f25a098df"
 }

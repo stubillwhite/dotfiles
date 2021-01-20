@@ -1,0 +1,237 @@
+{
+	"name": "haskell",
+	"displayName": "Haskell",
+	"description": "Haskell language support powered by the Haskell Language Server and ghcide",
+	"version": "1.2.0",
+	"license": "MIT",
+	"publisher": "haskell",
+	"engines": {
+		"vscode": "^1.39.0"
+	},
+	"keywords": [
+		"language",
+		"haskell",
+		"cabal",
+		"stack",
+		"lsp",
+		"multi-root ready"
+	],
+	"homepage": "https://github.com/haskell/vscode-haskell",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/haskell/vscode-haskell.git"
+	},
+	"bugs": {
+		"url": "https://github.com/haskell/vscode-haskell/issues"
+	},
+	"categories": [
+		"Programming Languages",
+		"Formatters",
+		"Linters",
+		"Other"
+	],
+	"icon": "images/haskell-logo.png",
+	"galleryBanner": {
+		"color": "#22172A",
+		"theme": "dark"
+	},
+	"activationEvents": [
+		"onLanguage:haskell",
+		"onLanguage:literate haskell"
+	],
+	"main": "./dist/extension",
+	"contributes": {
+		"languages": [
+			{
+				"id": "haskell",
+				"aliases": [
+					"Haskell",
+					"haskell"
+				],
+				"extensions": [
+					".hs"
+				]
+			},
+			{
+				"id": "literate haskell",
+				"aliases": [
+					"Literate Haskell",
+					"literate Haskell"
+				],
+				"extensions": [
+					".lhs"
+				]
+			}
+		],
+		"configuration": {
+			"type": "object",
+			"title": "Haskell",
+			"properties": {
+				"haskell.hlintOn": {
+					"title": "Hlint",
+					"scope": "resource",
+					"type": "boolean",
+					"default": true,
+					"description": "Get suggestions from hlint"
+				},
+				"haskell.maxNumberOfProblems": {
+					"scope": "resource",
+					"type": "number",
+					"default": 100,
+					"description": "Controls the maximum number of problems produced by the server"
+				},
+				"haskell.diagnosticsOnChange": {
+					"scope": "resource",
+					"type": "boolean",
+					"default": true,
+					"description": "Compute diagnostics continuously as you type. Turn off to only generate diagnostics on file save."
+				},
+				"haskell.liquidOn": {
+					"scope": "resource",
+					"type": "boolean",
+					"default": false,
+					"description": "Get diagnostics from liquid haskell"
+				},
+				"haskell.completionSnippetsOn": {
+					"title": "Completion Snippets",
+					"scope": "resource",
+					"type": "boolean",
+					"default": true,
+					"description": "Show snippets with type information when using code completion"
+				},
+				"haskell.formatOnImportOn": {
+					"scope": "resource",
+					"type": "boolean",
+					"default": true,
+					"description": "When adding an import, use the formatter on the result"
+				},
+				"haskell.formattingProvider": {
+					"scope": "resource",
+					"type": "string",
+					"enum": [
+						"brittany",
+						"floskell",
+						"fourmolu",
+						"ormolu",
+						"stylish-haskell",
+						"none"
+					],
+					"default": "ormolu",
+					"description": "The formatter to use when formatting a document or range"
+				},
+				"haskell.trace.server": {
+					"scope": "resource",
+					"type": "string",
+					"enum": [
+						"off",
+						"messages"
+					],
+					"default": "off",
+					"description": "Traces the communication between VS Code and the language server."
+				},
+				"haskell.logFile": {
+					"scope": "resource",
+					"type": "string",
+					"default": "",
+					"description": "If set, redirects the logs to a file."
+				},
+				"haskell.languageServerVariant": {
+					"scope": "resource",
+					"type": "string",
+					"enum": [
+						"haskell-ide-engine",
+						"haskell-language-server",
+						"ghcide"
+					],
+					"default": "haskell-language-server",
+					"description": "Which language server to use."
+				},
+				"haskell.serverExecutablePath": {
+					"scope": "resource",
+					"type": "string",
+					"default": "",
+					"description": "Manually set a language server executable. Can be something on the $PATH or a path to an executable itself. Works with ~, ${HOME} and ${workspaceFolder}."
+				},
+				"haskell.updateBehavior": {
+					"scope": "machine",
+					"type": "string",
+					"enum": [
+						"keep-up-to-date",
+						"prompt",
+						"never-check"
+					],
+					"enumDescriptions": [
+						"Always download the latest available version when it is published",
+						"Prompt before upgrading to a newer version",
+						"Don't check for newer versions"
+					],
+					"default": "keep-up-to-date",
+					"markdownDescription": "Only applicable with `#haskell.languageServerVariant#` set to `haskell-language-server`. Determine what to do when a new version of the language server is available."
+				}
+			}
+		},
+		"commands": [
+			{
+				"command": "haskell.commands.importIdentifier",
+				"title": "Haskell: Import identifier",
+				"description": "Imports a function or type based on a Hoogle search"
+			},
+			{
+				"command": "haskell.commands.restartServer",
+				"title": "Haskell: Restart Haskell LSP server",
+				"description": "Restart the Haskell LSP server"
+			}
+		]
+	},
+	"scripts": {
+		"vscode:prepublish": "webpack --mode production",
+		"compile": "webpack --mode none",
+		"watch": "webpack --mode none --watch --info-verbosity verbose",
+		"tslint": "tslint -p tsconfig.json -c tslint.json --format stylish 'src/**/*.ts'",
+		"tslint-fix": "tslint --fix -p tsconfig.json  -c tslint.json --format stylish 'src/**/*.ts'",
+		"push-tag": "git tag -a $npm_package_version -m \"Version $npm_package_version\" && git push origin $npm_package_version"
+	},
+	"husky": {
+		"hooks": {
+			"pre-commit": "pretty-quick --staged"
+		}
+	},
+	"devDependencies": {
+		"@types/cheerio": "^0.22.17",
+		"@types/js-yaml": "^3.12.3",
+		"@types/lodash-es": "^4.17.3",
+		"@types/lru-cache": "^4.1.2",
+		"@types/node": "^14.0.3",
+		"@types/request-promise-native": "^1.0.17",
+		"@types/vscode": "^1.39.0",
+		"@types/yauzl": "^2.9.1",
+		"husky": "^4.2.5",
+		"prettier": "^2.0.5",
+		"pretty-quick": "^2.0.1",
+		"ts-loader": "^6.2.2",
+		"tslint": "^5.20.1",
+		"tslint-loader": "^3.5.4",
+		"typescript": "^3.9.5",
+		"webpack": "^4.42.1",
+		"webpack-cli": "^3.3.11"
+	},
+	"extensionDependencies": [
+		"justusadam.language-haskell"
+	],
+	"dependencies": {
+		"cheerio": "^1.0.0-rc.3",
+		"extend": ">=3.0.2",
+		"js-yaml": "^3.13.1",
+		"lodash-es": "^4.17.15",
+		"lru-cache": "^4.1.5",
+		"request": "^2.88.2",
+		"request-promise-native": "^1.0.8",
+		"vscode-languageclient": "6.1.3",
+		"yauzl": "^2.10.0"
+	},
+	"__metadata": {
+		"id": "aead9e6c-3483-4ce4-a09f-843e25ce696f",
+		"publisherId": "15dd703a-8dc9-4836-8bca-956652720b1c",
+		"publisherDisplayName": "Haskell"
+	}
+}
