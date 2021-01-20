@@ -32,6 +32,7 @@ FILES=(
     "zsh/.zsh-completion"
     "zsh/.zshrc"
     "zsh/.zshrc.$(uname -n)"
+    "zsh/.zshrc.no-commit"
     "zsh/.zshrc.darwin"
     "zsh/.zshrc.linux"
 )

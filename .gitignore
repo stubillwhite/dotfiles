@@ -5,3 +5,4 @@
 /homebrew/Brewfile.lock.json
 /homebrew/Brewfile.*.lock.json
 .gitconfig.local
+**/*.no-commit
