@@ -106,7 +106,6 @@ alias git-scrub='git clean -x -f -d'
 alias docker-entrypoint='docker inspect --format="{{.Config.Cmd}}"'
 alias display-colours='msgcat --color=test'
 
-
 # Specific tools                                                            {{{1
 # ==============================================================================
 
@@ -530,6 +529,8 @@ function git-for-each-repo() {
     done
 }
 
+# For each directory within the current directory, if the directory is a Git
+# repository then execute the supplied function in parallel
 function git-for-each-repo-parallel() {
     local dirs=$(find . -type d -depth 1)
 
@@ -544,7 +545,7 @@ function git-for-each-repo-parallel() {
             "
 }
 
-# For each directory within the current directory, pull the repo
+# For each repo within the current directory, pull the repo
 function git-repos-pull() {
     pull-repo() {
         echo "Pulling $(basename $PWD)"
@@ -556,8 +557,7 @@ function git-repos-pull() {
     git-repos-status
 }
 
-# For each directory within the current directory, fetch the repo
-# TODO: --prune
+# For each repo within the current directory, fetch the repo
 function git-repos-fetch() {
     local args=$*
 
@@ -569,14 +569,6 @@ function git-repos-fetch() {
 
     git-for-each-repo-parallel fetch-repo 
     git-repos-status
-}
-
-function git-repos-contributor-stats() {
-    pull-repo() {
-        git --no-pager log --format="%an" --no-merges
-    }
-
-    git-for-each-repo pull-repo | sort | uniq -c | sort -r
 }
 
 # Parse Git status into a Zsh associative array
@@ -625,6 +617,7 @@ function git-parse-repo-status() {
     gitRepoStatus[stashed]=$stashed
 }
 
+# For each repo within the current directory, display the respository status
 function git-repos-status() {
     display-status() {
         git-parse-repo-status
@@ -654,8 +647,8 @@ function git-repos-status() {
     git-for-each-repo display-status | column -t -s ','
 }
 
-# For each directory within the current directory, display whether the
-# directory contains unmerged branches locally
+# For each repo within the current directory, display whether the repo contains
+# unmerged branches locally
 function git-repos-unmerged-branches() {
     display-unmerged-branches() {
         local cmd="git branch --no-merged main"
@@ -670,8 +663,8 @@ function git-repos-unmerged-branches() {
     git-for-each-repo display-unmerged-branches
 }
 
-# For each directory within the current directory, display whether the
-# directory contains unmerged branches locally and remote
+# For each repo within the current directory, display whether the repo contains
+# unmerged branches locally and remote
 function git-repos-unmerged-branches-all() {
     display-unmerged-branches-all() {
         local cmd="git branch --all --no-merged main"
@@ -686,6 +679,8 @@ function git-repos-unmerged-branches-all() {
     git-for-each-repo display-unmerged-branches-all
 }
 
+# For each repo within the current directory, display recent changes in the
+# repo
 function git-repos-recent() {
     recent() {
         local cmd="git --no-pager log-recent --author='Jenkins' --invert-grep"
@@ -700,6 +695,15 @@ function git-repos-recent() {
 
     git-for-each-repo recent 
 }
+
+function git-repos-contributor-stats() {
+    pull-repo() {
+        git --no-pager log --format="%an" --no-merges
+    }
+
+    git-for-each-repo pull-repo | sort | uniq -c | sort -r
+}
+
 
 function git-repos-authors() {
     authors() {
@@ -778,21 +782,6 @@ function git-open() {
     [[ -n "${filename}" ]] && popd
 }
 
-# Open the git repo in the browser
-function git-open-old() {
-    URL=$(git config remote.origin.url)
-    echo "Opening '$URL'"
-    if [[ $URL =~ "git@" ]]; then
-        echo "$URL" | sed -e 's/:/\//' | sed -e 's/git@/http:\/\//' | xargs $OPEN_CMD
-    elif [[ $URL =~ ^https:(.+)@bitbucket.org/(.+) ]]; then
-        echo "$URL" | sed -e 's/.git$//' | xargs $OPEN_CMD 
-    elif [[ $URL =~ "^https:" ]]; then
-        echo "$URL" | xargs $OPEN_CMD
-    else
-        echo "Failed to open due to unrecognised URL '$URL'"
-    fi
-}
-
 # Archive the Git branch by tagging then deleting it
 function git-archive-branch() {
     if [[ $# -ne 1 ]] ; then
@@ -803,26 +792,6 @@ function git-archive-branch() {
 
     git tag archive/$1 $1
     git branch -D $1
-}
-
-# Configure personal email
-function git-config-personal-email() {
-    git config --replace-all user.email "stubillwhite@gmail.com"
-}
-
-# Configure work email
-function git-config-work-email() {
-    git config --replace-all user.email "s.white.1@elsevier.com"
-}
-
-# Git stats for the current repo
-function git-contributor-stats() {
-    echo "Commit count"
-    git shortlog -sn --no-merges
-
-    echo
-    echo "Line count"
-    git ls-tree -r --name-only HEAD | grep -ve "\(\.json\|\.sql\)" | xargs -n1 git blame --line-porcelain HEAD | grep "^author " | sort | uniq -c | sort -nr
 }
 
 # Display the size of objects in the Git log
