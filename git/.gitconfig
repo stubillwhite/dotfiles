@@ -13,6 +13,7 @@
     push-branch = !git push --set-upstream origin $(git symbolic-ref --short HEAD)
     accept-ours = "!f() { [ -z \"$@\" ] && set - '.'; git checkout --ours -- \"$@\"; git add -u -- \"$@\"; }; f"
     accept-theirs = "!f() { [ -z \"$@\" ] && set - '.'; git checkout --theirs -- \"$@\"; git add -u -- \"$@\"; }; f"
+    contributor-stats = !git --no-pager log --format="%an" --no-merges | sort | uniq -c | sort -r
 
 [core]
 	editor = nvim
@@ -50,6 +51,9 @@
     path = ~/Dev/recommenders/.gitconfig
 
 [includeIf "gitdir:~/Dev/vcs-tools/"]
+    path = ~/Dev/recommenders/.gitconfig
+
+[includeIf "gitdir:~/Dev/labs/"]
     path = ~/Dev/recommenders/.gitconfig
 
 [mailmap]

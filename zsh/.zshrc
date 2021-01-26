@@ -696,14 +696,28 @@ function git-repos-recent() {
     git-for-each-repo recent 
 }
 
+# For each repo within the current directory, grep for the argument in the
+# history
+function git-repos-grep-history() {
+    local str=$1
+
+    check-history() {
+        local str=$1
+        pwd
+        git grep "${str}" $(git rev-list --all | tac)
+        echo
+    }
+
+    git-for-each-repo-parallel check-history "${str}"
+}
+
 function git-repos-contributor-stats() {
-    pull-repo() {
+    contributor-stats() {
         git --no-pager log --format="%an" --no-merges
     }
 
-    git-for-each-repo pull-repo | sort | uniq -c | sort -r
+    git-for-each-repo contributor-stats | sort | uniq -c | sort -r
 }
-
 
 function git-repos-authors() {
     authors() {
@@ -826,19 +840,19 @@ function prompt-help() {
 # GitHub                            {{{2
 # ======================================
 
+# Notify me when my GitHub PR has been reviewed
 function github-notify-when-reviewed() {
     {
         while true
         do
-            echo '.'
-            sleep 3
-            (github-list-pull-requests | grep -v 'Pull requests for' | grep -q -R '\(has-reviews\|has-comments\)') || break
+            sleep 30
+            (github-list-pull-requests | grep -v 'Pull requests for' | grep -q -R '\(has-reviews\|has-comments\)') && break
         done
 
         if (github-list-pull-requests | grep -v 'Pull requests for' | grep -q -R '\(has-reviews\|has-comments\)') ; then
             tell-me "GitHub PR reviewed or commented on"
         fi
-    } #> /dev/null 2>&1 & disown
+    } > /dev/null 2>&1 & disown
 }
 
 # AWS                               {{{2
