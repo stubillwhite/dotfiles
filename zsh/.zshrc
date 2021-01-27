@@ -92,11 +92,13 @@ alias tabulate-by-comma='column -t -s '','' '                               # Ta
 alias as-stream='stdbuf -o0'                                                # Turn pipes to streams (tail -F foo.log | as-stream grep "bar")
 alias no-color="gsed -r 's/\x1b\[[0-9;]*m//g'"                              # Strip ANSI colour codes
 
+alias strip-ansi="perl -pe 's/\x1b\[[0-9;]*[mG]//g'"
+
 alias ssh-purge-key='ssh-keygen -R'                                         # Remove key from SSH files
 alias ssh-rm-connections='rm /tmp/ssh-mux_*'
-alias strip-ansi="perl -pe 's/\x1b\[[0-9;]*[mG]//g'"
 alias py-env-activate='source bin/activate'
 alias py-env-deactivate='deactivate'
+alias create-react-app='npx create-react-app'                               # Shortcut to create a new React app
 
 alias list-ports='netstat -anv'
 alias i2cssh='i2cssh -p stuw --iterm2'
