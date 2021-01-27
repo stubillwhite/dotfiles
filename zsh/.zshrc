@@ -809,6 +809,12 @@ function git-archive-branch() {
     git tag archive/$1 $1
     git branch -D $1
 }
+compdef '_alternative \
+  "arguments:custom arg:($(git branch --no-merged main))" \
+  ' \
+  git-archive-branch
+
+#git branch --no-merged main
 
 # Display the size of objects in the Git log
 # https://stackoverflow.com/a/42544963
