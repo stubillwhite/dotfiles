@@ -1,0 +1,71 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.IntelliJSyntaxAnalyzer = void 0;
+class IntelliJSyntaxAnalyzer {
+}
+exports.IntelliJSyntaxAnalyzer = IntelliJSyntaxAnalyzer;
+IntelliJSyntaxAnalyzer.NO_MAPPING = undefined;
+IntelliJSyntaxAnalyzer.VSCODE_DELIMITTER = '+';
+IntelliJSyntaxAnalyzer.INTELLIJ_TO_VSCODE_KEY = new Map([
+    [/ /g, IntelliJSyntaxAnalyzer.VSCODE_DELIMITTER],
+    [/back_quote/g, '[Backquote]'],
+    [/minus/g, '[Minus]'],
+    [/equals/g, '[Equal]'],
+    [/open_bracket/g, '[BracketLeft]'],
+    [/close_bracket/g, '[BracketRight]'],
+    [/back_slash/g, '[Backslash]'],
+    [/semicolon/g, '[Semicolon]'],
+    [/quotedbl/g, '"'],
+    [/quote/g, '[Quote]'],
+    [/comma/g, '[Comma]'],
+    [/period/g, '[Period]'],
+    [/back_slash/g, '\\'],
+    [/slash/g, '[Slash]'],
+    [/left_parenthesis/g, '('],
+    [/right_parenthesis/g, ')'],
+    [/page_up/g, '[PageUp]'],
+    [/page_down/g, '[PageDown]'],
+    [/left/g, '[ArrowLeft]'],
+    [/up/g, '[ArrowUp]'],
+    [/right/g, '[ArrowRight]'],
+    [/down/g, '[ArrowDown]'],
+    [/end/g, '[End]'],
+    [/home/g, '[Home]'],
+    [/tab/g, '[Tab]'],
+    [/enter/g, '[Enter]'],
+    [/escape/g, '[Escape]'],
+    [/back_space/g, '[Backspace]'],
+    [/space/g, '[Space]'],
+    [/delete/g, '[Delete]'],
+    [/pause/g, '[Pause]'],
+    [/caps_lock/g, '[CapsLock]'],
+    [/insert/g, '[Insert]'],
+    [/exclamation_mark/g, '!'],
+    [/number_sign/g, '#'],
+    [/dollar/g, '$'],
+    [/circumflex/g, '^'],
+    [/ampersand/g, '&'],
+    [/asterisk/g, '*'],
+    [/underscore/g, '_'],
+    [/plus/g, '+'],
+    [/colon/g, '.'],
+    [/less/g, '<'],
+    [/greater/g, '>'],
+    [/numpad0/g, '[Numpad0]'],
+    [/numpad1/g, '[Numpad1]'],
+    [/numpad2/g, '[Numpad2]'],
+    [/numpad3/g, '[Numpad3]'],
+    [/numpad4/g, '[Numpad4]'],
+    [/numpad5/g, '[Numpad5]'],
+    [/numpad6/g, '[Numpad6]'],
+    [/numpad7/g, '[Numpad7]'],
+    [/numpad8/g, '[Numpad8]'],
+    [/numpad9/g, '[Numpad9]'],
+    [/multiply/g, '[NumpadMultiply]'],
+    // [//g, "[NumpadAdd]"], // FIXME:
+    // [//g, "[NumpadComma]"], // FIXME:
+    [/subtract/g, '[NumpadSubtract'],
+    [/decimal/g, '[NumpadDecimal'],
+    [/divide/g, '[NumpadDivide]'],
+]);
+//# sourceMappingURL=IntelliJSyntaxAnalyzer.js.map
