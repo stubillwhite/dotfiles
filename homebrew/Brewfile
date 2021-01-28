@@ -114,6 +114,7 @@ cask "visual-studio-code"                       # Open-source code editor
 brew "awscli"                                   # Official Amazon AWS command-line interface
 brew "awslogs"                                  # Simple command-line tool to read AWS CloudWatch logs
 brew "terraform", link: false                   # Tool to build, change, and version infrastructure
+brew "terragrunt"                               # Thin wrapper for Terraform e.g. for locking state
 brew "tfenv", link: true                        # Terraform version manager inspired by rbenv
 
 # SQL
