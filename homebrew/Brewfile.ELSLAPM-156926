@@ -56,9 +56,8 @@ brew "kafkacat"                                 # Generic command-line non-JVM A
 tap 'adevinta/zoe'
 brew "adevinta/homebrew-zoe/zoe"                # The missing companion for Kafka
 
-# SBT dependency analysis
-tap 'coursier/formulas'
-brew "coursier/formulas/coursier"               # Coursier launcher
-
 # SonarScanner for SonarQube
 brew "sonar-scanner"                            # Launcher to analyze a project with SonarQube
+
+# Load tools
+brew "hey"                                      # HTTP load generator, ApacheBench (ab) replacement
