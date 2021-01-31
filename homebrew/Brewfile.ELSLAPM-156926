@@ -40,10 +40,13 @@ brew "lazydocker"                               # The lazier way to manage every
 
 # Kubernetes
 brew "kubernetes-cli"                           # Kubernetes command-line interface
+brew "stern"                                    # Tail multiple Kubernetes pods & their containers
 cask "lens"                                     # Kubernetes IDE
 
 tap 'derailed/k9s'
 brew "derailed/k9s/k9s"                         # Kubernetes CLI To Manage Your Clusters In Style!
+
+
 
 # Android
 cask "android-platform-tools"                   # Android SDK Platform-Tools
