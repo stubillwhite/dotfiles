@@ -4,9 +4,9 @@
 
 # Java
 tap "AdoptOpenJDK/openjdk"
-cask "adoptopenjdk14"                            # AdoptOpenJDK 8
+cask "adoptopenjdk14"                           # AdoptOpenJDK 14
 
-cask "zoomus"                                   # Video communication and virtual meeting platform
+brew "zoom"                                     # Video communication and virtual meeting platform
 cask "homebrew/cask-drivers/garmin-express"     # Garmin desktop tool
 
 ################################################################################
