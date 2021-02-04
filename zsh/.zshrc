@@ -681,6 +681,21 @@ function git-repos-unmerged-branches-all() {
     git-for-each-repo display-unmerged-branches-all
 }
 
+# For each repo within the current directory, display stashes
+function git-repos-code-stashes() {
+    stashes() {
+        local cmd="git stash list"
+        local output=$(eval "$cmd") 
+        if [[ $output = *[![:space:]]* ]]; then
+            pwd
+            eval "$cmd"
+            echo
+        fi
+    }
+
+    git-for-each-repo stashes 
+}
+
 # For each repo within the current directory, display recent changes in the
 # repo
 function git-repos-recent() {
@@ -806,7 +821,7 @@ function git-archive-branch() {
         return 1
     fi
 
-    git tag archive/$1 $1
+    # git tag archive/$1 $1
     git branch -D $1
 }
 compdef '_alternative \
