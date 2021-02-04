@@ -143,8 +143,8 @@ function recs-api-statuses() {
             printf "\n"
         done
     ) | column -t -s '|' \
-      | highlight red   '[45][0-9]\+' \
-      | highlight green '[2][0-9]\+'
+      | highlight red   '\b[045][0-9]\+\b' \
+      | highlight green '\b[2][0-9]\+\b'
 }
 
 # SonarQube                                                                 {{{1
