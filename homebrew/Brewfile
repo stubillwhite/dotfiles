@@ -103,6 +103,9 @@ brew "python@2"                                 # Interpreted, interactive, obje
 # Elm
 brew "elm"                                      # Functional programming language for building browser-based GUIs
 
+# Go
+brew "go"                                       # Open source programming language to build simple/reliable/efficient software
+
 # Ruby
 brew "ruby"                                     # Powerful, clean, object-oriented scripting language
 
