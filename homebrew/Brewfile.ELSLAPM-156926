@@ -15,7 +15,6 @@ cask "dbeaver-community"                        # Free universal database tool a
 ################################################################################
 
 brew "babashka"                                 # A Clojure babushka for the grey areas of Bash.
-brew "sampler"                                  # Tool for shell commands execution, visualization and alerting
 cask "microsoft-teams"                          # Microsoft Teams is your hub for teamwork
 
 tap 'eddieantonio/eddieantonio'
@@ -45,8 +44,6 @@ cask "lens"                                     # Kubernetes IDE
 
 tap 'derailed/k9s'
 brew "derailed/k9s/k9s"                         # Kubernetes CLI To Manage Your Clusters In Style!
-
-
 
 # Android
 cask "android-platform-tools"                   # Android SDK Platform-Tools
