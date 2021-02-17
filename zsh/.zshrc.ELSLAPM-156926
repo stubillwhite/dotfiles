@@ -4,6 +4,8 @@
 # ==============================================================================
 alias tunnel-live-aurora-WRITEABLE='tunnel-open 4306 aurora-newsflo-live.cluster-cyva1uzg7p7h.us-east-1.rds.amazonaws.com 3306 s.white@bastion.live.newsflo'
 
+alias ssh-newsflo='ssh -F ~/.ssh/config-newsflo'
+
 # AWS authentication                                                        {{{1
 # ==============================================================================
 
@@ -13,6 +15,8 @@ alias aws-bos-utility="aws-developer-role $ACC_BOS_UTILITY ADFS-Developer aws-ra
 alias aws-bos-dev="aws-developer-role $ACC_BOS_DEV ADFS-Developer aws-rap-bosdev"
 alias aws-bos-staging="aws-developer-role $ACC_BOS_STAGING ADFS-Developer aws-rap-bosstaging"
 alias aws-bos-prod="aws-developer-role $ACC_BOS_PROD ADFS-Developer aws-rap-bosprod"
+alias aws-newsflo-dev="aws-developer-role $ACC_NEWSFLO_DEV ADFS-EnterpriseAdmin aws-rap-recommendersdev"
+alias aws-newsflo-prod="aws-developer-role $ACC_NEWSFLO_PROD ADFS-EnterpriseAdmin aws-rap-recommendersprod"
 alias aws-recs-dev="aws-developer-role $ACC_RECS_DEV ADFS-EnterpriseAdmin aws-rap-recommendersdev"
 alias aws-recs-prod="aws-developer-role $ACC_RECS_PROD ADFS-EnterpriseAdmin aws-rap-recommendersprod"
 
@@ -117,13 +121,11 @@ function recs-api-statuses() {
         fi-recommender.api
         funding-logged-email-events.api
         library-stats.api
-        people-co-authors.api
         raven-email-sent-stats.api
         recs-events-service.api
         recs-focus-stats.api
         recs-funding-institutional-recommender.api
         recs-mendeley-funding-recommender.api
-        recs-mendeley-user-rep.api
         recs-reviewers-recommender.api
         sd-article-recommendations.api
         sd-hpcc-related-articles.api
@@ -131,7 +133,6 @@ function recs-api-statuses() {
         sd-related-articles.api
         sd-user-activity.api
         sd-user-recommendations.api
-        sutd-recommender.api
     )
     (
         printf "%s|%s|%s\n" "API" "Dev" "Live"
@@ -186,3 +187,65 @@ function conda-insinuate() {
     unset __conda_setup
     # <<< conda initialize <<<
 }
+
+# Newsflo AWS                                                               {{{1
+# ==============================================================================
+
+function sshx-tagged-aws-machines() {
+    if [[ $# -ne 3 ]] ; then
+        echo 'Usage: sshx-tagged-aws-machines TAG'
+        return 1
+    fi
+
+    declare tag=$1
+
+    echo 'Finding machines'
+    machines=($(aws ec2 describe-instances | jq --raw-output '.Reservations[].Instances[]? | select(.State.Name=="running") | select(.Tags[] | select((.Key=="Name") and (.Value=="'$tag'"))) | .NetworkInterfaces[].PrivateIpAddresses[].PrivateIpAddress'))
+
+    echo "Opening SSH to $machines[*]"
+    i2cssh $machines[*]
+}
+
+function aws-instance-info() {
+    local tag=$1
+
+    aws ec2 describe-instances | jq --raw-output '.Reservations[].Instances[]? | select(.Tags[].Value=="'$tag'") | select(.State.Name=="running")'
+}
+compdef _aws-tag aws-instance-info
+
+# List the values of tagged AWS instances
+function aws-tag-values() {
+    if [[ $# -ne 1 ]] ; then
+        echo 'Usage: aws-tag-values PROFILE REGION KEY'
+        return 1
+    fi
+
+    local key=$1
+    
+    aws ec2 describe-instances | jq --raw-output '.Reservations[].Instances[].Tags[]? | select(.Key=="'$key'") | .Value' | sort | uniq
+}
+compdef _aws-tag aws-tag-values
+
+# List the IPs for tagged AWS instances
+function aws-instance-ips() {
+    if [[ $# -ne 1 ]] ; then
+        echo 'Usage: aws-instance-ips TAG'
+        return 1
+    fi
+
+    local tag=$1
+
+    aws ec2 describe-instances | jq --raw-output '.Reservations[].Instances[] | select(.Tags[]?.Value=="'$tag'") | select(.State.Name=="running") | .PrivateIpAddress' | sort | uniq
+}
+compdef _aws-tag aws-instance-ips
+
+# List the IPs for all AWS instances
+function aws-all-instance-ips() {
+    aws ec2 describe-instances | jq --raw-output '["Name", "IP address", "Instance ID", "Instance type", "AMI ID", "Launch time", "Monitoring"], (.Reservations[].Instances[]? | select(.State.Name=="running") | [ (.Tags[]? | (select(.Key=="Name")).Value) // "-", .NetworkInterfaces[].PrivateIpAddresses[].PrivateIpAddress, .InstanceId, .InstanceType, .ImageId, .LaunchTime, .Monitoring.State]) | @csv' | sort | column -t -s "," | sed 's/\"//g'
+}
+
+# List AWS instance limits
+function aws-ec2-instance-limits() {
+    aws service-quotas list-service-quotas --service-code ec2 | jq --raw-output '(.Quotas[] | ([.QuotaName, .Value])) | @csv' | column -t -s "," | sed 's/\"//g'
+}
+

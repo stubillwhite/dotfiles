@@ -4,13 +4,9 @@ _aws-tag() {
     local state
 
     _arguments \
-        '1: :->profile'\
-        '2: :->region'\
         '*: :->tag'
 
     case $state in
-        (profile) _arguments '1:profiles:(newsflo newsflo-prod)' ;;
-        (region) _arguments '2:regions:(us-east-1)' ;;
         (*) compadd $(aws-tag-values $words[2] $words[3] Name)
     esac
 }
