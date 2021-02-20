@@ -717,7 +717,7 @@ function git-open() {
         echo "Failed to open due to unrecognised URL '$URL'"
     fi
 
-    [[ -n "${filename}" ]] && popd
+    [[ -n "${filename}" ]] && popd > /dev/null 2>&1
 }
 
 # Archive the Git branch by tagging then deleting it
