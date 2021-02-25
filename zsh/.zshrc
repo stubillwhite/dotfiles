@@ -90,15 +90,18 @@ alias fmt-json='jq "."'                                                     # Pr
 alias tabulate-by-tab='column -t -s $''\t'' '                               # Tabluate TSV (cat foo.tsv | tabulate-by-tab)
 alias tabulate-by-comma='column -t -s '','' '                               # Tabluate CSV (cat foo.csv | tabulate-by-comma)
 alias as-stream='stdbuf -o0'                                                # Turn pipes to streams (tail -F foo.log | as-stream grep "bar")
-alias no-color="gsed -r 's/\x1b\[[0-9;]*m//g'"                              # Strip ANSI colour codes
+alias strip-color="gsed -r 's/\x1b\[[0-9;]*m//g'"                           # Strip ANSI colour codes
+alias strip-ansi="perl -pe 's/\x1b\[[0-9;]*[mG]//g'"                        # Strip all ANSI control codes
 
-alias strip-ansi="perl -pe 's/\x1b\[[0-9;]*[mG]//g'"
-
-alias ssh-purge-key='ssh-keygen -R'                                         # Remove key from SSH files
 alias ssh-rm-connections='rm /tmp/ssh-mux_*'
 alias py-env-activate='source bin/activate'
 alias py-env-deactivate='deactivate'
+
+# Other useful stuff
+alias reload-zsh-config="exec zsh"                                          # Reload Zsh config
+alias display-colours='msgcat --color=test'                                 # Display terminal colors
 alias create-react-app='npx create-react-app'                               # Shortcut to create a new React app
+alias ssh-purge-key='ssh-keygen -R'                                         # Remove key from SSH files (ssh-purge-key 10.188.188.192)
 
 alias list-ports='netstat -anv'
 alias i2cssh='i2cssh -p stuw --iterm2'
@@ -106,7 +109,6 @@ alias shred='shred -vuz --iterations=10'
 alias git-clean='git clean -X -f -d'
 alias git-scrub='git clean -x -f -d'
 alias docker-entrypoint='docker inspect --format="{{.Config.Cmd}}"'
-alias display-colours='msgcat --color=test'
 
 # Specific tools                                                            {{{1
 # ==============================================================================
@@ -327,52 +329,6 @@ function fast-ai-tunnel-open() {
 }
 alias tunnel-fast-ai='fast-ai-tunnel-open 8888 fast-ai-server 8888'
 
-# Java certificate management       {{{2
-# ======================================
-
-if_darwin && {
-    export JAVA_CERT_LOCATION=$(/usr/libexec/java_home)/jre/lib/security/cacerts
-}
-
-if_linux && {
-    export JAVA_CERT_LOCATION=$JAVA_HOME/jre/lib/security/cacerts
-}
-
-function cert-download() {
-    local usage='Download a certificate\nUsage:\n  cert-download HOST'
-    validate_usage "${usage}" 1 "$@" || return 1
-
-    declare host=$1
-    echo "Downloading certificate to $host.crt"
-    openssl x509 -in <(openssl s_client -connect "$host":443 -prexit 2>/dev/null) -out "$host".crt
-}
-
-function cert-import() {
-    local usage='Import a certificate\nUsage:\n  cert-import FNAM ALIAS'
-    validate_usage "${usage}" 2 "$@" || return 1
-
-    declare fnam=$1 alias=$2
-    echo "Importing certificate $fnam as $alias"
-    sudo keytool -importcert -file "$fnam" -alias "$alias" -keystore $JAVA_CERT_LOCATION -storepass changeit
-}
-
-function cert-delete() {
-    local usage='Delete a certificate\nUsage:\n  cert-delete ALIAS'
-    validate_usage "${usage}" 1 "$@" || return 1
-
-    declare alias=$1
-    echo "Deleting certificate $alias"
-    sudo keytool -delete -alias "$alias" -keystore $JAVA_CERT_LOCATION -storepass changeit
-}
-
-function cert-list() {
-    sudo keytool -list -keystore $JAVA_CERT_LOCATION -storepass changeit
-}
-
-function cert-store-path() {
-    echo "Keystore is $JAVA_CERT_LOCATION"
-}
-
 # Long running jobs                 {{{2
 # ======================================
 
@@ -405,6 +361,8 @@ function tell-me() {
 # jq                                {{{2
 # ======================================
 
+# Display the paths to the values in the JSON
+# cat foo.json | jq-paths
 function jq-paths() {
     # Taken from https://github.com/stedolan/jq/issues/243 
     jq '[path(..)|map(if type=="number" then "[]" else tostring end)|join(".")|split(".[]")|join("[]")]|unique|map("."+.)|.[]'
