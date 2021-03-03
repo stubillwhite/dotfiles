@@ -2,6 +2,7 @@
 # Applications
 ################################################################################
 
+cask "drawio"                                   # draw.io Desktop
 cask "hook"                                     # Hook
 
 # OneDrive integration
@@ -9,6 +10,7 @@ cask "onedrive"                                 # Cloud storage client
 
 # Database clients
 cask "dbeaver-community"                        # Free universal database tool and SQL client
+
 
 ################################################################################
 # Utilities

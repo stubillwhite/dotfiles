@@ -120,6 +120,10 @@ brew "terraform", link: false                   # Tool to build, change, and ver
 brew "terragrunt"                               # Thin wrapper for Terraform e.g. for locking state
 brew "tfenv", link: true                        # Terraform version manager inspired by rbenv
 
+# Heroku
+tap "heroku/brew" 
+brew "heroku"                                   # Everything you need to get started with Heroku
+
 # SQL
 cask "sequel-pro"                               # MySQL/MariaDB database management platform
 cask "sqlworkbenchj"                            # Java-based SQL client
