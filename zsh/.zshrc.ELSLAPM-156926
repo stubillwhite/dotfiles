@@ -68,6 +68,12 @@ function recs-k9s-dev() {
     k9s
 }
 
+function recs-k9s-staging() {
+    aws-recs-dev
+    recs-get-k8s staging main
+    k9s
+}
+
 function recs-k9s-live() {
     aws-recs-prod
     recs-get-k8s live main
@@ -135,12 +141,14 @@ function recs-api-statuses() {
         sd-user-recommendations.api
     )
     (
-        printf "%s|%s|%s\n" "API" "Dev" "Live"
+        printf "%s|%s|%s|%s|%s\n" "API" "Dev" "Staging" "Live" "Dev URL"
         for API in "${APIS[@]}"
         do
             printf "%s" "${API}"
             curl -s -w "%{http_code}" -o >(printf "|%s") -X GET "https://${API}.dev.recs.d.elsevier.com/api" 2>/dev/null
+            curl -s -w "%{http_code}" -o >(printf "|%s") -X GET "https://${API}.staging.recs.d.elsevier.com/api" 2>/dev/null
             curl -s -w "%{http_code}" -o >(printf "|%s") -X GET "https://${API}.recs.d.elsevier.com/api" 2>/dev/null
+            printf "|%s" "https://${API}.dev.recs.d.elsevier.com/api"
             printf "\n"
         done
     ) | column -t -s '|' \
