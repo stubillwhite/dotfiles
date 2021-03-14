@@ -63,4 +63,7 @@
     path = ~/Dev/recommenders/.gitconfig
 
 [mailmap]
-	file = /Users/white1/.mailmap
+	file = ~/.mailmap
+
+[log]
+	mailmap = true
