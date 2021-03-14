@@ -90,8 +90,8 @@ alias fmt-json='jq "."'                                                     # Pr
 alias tabulate-by-tab='column -t -s $''\t'' '                               # Tabluate TSV (cat foo.tsv | tabulate-by-tab)
 alias tabulate-by-comma='column -t -s '','' '                               # Tabluate CSV (cat foo.csv | tabulate-by-comma)
 alias as-stream='stdbuf -o0'                                                # Turn pipes to streams (tail -F foo.log | as-stream grep "bar")
-alias strip-color="gsed -r 's/\x1b\[[0-9;]*m//g'"                           # Strip ANSI colour codes
-alias strip-ansi="perl -pe 's/\x1b\[[0-9;]*[mG]//g'"                        # Strip all ANSI control codes
+alias strip-color="gsed -r 's/\x1b\[[0-9;]*m//g'"                           # Strip ANSI colour codes (some-cmd | strip-color)
+alias strip-ansi="perl -pe 's/\x1b\[[0-9;]*[mG]//g'"                        # Strip all ANSI control codes (some-cmd | strip-ansi)
 
 alias ssh-rm-connections='rm /tmp/ssh-mux_*'
 alias py-env-activate='source bin/activate'
@@ -584,18 +584,18 @@ function git-repos-grep-history() {
     local str=$1
 
     check-history() {
-        local str=$1
+        local str="$1"
         pwd
         git grep "${str}" $(git rev-list --all | tac)
         echo
     }
 
-    git-for-each-repo-parallel check-history "${str}"
+    git-for-each-repo-parallel check-history '"'"${str}"'"'
 }
 
 function git-repos-contributor-stats() {
     contributor-stats() {
-        git --no-pager log --format="%an" --no-merges
+        git --no-pager log --format="%aN" --no-merges
     }
 
     git-for-each-repo contributor-stats | sort | uniq -c | sort -r
