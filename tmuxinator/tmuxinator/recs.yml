@@ -15,3 +15,6 @@ windows:
         - archived:
             - pushd archived
             - git-repos-pull
+        - ds:
+            - pushd ds
+            - git-repos-pull
