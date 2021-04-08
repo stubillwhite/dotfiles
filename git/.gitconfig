@@ -19,7 +19,7 @@
     push-branch = !git push --set-upstream origin $(git symbolic-ref --short HEAD)
     accept-ours = "!f() { [ -z \"$@\" ] && set - '.'; git checkout --ours -- \"$@\"; git add -u -- \"$@\"; }; f"
     accept-theirs = "!f() { [ -z \"$@\" ] && set - '.'; git checkout --theirs -- \"$@\"; git add -u -- \"$@\"; }; f"
-    contributor-stats = !git --no-pager log --format="%an" --no-merges | sort | uniq -c | sort -r
+    contributor-stats = !git --no-pager log --format="%aN" --no-merges | sort | uniq -c | sort -r
 
 [core]
 	editor = nvim
