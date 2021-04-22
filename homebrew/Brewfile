@@ -64,7 +64,12 @@ brew "pandoc"                                   # Swiss-army knife of markup for
 # tmux
 brew "tmux"                                     # Terminal multiplexer
 brew "tmuxinator"                               # Manage complex tmux sessions easily
-brew 'reattach-to-user-namespace'               # Reattach process (e.g., tmux) to background
+brew "reattach-to-user-namespace"               # Reattach process (e.g., tmux) to background
+
+# Terminal plotting
+tap "rs/tap"
+brew "jaggr"                                    # JSON Aggregation CLI
+brew "jplot"                                    # iTerm2 expvar/JSON monitoring tool
 
 ################################################################################
 # Development
