@@ -121,9 +121,9 @@ compdef "_arguments \
 
 function recs-api-statuses() {
     local APIS=(
-        article-recommendations-popular.api
+        #article-recommendations-popular.api
         article-recommendations-tailored.api
-        article-recommendations-trending.api
+        #article-recommendations-trending.api
         fi-recommender.api
         funding-logged-email-events.api
         library-stats.api
@@ -141,12 +141,13 @@ function recs-api-statuses() {
         sd-user-recommendations.api
     )
     (
-        printf "%s|%s|%s|%s|%s\n" "API" "Dev" "Staging" "Live" "Dev URL"
+        #printf "%s|%s|%s|%s|%s\n" "API" "Dev" "Staging" "Live" "Dev URL"
+        printf "%s|%s|%s|%s\n" "API" "Dev" "Live" "Dev URL"
         for API in "${APIS[@]}"
         do
             printf "%s" "${API}"
             curl -s -w "%{http_code}" -o >(printf "|%s") -X GET "https://${API}.dev.recs.d.elsevier.com/api" 2>/dev/null
-            curl -s -w "%{http_code}" -o >(printf "|%s") -X GET "https://${API}.staging.recs.d.elsevier.com/api" 2>/dev/null
+            #curl -s -w "%{http_code}" -o >(printf "|%s") -X GET "https://${API}.staging.recs.d.elsevier.com/api" 2>/dev/null
             curl -s -w "%{http_code}" -o >(printf "|%s") -X GET "https://${API}.recs.d.elsevier.com/api" 2>/dev/null
             printf "|%s" "https://${API}.dev.recs.d.elsevier.com/api"
             printf "\n"

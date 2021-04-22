@@ -87,12 +87,14 @@ alias vim='nvim'                                                            # Us
 # Useful things to pipe things into
 alias fmt-xml='xmllint --format -'                                          # Prettify XML (cat foo.xml | fmt-xml)
 alias fmt-json='jq "."'                                                     # Prettify JSON (cat foo.json | fmt-json)
-alias tabulate-by-tab='column -t -s $''\t'' '                               # Tabluate TSV (cat foo.tsv | tabulate-by-tab)
-alias tabulate-by-comma='column -t -s '','' '                               # Tabluate CSV (cat foo.csv | tabulate-by-comma)
+alias tabulate-by-tab='gsed "s/\t\t/\t-\t/g" | column -t -s $''\t'' '       # Tabluate TSV (cat foo.tsv | tabulate-by-tab)
+alias tabulate-by-comma='gsed "s/,,/,-,/g" | column -t -s '','' '           # Tabluate CSV (cat foo.csv | tabulate-by-comma)
 alias as-stream='stdbuf -o0'                                                # Turn pipes to streams (tail -F foo.log | as-stream grep "bar")
 alias strip-color="gsed -r 's/\x1b\[[0-9;]*m//g'"                           # Strip ANSI colour codes (some-cmd | strip-color)
 alias strip-ansi="perl -pe 's/\x1b\[[0-9;]*[mG]//g'"                        # Strip all ANSI control codes (some-cmd | strip-ansi)
 alias sum-of="paste -sd+ - | bc"                                            # Sum numbers from stdin (some-cmd | sum-of)
+
+alias csv-to-json="python3 -c 'import csv, json, sys; print(json.dumps([dict(r) for r in csv.DictReader(sys.stdin)]))'"
 
 alias ssh-rm-connections='rm /tmp/ssh-mux_*'
 alias py-env-activate='source bin/activate'
@@ -302,6 +304,21 @@ function scp-skeleton-config() {
     popd || exit 1
 }
 compdef _ssh scp-skeleton-config=ssh
+
+# List ECR images
+function aws-list-ecr-images() {
+    local repos=$(aws ecr describe-repositories \
+        | jq -r ".repositories[].repositoryName" \
+        | sort)
+
+    while IFS= read -r repo; do 
+        echo $repo
+        AWS_PAGER="" aws ecr describe-images --repository-name "${repo}" \
+            | jq -r '.imageDetails[] | select(has("imageTags")) | .imageTags[] | select(test( "^\\d+\\.\\d+\\.\\d+$" ))' \
+            | sort
+        echo
+    done <<< "$repos"
+}
 
 # Fast AI course helpers            {{{2
 # ======================================
@@ -879,3 +896,22 @@ if_darwin && {
 
 source_if_exists "$HOME/.zshrc.no-commit"
 source_if_exists "$HOME/.zshrc.$(uname -n)"
+
+function response-times() {
+    if [[ $# -ne 1 ]] ; then
+        echo 'Find reponse times for URL'
+        echo 'Usage: response-times URL'
+        return 1
+    fi
+
+    local url=$1
+
+    echo "code,time_total,time_connect,time_appconnect,time_pretransfer,time_starttransfer"
+    for i in $(seq 1 10); do
+        curl \
+            --write-out "%{http_code},%{time_total},%{time_connect},%{time_appconnect},%{time_pretransfer},%{time_starttransfer}\n" \
+            --silent \
+            --output /dev/null \
+            "${url}"
+    done
+}
