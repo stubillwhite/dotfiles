@@ -28,6 +28,9 @@ cask "licecap"                                  # Animated screen capture applic
 brew "gnupg"                                    # GNU Pretty Good Privacy (PGP) package
 cask "keybase"                                  # End-to-end encryption software
 
+# Notebook
+cask "evernote"                                 # App for note taking, organizing, task lists, and archiving
+
 ################################################################################
 # Utilities
 ################################################################################
@@ -149,3 +152,4 @@ brew "yamllint"                                 # Linter for YAML files
 cask "anki"                                     # Memory training application
 
 brew "nethack"                                  # Single-player roguelike video game
+brew "stone-soup"                               # Dungeon Crawl Stone Soup: a roguelike game
