@@ -376,6 +376,34 @@ function tell-me() {
     }
 }
 
+# Helper function to notify when the output of a command changes
+# Usage:
+#   function watch-directory() {
+#       f() {
+#           ls
+#       }
+#   
+#       notify-on-change f 1 "Directory contents changed"
+#   }
+function notify-on-change() {
+    local f=$1
+    local period=$2
+    local message=$3
+    local tmpfile=$(mktemp)
+
+    $f > "${tmpfile}"
+
+    {
+        while true
+        do
+            sleep ${period}
+            (diff "${tmpfile}" <($f)) || break
+        done
+
+        tell-me "${message}"
+    } > /dev/null 2>&1 & disown
+}
+
 # jq                                {{{2
 # ======================================
 
@@ -759,6 +787,15 @@ function github-notify-when-reviewed() {
             tell-me "GitHub PR reviewed or commented on"
         fi
     } > /dev/null 2>&1 & disown
+}
+
+# Notify me when my GitHub PR has changed
+function github-notify-on-change() {
+    f() {
+        github-list-pull-requests
+    }
+
+    notify-on-change f 30 'GitHub PR changed'
 }
 
 # AWS                               {{{2

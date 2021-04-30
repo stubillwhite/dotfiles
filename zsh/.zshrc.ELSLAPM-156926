@@ -40,6 +40,7 @@ function aws-developer-role() {
 # ==============================================================================
 
 alias emacs='/Applications/Emacs.app/Contents/MacOS/Emacs'
+alias emacsclient='/Applications/Emacs.app/Contents/MacOS/bin/emacsclient'
 alias sqlworkbenchj='java -jar /Applications/SQLWorkbenchJ.app/Contents/Java/sqlworkbench.jar &'
 
 # Kubernetes                                                                {{{1
@@ -68,6 +69,12 @@ function recs-k9s-dev() {
     k9s
 }
 
+function recs-k9s-dev-util() {
+    aws-recs-dev
+    recs-get-k8s dev util
+    k9s
+}
+
 function recs-k9s-staging() {
     aws-recs-dev
     recs-get-k8s staging main
@@ -80,7 +87,7 @@ function recs-k9s-live() {
     k9s
 }
 
-function recs-k9s-util() {
+function recs-k9s-live-util() {
     aws-recs-prod
     recs-get-k8s live util
     k9s
