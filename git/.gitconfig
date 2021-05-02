@@ -25,6 +25,7 @@
 	editor = nvim
 	autocrlf = input
 	hooksPath = ~/.githooks
+	pager = git-split-diffs --color | less -RFX
 
 [diff]
 	tool = vimdiff
