@@ -1,0 +1,31 @@
+runners:
+  default: "local"
+  config:
+    local:
+      enabled: true
+
+storage: null
+
+secrets: null
+
+expressions: {}
+
+clusters:
+  default:
+    registry: "http://localhost:8081"
+    props:
+      bootstrap.servers: "http://localhost:29092"
+      key.serializer: "org.apache.kafka.common.serialization.StringSerializer"
+      key.deserializer: "org.apache.kafka.common.serialization.StringDeserializer"
+      value.serializer: "io.confluent.kafka.serializers.KafkaAvroSerializer"
+      value.deserializer: "io.confluent.kafka.serializers.KafkaAvroDeserializer"
+    groups: {}
+  aws:
+    registry: "http://localhost:38081"
+    props:
+      bootstrap.servers: "localhost:39092"
+      key.serializer: "org.apache.kafka.common.serialization.StringSerializer"
+      key.deserializer: "org.apache.kafka.common.serialization.StringDeserializer"
+      value.serializer: "io.confluent.kafka.serializers.KafkaAvroSerializer"
+      value.deserializer: "io.confluent.kafka.serializers.KafkaAvroDeserializer"
+    groups: {}

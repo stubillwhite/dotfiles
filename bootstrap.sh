@@ -26,14 +26,15 @@ FILES=(
     "pylint/.pylintrc"
     "tig/.tigrc"
     "tmux/.tmux.conf"
+    "zoe/.zoe"
     "zsh/.bashrc"
     "zsh/.commonrc"
     "zsh/.zsh-completion"
     "zsh/.zshrc"
     "zsh/.zshrc.$(uname -n)"
-    "zsh/.zshrc.no-commit"
     "zsh/.zshrc.darwin"
     "zsh/.zshrc.linux"
+    "zsh/.zshrc.no-commit"
 )
 
 # Files to link to in $HOME/.config
