@@ -691,7 +691,7 @@ function git-open() {
     fi
 
     local branch=$(git rev-parse --abbrev-ref HEAD 2> /dev/null)
-    ([[ $? -ne 0 ]] || [[ -z "$branch" ]]) && branch="master"
+    ([[ $? -ne 0 ]] || [[ -z "$branch" ]]) && branch="main"
 
     URL=$(git config remote.origin.url)
     echo "Opening '$URL'"
