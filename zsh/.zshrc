@@ -104,6 +104,7 @@ alias py-env-deactivate='deactivate'
 alias reload-zsh-config="exec zsh"                                          # Reload Zsh config
 alias display-colours='msgcat --color=test'                                 # Display terminal colors
 alias create-react-app='npx create-react-app'                               # Shortcut to create a new React app
+alias ssh-add-personal-key='ssh-add ~/.ssh/keys/id_rsa_personal'            # Add personal key to SSH agent
 alias ssh-purge-key='ssh-keygen -R'                                         # Remove key from SSH files (ssh-purge-key 10.188.188.192)
 
 alias list-ports='netstat -anv'
