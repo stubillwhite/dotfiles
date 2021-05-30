@@ -14,7 +14,7 @@
     pretty-log = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %aN%C(reset)%C(bold yellow)%d%C(reset)' 
     log-recent = pretty-log --since='3 days ago'
     logv = pretty-log --all
-    diff-base = !git diff $(git merge-base --fork-point main)
+    diff-base = !git diff --ignore-all-space $(git merge-base --fork-point main)
     difftool-base = !git difftool --trust-exit-code -y $(git merge-base --fork-point main)
     push-branch = !git push --set-upstream origin $(git symbolic-ref --short HEAD)
     accept-ours = "!f() { [ -z \"$@\" ] && set - '.'; git checkout --ours -- \"$@\"; git add -u -- \"$@\"; }; f"
