@@ -104,10 +104,11 @@ alias py-env-deactivate='deactivate'
 alias reload-zsh-config="exec zsh"                                          # Reload Zsh config
 alias display-colours='msgcat --color=test'                                 # Display terminal colors
 alias create-react-app='npx create-react-app'                               # Shortcut to create a new React app
-alias ssh-add-personal-key='ssh-add ~/.ssh/keys/id_rsa_personal'            # Add personal key to SSH agent
+alias ssh-add-keys='ssh-add ~/.ssh/keys/id_rsa_personal'                    # Add standard keys to SSH agent
 alias ssh-purge-key='ssh-keygen -R'                                         # Remove key from SSH files (ssh-purge-key 10.188.188.192)
+alias list-ports='netstat -anv'                                             # List active ports
+alias aws-local='aws --endpoint-url=http://localhost:4566'                  # AWS CLI commands pointing at localstack
 
-alias list-ports='netstat -anv'
 alias i2cssh='i2cssh -p stuw --iterm2'
 alias shred='shred -vuz --iterations=10'
 alias git-clean='git clean -X -f -d'
@@ -124,6 +125,7 @@ export SHELLCHECK_OPTS=""
 SHELLCHECK_OPTS+="-e SC1091 "    # Allow sourcing files from paths that do not exist yet
 SHELLCHECK_OPTS+="-e SC2039 "    # Allow dash in function names
 SHELLCHECK_OPTS+="-e SC2112 "    # Allow 'function' keyword
+SHELLCHECK_OPTS+="-e SC2155 "    # Allow declare and assignment in the same statement
 
 # SBT                               {{{2
 # ======================================
