@@ -21,6 +21,7 @@ OPTIONS=autopickup,pickup_types:$,pushweapon
 OPTIONS=showexp,showscore,time,toptenwin
 OPTIONS=DECGraphics
 OPTIONS=color,menucolors,statushilites
+OPTIONS=!implicit_uncursed
 
 ########################################
 # Colours
