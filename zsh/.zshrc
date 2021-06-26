@@ -289,6 +289,13 @@ function tunnel-close-all() {
     done
 }
 
+# Switch between SSH configs
+function ssh-config() {
+    mv ~/.ssh/config ~/.ssh/config.bak
+    ln -s "$HOME/.ssh/config-${1}" ~/.ssh/config
+}
+compdef '_alternative "arguments:custom arg:(recs newsflo)"' ssh-config
+
 # AWS                               {{{2
 # ======================================
 
@@ -895,6 +902,20 @@ function aws-s3-open() {
         | sed -e 's/$/?region=us-east-1/' \
         | xargs "$OPEN_CMD"
 }
+
+function aws-get-secrets() {
+    local secretsNames=$(aws secretsmanager list-secrets | jq -r '.SecretList[].Name')
+
+    while IFS= read -r secret ; do 
+        echo ${secret}
+        aws secretsmanager list-secrets \
+            | jq -r ".SecretList[] | select(.Name == \"$secret\") | .Tags[] // false | select(.Key == \"Description\") | .Value"
+        aws secretsmanager get-secret-value --secret-id "$secret"\
+            | jq '.SecretString // false | fromjson'
+        echo
+    done <<< "${secretsNames}"
+}
+
 
 # Docker
 
