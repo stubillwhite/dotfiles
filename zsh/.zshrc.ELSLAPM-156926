@@ -137,8 +137,8 @@ function recs-api-statuses() {
         raven-email-sent-stats.api
         recs-events-service.api
         recs-focus-stats.api
-        recs-funding-institutional-recommender.api
-        recs-mendeley-funding-recommender.api
+        #recs-funding-institutional-recommender.api
+        #recs-mendeley-funding-recommender.api
         recs-reviewers-recommender.api
         sd-article-recommendations.api
         sd-hpcc-related-articles.api
@@ -174,9 +174,11 @@ function sonarqube-run() {
     else
         local sonarToken=$1
 
+        set +x
         local sonarServer="https://sq.prod.tio.elsevier.systems"
-        local sonarScannerHome=$(full-path "$(which sonar-scanner | xargs readlink -f)/../..")
+        local sonarScannerHome=$(full-path "$(which sonar-scanner | xargs readlink -f | xargs dirname)/..")
         local sonarOpts="-Dsonar.host.url=\"${sonarServer}\" -DsonarScanner.home=\"${sonarScannerHome}\" -Dsonar.login=\"${sonarToken}\""
+        set -x
 
         echo "NOTE: Ensure you have first generated coverage with 'sbt clean coverage test coverageReport'"
         SONAR_SCANNER_HOME="${sonarScannerHome}" sbt -Dsonar.host.url="${sonarServer}" -Dsonar.login="${sonarToken}" sonarScan
