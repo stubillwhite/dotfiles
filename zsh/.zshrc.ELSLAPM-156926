@@ -9,8 +9,8 @@ alias ssh-newsflo='ssh -F ~/.ssh/config-newsflo'
 # AWS authentication                                                        {{{1
 # ==============================================================================
 
-alias "aws-which"="env | grep AWS | sort"
-alias "aws-clear-variables"="for i in \$(aws-which | cut -d= -f1,1 | paste -); do unset \$i; done"
+alias aws-which="env | grep AWS | sort"
+alias aws-clear-variables="for i in \$(aws-which | cut -d= -f1,1 | paste -); do unset \$i; done"
 alias aws-bos-utility="aws-developer-role $ACC_BOS_UTILITY ADFS-Developer aws-rap-bosutility"
 alias aws-bos-dev="aws-developer-role $ACC_BOS_DEV ADFS-Developer aws-rap-bosdev"
 alias aws-bos-staging="aws-developer-role $ACC_BOS_STAGING ADFS-Developer aws-rap-bosstaging"
