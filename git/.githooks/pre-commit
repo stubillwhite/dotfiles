@@ -5,8 +5,8 @@ COLOR_NONE='\033[0m'
 
 branchName="$(git rev-parse --abbrev-ref HEAD)"
 
-validBranchRegex="^(sdpr|news|)-[0-9]+[a-z0-9.-]*$"
+validBranchRegex="^(sdpr|news)-[0-9]+[a-z0-9.-]*$"
 
 if [[ ! "${branchName}" =~ $validBranchRegex ]]; then
-    printf "${COLOR_RED}WARNING: Branch name does not match expected format${COLOR_NONE}\n"
+    printf "${COLOR_RED}WARNING: Branch name '%s' does not match expected format${COLOR_NONE}\n" "${branchName}"
 fi
