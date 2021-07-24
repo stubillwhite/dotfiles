@@ -78,7 +78,7 @@ if_linux && {
 alias eject='diskutil eject'                                                # Eject disk
 alias env='env | sort'                                                      # env should be sorted
 alias tree='tree -A'                                                        # tree should be ascii
-alias watch='watch -c -x zsh -ic'                                           # watch should be colourised, use interactive Zsh shell
+alias watch='watch -x zsh -ic'                                              # watch should use interactive Zsh shell for functions
 alias entr='entr -c'                                                        # entr should be colourised
 alias gh='NO_COLOR=1 gh'                                                    # gh should not be colourised
 alias vi='nvim'                                                             # Use nvim instead of vi
