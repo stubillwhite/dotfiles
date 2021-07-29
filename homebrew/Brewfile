@@ -46,6 +46,7 @@ brew "htop"                                     # Improved top (interactive proc
 brew "jq"                                       # Lightweight and flexible command-line JSON processor
 brew "ctags"                                    # Reimplementation of ctags(1)
 brew "q"                                        # Run SQL directly on CSV or TSV files
+brew "miller"                                   # Like sed, awk, cut, join & sort for name-indexed data such as CSV
 brew "ncdu"                                     # NCurses Disk Usage
 brew "neovim"                                   # Ambitious Vim-fork focused on extensibility and agility
 brew "openssh"                                  # OpenBSD freely-licensed SSH connectivity tools
