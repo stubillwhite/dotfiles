@@ -7,6 +7,9 @@
 [init]
 	defaultBranch = main
 
+[fetch]
+	prune = true
+
 [pull]
 	rebase = true
 
@@ -20,6 +23,8 @@
     accept-ours = "!f() { [ -z \"$@\" ] && set - '.'; git checkout --ours -- \"$@\"; git add -u -- \"$@\"; }; f"
     accept-theirs = "!f() { [ -z \"$@\" ] && set - '.'; git checkout --theirs -- \"$@\"; git add -u -- \"$@\"; }; f"
     contributor-stats = !git --no-pager log --format="%aN" --no-merges | sort | uniq -c | sort -r
+    unmerged-branches = !git --no-pager branch --no-merged main
+    unmerged-branches-all = !git --no-pager branch --all --no-merged main
 
 [core]
 	editor = nvim
