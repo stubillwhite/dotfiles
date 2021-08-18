@@ -52,9 +52,9 @@ brew "neovim"                                   # Ambitious Vim-fork focused on 
 brew "openssh"                                  # OpenBSD freely-licensed SSH connectivity tools
 brew "parallel"                                 # Shell command parallelization utility
 brew "pkg-config"                               # Manage compile and link flags for libraries
+brew "ripgrep"                                  # Search tool like grep and The Silver Searcher
 brew "sampler"                                  # Tool for shell commands execution, visualization and alerting
 brew "slackcat"                                 # Command-line utility for posting snippets to Slack
-brew "the_silver_searcher"                      # Code-search similar to ack
 brew "tree"                                     # Display directories as trees (with optional color/HTML output)
 brew "watch"                                    # Executes a program periodically, showing output fullscreen
 brew "wget"                                     # Internet file retriever

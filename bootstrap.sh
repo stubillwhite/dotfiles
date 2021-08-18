@@ -24,6 +24,7 @@ FILES=(
     "leiningen/.lein"
     "proselint/.proselintrc"
     "pylint/.pylintrc"
+    "ripgrep/.ripgreprc"
     "tig/.tigrc"
     "tmux/.tmux.conf"
     "zoe/.zoe"

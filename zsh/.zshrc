@@ -118,6 +118,11 @@ alias docker-entrypoint='docker inspect --format="{{.Config.Cmd}}"'
 # Specific tools                                                            {{{1
 # ==============================================================================
 
+# Ripgrep                           {{{2
+# ======================================
+
+export RIPGREP_CONFIG_PATH=~/.ripgreprc
+
 # Shellcheck                        {{{2
 # ======================================
 
@@ -574,7 +579,7 @@ function git-repos-status() {
 # unmerged branches locally
 function git-repos-unmerged-branches() {
     display-unmerged-branches() {
-        local cmd="git branch --no-merged main"
+        local cmd="git unmerged-branches"
         unmergedBranches=$(eval "$cmd") 
         if [[ $unmergedBranches = *[![:space:]]* ]]; then
             echo "$fnam"
@@ -590,7 +595,7 @@ function git-repos-unmerged-branches() {
 # unmerged branches locally and remote
 function git-repos-unmerged-branches-all() {
     display-unmerged-branches-all() {
-        local cmd="git branch --all --no-merged main"
+        local cmd="git unmerged-branches-all"
         unmergedBranches=$(eval "$cmd") 
         if [[ $unmergedBranches = *[![:space:]]* ]]; then
             echo "$fnam"
@@ -649,6 +654,16 @@ function git-repos-grep-history() {
     git-for-each-repo-parallel check-history '"'"${str}"'"'
 }
 
+function git-repos-author-line-count() {
+    author-line-count() {
+        git ls-files \
+            | xargs -n1 git blame -w -M -C -C --line-porcelain \
+            | sed -n 's/^author //p' 
+    }
+
+    git-for-each-repo author-line-count | sort -f | uniq -ic | sort -nr
+}
+
 function git-repos-contributor-stats() {
     contributor-stats() {
         git --no-pager log --format="%aN" --no-merges
@@ -668,7 +683,6 @@ function git-repos-authors() {
         | sort \
         | uniq
 }
-
 
 # For each directory within the current directory, generate a hacky lines of
 # code count 

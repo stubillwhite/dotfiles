@@ -1,0 +1,3 @@
+# Additional file types
+--type-add
+sbt:*.{sbt}*
