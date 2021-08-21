@@ -139,6 +139,25 @@ export SBT_OPTS=-Xmx2G
 alias sbt-no-test='sbt "set test in assembly := {}"'
 alias sbt-test='sbt test it:test'
 
+# Switch between standard and cleanroom builds
+function use-artifactory () {
+    if [[ $# -ne 1 ]] ; then
+        echo 'Usage: use-artifactory (cleanroom|standard)'
+        exit 1
+    fi
+
+    echo "Switching to ${1} repository"
+
+    rm ~/.sbt/repositories 
+    rm ~/.ivy2
+
+    ln -s "$HOME/.sbt/repositories-${1}" ~/.sbt/repositories 
+    ln -s "$HOME/.ivy2-${1}"             ~/.ivy2
+}
+compdef "_arguments \
+    '1:environment arg:(cleanroom standard)'" \
+    use-artifactory
+
 # General file helpers              {{{2
 # ======================================
 

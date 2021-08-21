@@ -164,6 +164,32 @@ function recs-api-statuses() {
       | highlight green '\b[2][0-9]\+\b'
 }
 
+# Data pipelines
+# ==============================================================================
+
+function recs-reviewers-evise-dumps() {
+    if [[ $# -ne 1 ]] ; then
+        echo "Usage: recs-reviewers-evise-dumps (dev|live)"
+    else
+        local recsEnv=$1
+
+        [[ ${recsEnv} == "dev" ]]  && aws-recs-dev  > /dev/null
+        [[ ${recsEnv} == "live" ]] && aws-recs-prod > /dev/null
+
+        manuscriptsTimestamp=$(aws s3 ls s3://com-elsevier-recs-${recsEnv}-reviewers/data-dump/manuscripts/ | tail -n 1 | awk '{ print $2; }' | gsed 's/\///g')
+        reviewersTimestamp=$(aws s3 ls s3://com-elsevier-recs-${recsEnv}-reviewers/data-dump/reviewers/ | tail -n 1 | awk '{ print $2; }' | gsed 's/\///g')
+
+        (
+            printf "Data set|Timestamp|Count\n"
+            printf "%s|%s|%s\n" "Reviewers"   ${reviewersTimestamp}   $(aws s3 ls s3://com-elsevier-recs-${recsEnv}-reviewers/data-dump/reviewers/${reviewersTimestamp}/data/     | wc -l)
+            printf "%s|%s|%s\n" "Manuscripts" ${manuscriptsTimestamp} $(aws s3 ls s3://com-elsevier-recs-${recsEnv}-reviewers/data-dump/manuscripts/${manuscriptsTimestamp}/data/ | wc -l)
+        ) | column -t -s '|'
+    fi
+}
+compdef "_arguments \
+    '1:environment arg:(dev live)'" \
+    recs-reviewers-evise-dumps
+
 # SonarQube                                                                 {{{1
 # ==============================================================================
 
