@@ -18,3 +18,6 @@ windows:
         - ds:
             - pushd ds
             - git-repos-pull
+        - tech-stacks:
+            - pushd tech-stacks
+            - git-repos-pull
