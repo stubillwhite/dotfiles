@@ -28,15 +28,19 @@ compinit
 ## fi
 
 # Include Prezto, but remove unhelpful configuration
+
+zstyle ':prezto:module:git:alias' skip 'yes' # No Git aliases
+
 source_if_exists "$HOME/.zprezto/init.zsh"
-unalias cp &> /dev/null         # Standard behaviour
-unalias rm &> /dev/null         # Standard behaviour
-unalias mv &> /dev/null         # Standard behaviour
-unalias grep &> /dev/null       # Standard behaviour
-setopt clobber                  # Happily clobber files
-setopt interactivecomments      # Allow comments in interactive shells
-unsetopt AUTO_CD                # Don't change directory automatically
-unsetopt AUTO_PUSHD             # Don't push directory automatically
+
+unalias cp &> /dev/null              # Standard behaviour
+unalias rm &> /dev/null              # Standard behaviour
+unalias mv &> /dev/null              # Standard behaviour
+unalias grep &> /dev/null            # Standard behaviour
+setopt clobber                       # Happily clobber files
+setopt interactivecomments           # Allow comments in interactive shells
+unsetopt AUTO_CD                     # Don't change directory automatically
+unsetopt AUTO_PUSHD                  # Don't push directory automatically
 
 # https://github.com/zsh-users/zsh-completions/issues/314
 #zstyle ':completion::users' ignored-patterns '*'
@@ -854,6 +858,23 @@ function aws-datapipeline-requirements() {
     done < <(aws datapipeline list-pipelines | jq --raw-output '.pipelineIdList[] | [.id, .name] | @csv' | sed 's/"//g') \
         | sed 's/"//g' \
         | column -t -s '','' 
+}
+
+function aws-subnets() {
+    # while IFS=, read -rA x 
+    # do
+    #     addressesInUse=$(aws ec2 describe-network-interfaces --filters Name=subnet-id,Values=${x} \
+    #         | jq --raw-output '.NetworkInterfaces[].PrivateIpAddresses' \
+    #         | wc -l)
+    #     printf "%s,%s\n" ${x} ${addressesInUse}
+    # done < <(aws ec2 describe-subnets | jq --raw-output ".Subnets[].SubnetId") \
+    #     | sed 's/"//g' \
+    #     | column -t -s '','' 
+
+    aws ec2 describe-subnets \
+        | jq -r ".Subnets[] | [ .SubnetId, .AvailableIpAddressCount ] | @csv" \
+        | sed 's/"//g' \
+        | column -t -s '',''
 }
 
 function aws-datapipeline-amis() {
