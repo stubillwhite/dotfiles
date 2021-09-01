@@ -78,6 +78,9 @@ if_linux && {
     alias open='xdg-open'
 }
 
+# More helpful aliases for programs that change frequently
+alias gg='rg'                                                               # Grep
+
 # Better command defaults
 alias eject='diskutil eject'                                                # Eject disk
 alias env='env | sort'                                                      # env should be sorted

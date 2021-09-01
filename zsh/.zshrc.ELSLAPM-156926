@@ -20,6 +20,11 @@ alias aws-newsflo-prod="aws-developer-role $ACC_NEWSFLO_PROD ADFS-EnterpriseAdmi
 alias aws-recs-dev="aws-developer-role $ACC_RECS_DEV ADFS-EnterpriseAdmin aws-rap-recommendersdev"
 alias aws-recs-prod="aws-developer-role $ACC_RECS_PROD ADFS-EnterpriseAdmin aws-rap-recommendersprod"
 
+function aws-ssh() {
+    local addr=$1
+    ssh "ec2-user@${addr}" || ssh "centos@${addr}" || ssh "hadoop@${addr}" || ssh "admin@${addr}"
+}
+
 function aws-switch-role() {
     declare roleARN=$1 profile=$2
 
@@ -94,7 +99,7 @@ function recs-k9s-live-util() {
 }
 
 function recs-ecr-login() {
-    if [[ $# -ne 1 ]] ; then
+    if [[ $# -ne 1 ]]; then
         echo "Usage: recs-ecr-login (dev|live)"
     else
         local recsEnv=$1
@@ -122,6 +127,48 @@ function recs-ecr-login() {
 compdef "_arguments \
     '1:environment arg:(dev live)'" \
     recs-ecr-login
+
+function recs-get-emr-logs() {
+    setopt local_options BASH_REMATCH
+    if [[ $# -ne 1 ]]; then
+        echo "Usage: recs-get-emr-logs S3_PATH"
+    else
+        local s3Path=$1
+        if [[ ${s3Path} =~ "com-elsevier-recs-(.+)-logs" ]]; then
+            local recsEnv=$BASH_REMATCH[2]
+            case "${recsEnv}" in
+                dev*)
+                    aws-recs-dev
+                    ;;
+
+                live*)
+                    aws-recs-prod
+                    ;;
+
+                *)
+                    echo "ERROR: Unrecognised environment ${recsEnv}"
+                    return -1
+                    ;;
+            esac
+
+            # Clean old logs if they exist
+            rm -rf ~/trash/logs
+            mkdir ~/trash/logs
+            pushd ~/trash/logs
+
+            # Copy the logs
+            aws s3 cp --recursive "${s3Path}" .
+
+            # Unzip
+            while read -r line; do
+                echo "$line"
+                gunzip "$line"
+            done < <(find . -name "*.gz")
+        else 
+            echo "ERROR: Unrecognised path ${s3Path}"
+        fi
+    fi
+}
 
 # APIs
 # ==============================================================================
@@ -176,13 +223,16 @@ function recs-reviewers-evise-dumps() {
         [[ ${recsEnv} == "dev" ]]  && aws-recs-dev  > /dev/null
         [[ ${recsEnv} == "live" ]] && aws-recs-prod > /dev/null
 
-        manuscriptsTimestamp=$(aws s3 ls s3://com-elsevier-recs-${recsEnv}-reviewers/data-dump/manuscripts/ | tail -n 1 | awk '{ print $2; }' | gsed 's/\///g')
-        reviewersTimestamp=$(aws s3 ls s3://com-elsevier-recs-${recsEnv}-reviewers/data-dump/reviewers/ | tail -n 1 | awk '{ print $2; }' | gsed 's/\///g')
+        manuscriptsPath="s3://com-elsevier-recs-${recsEnv}-reviewers/raw/batched-manuscripts"
+        reviewersPath="s3://com-elsevier-recs-${recsEnv}-reviewers/raw/batched-reviewers"
+
+        manuscriptsTimestamp=$(aws s3 ls "${manuscriptsPath}/" | tail -n 1 | awk '{ print $2; }' | gsed 's/\///g')
+        reviewersTimestamp=$(aws s3 ls "${reviewersPath}/" | tail -n 1 | awk '{ print $2; }' | gsed 's/\///g')
 
         (
             printf "Data set|Timestamp|Count\n"
-            printf "%s|%s|%s\n" "Reviewers"   ${reviewersTimestamp}   $(aws s3 ls s3://com-elsevier-recs-${recsEnv}-reviewers/data-dump/reviewers/${reviewersTimestamp}/data/     | wc -l)
-            printf "%s|%s|%s\n" "Manuscripts" ${manuscriptsTimestamp} $(aws s3 ls s3://com-elsevier-recs-${recsEnv}-reviewers/data-dump/manuscripts/${manuscriptsTimestamp}/data/ | wc -l)
+            printf "%s|%s|%s\n" "Reviewers"   ${reviewersTimestamp}   $(aws s3 ls "${reviewersPath}/${reviewersTimestamp}/data/"     | wc -l)
+            printf "%s|%s|%s\n" "Manuscripts" ${manuscriptsTimestamp} $(aws s3 ls "${manuscriptsPath}/${manuscriptsTimestamp}/data/" | wc -l)
         ) | column -t -s '|'
     fi
 }
