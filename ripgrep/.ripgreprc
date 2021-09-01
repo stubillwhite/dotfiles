@@ -1,3 +1,9 @@
+--smart-case
+
 # Additional file types
+
 --type-add
 sbt:*.{sbt}*
+
+--type-add
+conf:*.{conf}*
