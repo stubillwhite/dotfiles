@@ -56,7 +56,7 @@ brew 'scrcpy'                                   # Display and control your Andro
 
 # Kafka
 brew 'kafka'                                    # Publish-subscribe messaging rethought as a distributed commit log
-brew 'kafkacat'                                 # Generic command-line non-JVM Apache Kafka producer and consumer
+brew 'kcat'                                     # Generic command-line non-JVM Apache Kafka producer and consumer
 
 tap 'adevinta/zoe'
 brew 'adevinta/homebrew-zoe/zoe'                # The missing companion for Kafka
