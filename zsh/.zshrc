@@ -150,7 +150,7 @@ alias sbt-test='sbt test it:test'
 function use-artifactory () {
     if [[ $# -ne 1 ]] ; then
         echo 'Usage: use-artifactory (cleanroom|standard)'
-        exit 1
+        return 1
     fi
 
     echo "Switching to ${1} repository"
@@ -850,6 +850,18 @@ function github-notify-on-change() {
 
 # AWS                               {{{2
 # ======================================
+
+function aws-datapipeline-definitions() {
+    while IFS=, read -rA x 
+    do
+        pipelineId=${x[@]:0:1}
+        pipelineName=$(echo "${x[@]:1:1}" | tr '[A-Z]' '[a-z]' | tr ' ' '-')
+        echo $pipelineName
+        aws datapipeline get-pipeline-definition --pipeline-id $pipelineId \
+            | jq '.' \
+            > "pipeline-definition-${pipelineName}"
+    done < <(aws datapipeline list-pipelines | jq --raw-output '.pipelineIdList[] | [.id, .name] | @csv' | sed 's/"//g') \
+}
 
 function aws-datapipeline-requirements() {
     while IFS=, read -rA x 
