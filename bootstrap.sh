@@ -18,7 +18,6 @@ FILES=(
     "chemacs/.emacs-profiles.el"
     "doom/.doom.d"
     "git/.gitconfig"
-    "k9s/.k9s"
     "git/.githooks"
     "nethack/.nethackrc"
     "leiningen/.lein"
@@ -128,5 +127,6 @@ create-links-for-files $HOME         "$FILES[@]"
 mkdir -p $HOME/.config/
 create-links-for-files $HOME/.config "$CONFIG_DIRS[@]"
 
-create-links-for-files-at-path ~/Dev/my-stuff     git/my-stuff
-create-links-for-files-at-path ~/Dev/recommenders git/recommenders
+create-links-for-files-at-path ~/Dev/my-stuff            git/my-stuff
+create-links-for-files-at-path ~/Dev/recommenders        git/recommenders
+create-links-for-files-at-path ~/Library/Preferences/k9s k9s

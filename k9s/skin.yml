@@ -1,6 +1,4 @@
 # monokai.yml
-# Taken from https://raw.githubusercontent.com/derailed/k9s/master/skins/monokai.yml
-#
 # Styles...
 foreground: &foreground "#ffffff"
 background: &background "default"
@@ -20,6 +18,11 @@ k9s:
     fgColor: *foreground
     bgColor: *background
     logoColor: *magenta
+  # Command prompt styles
+  prompt:
+    fgColor: *foreground
+    bgColor: *background
+    suggestColor: *orange
   # ClusterInfoView styles.
   info:
     fgColor: *blue
@@ -96,7 +99,7 @@ k9s:
           - *magenta
         v1/pods:
           - *blue
-          - *magenta      
+          - *magenta
     # TableView attributes.
     table:
       fgColor: *foreground

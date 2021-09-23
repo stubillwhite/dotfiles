@@ -3,6 +3,7 @@ k9s:
   maxConnRetry: 5
   enableMouse: false
   headless: false
+  logoless: false
   crumbsless: false
   readOnly: false
   noIcons: false
@@ -28,6 +29,8 @@ k9s:
         nodeShell: false
       shellPod:
         image: busybox:1.31
+        command: []
+        args: []
         namespace: default
         limits:
           cpu: 100m
