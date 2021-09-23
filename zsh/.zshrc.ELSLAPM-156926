@@ -22,7 +22,9 @@ alias aws-recs-prod="aws-developer-role $ACC_RECS_PROD ADFS-EnterpriseAdmin aws-
 
 function aws-ssh() {
     local addr=$1
+    set -x
     ssh "ec2-user@${addr}" || ssh "centos@${addr}" || ssh "hadoop@${addr}" || ssh "admin@${addr}"
+    set +x
 }
 
 function aws-switch-role() {
@@ -165,8 +167,8 @@ function recs-get-emr-logs() {
                 gunzip "$line"
             done < <(find . -name "*.gz")
 
-            # Start nvim
-            nvim
+            # Start nvim, search for error, view only results
+            nvim -c 'Ack! error' -c 'only'
         else 
             echo "ERROR: Unrecognised path ${s3Path}"
         fi
