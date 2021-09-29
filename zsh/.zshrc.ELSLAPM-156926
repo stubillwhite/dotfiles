@@ -184,7 +184,7 @@ function recs-api-statuses() {
         article-recommendations-tailored.api
         #article-recommendations-trending.api
         fi-recommender.api
-        funding-logged-email-events.api
+        #funding-logged-email-events.api
         library-stats.api
         raven-email-sent-stats.api
         recs-events-service.api
@@ -214,6 +214,10 @@ function recs-api-statuses() {
     ) | column -t -s '|' \
       | highlight red   '\b[045][0-9]\+\b' \
       | highlight green '\b[2][0-9]\+\b'
+}
+
+function recs-fi-performance() {
+    hey -n 20 -c 3 -H 'Accept: application/json' -m GET 'https://fi-recommender.api.recs.d.elsevier.com/api/fi-recommendations/webuser/37325013/author/23982012500'
 }
 
 # Data pipelines
