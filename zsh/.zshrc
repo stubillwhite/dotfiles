@@ -41,6 +41,7 @@ setopt clobber                       # Happily clobber files
 setopt interactivecomments           # Allow comments in interactive shells
 unsetopt AUTO_CD                     # Don't change directory automatically
 unsetopt AUTO_PUSHD                  # Don't push directory automatically
+unsetopt PATH_DIRS                   # Don't automcomplete foo/bar to my_path_dir/foo/bar
 
 # https://github.com/zsh-users/zsh-completions/issues/314
 #zstyle ':completion::users' ignored-patterns '*'
