@@ -20,11 +20,32 @@ alias aws-newsflo-prod="aws-developer-role $ACC_NEWSFLO_PROD ADFS-EnterpriseAdmi
 alias aws-recs-dev="aws-developer-role $ACC_RECS_DEV ADFS-EnterpriseAdmin aws-rap-recommendersdev"
 alias aws-recs-prod="aws-developer-role $ACC_RECS_PROD ADFS-EnterpriseAdmin aws-rap-recommendersprod"
 
-function aws-ssh() {
+function ssh-find-username() {
+    if [[ $# -ne 1 ]] ; then
+        echo 'Usage: ssh-find-username ADDRESS'
+        return 1
+    fi
+
     local addr=$1
-    set -x
-    ssh "ec2-user@${addr}" || ssh "centos@${addr}" || ssh "hadoop@${addr}" || ssh "admin@${addr}"
-    set +x
+
+    local USERNAMES=(
+        centos
+        ec2-user
+        hadoop
+        admin
+    )
+
+    for username in $USERNAMES[@]; do
+        printf "${COLOR_CLEAR_LINE}Trying %s" "${username}"
+        capturedOutput=$(ssh -q -o ConnectTimeout=5 "${username}@${addr}" "echo 'Test command'" 2>&1)
+        exitCode=$?
+        if [ $exitCode -eq 0 ]; then
+            printf "${COLOR_CLEAR_LINE}${username}\n"
+            return 0
+        fi
+    done
+    printf "${COLOR_CLEAR_LINE}Unable to find username for ${addr}\n"
+    return 1
 }
 
 function aws-switch-role() {
