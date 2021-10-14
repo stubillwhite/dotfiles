@@ -7,3 +7,6 @@ sbt:*.{sbt}*
 
 --type-add
 conf:*.{conf}*
+
+--type-add
+properties:*.{properties}*
