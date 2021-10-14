@@ -166,286 +166,6 @@ compdef "_arguments \
     '1:environment arg:(cleanroom standard)'" \
     use-artifactory
 
-# General file helpers              {{{2
-# ======================================
-
-function full-path() {
-    declare fnam=$1
-
-    if [ -d "$fnam" ]; then
-        (cd "$fnam"; pwd)
-    elif [ -f "$fnam" ]; then
-        if [[ $fnam == */* ]]; then
-            echo "$(cd "${1%/*}"; pwd)/${1##*/}"
-        else
-            echo "$(pwd)/$fnam"
-        fi
-    fi
-}
-
-# Tar a file
-function tarf() {
-    declare fnam=$1
-    tar -zcvf "${fnam%/}".tar.gz "$1"
-}
-
-# Untar a file
-function untarf() {
-    declare fnam=$1
-    tar -zxvf "$1"
-}
-
-# Grep zipped logs
-function zgrep-logs() {
-    declare pattern=$1
-    zgrep -iR "${pattern}" . --context 10
-}
-
-# Run gunzip on all files under the current directory
-function gunzip-logs() {
-    while read -r line; do
-        echo "$line"
-        gunzip "$line"
-    done < <(find . -name "*.gz")
-}
-
-# Prompt for confirmation
-# confirm "Delete [y/n]?" && rm -rf *
-function confirm() {
-    read response\?"${1:-Are you sure?} [y/N] "
-    case "$response" in
-        [Yy][Ee][Ss]|[Yy]) 
-            true
-            ;;
-        *)
-            false
-            ;;
-    esac
-}
-
-# Highlight output using sed regex
-# cat my-log.txt | highlight red ERROR | highlight yellow WARNING
-function highlight() {
-    if [[ $# -ne 2 ]] ; then
-        echo 'Usage: highlight COLOR PATTERN'
-        echo '  COLOR   The color to use (red, green, yellow, blue, magenta, cyan)'
-        echo '  PATTERN The sed regular expression to match'
-        return 1
-    fi
-
-    color=$1
-    pattern=$2
-
-    declare -A colors
-    colors[red]="\033[0;31m"
-    colors[green]="\033[0;32m"
-    colors[yellow]="\033[0;33m"
-    colors[blue]="\033[0;34m"
-    colors[magenta]="\033[0;35m"
-    colors[cyan]="\033[0;36m"
-    colors[default]="\033[0m"
-
-    colorOn=$(echo -e "${colors[$color]}")
-    colorOff=$(echo -e "${colors[default]}")
-
-    gsed -u s"/$pattern/$colorOn\0$colorOff/g"
-}
-compdef '_alternative "arguments:custom arg:(red green yellow blue magenta cyan)"' highlight
-
-# SSH tunneling                     {{{2
-# ======================================
-
-function tunnel-open() {
-    if [[ $# -ne 4 ]] ; then
-        echo 'Usage: tunnel-open LOCALPORT HOST HOSTPORT SERVER'
-        return -1
-    fi
-
-    localPort=$1
-    host=$2
-    hostPort=$3
-    server=$4
-    connectionFile=~/.ssh-tunnel-localhost:${localPort}===${host:0:20}:${hostPort}
-
-    echo "Opening tunnel localhost:${localPort} -> ${server} -> ${host}:${hostPort}"
-    ssh -AL ${localPort}:${host}:${hostPort} ${server} -f -o ServerAliveInterval=30 -N -M -S ${connectionFile} || { echo "Failed to open tunnel"; return -1; }
-    echo "Tunnel open ${connectionFile}"
-}
-compdef _hosts tunnel-open
-
-function tunnel-list() {
-    ls ~/.ssh-tunnel-*
-}
-
-function tunnel-check() {
-    if [[ $# -ne 1 ]] ; then
-        echo 'Usage: tunnel-check CONNECTIONFILE'
-        return -1
-    fi
-    connectionFile=$1
-
-    [[ ${connectionFile} =~ .ssh-tunnel-localhost:(.*)===(.*):(.*) ]]
-
-    localPort=${BASH_REMATCH[1]}
-    host=${BASH_REMATCH[2]}
-    hostPort=${BASH_REMATCH[3]}
-
-    echo "Checking tunnel localhost:${localPort} -> ${host}:${hostPort}"
-    ssh -S ${connectionFile} -O check ${host}
-}
-compdef '_files -g "~/.ssh-tunnel-*"' tunnel-check
-
-function tunnel-close() {
-    if [[ $# -ne 1 ]] ; then
-        echo 'Usage: tunnel-close CONNECTIONFILE'
-        return -1
-    fi
-
-    connectionFile=$1
-
-    [[ ${connectionFile} =~ .ssh-tunnel-localhost:(.*)===(.*):(.*) ]]
-
-    localPort=${BASH_REMATCH[1]}
-    host=${BASH_REMATCH[2]}
-    hostPort=${BASH_REMATCH[3]}
-
-    echo "Closing tunnel localhost:${localPort} -> ${host}:${hostPort}"
-    ssh -S ${connectionFile} -O exit ${host}
-}
-compdef '_files -g "~/.ssh-tunnel-*"' tunnel-close
-
-function tunnel-close-all() {
-    for connectionFile in ~/.ssh-tunnel-*
-    do
-        tunnel-close $connectionFile
-    done
-}
-
-# Switch between SSH configs
-function ssh-config() {
-    mv ~/.ssh/config ~/.ssh/config.bak
-    ln -s "$HOME/.ssh/config-${1}" ~/.ssh/config
-}
-compdef '_alternative "arguments:custom arg:(recs newsflo)"' ssh-config
-
-# AWS                               {{{2
-# ======================================
-
-# Copy my base machine config to a remote host
-function scp-skeleton-config() {
-    if [[ $# -ne 1 ]] ; then
-        echo 'Usage: scp-skeleton-config HOST'
-        exit -1
-    fi
-
-    pushd ~/Dev/my-stuff/dotfiles/skeleton-config || exit 1
-    echo "Uploading config to $1"
-    for file in $(find . \! -name .); do
-        scp $file $1:$file
-    done
-    popd || exit 1
-}
-compdef _ssh scp-skeleton-config=ssh
-
-# List ECR images
-function aws-list-ecr-images() {
-    local repos=$(aws ecr describe-repositories \
-        | jq -r ".repositories[].repositoryName" \
-        | sort)
-
-    while IFS= read -r repo; do 
-        echo $repo
-        AWS_PAGER="" aws ecr describe-images --repository-name "${repo}" \
-            | jq -r '.imageDetails[] | select(has("imageTags")) | .imageTags[] | select(test( "^\\d+\\.\\d+\\.\\d+$" ))' \
-            | sort
-        echo
-    done <<< "$repos"
-}
-
-# Fast AI course helpers            {{{2
-# ======================================
-
-function fast-ai-setup() {
-    export PATH=~/anaconda/bin:$PATH
-    export AWS_DEFAULT_PROFILE=stubillwhite
-    source_if_exists "/Users/white1/Dev/my-stuff/fast-ai/courses/setup/aws-alias.sh"
-    echo "Using anaconda tools and defaulting to AWS profile for fast-ai course"
-}
-
-function fast-ai-tunnel-open() {
-    if [[ $# -ne 3 ]] ; then
-        echo 'Usage: tunnel-open LOCALPORT SERVER SERVERPORT'
-        return -1
-    fi
-
-    localPort=$1
-    server=$2
-    serverPort=$3
-    connectionFile=~/.ssh-tunnel-localhost:${localPort}===${server:0:20}:${serverPort}
-
-    echo "Opening tunnel localhost:${localPort} -> ${server}:${serverPort}"
-    ssh -L ${localPort}:localhost:${serverPort} ${server} -i ~/.ssh/aws-key-fast-ai.pem -f -o ServerAliveInterval=30 -N -M -S ${connectionFile} || { echo "Failed to open tunnel"; return -1; }
-    echo "Tunnel open ${connectionFile}"
-}
-alias tunnel-fast-ai='fast-ai-tunnel-open 8888 fast-ai-server 8888'
-
-# Long running jobs                 {{{2
-# ======================================
-
-# Notify me when something completes
-# Usage: do-something-long-running ; tell-me "optional message"
-function tell-me() {
-    exitCode="$?"
-
-    if [[ $exitCode -eq 0 ]]; then
-        exitStatus="SUCCEEDED"
-    else
-        exitStatus="FAILED"
-    fi
-
-    if [[ $# -lt 1 ]] ; then
-        msg="${exitStatus}"
-    else 
-        msg="${exitStatus} : $1"
-    fi
-
-    if_darwin && {
-        osascript -e "display notification \"$msg\" with title \"tell-me\""
-    }
-
-    if_linux && {
-        notify-send -t 2000 "tell-me" "$msg"
-    }
-}
-
-# Helper function to notify when the output of a command changes
-# Usage:
-#   function watch-directory() {
-#       f() {
-#           ls
-#       }
-#   
-#       notify-on-change f 1 "Directory contents changed"
-#   }
-function notify-on-change() {
-    local f=$1
-    local period=$2
-    local message=$3
-    local tmpfile=$(mktemp)
-
-    $f > "${tmpfile}"
-
-    {
-        while true
-        do
-            sleep ${period}
-            (diff "${tmpfile}" <($f)) || break
-        done
-
-        tell-me "${message}"
-    } > /dev/null 2>&1 & disown
-}
-
 # jq                                {{{2
 # ======================================
 
@@ -847,6 +567,306 @@ function github-notify-on-change() {
     }
 
     notify-on-change f 30 'GitHub PR changed'
+}
+
+# General functions                                                         {{{1
+# ==============================================================================
+
+# File helpers                      {{{2
+# ======================================
+
+function full-path() {
+    declare fnam=$1
+
+    if [ -d "$fnam" ]; then
+        (cd "$fnam"; pwd)
+    elif [ -f "$fnam" ]; then
+        if [[ $fnam == */* ]]; then
+            echo "$(cd "${1%/*}"; pwd)/${1##*/}"
+        else
+            echo "$(pwd)/$fnam"
+        fi
+    fi
+}
+
+# Tar a file
+function tarf() {
+    declare fnam=$1
+    tar -zcvf "${fnam%/}".tar.gz "$1"
+}
+
+# Untar a file
+function untarf() {
+    declare fnam=$1
+    tar -zxvf "$1"
+}
+
+# Grep zipped logs
+function zgrep-logs() {
+    declare pattern=$1
+    zgrep -iR "${pattern}" . --context 10
+}
+
+# Run gunzip on all files under the current directory
+function gunzip-logs() {
+    while read -r line; do
+        echo "$line"
+        gunzip "$line"
+    done < <(find . -name "*.gz")
+}
+
+# Miscellaneous utilities           {{{2
+# ======================================
+
+# Prompt for confirmation
+# confirm "Delete [y/n]?" && rm -rf *
+function confirm() {
+    read response\?"${1:-Are you sure?} [y/N] "
+    case "$response" in
+        [Yy][Ee][Ss]|[Yy]) 
+            true
+            ;;
+        *)
+            false
+            ;;
+    esac
+}
+
+# Highlight output using sed regex
+# cat my-log.txt | highlight red ERROR | highlight yellow WARNING
+function highlight() {
+    if [[ $# -ne 2 ]] ; then
+        echo 'Usage: highlight COLOR PATTERN'
+        echo '  COLOR   The color to use (red, green, yellow, blue, magenta, cyan)'
+        echo '  PATTERN The sed regular expression to match'
+        return 1
+    fi
+
+    color=$1
+    pattern=$2
+
+    declare -A colors
+    colors[red]="\033[0;31m"
+    colors[green]="\033[0;32m"
+    colors[yellow]="\033[0;33m"
+    colors[blue]="\033[0;34m"
+    colors[magenta]="\033[0;35m"
+    colors[cyan]="\033[0;36m"
+    colors[default]="\033[0m"
+
+    colorOn=$(echo -e "${colors[$color]}")
+    colorOff=$(echo -e "${colors[default]}")
+
+    gsed -u s"/$pattern/$colorOn\0$colorOff/g"
+}
+compdef '_alternative "arguments:custom arg:(red green yellow blue magenta cyan)"' highlight
+
+# Convert milliseconds since the epoch to the current date time
+# echo 1633698951550 | epoch-to-date
+function epoch-to-date() {
+    while IFS= read -r msSinceEpoch; do
+        awk -v t="${msSinceEpoch}" 'BEGIN { print strftime("%Y-%m-%d %H:%M:%S", t/1000); }'
+    done
+}
+
+# Calculate the result of an expression
+# calc 2 + 2
+function calc () { 
+    echo "scale=2;$*" | bc | sed 's/\.0*$//'
+}
+
+# SSH tunneling                     {{{2
+# ======================================
+
+function tunnel-open() {
+    if [[ $# -ne 4 ]] ; then
+        echo 'Usage: tunnel-open LOCALPORT HOST HOSTPORT SERVER'
+        return -1
+    fi
+
+    localPort=$1
+    host=$2
+    hostPort=$3
+    server=$4
+    connectionFile=~/.ssh-tunnel-localhost:${localPort}===${host:0:20}:${hostPort}
+
+    echo "Opening tunnel localhost:${localPort} -> ${server} -> ${host}:${hostPort}"
+    ssh -AL ${localPort}:${host}:${hostPort} ${server} -f -o ServerAliveInterval=30 -N -M -S ${connectionFile} || { echo "Failed to open tunnel"; return -1; }
+    echo "Tunnel open ${connectionFile}"
+}
+compdef _hosts tunnel-open
+
+function tunnel-list() {
+    ls ~/.ssh-tunnel-*
+}
+
+function tunnel-check() {
+    if [[ $# -ne 1 ]] ; then
+        echo 'Usage: tunnel-check CONNECTIONFILE'
+        return -1
+    fi
+    connectionFile=$1
+
+    [[ ${connectionFile} =~ .ssh-tunnel-localhost:(.*)===(.*):(.*) ]]
+
+    localPort=${BASH_REMATCH[1]}
+    host=${BASH_REMATCH[2]}
+    hostPort=${BASH_REMATCH[3]}
+
+    echo "Checking tunnel localhost:${localPort} -> ${host}:${hostPort}"
+    ssh -S ${connectionFile} -O check ${host}
+}
+compdef '_files -g "~/.ssh-tunnel-*"' tunnel-check
+
+function tunnel-close() {
+    if [[ $# -ne 1 ]] ; then
+        echo 'Usage: tunnel-close CONNECTIONFILE'
+        return -1
+    fi
+
+    connectionFile=$1
+
+    [[ ${connectionFile} =~ .ssh-tunnel-localhost:(.*)===(.*):(.*) ]]
+
+    localPort=${BASH_REMATCH[1]}
+    host=${BASH_REMATCH[2]}
+    hostPort=${BASH_REMATCH[3]}
+
+    echo "Closing tunnel localhost:${localPort} -> ${host}:${hostPort}"
+    ssh -S ${connectionFile} -O exit ${host}
+}
+compdef '_files -g "~/.ssh-tunnel-*"' tunnel-close
+
+function tunnel-close-all() {
+    for connectionFile in ~/.ssh-tunnel-*
+    do
+        tunnel-close $connectionFile
+    done
+}
+
+# Switch between SSH configs
+function ssh-config() {
+    mv ~/.ssh/config ~/.ssh/config.bak
+    ln -s "$HOME/.ssh/config-${1}" ~/.ssh/config
+}
+compdef '_alternative "arguments:custom arg:(recs newsflo)"' ssh-config
+
+# AWS                               {{{2
+# ======================================
+
+# Copy my base machine config to a remote host
+function scp-skeleton-config() {
+    if [[ $# -ne 1 ]] ; then
+        echo 'Usage: scp-skeleton-config HOST'
+        exit -1
+    fi
+
+    pushd ~/Dev/my-stuff/dotfiles/skeleton-config || exit 1
+    echo "Uploading config to $1"
+    for file in $(find . \! -name .); do
+        scp $file $1:$file
+    done
+    popd || exit 1
+}
+compdef _ssh scp-skeleton-config=ssh
+
+# List ECR images
+function aws-list-ecr-images() {
+    local repos=$(aws ecr describe-repositories \
+        | jq -r ".repositories[].repositoryName" \
+        | sort)
+
+    while IFS= read -r repo; do 
+        echo $repo
+        AWS_PAGER="" aws ecr describe-images --repository-name "${repo}" \
+            | jq -r '.imageDetails[] | select(has("imageTags")) | .imageTags[] | select(test( "^\\d+\\.\\d+\\.\\d+$" ))' \
+            | sort
+        echo
+    done <<< "$repos"
+}
+
+# Fast AI course helpers            {{{2
+# ======================================
+
+function fast-ai-setup() {
+    export PATH=~/anaconda/bin:$PATH
+    export AWS_DEFAULT_PROFILE=stubillwhite
+    source_if_exists "/Users/white1/Dev/my-stuff/fast-ai/courses/setup/aws-alias.sh"
+    echo "Using anaconda tools and defaulting to AWS profile for fast-ai course"
+}
+
+function fast-ai-tunnel-open() {
+    if [[ $# -ne 3 ]] ; then
+        echo 'Usage: tunnel-open LOCALPORT SERVER SERVERPORT'
+        return -1
+    fi
+
+    localPort=$1
+    server=$2
+    serverPort=$3
+    connectionFile=~/.ssh-tunnel-localhost:${localPort}===${server:0:20}:${serverPort}
+
+    echo "Opening tunnel localhost:${localPort} -> ${server}:${serverPort}"
+    ssh -L ${localPort}:localhost:${serverPort} ${server} -i ~/.ssh/aws-key-fast-ai.pem -f -o ServerAliveInterval=30 -N -M -S ${connectionFile} || { echo "Failed to open tunnel"; return -1; }
+    echo "Tunnel open ${connectionFile}"
+}
+alias tunnel-fast-ai='fast-ai-tunnel-open 8888 fast-ai-server 8888'
+
+# Long running jobs                 {{{2
+# ======================================
+
+# Notify me when something completes
+# Usage: do-something-long-running ; tell-me "optional message"
+function tell-me() {
+    exitCode="$?"
+
+    if [[ $exitCode -eq 0 ]]; then
+        exitStatus="SUCCEEDED"
+    else
+        exitStatus="FAILED"
+    fi
+
+    if [[ $# -lt 1 ]] ; then
+        msg="${exitStatus}"
+    else 
+        msg="${exitStatus} : $1"
+    fi
+
+    if_darwin && {
+        osascript -e "display notification \"$msg\" with title \"tell-me\""
+    }
+
+    if_linux && {
+        notify-send -t 2000 "tell-me" "$msg"
+    }
+}
+
+# Helper function to notify when the output of a command changes
+# Usage:
+#   function watch-directory() {
+#       f() {
+#           ls
+#       }
+#   
+#       notify-on-change f 1 "Directory contents changed"
+#   }
+function notify-on-change() {
+    local f=$1
+    local period=$2
+    local message=$3
+    local tmpfile=$(mktemp)
+
+    $f > "${tmpfile}"
+
+    {
+        while true
+        do
+            sleep ${period}
+            (diff "${tmpfile}" <($f)) || break
+        done
+
+        tell-me "${message}"
+    } > /dev/null 2>&1 & disown
 }
 
 # AWS                               {{{2
