@@ -32,6 +32,9 @@ cask "keybase"                                  # End-to-end encryption software
 # Notebook
 cask "evernote"                                 # App for note taking, organizing, task lists, and archiving
 
+# APIs
+cask "insomnia"                                 # HTTP and GraphQL Client
+
 ################################################################################
 # Utilities
 ################################################################################
@@ -41,6 +44,7 @@ brew "coreutils"                                # GNU File, Shell, and Text util
 brew "entr"                                     # Run arbitrary commands when files change
 brew "findutils"                                # Collection of GNU find, xargs, and locate
 brew "gnu-sed"                                  # GNU implementation of the famous stream editor
+brew "gnuplot"                                  # Command-driven, interactive function plotting
 brew "graphviz"                                 # Graph visualization software from AT&T and Bell Labs
 brew "htop"                                     # Improved top (interactive process viewer)
 brew "jq"                                       # Lightweight and flexible command-line JSON processor
@@ -50,6 +54,7 @@ brew "miller"                                   # Like sed, awk, cut, join & sor
 brew "ncdu"                                     # NCurses Disk Usage
 brew "neovim"                                   # Ambitious Vim-fork focused on extensibility and agility
 brew "openssh"                                  # OpenBSD freely-licensed SSH connectivity tools
+brew "pass"                                     # Password manager
 brew "parallel"                                 # Shell command parallelization utility
 brew "pkg-config"                               # Manage compile and link flags for libraries
 brew "ripgrep"                                  # Search tool like grep and The Silver Searcher
