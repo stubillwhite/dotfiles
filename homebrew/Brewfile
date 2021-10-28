@@ -126,7 +126,9 @@ brew "go"                                       # Open source programming langua
 brew "ruby"                                     # Powerful, clean, object-oriented scripting language
 
 # Javascript
-brew "node"                                     # Platform built on V8 to build network applications
+# TODO: While we're using Mojave we must use an old version of Node
+# brew "node"                                   # platform built on v8 to build network applications
+brew "node@14"                                  # platform built on v8 to build network applications
 cask "visual-studio-code"                       # Open-source code editor
 
 # AWS

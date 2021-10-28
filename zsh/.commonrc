@@ -63,6 +63,9 @@ PERL_LOCAL_LIB_ROOT="/Users/white1/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB
 PERL_MB_OPT="--install_base \"/Users/white1/perl5\""; export PERL_MB_OPT;
 PERL_MM_OPT="INSTALL_BASE=/Users/white1/perl5"; export PERL_MM_OPT;
 
+# Node legacy while we're running Mojave
+export PATH=/usr/local/opt/node@14/bin:$PATH
+
 # Other tools
 
 export PATH=~/Dev/tools/bin:$PATH
