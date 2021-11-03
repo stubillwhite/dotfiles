@@ -51,6 +51,7 @@ brew "jq"                                       # Lightweight and flexible comma
 brew "ctags"                                    # Reimplementation of ctags(1)
 brew "q"                                        # Run SQL directly on CSV or TSV files
 brew "miller"                                   # Like sed, awk, cut, join & sort for name-indexed data such as CSV
+brew "mitmproxy"                                # Intercept, modify, replay, save HTTP/S traffic
 brew "ncdu"                                     # NCurses Disk Usage
 brew "neovim"                                   # Ambitious Vim-fork focused on extensibility and agility
 brew "openssh"                                  # OpenBSD freely-licensed SSH connectivity tools
@@ -65,6 +66,7 @@ brew "watch"                                    # Executes a program periodicall
 brew "wget"                                     # Internet file retriever
 brew "xsv"                                      # Fast CSV toolkit written in Rust
 brew "zsh"                                      # UNIX shell (command interpreter)
+cask "bartender"                                # Menu bar icon organizer
 cask "scroll-reverser"                          # Tool to reverse the direction of scrolling
 
 # Document and image manipulation
@@ -126,9 +128,7 @@ brew "go"                                       # Open source programming langua
 brew "ruby"                                     # Powerful, clean, object-oriented scripting language
 
 # Javascript
-# TODO: While we're using Mojave we must use an old version of Node
-# brew "node"                                   # platform built on v8 to build network applications
-brew "node@14"                                  # platform built on v8 to build network applications
+brew "node"                                     # platform built on v8 to build network applications
 cask "visual-studio-code"                       # Open-source code editor
 
 # AWS

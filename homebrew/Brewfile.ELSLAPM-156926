@@ -58,9 +58,6 @@ brew 'scrcpy'                                   # Display and control your Andro
 brew 'kafka'                                    # Publish-subscribe messaging rethought as a distributed commit log
 brew 'kcat'                                     # Generic command-line non-JVM Apache Kafka producer and consumer
 
-tap 'adevinta/zoe'
-brew 'adevinta/homebrew-zoe/zoe'                # The missing companion for Kafka
-
 # SonarScanner for SonarQube
 brew 'sonar-scanner'                            # Launcher to analyze a project with SonarQube
 
