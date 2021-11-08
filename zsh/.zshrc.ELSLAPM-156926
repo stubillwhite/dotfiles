@@ -190,7 +190,7 @@ function recs-get-emr-logs() {
 
             # Start nvim, search for error, view only results
             nvim -c 'Ack! error' -c 'only'
-        else 
+        else
             echo "ERROR: Unrecognised path ${s3Path}"
         fi
     fi
@@ -270,6 +270,38 @@ compdef "_arguments \
     '1:environment arg:(dev live)'" \
     recs-reviewers-evise-dumps
 
+# Quality metrics
+# ==============================================================================
+
+function recs-reviewers-quality-metrics() {
+    dashboard="MjA5OTI0M3xWSVp8REFTSEJPQVJEfGRhOjQ1MDIyOA"
+
+    # Find the sub-dashboards in the main page
+    subDashboardsResponse=$(curl -s https://api.newrelic.com/graphql \
+        -H 'Content-Type: application/json' \
+        -H "API-Key: ${NEWRELIC_API_KEY}" \
+        --data-binary '{"query":"{ actor { entity(guid: \"'${dashboard}'\") { ... on DashboardEntity { guid name pages { guid name } } } } } ", "variables":""}'
+    )
+
+    subDashboard=$(echo "${subDashboardsResponse}" | jq -r '.data.actor.entity.pages[0].guid')
+
+    # Generate a new URL for the current data
+    dashboardUrlResponse=$(curl -s https://api.newrelic.com/graphql \
+        -H 'Content-Type: application/json' \
+        -H "API-Key: ${NEWRELIC_API_KEY}" \
+        --data-binary '{"query":"mutation { dashboardCreateSnapshotUrl(guid: \"'${subDashboard}'\") } ", "variables":""}'
+    )
+
+    dashboardUrl=$( \
+        echo "${dashboardUrlResponse}" \
+        | jq -r '.data.dashboardCreateSnapshotUrl' \
+        | sed 's/format=PDF/format=PNG/' \
+    )
+
+    # Download and show
+    wget -q "${dashboardUrl}" -O - | imgcat -R
+}
+
 # SonarQube                                                                 {{{1
 # ==============================================================================
 
@@ -343,7 +375,7 @@ function aws-tag-values() {
     fi
 
     local key=$1
-    
+
     aws ec2 describe-instances | jq --raw-output '.Reservations[].Instances[].Tags[]? | select(.Key=="'$key'") | .Value' | sort | uniq
 }
 compdef _aws-tag aws-tag-values
