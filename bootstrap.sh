@@ -39,8 +39,9 @@ FILES=(
 
 # Files to link to in $HOME/.config
 CONFIG_DIRS=(
-    "yamllint/yamllint"
+    "htop/htop"
     "tmuxinator/tmuxinator"
+    "yamllint/yamllint"
 )
 
 RED='\033[0;31m'
