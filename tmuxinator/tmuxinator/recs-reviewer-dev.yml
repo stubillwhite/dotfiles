@@ -1,0 +1,15 @@
+# /Users/white1/.config/tmuxinator/recs-reviewer-dev.yml
+
+name: recs-reviewer-dev
+root: ~
+
+windows:
+  - recs-reviewer-dev:
+      layout: even-vertical
+      panes:
+        - data-pump:
+            - aws-recs-dev
+            - awslogs get -w --timestamp /aws/lambda/recs-rev-manuscripts-data-pump-lambda-dev
+        - infra:
+            - aws-recs-dev
+            - awslogs get -w --timestamp /aws/lambda/recs-reviewers-recommender-lambda-dev
