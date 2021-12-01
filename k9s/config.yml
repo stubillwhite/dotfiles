@@ -14,10 +14,10 @@ k9s:
     fullScreenLogs: false
     textWrap: false
     showTime: false
-  currentContext: recs-eks-main-dev
-  currentCluster: recs-eks-main-dev
+  currentContext: recs-eks-main-live
+  currentCluster: recs-eks-main-live
   clusters:
-    recs-eks-main-dev:
+    recs-eks-main-live:
       namespace:
         active: ""
         favorites:

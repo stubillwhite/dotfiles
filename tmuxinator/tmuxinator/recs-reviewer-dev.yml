@@ -9,7 +9,7 @@ windows:
       panes:
         - data-pump:
             - aws-recs-dev
-            - awslogs get -w --timestamp /aws/lambda/recs-rev-manuscripts-data-pump-lambda-dev
+            - awslogs get -S -G -w --timestamp /aws/lambda/recs-rev-manuscripts-data-pump-lambda-dev
         - infra:
             - aws-recs-dev
-            - awslogs get -w --timestamp /aws/lambda/recs-reviewers-recommender-lambda-dev
+            - awslogs get -S -G -w --timestamp /aws/lambda/recs-reviewers-recommender-lambda-dev

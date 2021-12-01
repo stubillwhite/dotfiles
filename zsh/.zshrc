@@ -431,6 +431,15 @@ function git-repos-authors() {
         | uniq
 }
 
+# For each repo within the current directory, list the remote
+function git-repos-remotes() {
+    remotes() {
+        git remote -v | grep '(fetch)' | awk '{ print $2 }'
+    }
+
+    git-for-each-repo remotes
+}
+
 # For each directory within the current directory, generate a hacky lines of
 # code count 
 function git-repos-hacky-line-count() {
