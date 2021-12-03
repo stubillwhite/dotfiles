@@ -21,6 +21,7 @@ FILES=(
     "git/.githooks"
     "nethack/.nethackrc"
     "leiningen/.lein"
+    "motd/.hushlogin"
     "proselint/.proselintrc"
     "pylint/.pylintrc"
     "ripgrep/.ripgreprc"
