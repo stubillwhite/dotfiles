@@ -91,6 +91,7 @@ alias entr='entr -c'                                                        # en
 alias gh='NO_COLOR=1 gh'                                                    # gh should not be colourised
 alias vi='nvim'                                                             # Use nvim instead of vi
 alias vim='nvim'                                                            # Use nvim instead of vim
+alias sed='gsed'                                                            # Use gsed instead of sed
 
 # Useful things to pipe things into
 alias fmt-xml='xmllint --format -'                                          # Prettify XML (cat foo.xml | fmt-xml)
@@ -1008,9 +1009,9 @@ function aws-get-secrets() {
     while IFS= read -r secret ; do 
         echo ${secret}
         aws secretsmanager list-secrets \
-            | jq -r ".SecretList[] | select(.Name == \"$secret\") | .Tags[] // false | select(.Key == \"Description\") | .Value"
+            | jq -r ".SecretList[] | select(.Name == \"$secret\") | .Tags[] // [] | select(.Key == \"Description\") | .Value"
         aws secretsmanager get-secret-value --secret-id "$secret"\
-            | jq '.SecretString // false | fromjson'
+            | jq '.SecretString | fromjson'
         echo
     done <<< "${secretsNames}"
 }
