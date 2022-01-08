@@ -12,9 +12,6 @@ windows:
         - infra:
             - pushd infra
             - git-repos-pull
-        - archived:
-            - pushd archived
-            - git-repos-pull
         - ds:
             - pushd ds
             - git-repos-pull
