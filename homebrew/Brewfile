@@ -27,7 +27,9 @@ cask "licecap"                                  # Animated screen capture applic
 
 # Encryption
 brew "gnupg"                                    # GNU Pretty Good Privacy (PGP) package
-cask "keybase"                                  # End-to-end encryption software
+cask "gpg-suite"                                # GPG Suite
+# Currently broken on Big Sur; application is untrusted
+# cask "keybase"                                  # End-to-end encryption software
 
 # Notebook
 cask "evernote"                                 # App for note taking, organizing, task lists, and archiving
@@ -91,7 +93,6 @@ brew "jplot"                                    # iTerm2 expvar/JSON monitoring 
 brew "git"                                      # Distributed revision control system
 brew "git-secret"                               # Bash-tool to store the private data inside a git repo
 brew "gh"                                       # GitHub command-line tool
-brew "tig"                                      # Text interface for Git repositories
 
 # Java
 cask "visualvm"                                 # JVM visualiser
@@ -116,7 +117,6 @@ brew "groovy"                                   # Java-based scripting language
 
 # Python
 brew "python"                                   # Interpreted, interactive, object-oriented programming language
-brew "python@2"                                 # Interpreted, interactive, object-oriented programming language
 
 # Elm
 brew "elm"                                      # Functional programming language for building browser-based GUIs
