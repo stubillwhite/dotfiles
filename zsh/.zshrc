@@ -579,6 +579,44 @@ function github-notify-on-change() {
     notify-on-change f 30 'GitHub PR changed'
 }
 
+function github-list-user-repos() {
+    if [[ $# -ne 1 ]] ; then
+        echo 'Usage: github-list-user-repos USERNAME'
+        exit -1
+    fi
+
+    local user=$1
+    local base_url="https://api.github.com:443/users/${user}/repos"
+
+    # Get user email and token, for which we unfortunately need a repo
+    local tmpDir=$(mktemp -d -t github-temp-repo-XXXXXXXXXX --tmpdir=.)
+    cd ${tmpDir}
+    git init > /dev/null
+
+    local token=$(git config --get user.token)
+    local email=$(git config --get user.email)
+
+    cd ..
+    rm -rf ${tmpDir}
+
+    # Page through repositories
+    local page=1
+    local results=''
+    while : ;
+    do
+        local resultsPage=$(curl -u ${email}:${token} -s "${base_url}?per_page=100\&page=$page")
+        [[ "$(echo "${resultsPage}" | jq 'isempty(.[])')" == "true" ]] && break
+        results=$results$resultsPage
+        page=$((page + 1))
+    done
+
+    echo ${results} \
+        | jq -r '.[] | [ .updated_at, .name ] | @csv' \
+        | tabulate-by-comma \
+        | sort -r \
+        | gsed 's/"//g'
+}
+
 # General functions                                                         {{{1
 # ==============================================================================
 

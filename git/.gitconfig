@@ -60,7 +60,7 @@
 [includeIf "gitdir:~/Dev/artifactory-migration/recommenders/"]
     path = ~/Dev/recommenders/.gitconfig
 
-[includeIf "gitdir:~/Dev/graduates/"]
+[includeIf "gitdir:~/Dev/code-review/mentoring/"]
     path = ~/Dev/recommenders/.gitconfig
 
 [includeIf "gitdir:~/Dev/newsflo/"]
