@@ -589,7 +589,7 @@ function github-list-user-repos() {
     local base_url="https://api.github.com:443/users/${user}/repos"
 
     # Get user email and token, for which we unfortunately need a repo
-    local tmpDir=$(mktemp -d -t github-temp-repo-XXXXXXXXXX --tmpdir=.)
+    local tmpDir=$(mktemp -d --tmpdir=.)
     cd ${tmpDir}
     git init > /dev/null
 

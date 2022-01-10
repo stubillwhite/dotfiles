@@ -129,6 +129,8 @@ create-links-for-files $HOME         "$FILES[@]"
 mkdir -p $HOME/.config/
 create-links-for-files $HOME/.config "$CONFIG_DIRS[@]"
 
-create-links-for-files-at-path ~/Dev/my-stuff            git/my-stuff
-create-links-for-files-at-path ~/Dev/recommenders        git/recommenders
+create-links-for-files-at-path ~/Dev/my-stuff            git/personal-config
+create-links-for-files-at-path ~/Dev/recommenders        git/work-config
+create-links-for-files-at-path ~/Dev/newsflo             git/work-config
+create-links-for-files-at-path ~/Dev/code-review/        git/work-config
 create-links-for-files-at-path ~/Library/Preferences/k9s k9s
