@@ -3,10 +3,13 @@
 COLOR_RED='\033[0;31m'
 COLOR_NONE='\033[0m'
 
-branchName="$(git rev-parse --abbrev-ref HEAD)"
+branchName="$(git branch --show-current)"
 
+trunkRegex="^(main|master)*$"
 validBranchRegex="^(sdpr|news)-[0-9]+[a-z0-9.-]*$"
 
-if [[ ! "${branchName}" =~ $validBranchRegex ]]; then
+if [[ "${branchName}" =~ $trunkRegex ]]; then
+    printf "${COLOR_RED}WARNING: Committing directly to '%s' instead of a branch${COLOR_NONE}\n" "${branchName}"
+elif [[ ! "${branchName}" =~ $validBranchRegex ]]; then
     printf "${COLOR_RED}WARNING: Branch name '%s' does not match expected format${COLOR_NONE}\n" "${branchName}"
 fi
