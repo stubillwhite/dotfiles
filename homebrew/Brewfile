@@ -28,6 +28,7 @@ cask "licecap"                                  # Animated screen capture applic
 # Encryption
 brew "gnupg"                                    # GNU Pretty Good Privacy (PGP) package
 cask "gpg-suite"                                # GPG Suite
+cask "keepassxc"                                # Password manager app
 # Currently broken on Big Sur; application is untrusted
 # cask "keybase"                                  # End-to-end encryption software
 

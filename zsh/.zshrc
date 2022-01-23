@@ -127,6 +127,11 @@ alias docker-entrypoint='docker inspect --format="{{.Config.Cmd}}"'
 # Specific tools                                                            {{{1
 # ==============================================================================
 
+# KeePassXC                         {{{2
+# ======================================
+
+alias keepassxc-cli='/Applications/KeePassXC.app/Contents/MacOS/keepassxc-cli'
+
 # Ripgrep                           {{{2
 # ======================================
 
