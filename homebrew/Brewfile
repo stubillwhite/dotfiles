@@ -44,24 +44,25 @@ cask "insomnia"                                 # HTTP and GraphQL Client
 
 brew "cmake"                                    # Cross-platform make
 brew "coreutils"                                # GNU File, Shell, and Text utilities
+brew "ctags"                                    # Reimplementation of ctags(1)
 brew "datamash"                                 # Tool to perform numerical, textual & statistical operations
 brew "entr"                                     # Run arbitrary commands when files change
 brew "findutils"                                # Collection of GNU find, xargs, and locate
+brew "fzf"                                      # Command-line fuzzy finder written in Go
 brew "gnu-sed"                                  # GNU implementation of the famous stream editor
 brew "gnuplot"                                  # Command-driven, interactive function plotting
 brew "graphviz"                                 # Graph visualization software from AT&T and Bell Labs
 brew "htop"                                     # Improved top (interactive process viewer)
 brew "jq"                                       # Lightweight and flexible command-line JSON processor
-brew "ctags"                                    # Reimplementation of ctags(1)
-brew "q"                                        # Run SQL directly on CSV or TSV files
 brew "miller"                                   # Like sed, awk, cut, join & sort for name-indexed data such as CSV
 brew "mitmproxy"                                # Intercept, modify, replay, save HTTP/S traffic
 brew "ncdu"                                     # NCurses Disk Usage
 brew "neovim"                                   # Ambitious Vim-fork focused on extensibility and agility
 brew "openssh"                                  # OpenBSD freely-licensed SSH connectivity tools
-brew "pass"                                     # Password manager
 brew "parallel"                                 # Shell command parallelization utility
+brew "pass"                                     # Password manager
 brew "pkg-config"                               # Manage compile and link flags for libraries
+brew "q"                                        # Run SQL directly on CSV or TSV files
 brew "ripgrep"                                  # Search tool like grep and The Silver Searcher
 brew "sampler"                                  # Tool for shell commands execution, visualization and alerting
 brew "slackcat"                                 # Command-line utility for posting snippets to Slack
