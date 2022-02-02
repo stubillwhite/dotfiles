@@ -137,6 +137,11 @@ alias keepassxc-cli='/Applications/KeePassXC.app/Contents/MacOS/keepassxc-cli'
 
 export RIPGREP_CONFIG_PATH=~/.ripgreprc
 
+# FZF                               {{{2
+# ======================================
+
+export FZF_DEFAULT_COMMAND="fd --exclude={.git,.idea,.vscode,target,node_modules,build} --type f"
+
 # Shellcheck                        {{{2
 # ======================================
 

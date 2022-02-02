@@ -47,6 +47,7 @@ brew "coreutils"                                # GNU File, Shell, and Text util
 brew "ctags"                                    # Reimplementation of ctags(1)
 brew "datamash"                                 # Tool to perform numerical, textual & statistical operations
 brew "entr"                                     # Run arbitrary commands when files change
+brew "fd"                                       # Simple, fast and user-friendly alternative to find
 brew "findutils"                                # Collection of GNU find, xargs, and locate
 brew "fzf"                                      # Command-line fuzzy finder written in Go
 brew "gnu-sed"                                  # GNU implementation of the famous stream editor
