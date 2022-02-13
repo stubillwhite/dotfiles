@@ -438,3 +438,8 @@ function jira-my-issues() {
         | jq -r ".issues[] | [.key, .fields.summary] | @tsv" \
         | tabulate-by-tab
 }
+
+function jira-branch() {
+    git checkout -b $1
+}
+compdef _jira-branch jira-branch
