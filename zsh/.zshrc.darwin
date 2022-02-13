@@ -7,6 +7,12 @@ alias sqlworkbenchj='java -jar  /Applications/SQLWorkbenchJ.app/Contents/Java/sq
 alias doom='emacs --with-profile doom'
 alias keepass-get-ssh='keepassxc-cli clip ~/Dropbox/Private/keepassx/personal.kdbx /Personal/SSH'
 
+# OS specific tools                                                         {{{1
+# ==============================================================================
+
+# Add stern completion
+source <(stern --completion=zsh)
+
 # General OS helper functions                                               {{{1
 # ==============================================================================
 
