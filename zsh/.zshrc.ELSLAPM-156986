@@ -281,7 +281,7 @@ function recs-reviewers-quality-metrics() {
     # Find the sub-dashboards in the main page
     subDashboardsResponse=$(curl -s https://api.newrelic.com/graphql \
         -H 'Content-Type: application/json' \
-        -H "API-Key: ${NEWRELIC_API_KEY}" \
+        -H "API-Key: ${SECRET_NEWRELIC_API_KEY}" \
         --data-binary '{"query":"{ actor { entity(guid: \"'${dashboard}'\") { ... on DashboardEntity { guid name pages { guid name } } } } } ", "variables":""}'
     )
 
@@ -290,7 +290,7 @@ function recs-reviewers-quality-metrics() {
     # Generate a new URL for the current data
     dashboardUrlResponse=$(curl -s https://api.newrelic.com/graphql \
         -H 'Content-Type: application/json' \
-        -H "API-Key: ${NEWRELIC_API_KEY}" \
+        -H "API-Key: ${SECRET_NEWRELIC_API_KEY}" \
         --data-binary '{"query":"mutation { dashboardCreateSnapshotUrl(guid: \"'${subDashboard}'\") } ", "variables":""}'
     )
 
@@ -426,4 +426,15 @@ function recs-build-and-publish-jar() {
     else
         echo "Assembly not found"
     fi
+}
+
+# JIRA                                                                      {{{1
+# ==============================================================================
+
+function jira-my-issues() {
+    curl -s -G 'https://elsevier.atlassian.net/rest/api/2/search' \
+        --data-urlencode "jql=project=SDPR AND assignee = currentUser() AND status IN (\"In Progress\")" \
+        --user "${SECRET_JIRA_USER}:${SECRET_JIRA_API_KEY}" \
+        | jq -r ".issues[] | [.key, .fields.summary] | @tsv" \
+        | tabulate-by-tab
 }
