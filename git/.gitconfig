@@ -35,6 +35,7 @@
 
 [diff]
 	tool = vimdiff
+	algorithm = minimal
 
 [difftool "vimdiff"]
     cmd = nvim -d $BASE $LOCAL
