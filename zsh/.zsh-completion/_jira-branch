@@ -10,5 +10,5 @@ function _jira-branch() {
         | gsed -e 's/ \+/-/g'
     )
 
-    _alternative "directories:user directory:($branchNames)"
+    _alternative "branches:jira branch:($branchNames)"
 }

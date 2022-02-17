@@ -1003,6 +1003,16 @@ function aws-datapipeline-amis() {
         | column -t -s '','' 
 }
 
+function aws-lambda-statuses() {
+    aws lambda list-event-source-mappings \
+        | jq -r ".EventSourceMappings[] | [.FunctionArn, .EventSourceArn, .State, .UUID] | @tsv" \
+        | gsed "s/\t\t/\t-\t/g" \
+        | column -t -s $'\t' \
+        | sort \
+        | highlight red '.*Disabled.*' \
+        | highlight yellow '.*\(Enabling\|Disabling\|Updating\).*'
+}
+
 function aws-service-quotas() {
     aws service-quotas list-service-quotas --service-code ec2 | jq --raw-output '(.Quotas[] | ([.QuotaName, .Value])) | @csv' | column -t -s "," | sed 's/\"//g'
 }
@@ -1063,7 +1073,6 @@ function aws-get-secrets() {
         echo
     done <<< "${secretsNames}"
 }
-
 
 # Docker
 

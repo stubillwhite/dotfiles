@@ -153,6 +153,31 @@ compdef "_arguments \
     '1:environment arg:(dev live)'" \
     recs-ecr-login
 
+function recs-api-versions() {
+    if [[ $# -ne 1 ]] ; then
+        echo "Usage: recs-api-versions (dev|live)"
+    else
+        local recsEnv=$1
+
+        [[ ${recsEnv} == "dev" ]]  && aws-recs-dev  > /dev/null
+        [[ ${recsEnv} == "live" ]] && aws-recs-prod > /dev/null
+
+        recs-get-k8s $1 main > /dev/null
+
+        kubectl get po -A -o json \
+            | jq -r ".items[].status.containerStatuses[].image" \
+            | grep "api" \
+            | gsed -e 's/^.*\/api\///g' \
+            | sort \
+            | uniq \
+            | tr ':' ',' \
+            | tabulate-by-comma    
+    fi
+}
+compdef "_arguments \
+    '1:environment arg:(dev live)'" \
+    recs-api-versions
+
 function recs-get-emr-logs() {
     setopt local_options BASH_REMATCH
     if [[ $# -ne 1 ]]; then
