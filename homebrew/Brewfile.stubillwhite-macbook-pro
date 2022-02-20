@@ -22,6 +22,11 @@ brew "lazydocker"                               # The lazier way to manage every
 # Game dev
 cask "godot"                                    # The game engine you waited for
 
+# Kubernetes
+brew 'kubectl'                                  # Kubernetes command-line interface
+brew 'kubernetes-cli'                           # Kubernetes command-line interface
+brew 'stern'                                    # Tail multiple Kubernetes pods & their containers
+
 ################################################################################
 # Fun
 ################################################################################
