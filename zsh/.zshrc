@@ -384,7 +384,7 @@ function git-repos-code-stashes() {
 # repo
 function git-repos-recent() {
     recent() {
-        local cmd="git --no-pager log-recent --author='Jenkins' --invert-grep"
+        local cmd="git --no-pager log-recent --perl-regexp --author='^((?!Jenkins).*)$' --invert-grep"
         local output=$(eval "$cmd") 
         if [[ $output = *[![:space:]]* ]]; then
             pwd
