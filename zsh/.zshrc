@@ -1115,6 +1115,32 @@ if_darwin && {
 source_if_exists "$HOME/.zshrc.no-commit"
 source_if_exists "$HOME/.zshrc.$(uname -n)"
 
+function assert-variables-defined() {
+    local variables=("$@")
+    for variable in "${variables[@]}"
+    do
+        if [[ -z "${(P)variable}" ]]; then
+            echo "${variable} is not defined -- please check ~/.zshrc-no-commit"
+        fi
+    done
+}
+
+EXPECTED_SECRETS=(
+    SECRET_ACC_BOS_UTILITY
+    SECRET_ACC_BOS_DEV
+    SECRET_ACC_BOS_STAGING
+    SECRET_ACC_BOS_PROD
+    SECRET_ACC_NEWSFLO_DEV
+    SECRET_ACC_NEWSFLO_PROD
+    SECRET_ACC_RECS_DEV
+    SECRET_ACC_RECS_PROD
+    SECRET_NEWRELIC_API_KEY
+    SECRET_JIRA_API_KEY
+    SECRET_JIRA_USER
+)
+
+assert-variables-defined "${EXPECTED_SECRETS[@]}"
+
 function response-times() {
     if [[ $# -ne 1 ]] ; then
         echo 'Find reponse times for URL'
