@@ -329,6 +329,18 @@ function recs-reviewers-quality-metrics() {
     wget -q "${dashboardUrl}" -O - | imgcat -R
 }
 
+# Lambda timings
+# ==============================================================================
+
+function recs-reviewers-lambda-timings() {
+    awslogs get --no-group --no-stream --timestamp -s "5m" /aws/lambda/recs-reviewers-recommender-lambda-live \
+        | grep Instrumentation \
+        | gsed -r 's/^.* (.+) - ([0-9]+) ms$/\1 \2/' \
+        | sort \
+        | datamash --field-separator=' ' -H -g 1 min 2 max 2 mean 2 \
+        | column -s ' ' -t
+}
+
 # SonarQube                                                                 {{{1
 # ==============================================================================
 
