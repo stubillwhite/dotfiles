@@ -98,6 +98,7 @@ alias fmt-xml='xmllint --format -'                                          # Pr
 alias fmt-json='jq "."'                                                     # Prettify JSON (cat foo.json | fmt-json)
 alias tabulate-by-tab='gsed "s/\t\t/\t-\t/g" | column -t -s $''\t'' '       # Tabluate TSV (cat foo.tsv | tabulate-by-tab)
 alias tabulate-by-comma='gsed "s/,,/,-,/g" | column -t -s '','' '           # Tabluate CSV (cat foo.csv | tabulate-by-comma)
+alias tabulate-by-space='column -t -s '' '' '                               # Tabluate CSV (cat foo.txt | tabulate-by-space)
 alias as-stream='stdbuf -o0'                                                # Turn pipes to streams (tail -F foo.log | as-stream grep "bar")
 alias strip-color="gsed -r 's/\x1b\[[0-9;]*m//g'"                           # Strip ANSI colour codes (some-cmd | strip-color)
 alias strip-ansi="perl -pe 's/\x1b\[[0-9;]*[mG]//g'"                        # Strip all ANSI control codes (some-cmd | strip-ansi)
