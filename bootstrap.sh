@@ -134,4 +134,5 @@ create-links-for-files-at-path ~/Dev/bos                 git/work-config
 create-links-for-files-at-path ~/Dev/recommenders        git/work-config
 create-links-for-files-at-path ~/Dev/newsflo             git/work-config
 create-links-for-files-at-path ~/Dev/code-review/        git/work-config
+create-links-for-files-at-path ~/Dev/scratchpad/         git/work-config
 create-links-for-files-at-path ~/Library/Preferences/k9s k9s
