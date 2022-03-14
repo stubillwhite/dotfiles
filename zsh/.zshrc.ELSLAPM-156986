@@ -340,7 +340,7 @@ function recs-reviewers-lambda-timings() {
         awslogs get --no-group --no-stream --timestamp -s "5m" /aws/lambda/recs-reviewers-recommender-lambda-${recsEnv} \
             | grep Instrumentation \
             | gsed -r 's/^.* (.+) - ([0-9]+) ms$/\1 \2/' \
-            | datamash --sort --field-separator=' ' --round=1 -H -g 1 min 2 mean 2 max 2 \
+            | datamash --sort --field-separator=' ' --round=1 --header-out -g 1 min 2 mean 2 max 2 \
             | column -s ' ' -t
     fi
 }
