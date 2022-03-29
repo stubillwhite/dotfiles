@@ -102,9 +102,11 @@ alias tabulate-by-space='column -t -s '' '' '                               # Ta
 alias as-stream='stdbuf -o0'                                                # Turn pipes to streams (tail -F foo.log | as-stream grep "bar")
 alias strip-color="gsed -r 's/\x1b\[[0-9;]*m//g'"                           # Strip ANSI colour codes (some-cmd | strip-color)
 alias strip-ansi="perl -pe 's/\x1b\[[0-9;]*[mG]//g'"                        # Strip all ANSI control codes (some-cmd | strip-ansi)
+alias strip-quotes='gsed "s/[''\"]//g"'                                     # Strip all quotes (some-cmd | strip-quotes)
 alias sum-of="paste -sd+ - | bc"                                            # Sum numbers from stdin (some-cmd | sum-of)
 
 alias csv-to-json="python3 -c 'import csv, json, sys; print(json.dumps([dict(r) for r in csv.DictReader(sys.stdin)]))'"
+alias json-to-csv='jq -r ''(map(keys) | add | unique) as $cols | map(. as $row | $cols | map($row[.])) as $rows | $cols, $rows[] | @csv'''
 
 alias ssh-rm-connections='rm /tmp/ssh-mux_*'
 alias py-env-activate='source bin/activate'
@@ -1159,4 +1161,24 @@ function response-times() {
             --output /dev/null \
             "${url}"
     done
+}
+
+function g-rebase-branch() {
+    local trunk='main'
+
+    git branch --show-current \
+        | xargs git merge-base ${trunk} \
+        | xargs git rebase -i
+}
+
+function g-one-commit() {
+    local trunk=main
+    local lastCommitMessage=$(git show -s --format=%s)
+
+    git branch --show-current \
+        | xargs git merge-base ${trunk} \
+        | xargs git reset --soft
+    git add -A
+    git commit -m "${lastCommitMessage}"
+    git commit --amend
 }

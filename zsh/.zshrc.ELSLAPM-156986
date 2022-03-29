@@ -338,7 +338,7 @@ function recs-reviewers-lambda-timings() {
     else
         local recsEnv=$1
         awslogs get --no-group --no-stream --timestamp -s "5m" /aws/lambda/recs-reviewers-recommender-lambda-${recsEnv} \
-            | grep Instrumentation \
+            | grep -e 'Instrumentation\$:' \
             | gsed -r 's/^.* (.+) - ([0-9]+) ms$/\1 \2/' \
             | datamash --sort --field-separator=' ' --round=1 --header-out -g 1 min 2 mean 2 max 2 \
             | column -s ' ' -t
