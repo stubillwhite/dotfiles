@@ -32,6 +32,7 @@ function source_or_warn() {
 
 source_if_exists "$HOME/Dev/my-stuff/shell-utils/.shell-helper-functions"
 
+# TODO: Move these to .zshrc
 # General settings                                                          {{{1
 # ==============================================================================
 
@@ -94,6 +95,7 @@ export LEIN_JVM_OPTS='-Xms4G -Xmx4G'
 
 export SPARK_LOCAL_IP=127.0.0.1
 
+# TODO: Move these to .zshrc
 # SSH                                                                       {{{1
 # ==============================================================================
 
@@ -115,45 +117,6 @@ if [ -f "${SSH_ENV_FILE}" ]; then
 else
     ssh-start-agent;
 fi
-
-# Random things to rationalise                                              {{{1
-# ==============================================================================
-
-export COLOR_RED='\033[0;31m'
-export COLOR_GREEN='\033[0;32m'
-export COLOR_YELLOW='\033[0;33m'
-export COLOR_NONE='\033[0m'
-export COLOR_CLEAR_LINE='\r\033[K'
-
-function docker-machine-start {
-    ~/docker_setup_mac.bash
-    docker-machine start
-    eval $(docker-machine env default)
-    echo "Initialised environment"
-}
-
-function docker-ips() {
-    docker ps | while read line; do
-    if `echo $line | grep -q 'CONTAINER ID'`; then
-        echo -e "IP ADDRESS\t$line"
-    else
-        CID=$(echo $line | awk '{print $1}');
-        IP=$(docker inspect -f "{{ .NetworkSettings.IPAddress }}" $CID);
-        printf "${IP}\t${line}\n"
-    fi
-done;
-}
-
-function awssh() {
-    servers=$(aws ec2 describe-instances --region eu-west-1 --profile newsflo --output json | jq '.Reservations[].Instances[] | select(.Tags != null) | select(.Tags[].Value | select(. != null) | contains("'$1'")) | .PrivateIpAddress'|  sort | uniq | head -n 10)
-    num=$(echo "$servers" | wc -l)
-    servers=$(echo "$servers" | tr -d '"')
-    if [ $num -eq 1 ]; then
-        ssh "$servers"
-    else
-        echo "$servers" | xargs csshX --login stuart.white
-    fi
-}
 
 # 1}}}
 
