@@ -1,5 +1,11 @@
 # vim:fdm=marker
 
+# Profiling for startup                                                     {{{1
+# ==============================================================================
+# Enable profiling (display report with `zprof`)
+
+zmodload zsh/zprof
+
 # Conditional inclusion                                                     {{{1
 # ==============================================================================
 
@@ -32,6 +38,9 @@ function source-or-warn() {
 
 # Included scripts                                                          {{{1
 # ==============================================================================
+
+# Prezto
+source ~/Dev/my-stuff/prezto/runcoms/zshenv
 
 # Include common configuration
 source $HOME/.commonrc
@@ -139,6 +148,63 @@ function untarf() {
     tar -zxvf "$1"
 }
 
+# Long running jobs                 {{{2
+# ======================================
+
+# Notify me when something completes
+# Usage: do-something-long-running ; tell-me "optional message"
+function tell-me() {
+    exitCode="$?"
+
+    if [[ $exitCode -eq 0 ]]; then
+        exitStatus="SUCCEEDED"
+    else
+        exitStatus="FAILED"
+    fi
+
+    if [[ $# -lt 1 ]] ; then
+        msg="${exitStatus}"
+    else 
+        msg="${exitStatus} : $1"
+    fi
+
+    if-darwin && {
+        osascript -e "display notification \"$msg\" with title \"tell-me\""
+    }
+
+    if-linux && {
+        notify-send -t 2000 "tell-me" "$msg"
+    }
+}
+
+# Helper function to notify when the output of a command changes
+# Usage:
+#   function watch-directory() {
+#       f() {
+#           ls
+#       }
+#   
+#       notify-on-change f 1 "Directory contents changed"
+#   }
+function notify-on-change() {
+    local f=$1
+    local period=$2
+    local message=$3
+    local tmpfile=$(mktemp)
+
+    $f > "${tmpfile}"
+
+    {
+        while true
+        do
+            sleep ${period}
+            (diff "${tmpfile}" <($f)) || break
+        done
+
+        tell-me "${message}"
+    } > /dev/null 2>&1 & disown
+}
+
 # Miscellaneous utilities           {{{2
 # ======================================
 
@@ -202,15 +268,26 @@ function calc () {
 # Specific tools                                                            {{{1
 # ==============================================================================
 
-# GNU parallel                      {{{2
+# Docker                            {{{2
 # ======================================
 
-source-if-exists "$(which env_parallel.zsh)"
+function docker-rm-instances() {
+    docker ps -a -q | xargs docker stop
+    docker ps -a -q | xargs docker rm
+}
 
-# Tmuxinator                        {{{2
+function docker-rm-images() {
+    if confirm; then
+        docker-rm-instances
+        docker images -q | xargs docker rmi
+        docker images | grep "<none>" | awk '{print $3}' | xargs docker rmi
+    fi
+}
+
+# FZF                               {{{2
 # ======================================
 
-source-if-exists "$HOME/Dev/my-stuff/dotfiles/tmuxinator/tmuxinator.zsh"
+export FZF_DEFAULT_COMMAND="fd --exclude={.git,.idea,.vscode,target,node_modules,build} --type f"
 
 # Git                               {{{2
 # ======================================
@@ -644,3 +721,87 @@ function github-list-user-repos() {
         | sort -r \
         | gsed 's/"//g'
 }
+
+# GNU parallel                      {{{2
+# ======================================
+
+source-if-exists "$(which env_parallel.zsh)"
+
+# jq                                {{{2
+# ======================================
+
+# Display the paths to the values in the JSON
+# cat foo.json | jq-paths
+function jq-paths() {
+    # Taken from https://github.com/stedolan/jq/issues/243 
+    jq '[path(..)|map(if type=="number" then "[]" else tostring end)|join(".")|split(".[]")|join("[]")]|unique|map("."+.)|.[]'
+}
+
+# KeePassXC                         {{{2
+# ======================================
+
+alias keepassxc-cli='/Applications/KeePassXC.app/Contents/MacOS/keepassxc-cli'
+
+alias keepassxc-get-ssh='keepassxc-cli clip ~/Dropbox/Private/keepassx/personal.kdbx /Personal/SSH'
+
+alias keepassxc-get-gpg='keepassxc-cli clip ~/Dropbox/Private/keepassx/elsevier.kdbx /Elsevier/GPG'
+
+# Shellcheck                        {{{2
+# ======================================
+
+export SHELLCHECK_OPTS=""
+SHELLCHECK_OPTS+="-e SC1091 "    # Allow sourcing files from paths that do not exist yet
+SHELLCHECK_OPTS+="-e SC2039 "    # Allow dash in function names
+SHELLCHECK_OPTS+="-e SC2112 "    # Allow 'function' keyword
+SHELLCHECK_OPTS+="-e SC2155 "    # Allow declare and assignment in the same statement
+
+# Python                            {{{2
+# ======================================
+
+function py-env-init() {
+    python3 -m venv .
+    touch requirements.txt
+    py-env-activate
+}
+
+alias py-env-activate='source bin/activate'
+
+alias py-env-deactivate='deactivate'
+
+# Ripgrep                           {{{2
+# ======================================
+
+export RIPGREP_CONFIG_PATH=~/.ripgreprc
+
+# SBT                               {{{2
+# ======================================
+
+export SBT_OPTS=-Xmx2G
+
+alias sbt-no-test='sbt "set test in assembly := {}"'
+alias sbt-test='sbt test it:test'
+
+# Switch between standard and cleanroom repositories
+function sbt-use-repository () {
+    if [[ $# -ne 1 ]] ; then
+        echo 'Usage: sbt-use-repository (cleanroom|standard)'
+        return 1
+    fi
+
+    echo "Switching to ${1} repository"
+
+    rm ~/.sbt/repositories 
+    rm ~/.ivy2
+
+    ln -s "$HOME/.sbt/repositories-${1}" ~/.sbt/repositories 
+    ln -s "$HOME/.ivy2-${1}"             ~/.ivy2
+}
+compdef "_arguments \
+    '1:environment arg:(cleanroom standard)'" \
+    sbt-use-repository
+
+# Tmuxinator                        {{{2
+# ======================================
+
+source-if-exists "$HOME/Dev/my-stuff/dotfiles/tmuxinator/tmuxinator.zsh"
+

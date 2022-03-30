@@ -1,31 +1,10 @@
 # vim:fdm=marker
 
-# Profiling for startup                                                     {{{1
-# ==============================================================================
-# Enable profiling (display report with `zprof`)
-
-zmodload zsh/zprof
-
 # Included scripts                                                          {{{1
 # ==============================================================================
 
-# Include common configuration
-#source $HOME/.commonrc
-
 # No flow control, so C-s is free for C-r/C-s back/forward incremental search
 stty -ixon
-
-## # Include completion functions
-## fpath=(~/.zsh-completion $fpath)
-## autoload -U compinit
-## compinit
-
-# Pyenv
-## export PYENV_ROOT="$HOME/Dev/tools/pyenv"
-## export PATH="$PYENV_ROOT/bin:$PATH"
-## if command -v pyenv 1>/dev/null 2>&1; then
-##     eval "$(pyenv init -)"
-## fi
 
 # Include Prezto, but remove unhelpful configuration
 
@@ -88,10 +67,6 @@ alias vi='nvim'                                                             # Us
 alias vim='nvim'                                                            # Use nvim instead of vim
 alias sed='gsed'                                                            # Use gsed instead of sed
 
-alias ssh-rm-connections='rm /tmp/ssh-mux_*'
-alias py-env-activate='source bin/activate'
-alias py-env-deactivate='deactivate'
-
 # Other useful stuff
 alias reload-zsh-config="exec zsh"                                          # Reload Zsh config
 alias display-colours='msgcat --color=test'                                 # Display terminal colors
@@ -106,80 +81,6 @@ alias shred='shred -vuz --iterations=10'
 alias git-clean='git clean -X -f -d'
 alias git-scrub='git clean -x -f -d'
 alias docker-entrypoint='docker inspect --format="{{.Config.Cmd}}"'
-
-# Specific tools                                                            {{{1
-# ==============================================================================
-
-# KeePassXC                         {{{2
-# ======================================
-
-alias keepassxc-cli='/Applications/KeePassXC.app/Contents/MacOS/keepassxc-cli'
-
-# Ripgrep                           {{{2
-# ======================================
-
-export RIPGREP_CONFIG_PATH=~/.ripgreprc
-
-# FZF                               {{{2
-# ======================================
-
-export FZF_DEFAULT_COMMAND="fd --exclude={.git,.idea,.vscode,target,node_modules,build} --type f"
-
-# Shellcheck                        {{{2
-# ======================================
-
-export SHELLCHECK_OPTS=""
-SHELLCHECK_OPTS+="-e SC1091 "    # Allow sourcing files from paths that do not exist yet
-SHELLCHECK_OPTS+="-e SC2039 "    # Allow dash in function names
-SHELLCHECK_OPTS+="-e SC2112 "    # Allow 'function' keyword
-SHELLCHECK_OPTS+="-e SC2155 "    # Allow declare and assignment in the same statement
-
-# SBT                               {{{2
-# ======================================
-
-export SBT_OPTS=-Xmx2G
-alias sbt-no-test='sbt "set test in assembly := {}"'
-alias sbt-test='sbt test it:test'
-
-# Switch between standard and cleanroom builds
-function use-artifactory () {
-    if [[ $# -ne 1 ]] ; then
-        echo 'Usage: use-artifactory (cleanroom|standard)'
-        return 1
-    fi
-
-    echo "Switching to ${1} repository"
-
-    rm ~/.sbt/repositories 
-    rm ~/.ivy2
-
-    ln -s "$HOME/.sbt/repositories-${1}" ~/.sbt/repositories 
-    ln -s "$HOME/.ivy2-${1}"             ~/.ivy2
-}
-compdef "_arguments \
-    '1:environment arg:(cleanroom standard)'" \
-    use-artifactory
-
-# jq                                {{{2
-# ======================================
-
-# Display the paths to the values in the JSON
-# cat foo.json | jq-paths
-function jq-paths() {
-    # Taken from https://github.com/stedolan/jq/issues/243 
-    jq '[path(..)|map(if type=="number" then "[]" else tostring end)|join(".")|split(".[]")|join("[]")]|unique|map("."+.)|.[]'
-}
-
-# Python                            {{{2
-# ======================================
-
-# Initialise the Python virtual environment
-function py-env-init() {
-    python3 -m venv .
-    touch requirements.txt
-    py-env-activate
-}
-
 
 # General functions                                                         {{{1
 # ==============================================================================
@@ -196,75 +97,6 @@ function gunzip-logs() {
         echo "$line"
         gunzip "$line"
     done < <(find . -name "*.gz")
-}
-
-# SSH tunneling                     {{{2
-# ======================================
-
-function tunnel-open() {
-    if [[ $# -ne 4 ]] ; then
-        echo 'Usage: tunnel-open LOCALPORT HOST HOSTPORT SERVER'
-        return -1
-    fi
-
-    localPort=$1
-    host=$2
-    hostPort=$3
-    server=$4
-    connectionFile=~/.ssh-tunnel-localhost:${localPort}===${host:0:20}:${hostPort}
-
-    echo "Opening tunnel localhost:${localPort} -> ${server} -> ${host}:${hostPort}"
-    ssh -AL ${localPort}:${host}:${hostPort} ${server} -f -o ServerAliveInterval=30 -N -M -S ${connectionFile} || { echo "Failed to open tunnel"; return -1; }
-    echo "Tunnel open ${connectionFile}"
-}
-compdef _hosts tunnel-open
-
-function tunnel-list() {
-    ls ~/.ssh-tunnel-*
-}
-
-function tunnel-check() {
-    if [[ $# -ne 1 ]] ; then
-        echo 'Usage: tunnel-check CONNECTIONFILE'
-        return -1
-    fi
-    connectionFile=$1
-
-    [[ ${connectionFile} =~ .ssh-tunnel-localhost:(.*)===(.*):(.*) ]]
-
-    localPort=${BASH_REMATCH[1]}
-    host=${BASH_REMATCH[2]}
-    hostPort=${BASH_REMATCH[3]}
-
-    echo "Checking tunnel localhost:${localPort} -> ${host}:${hostPort}"
-    ssh -S ${connectionFile} -O check ${host}
-}
-compdef '_files -g "~/.ssh-tunnel-*"' tunnel-check
-
-function tunnel-close() {
-    if [[ $# -ne 1 ]] ; then
-        echo 'Usage: tunnel-close CONNECTIONFILE'
-        return -1
-    fi
-
-    connectionFile=$1
-
-    [[ ${connectionFile} =~ .ssh-tunnel-localhost:(.*)===(.*):(.*) ]]
-
-    localPort=${BASH_REMATCH[1]}
-    host=${BASH_REMATCH[2]}
-    hostPort=${BASH_REMATCH[3]}
-
-    echo "Closing tunnel localhost:${localPort} -> ${host}:${hostPort}"
-    ssh -S ${connectionFile} -O exit ${host}
-}
-compdef '_files -g "~/.ssh-tunnel-*"' tunnel-close
-
-function tunnel-close-all() {
-    for connectionFile in ~/.ssh-tunnel-*
-    do
-        tunnel-close $connectionFile
-    done
 }
 
 # Switch between SSH configs
@@ -334,63 +166,6 @@ function fast-ai-tunnel-open() {
     echo "Tunnel open ${connectionFile}"
 }
 alias tunnel-fast-ai='fast-ai-tunnel-open 8888 fast-ai-server 8888'
-
-# Long running jobs                 {{{2
-# ======================================
-
-# Notify me when something completes
-# Usage: do-something-long-running ; tell-me "optional message"
-function tell-me() {
-    exitCode="$?"
-
-    if [[ $exitCode -eq 0 ]]; then
-        exitStatus="SUCCEEDED"
-    else
-        exitStatus="FAILED"
-    fi
-
-    if [[ $# -lt 1 ]] ; then
-        msg="${exitStatus}"
-    else 
-        msg="${exitStatus} : $1"
-    fi
-
-    if_darwin && {
-        osascript -e "display notification \"$msg\" with title \"tell-me\""
-    }
-
-    if_linux && {
-        notify-send -t 2000 "tell-me" "$msg"
-    }
-}
-
-# Helper function to notify when the output of a command changes
-# Usage:
-#   function watch-directory() {
-#       f() {
-#           ls
-#       }
-#   
-#       notify-on-change f 1 "Directory contents changed"
-#   }
-function notify-on-change() {
-    local f=$1
-    local period=$2
-    local message=$3
-    local tmpfile=$(mktemp)
-
-    $f > "${tmpfile}"
-
-    {
-        while true
-        do
-            sleep ${period}
-            (diff "${tmpfile}" <($f)) || break
-        done
-
-        tell-me "${message}"
-    } > /dev/null 2>&1 & disown
-}
 
 # AWS                               {{{2
 # ======================================
@@ -511,10 +286,6 @@ function plot-aws-s3-size() {
     interval -t $period "aws --profile '$profile' s3 ls --summarize --recursive '$prefix' | grep 'Total Size' | awk '"'{ print $3 }'"'" | plot
 }
 
-function aws-export-current-credentials() {
-    echo "export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} && export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}"
-}
-
 # Open the specified S3 bucket
 function aws-s3-open() {
     local s3Path=$1
@@ -539,26 +310,6 @@ function aws-get-secrets() {
     done <<< "${secretsNames}"
 }
 
-# Docker
-
-function docker-rm-instances() {
-    docker ps -a -q | xargs docker stop
-    docker ps -a -q | xargs docker rm
-}
-
-function docker-rm-images() {
-    if confirm; then
-        docker-rm-instances
-        docker images -q | xargs docker rmi
-        docker images | grep "<none>" | awk '{print $3}' | xargs docker rmi
-    fi
-}
-
-# k9s
-
-function k9s-logs() {
-    echo "$(k9s info | no-color | grep Logs | gsed -r 's/^Logs:\s+//g' | xargs dirname)/k9s-screens-white1"
-}
 
 # Machine-specific configuration                                            {{{1
 # ==============================================================================
@@ -577,34 +328,7 @@ if_darwin && {
     if [ ! -d "$HOME/trash" ]; then ln -s "$HOME/.Trash" "$HOME/trash"; fi
 }
 
-## source_if_exists "$HOME/.zshrc.no-commit"
 source_if_exists "$HOME/.zshrc.$(uname -n)"
-
-## function assert-variables-defined() {
-##     local variables=("$@")
-##     for variable in "${variables[@]}"
-##     do
-##         if [[ -z "${(P)variable}" ]]; then
-##             echo "${variable} is not defined -- please check ~/.zshrc-no-commit"
-##         fi
-##     done
-## }
-## 
-## EXPECTED_SECRETS=(
-##     SECRET_ACC_BOS_UTILITY
-##     SECRET_ACC_BOS_DEV
-##     SECRET_ACC_BOS_STAGING
-##     SECRET_ACC_BOS_PROD
-##     SECRET_ACC_NEWSFLO_DEV
-##     SECRET_ACC_NEWSFLO_PROD
-##     SECRET_ACC_RECS_DEV
-##     SECRET_ACC_RECS_PROD
-##     SECRET_NEWRELIC_API_KEY
-##     SECRET_JIRA_API_KEY
-##     SECRET_JIRA_USER
-## )
-
-assert-variables-defined "${EXPECTED_SECRETS[@]}"
 
 function response-times() {
     if [[ $# -ne 1 ]] ; then

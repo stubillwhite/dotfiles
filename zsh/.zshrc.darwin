@@ -5,8 +5,6 @@
 
 alias sqlworkbenchj='java -jar  /Applications/SQLWorkbenchJ.app/Contents/Java/sqlworkbench.jar &'
 alias doom='emacs --with-profile doom'
-alias keepassxc-get-ssh='keepassxc-cli clip ~/Dropbox/Private/keepassx/personal.kdbx /Personal/SSH'
-alias keepassxc-get-gpg='keepassxc-cli clip ~/Dropbox/Private/keepassx/elsevier.kdbx /Elsevier/GPG'
 
 # OS specific tools                                                         {{{1
 # ==============================================================================
