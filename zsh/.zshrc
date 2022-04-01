@@ -85,88 +85,6 @@ alias docker-entrypoint='docker inspect --format="{{.Config.Cmd}}"'
 # General functions                                                         {{{1
 # ==============================================================================
 
-# Grep zipped logs
-function zgrep-logs() {
-    declare pattern=$1
-    zgrep -iR "${pattern}" . --context 10
-}
-
-# Run gunzip on all files under the current directory
-function gunzip-logs() {
-    while read -r line; do
-        echo "$line"
-        gunzip "$line"
-    done < <(find . -name "*.gz")
-}
-
-# Switch between SSH configs
-function ssh-config() {
-    mv ~/.ssh/config ~/.ssh/config.bak
-    ln -s "$HOME/.ssh/config-${1}" ~/.ssh/config
-}
-compdef '_alternative "arguments:custom arg:(recs newsflo)"' ssh-config
-
-# AWS                               {{{2
-# ======================================
-
-# Copy my base machine config to a remote host
-function scp-skeleton-config() {
-    if [[ $# -ne 1 ]] ; then
-        echo 'Usage: scp-skeleton-config HOST'
-        exit -1
-    fi
-
-    pushd ~/Dev/my-stuff/dotfiles/skeleton-config || exit 1
-    echo "Uploading config to $1"
-    for file in $(find . \! -name .); do
-        scp $file $1:$file
-    done
-    popd || exit 1
-}
-compdef _ssh scp-skeleton-config=ssh
-
-# List ECR images
-function aws-list-ecr-images() {
-    local repos=$(aws ecr describe-repositories \
-        | jq -r ".repositories[].repositoryName" \
-        | sort)
-
-    while IFS= read -r repo; do 
-        echo $repo
-        AWS_PAGER="" aws ecr describe-images --repository-name "${repo}" \
-            | jq -r '.imageDetails[] | select(has("imageTags")) | .imageTags[] | select(test( "^\\d+\\.\\d+\\.\\d+$" ))' \
-            | sort
-        echo
-    done <<< "$repos"
-}
-
-# Fast AI course helpers            {{{2
-# ======================================
-
-function fast-ai-setup() {
-    export PATH=~/anaconda/bin:$PATH
-    export AWS_DEFAULT_PROFILE=stubillwhite
-    source_if_exists "/Users/white1/Dev/my-stuff/fast-ai/courses/setup/aws-alias.sh"
-    echo "Using anaconda tools and defaulting to AWS profile for fast-ai course"
-}
-
-function fast-ai-tunnel-open() {
-    if [[ $# -ne 3 ]] ; then
-        echo 'Usage: tunnel-open LOCALPORT SERVER SERVERPORT'
-        return -1
-    fi
-
-    localPort=$1
-    server=$2
-    serverPort=$3
-    connectionFile=~/.ssh-tunnel-localhost:${localPort}===${server:0:20}:${serverPort}
-
-    echo "Opening tunnel localhost:${localPort} -> ${server}:${serverPort}"
-    ssh -L ${localPort}:localhost:${serverPort} ${server} -i ~/.ssh/aws-key-fast-ai.pem -f -o ServerAliveInterval=30 -N -M -S ${connectionFile} || { echo "Failed to open tunnel"; return -1; }
-    echo "Tunnel open ${connectionFile}"
-}
-alias tunnel-fast-ai='fast-ai-tunnel-open 8888 fast-ai-server 8888'
-
 # AWS                               {{{2
 # ======================================
 
@@ -227,32 +145,6 @@ function aws-datapipeline-amis() {
         | column -t -s '','' 
 }
 
-function aws-datapipeline-amis() {
-    while IFS=, read -rA x 
-    do
-        pipelineId=${x[@]:0:1}
-        pipelineName=${x[@]:1:1}
-        aws datapipeline get-pipeline-definition --pipeline-id $pipelineId      \
-            | jq --raw-output "                                                 \
-                    [\"$pipelineName\",                                         \
-                     (.objects[] | select(has(\"imageId\")) | .[\"imageId\"]),  \
-                     (.values[\"my_ec2_machine_ami_id\"])]                      \
-                    | @csv"
-    done < <(aws datapipeline list-pipelines | jq --raw-output '.pipelineIdList[] | [.id, .name] | @csv' | sed 's/"//g') \
-        | sed 's/"//g' \
-        | column -t -s '','' 
-}
-
-function aws-lambda-statuses() {
-    aws lambda list-event-source-mappings \
-        | jq -r ".EventSourceMappings[] | [.FunctionArn, .EventSourceArn, .State, .UUID] | @tsv" \
-        | gsed "s/\t\t/\t-\t/g" \
-        | column -t -s $'\t' \
-        | sort \
-        | highlight red '.*Disabled.*' \
-        | highlight yellow '.*\(Enabling\|Disabling\|Updating\).*'
-}
-
 function aws-service-quotas() {
     aws service-quotas list-service-quotas --service-code ec2 | jq --raw-output '(.Quotas[] | ([.QuotaName, .Value])) | @csv' | column -t -s "," | sed 's/\"//g'
 }
@@ -270,31 +162,6 @@ function aws-datapipeline-record-loader-versions() {
     done < <(aws datapipeline list-pipelines | jq --raw-output '.pipelineIdList[] | [.id, .name] | @csv' | sed 's/"//g') \
         | sed 's/"//g' \
         | column -t -s '','' 
-}
-
-function plot-aws-s3-size() {
-    if [[ $# -ne 3 ]] ; then
-        echo 'Plot the size of the AWS S3 bucket and prefix'
-        echo 'Usage: plot-aws-s3-size PROFILE PREFIX PERIOD'
-        return -1
-    fi
-
-    profile=$1
-    prefix=$2
-    period=$3
-
-    interval -t $period "aws --profile '$profile' s3 ls --summarize --recursive '$prefix' | grep 'Total Size' | awk '"'{ print $3 }'"'" | plot
-}
-
-# Open the specified S3 bucket
-function aws-s3-open() {
-    local s3Path=$1
-    echo "Opening '$s3Path'"
-    echo "$s3Path" \
-        | sed -e 's/^.*s3:\/\/\(.*\)/\1/' \
-        | sed -e 's/^/https:\/\/s3.console.aws.amazon.com\/s3\/buckets\//' \
-        | sed -e 's/$/?region=us-east-1/' \
-        | xargs "$OPEN_CMD"
 }
 
 function aws-get-secrets() {
@@ -349,22 +216,3 @@ function response-times() {
     done
 }
 
-function g-rebase-branch() {
-    local trunk='main'
-
-    git branch --show-current \
-        | xargs git merge-base ${trunk} \
-        | xargs git rebase -i
-}
-
-function g-one-commit() {
-    local trunk=main
-    local lastCommitMessage=$(git show -s --format=%s)
-
-    git branch --show-current \
-        | xargs git merge-base ${trunk} \
-        | xargs git reset --soft
-    git add -A
-    git commit -m "${lastCommitMessage}"
-    git commit --amend
-}

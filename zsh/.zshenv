@@ -40,7 +40,10 @@ function source-or-warn() {
 # ==============================================================================
 
 # Prezto
-source ~/Dev/my-stuff/prezto/runcoms/zshenv
+source-or-warn ~/Dev/my-stuff/prezto/runcoms/zshenv
+
+# GNU parallel
+source-or-warn /usr/local/bin/env_parallel.zsh
 
 # Include common configuration
 source $HOME/.commonrc
@@ -265,8 +268,98 @@ function calc () {
     echo "scale=2;$*" | bc | sed 's/\.0*$//'
 }
 
+# Switch between SSH configs
+function ssh-config() {
+    mv ~/.ssh/config ~/.ssh/config.bak
+    ln -s "$HOME/.ssh/config-${1}" ~/.ssh/config
+}
+compdef '_alternative "arguments:custom arg:(recs newsflo)"' ssh-config
+
+# Copy my base machine config to a remote host
+function scp-skeleton-config() {
+    if [[ $# -ne 1 ]] ; then
+        echo 'Usage: scp-skeleton-config HOST'
+        exit -1
+    fi
+
+    pushd ~/Dev/my-stuff/dotfiles/skeleton-config || exit 1
+    echo "Uploading config to $1"
+    for file in $(find . \! -name .); do
+        scp $file $1:$file
+    done
+    popd || exit 1
+}
+compdef _ssh scp-skeleton-config=ssh
+
+# Fast AI course helpers            {{{2
+# ======================================
+
+function fast-ai-setup() {
+    export PATH=~/anaconda/bin:$PATH
+    export AWS_DEFAULT_PROFILE=stubillwhite
+    source_if_exists "/Users/white1/Dev/my-stuff/fast-ai/courses/setup/aws-alias.sh"
+    echo "Using anaconda tools and defaulting to AWS profile for fast-ai course"
+}
+
+function fast-ai-tunnel-open() {
+    if [[ $# -ne 3 ]] ; then
+        echo 'Usage: tunnel-open LOCALPORT SERVER SERVERPORT'
+        return -1
+    fi
+
+    localPort=$1
+    server=$2
+    serverPort=$3
+    connectionFile=~/.ssh-tunnel-localhost:${localPort}===${server:0:20}:${serverPort}
+
+    echo "Opening tunnel localhost:${localPort} -> ${server}:${serverPort}"
+    ssh -L ${localPort}:localhost:${serverPort} ${server} -i ~/.ssh/aws-key-fast-ai.pem -f -o ServerAliveInterval=30 -N -M -S ${connectionFile} || { echo "Failed to open tunnel"; return -1; }
+    echo "Tunnel open ${connectionFile}"
+}
+alias tunnel-fast-ai='fast-ai-tunnel-open 8888 fast-ai-server 8888'
+
 # Specific tools                                                            {{{1
 # ==============================================================================
+
+# AWS                               {{{2
+# ======================================
+
+# List ECR images
+function aws-list-ecr-images() {
+    local repos=$(aws ecr describe-repositories \
+        | jq -r ".repositories[].repositoryName" \
+        | sort)
+
+    while IFS= read -r repo; do 
+        echo $repo
+        AWS_PAGER="" aws ecr describe-images --repository-name "${repo}" \
+            | jq -r '.imageDetails[] | select(has("imageTags")) | .imageTags[] | select(test( "^\\d+\\.\\d+\\.\\d+$" ))' \
+            | sort
+        echo
+    done <<< "$repos"
+}
+
+# List lambda statuses
+function aws-lambda-statuses() {
+    aws lambda list-event-source-mappings \
+        | jq -r ".EventSourceMappings[] | [.FunctionArn, .EventSourceArn, .State, .UUID] | @tsv" \
+        | gsed "s/\t\t/\t-\t/g" \
+        | tabulate-by-tab \
+        | sort \
+        | highlight red '.*Disabled.*' \
+        | highlight yellow '.*\(Enabling\|Disabling\|Updating\).*'
+}
+
+# Open the specified S3 bucket in the web browser
+function aws-s3-open() {
+    local s3Path=$1
+    echo "Opening '$s3Path'"
+    echo "$s3Path" \
+        | gsed -e 's/^.*s3:\/\/\(.*\)/\1/' \
+        | gsed -e 's/^/https:\/\/s3.console.aws.amazon.com\/s3\/buckets\//' \
+        | gsed -e 's/$/?region=us-east-1/' \
+        | xargs "$OPEN_CMD"
+}
 
 # Docker                            {{{2
 # ======================================
@@ -639,6 +732,28 @@ function git-large-objects() {
         | $(command -v gnumfmt || echo numfmt) --field=2 --to=iec-i --suffix=B --padding=7 --round=nearest
     }
 
+# Rebase the current branch on trunk
+function git-rebase-branch() {
+    local trunk='main'
+
+    git branch --show-current \
+        | xargs git merge-base ${trunk} \
+        | xargs git rebase -i
+}
+
+# Squash the commits on the current branch to a single commit
+function git-squash-branch-commits() {
+    local trunk=main
+    local lastCommitMessage=$(git show -s --format=%s)
+
+    git branch --show-current \
+        | xargs git merge-base ${trunk} \
+        | xargs git reset --soft
+    git add -A
+    git commit -m "${lastCommitMessage}"
+    git commit --amend
+}
+
 # Display the meaning of characters used for the prompt markers
 function git-prompt-help() {
     # TODO: Would be neater to do this dynamically based on info_format
@@ -721,11 +836,6 @@ function github-list-user-repos() {
         | sort -r \
         | gsed 's/"//g'
 }
-
-# GNU parallel                      {{{2
-# ======================================
-
-source-if-exists "$(which env_parallel.zsh)"
 
 # jq                                {{{2
 # ======================================
