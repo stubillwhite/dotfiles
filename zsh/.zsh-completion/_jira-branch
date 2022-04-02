@@ -4,10 +4,10 @@ function _jira-branch() {
     local branchNames=$(curl -s -G 'https://elsevier.atlassian.net/rest/api/2/search' \
             --data-urlencode "jql=project=SDPR AND assignee = currentUser() AND status IN (\"In Progress\")" --user "${SECRET_JIRA_USER}:${SECRET_JIRA_API_KEY}" \
         | jq -r ".issues[] | [.key, .fields.summary] | @tsv" \
-        | gsed "s/\t\t/\t-\t/g" \
         | column -t -s $'\t' \
         | tr '[:upper:]' '[:lower:]' \
-        | gsed -e 's/ \+/-/g'
+        | tr '[\[\]]' ' ' \
+        | gsed -r 's/ +/-/g'
     )
 
     _alternative "branches:jira branch:($branchNames)"

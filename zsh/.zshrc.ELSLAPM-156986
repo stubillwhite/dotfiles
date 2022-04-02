@@ -1,25 +1,5 @@
 # vim:fdm=marker
 
-# Newsflo                                                                   {{{1
-# ==============================================================================
-alias tunnel-live-aurora-WRITEABLE='tunnel-open 4306 aurora-newsflo-live.cluster-cyva1uzg7p7h.us-east-1.rds.amazonaws.com 3306 s.white@bastion.live.newsflo'
-
-alias ssh-newsflo='ssh -F ~/.ssh/config-newsflo'
-
-# AWS authentication                                                        {{{1
-# ==============================================================================
-
-alias aws-which="env | grep AWS | sort"
-alias aws-clear-variables="for i in \$(aws-which | cut -d= -f1,1 | paste -); do unset \$i; done"
-alias aws-bos-utility="aws-developer-role $SECRET_ACC_BOS_UTILITY ADFS-Developer aws-rap-bosutility"
-alias aws-bos-dev="aws-developer-role $SECRET_ACC_BOS_DEV ADFS-Developer aws-rap-bosdev"
-alias aws-bos-staging="aws-developer-role $SECRET_ACC_BOS_STAGING ADFS-Developer aws-rap-bosstaging"
-alias aws-bos-prod="aws-developer-role $SECRET_ACC_BOS_PROD ADFS-Developer aws-rap-bosprod"
-alias aws-newsflo-dev="aws-developer-role $SECRET_ACC_NEWSFLO_DEV ADFS-EnterpriseAdmin aws-rap-recommendersdev"
-alias aws-newsflo-prod="aws-developer-role $SECRET_ACC_NEWSFLO_PROD ADFS-EnterpriseAdmin aws-rap-recommendersprod"
-alias aws-recs-dev="aws-developer-role $SECRET_ACC_RECS_DEV ADFS-EnterpriseAdmin aws-rap-recommendersdev"
-alias aws-recs-prod="aws-developer-role $SECRET_ACC_RECS_PROD ADFS-EnterpriseAdmin aws-rap-recommendersprod"
-
 function ssh-find-username() {
     if [[ $# -ne 1 ]] ; then
         echo 'Usage: ssh-find-username ADDRESS'
@@ -48,33 +28,51 @@ function ssh-find-username() {
     return 1
 }
 
-function aws-switch-role() {
-    declare roleARN=$1 profile=$2
-
-    export username=white1@science.regn.net
-    LOGIN_OUTPUT="$(aws-adfs login --adfs-host federation.reedelsevier.com --region us-east-1 --session-duration 14400 --role-arn $roleARN --env --profile $profile --printenv | grep export)"
-    AWS_ENV="$(echo $LOGIN_OUTPUT | grep export)"
-    eval $AWS_ENV
-    export AWS_REGION=us-east-1
-    aws-which
-}
-
-function aws-developer-role() {
-    declare accountId=$1 role=$2 profile=$3
-    aws-switch-role "arn:aws:iam::${accountId}:role/${role}" "${profile}"
-}
-
 # Machine specific aliases                                                  {{{1
 # ==============================================================================
 
-alias emacs='/Applications/Emacs.app/Contents/MacOS/Emacs'
-alias emacsclient='/Applications/Emacs.app/Contents/MacOS/bin/emacsclient'
-alias sqlworkbenchj='java -jar /Applications/SQLWorkbenchJ.app/Contents/Java/sqlworkbench.jar &'
 
 # Kubernetes                                                                {{{1
 # ==============================================================================
 
 source <(kubectl completion zsh)
+
+source <(stern --completion=zsh)
+
+function aws-recs-login() {
+    if [[ $# -ne 1 ]]; then
+        echo "Usage: aws-recs-login (dev|staging|live)"
+    else
+        local recsEnv=$1
+
+        case "${recsEnv}" in
+            dev*)
+                aws-recs-dev
+            ;;
+
+            staging*)
+                aws-recs-dev
+            ;;
+
+            live*)
+                aws-recs-live
+            ;;
+
+            *)
+                echo "ERROR: Unrecognised environment ${recsEnv}"
+                return -1
+            ;;
+        esac
+    fi
+}
+compdef "_arguments \
+    '1:environment arg:(dev staging live)'" \
+    aws-recs-login
+
+function jira-branch() {
+    git checkout -b $1
+}
+compdef _jira-branch jira-branch
 
 function recs-get-k8s() {
     if [[ $# -ne 2 ]] ; then
@@ -472,18 +470,3 @@ function recs-build-and-publish-jar() {
     fi
 }
 
-# JIRA                                                                      {{{1
-# ==============================================================================
-
-function jira-my-issues() {
-    curl -s -G 'https://elsevier.atlassian.net/rest/api/2/search' \
-        --data-urlencode "jql=project=SDPR AND assignee = currentUser() AND status IN (\"In Progress\")" \
-        --user "${SECRET_JIRA_USER}:${SECRET_JIRA_API_KEY}" \
-        | jq -r ".issues[] | [.key, .fields.summary] | @tsv" \
-        | tabulate-by-tab
-}
-
-function jira-branch() {
-    git checkout -b $1
-}
-compdef _jira-branch jira-branch

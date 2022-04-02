@@ -32,14 +32,10 @@ FILES=(
     "zsh/.commonrc"
     "zsh/.zsh-completion"
     "zsh/.zshenv"
-    "zsh/.zshenv.$(uname -n)"
-    "zsh/.zshenv.darwin"
-    "zsh/.zshenv.linux"
     "zsh/.zshenv.no-commit"
     "zsh/.zshrc"
-    "zsh/.zshrc.$(uname -n)"
+    "zsh/.zshrc.ELSLAPM-156986"
     "zsh/.zshrc.darwin"
-    "zsh/.zshrc.linux"
     "zsh/.zshrc.no-commit"
 )
 

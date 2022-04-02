@@ -36,16 +36,6 @@ source_if_exists "$HOME/Dev/my-stuff/shell-utils/.shell-helper-functions"
 # General settings                                                          {{{1
 # ==============================================================================
 
-# Misc differences between systems
-
-if_darwin && {
-    export OPEN_CMD=open
-}
-
-if_linux && {
-    export OPEN_CMD="xdg-open"
-}
-
 # Unlimited history
 
 export HISTFILESIZE=
