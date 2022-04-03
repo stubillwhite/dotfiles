@@ -86,16 +86,12 @@ stty -ixon
 # Minor machine-specific differences                                        {{{1
 # ==============================================================================
 
-if-work-machine && {
+if-darwin && {
     alias emacs='/Applications/Emacs.app/Contents/MacOS/Emacs'
     alias emacsclient='/Applications/Emacs.app/Contents/MacOS/bin/emacsclient'
     alias doom='emacs --with-profile doom'
     alias sqlworkbenchj='java -jar /Applications/SQLWorkbenchJ.app/Contents/Java/sqlworkbench.jar &'
 }
-
-# TODO: Check this works then remove
-# From .zshrc.darwin -- check works on home machine
-#alias emacs=Emacs
 
 # Link ~/trash to the recycle bin                                           {{{1
 # ==============================================================================
