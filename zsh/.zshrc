@@ -396,8 +396,11 @@ compdef "_arguments \
 # AWS helper functions              {{{2
 # ======================================
 
+# AWS CLI commands pointing at localstack
+alias aws-localstack='aws --endpoint-url=http://localhost:4566'
+
 # List ECR images
-function aws-list-ecr-images() {
+function aws-ecr-images() {
     local repos=$(aws ecr describe-repositories \
         | jq -r ".repositories[].repositoryName" \
         | sort)
@@ -431,6 +434,63 @@ function aws-s3-open() {
         | gsed -e 's/^/https:\/\/s3.console.aws.amazon.com\/s3\/buckets\//' \
         | gsed -e 's/$/?region=us-east-1/' \
         | xargs open
+}
+
+# Download data pipeline definitions to local files
+function aws-datapipeline-download-definitions() {
+    while IFS=, read -rA x 
+    do
+        pipelineId=${x[@]:0:1}
+        pipelineName=$(echo "${x[@]:1:1}" | tr '[A-Z]' '[a-z]' | tr ' ' '-')
+        echo $pipelineName
+        aws datapipeline get-pipeline-definition --pipeline-id $pipelineId \
+            | jq '.' \
+            > "pipeline-definition-${pipelineName}"
+    done < <(aws datapipeline list-pipelines | jq --raw-output '.pipelineIdList[] | [.id, .name] | @csv' | sed 's/"//g') \
+}
+
+# Display data pipeline instance requirements
+function aws-datapipeline-instance-requirements() {
+    while IFS=, read -rA x 
+    do
+        pipelineId=${x[@]:0:1}
+        pipelineName=${x[@]:1:1}
+        aws datapipeline get-pipeline-definition --pipeline-id $pipelineId \
+            | jq --raw-output ".values | [\"$pipelineName\", .my_master_instance_type, \"1\", .my_core_instance_type, .my_core_instance_count, .my_env_subnet_private]| @csv"
+    done < <(aws datapipeline list-pipelines | jq --raw-output '.pipelineIdList[] | [.id, .name] | @csv' | sed 's/"//g') \
+        | sed 's/"//g' \
+        | column -t -s '','' 
+}
+
+# Display data pipeline AMIs
+function aws-datapipeline-amis() {
+    while IFS=, read -rA x 
+    do
+        pipelineId=${x[@]:0:1}
+        pipelineName=${x[@]:1:1}
+        aws datapipeline get-pipeline-definition --pipeline-id $pipelineId \
+            | jq --raw-output "                                            \
+                    .objects[]                                             \
+                    | select(has(\"imageId\"))                             \
+                    | [\"$pipelineName\", .[\"imageId\"]]                  \
+                    | @csv"
+    done < <(aws datapipeline list-pipelines | jq --raw-output '.pipelineIdList[] | [.id, .name] | @csv' | sed 's/"//g') \
+        | sed 's/"//g' \
+        | column -t -s '','' 
+}
+
+# Display AWS secrets
+function aws-secrets() {
+    local secretsNames=$(aws secretsmanager list-secrets | jq -r '.SecretList[].Name')
+
+    while IFS= read -r secret ; do 
+        echo ${secret}
+        aws secretsmanager list-secrets \
+            | jq -r ".SecretList[] | select(.Name == \"$secret\") | .Tags[] // [] | select(.Key == \"Description\") | .Value"
+        aws secretsmanager get-secret-value --secret-id "$secret"\
+            | jq '.SecretString | fromjson'
+        echo
+    done <<< "${secretsNames}"
 }
 
 # Docker                            {{{2
@@ -881,14 +941,14 @@ function github-list-user-repos() {
     local base_url="https://api.github.com:443/users/${user}/repos"
 
     # Get user email and token, for which we unfortunately need a repo
-    local tmpDir=$(mktemp -d --tmpdir=.)
-    cd ${tmpDir}
+    local tmpDir=$(mktemp -d "${TMPDIR:-/tmp}"/github-list-user-repos.XXXX)
+    pushd ${tmpDir} > /dev/null
     git init > /dev/null
 
     local token=$(git config --get user.token)
     local email=$(git config --get user.email)
 
-    cd ..
+    popd > /dev/null
     rm -rf ${tmpDir}
 
     # Page through repositories
@@ -903,7 +963,7 @@ function github-list-user-repos() {
     done
 
     echo ${results} \
-        | jq -r '.[] | [ .updated_at, .name ] | @csv' \
+        | jq -r '.[] | [ .pushed_at, .name ] | @csv' \
         | tabulate-by-comma \
         | sort -r \
         | gsed 's/"//g'
@@ -1011,54 +1071,11 @@ source-if-exists "$HOME/Dev/my-stuff/dotfiles/tmuxinator/tmuxinator.zsh"
 # AWS                               {{{2
 # ======================================
 
-# AWS CLI commands pointing at localstack
-alias aws-local='aws --endpoint-url=http://localhost:4566'
-
-function aws-datapipeline-definitions() {
-    while IFS=, read -rA x 
-    do
-        pipelineId=${x[@]:0:1}
-        pipelineName=$(echo "${x[@]:1:1}" | tr '[A-Z]' '[a-z]' | tr ' ' '-')
-        echo $pipelineName
-        aws datapipeline get-pipeline-definition --pipeline-id $pipelineId \
-            | jq '.' \
-            > "pipeline-definition-${pipelineName}"
-    done < <(aws datapipeline list-pipelines | jq --raw-output '.pipelineIdList[] | [.id, .name] | @csv' | sed 's/"//g') \
-}
-
-function aws-datapipeline-requirements() {
-    while IFS=, read -rA x 
-    do
-        pipelineId=${x[@]:0:1}
-        pipelineName=${x[@]:1:1}
-        aws datapipeline get-pipeline-definition --pipeline-id $pipelineId \
-            | jq --raw-output ".values | [\"$pipelineName\", .my_master_instance_type, \"1\", .my_core_instance_type, .my_core_instance_count, .my_env_subnet_private]| @csv"
-    done < <(aws datapipeline list-pipelines | jq --raw-output '.pipelineIdList[] | [.id, .name] | @csv' | sed 's/"//g') \
-        | sed 's/"//g' \
-        | column -t -s '','' 
-}
-
 function aws-subnets() {
     aws ec2 describe-subnets \
         | jq -r ".Subnets[] | [ .SubnetId, .AvailableIpAddressCount ] | @csv" \
         | sed 's/"//g' \
         | column -t -s '',''
-}
-
-function aws-datapipeline-amis() {
-    while IFS=, read -rA x 
-    do
-        pipelineId=${x[@]:0:1}
-        pipelineName=${x[@]:1:1}
-        aws datapipeline get-pipeline-definition --pipeline-id $pipelineId \
-            | jq --raw-output "                                            \
-                    .objects[]                                             \
-                    | select(has(\"imageId\"))                             \
-                    | [\"$pipelineName\", .[\"imageId\"]]                  \
-                    | @csv"
-    done < <(aws datapipeline list-pipelines | jq --raw-output '.pipelineIdList[] | [.id, .name] | @csv' | sed 's/"//g') \
-        | sed 's/"//g' \
-        | column -t -s '','' 
 }
 
 function aws-service-quotas() {
@@ -1078,19 +1095,6 @@ function aws-datapipeline-record-loader-versions() {
     done < <(aws datapipeline list-pipelines | jq --raw-output '.pipelineIdList[] | [.id, .name] | @csv' | sed 's/"//g') \
         | sed 's/"//g' \
         | column -t -s '','' 
-}
-
-function aws-get-secrets() {
-    local secretsNames=$(aws secretsmanager list-secrets | jq -r '.SecretList[].Name')
-
-    while IFS= read -r secret ; do 
-        echo ${secret}
-        aws secretsmanager list-secrets \
-            | jq -r ".SecretList[] | select(.Name == \"$secret\") | .Tags[] // [] | select(.Key == \"Description\") | .Value"
-        aws secretsmanager get-secret-value --secret-id "$secret"\
-            | jq '.SecretString | fromjson'
-        echo
-    done <<< "${secretsNames}"
 }
 
 # Machine-specific configuration                                            {{{1

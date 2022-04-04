@@ -1,14 +1,10 @@
 # vim:fdm=marker
 
-# Aliases                                                                   {{{1
-# ==============================================================================
-
-
 # OS specific tools                                                         {{{1
 # ==============================================================================
 
-# General OS helper functions                                               {{{1
-# ==============================================================================
+# General functions                 {{{2
+# ======================================
 
 # Go to the directory where the finder window is currently looking
 function finder() {

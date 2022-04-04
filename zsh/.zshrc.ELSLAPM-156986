@@ -55,7 +55,7 @@ function aws-recs-login() {
             ;;
 
             live*)
-                aws-recs-live
+                aws-recs-prod
             ;;
 
             *)
