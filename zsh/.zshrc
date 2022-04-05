@@ -414,11 +414,22 @@ function aws-ecr-images() {
     done <<< "$repos"
 }
 
+# Describe OpenSearch clusters
+function aws-opensearch-describe-clusters() {
+    while IFS=, read -rA domainName
+    do
+        aws opensearch describe-domain --domain-name "${domainName}"
+    done < <(aws opensearch list-domain-names | jq -r -c '.DomainNames[].DomainName') \
+        | jq -s \
+        | jq -r '["DomainName", "InstanceType", "InstanceCount", "MasterType", "MasterCount"],(.[].DomainStatus | [.DomainName, (.ClusterConfig | .InstanceType, .InstanceCount, .DedicatedMasterType, .DedicatedMasterCount)]) | @tsv' \
+        | tabulate-by-tab
+}
+
+
 # List lambda statuses
 function aws-lambda-statuses() {
     aws lambda list-event-source-mappings \
         | jq -r ".EventSourceMappings[] | [.FunctionArn, .EventSourceArn, .State, .UUID] | @tsv" \
-        | gsed "s/\t\t/\t-\t/g" \
         | tabulate-by-tab \
         | sort \
         | highlight red '.*Disabled.*' \
@@ -436,6 +447,22 @@ function aws-s3-open() {
         | xargs open
 }
 
+# Display available IPs in each subnet
+function aws-subnet-available-ips() {
+    aws ec2 describe-subnets \
+        | jq -r ".Subnets[] | [ .SubnetId, .AvailableIpAddressCount ] | @tsv" \
+        | strip-quotes \
+        | tabulate-by-tab
+}
+
+# Display service quotas for EC2
+function aws-ec2-service-quotas() {
+    aws service-quotas list-service-quotas --service-code ec2 \
+        | jq -r '(.Quotas[] | ([.QuotaName, .Value])) | @tsv' \
+        | strip-quotes \
+        | tabulate-by-tab
+}
+
 # Download data pipeline definitions to local files
 function aws-datapipeline-download-definitions() {
     while IFS=, read -rA x 
@@ -446,7 +473,7 @@ function aws-datapipeline-download-definitions() {
         aws datapipeline get-pipeline-definition --pipeline-id $pipelineId \
             | jq '.' \
             > "pipeline-definition-${pipelineName}"
-    done < <(aws datapipeline list-pipelines | jq --raw-output '.pipelineIdList[] | [.id, .name] | @csv' | sed 's/"//g') \
+    done < <(aws datapipeline list-pipelines | jq --raw-output '.pipelineIdList[] | [.id, .name] | @csv' | strip-quotes) \
 }
 
 # Display data pipeline instance requirements
@@ -457,26 +484,9 @@ function aws-datapipeline-instance-requirements() {
         pipelineName=${x[@]:1:1}
         aws datapipeline get-pipeline-definition --pipeline-id $pipelineId \
             | jq --raw-output ".values | [\"$pipelineName\", .my_master_instance_type, \"1\", .my_core_instance_type, .my_core_instance_count, .my_env_subnet_private]| @csv"
-    done < <(aws datapipeline list-pipelines | jq --raw-output '.pipelineIdList[] | [.id, .name] | @csv' | sed 's/"//g') \
-        | sed 's/"//g' \
-        | column -t -s '','' 
-}
-
-# Display data pipeline AMIs
-function aws-datapipeline-amis() {
-    while IFS=, read -rA x 
-    do
-        pipelineId=${x[@]:0:1}
-        pipelineName=${x[@]:1:1}
-        aws datapipeline get-pipeline-definition --pipeline-id $pipelineId \
-            | jq --raw-output "                                            \
-                    .objects[]                                             \
-                    | select(has(\"imageId\"))                             \
-                    | [\"$pipelineName\", .[\"imageId\"]]                  \
-                    | @csv"
-    done < <(aws datapipeline list-pipelines | jq --raw-output '.pipelineIdList[] | [.id, .name] | @csv' | sed 's/"//g') \
-        | sed 's/"//g' \
-        | column -t -s '','' 
+    done < <(aws datapipeline list-pipelines | jq --raw-output '.pipelineIdList[] | [.id, .name] | @csv' | strip-quotes) \
+        | strip-quotes \
+        | tabulate-by-comma
 }
 
 # Display AWS secrets
@@ -512,7 +522,7 @@ function docker-rm-images() {
 # FZF                               {{{2
 # ======================================
 
-export FZF_DEFAULT_COMMAND="fd --exclude={.git,.idea,.vscode,target,node_modules,build} --type f"
+export FZF_DEFAULT_COMMAND="fd --exclude={.git,.idea,.vscode,target,node_modules,build} --type f --hidden"
 
 # Git                               {{{2
 # ======================================
@@ -966,7 +976,7 @@ function github-list-user-repos() {
         | jq -r '.[] | [ .pushed_at, .name ] | @csv' \
         | tabulate-by-comma \
         | sort -r \
-        | gsed 's/"//g'
+        | gstrip-quotes
 }
 
 # JIRA                              {{{2
@@ -1058,45 +1068,6 @@ compdef "_arguments \
 
 source-if-exists "$HOME/Dev/my-stuff/dotfiles/tmuxinator/tmuxinator.zsh"
 
-
-
-
-
-# TODO - REVIEW BELOW HERE                                                  {{{1
-# ==============================================================================
-
-# General functions                                                         {{{1
-# ==============================================================================
-
-# AWS                               {{{2
-# ======================================
-
-function aws-subnets() {
-    aws ec2 describe-subnets \
-        | jq -r ".Subnets[] | [ .SubnetId, .AvailableIpAddressCount ] | @csv" \
-        | sed 's/"//g' \
-        | column -t -s '',''
-}
-
-function aws-service-quotas() {
-    aws service-quotas list-service-quotas --service-code ec2 | jq --raw-output '(.Quotas[] | ([.QuotaName, .Value])) | @csv' | column -t -s "," | sed 's/\"//g'
-}
-
-function aws-datapipeline-record-loader-versions() {
-    while IFS=, read -rA x 
-    do
-        pipelineId=${x[@]:0:1}
-        pipelineName=${x[@]:1:1}
-        aws datapipeline get-pipeline-definition --pipeline-id $pipelineId      \
-            | jq --raw-output "                                                 \
-                    [\"$pipelineName\",                                         \
-                     (.values[\"my_record_loader_version\"])]                   \
-                    | @csv"
-    done < <(aws datapipeline list-pipelines | jq --raw-output '.pipelineIdList[] | [.id, .name] | @csv' | sed 's/"//g') \
-        | sed 's/"//g' \
-        | column -t -s '','' 
-}
-
 # Machine-specific configuration                                            {{{1
 # ==============================================================================
 
@@ -1109,23 +1080,3 @@ if-darwin && {
 }
 
 source-if-exists "$HOME/.zshrc.$(uname -n)"
-
-function response-times() {
-    if [[ $# -ne 1 ]] ; then
-        echo 'Find reponse times for URL'
-        echo 'Usage: response-times URL'
-        return 1
-    fi
-
-    local url=$1
-
-    echo "code,time_total,time_connect,time_appconnect,time_pretransfer,time_starttransfer"
-    for i in $(seq 1 10); do
-        curl \
-            --write-out "%{http_code},%{time_total},%{time_connect},%{time_appconnect},%{time_pretransfer},%{time_starttransfer}\n" \
-            --silent \
-            --output /dev/null \
-            "${url}"
-    done
-}
-
