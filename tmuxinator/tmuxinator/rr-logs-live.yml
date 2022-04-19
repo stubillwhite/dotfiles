@@ -1,0 +1,15 @@
+# /Users/white1/.config/tmuxinator/rr-logs-live.yml
+
+name: rr-logs-live
+root: ~
+
+windows:
+  - recs-reviewer-live:
+      layout: even-vertical
+      panes:
+        - data-pump:
+            - aws-recs-prod > /dev/null
+            - awslogs get --no-group --no-stream --timestamp /aws/lambda/recs-rev-manuscripts-data-pump-lambda-live
+        - manuscripts:
+            - aws-recs-prod > /dev/null
+            - awslogs get --no-group --no-stream --timestamp /aws/lambda/recs-reviewers-recommender-lambda-live
