@@ -166,3 +166,4 @@ cask "anki"                                     # Memory training application
 brew "nethack"                                  # Single-player roguelike video game
 brew "stone-soup"                               # Dungeon Crawl Stone Soup: a roguelike game
 brew "brogue"                                   # Roguelike game
+brew "angband"                                  # Dungeon exploration game
