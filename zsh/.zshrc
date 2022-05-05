@@ -425,7 +425,6 @@ function aws-opensearch-describe-clusters() {
         | tabulate-by-tab
 }
 
-
 # List lambda statuses
 function aws-lambda-statuses() {
     aws lambda list-event-source-mappings \
@@ -501,6 +500,11 @@ function aws-secrets() {
             | jq '.SecretString | fromjson'
         echo
     done <<< "${secretsNames}"
+}
+
+function aws-ip() {
+    local hostname=$1
+    echo "${hostname}" | sed -r 's/ip-(.+)\.ec2\.internal/\1/g' | sed -r 's/-/./g'
 }
 
 # Docker                            {{{2
@@ -976,10 +980,9 @@ function github-list-user-repos() {
         | jq -r '.[] | [ .pushed_at, .name ] | @csv' \
         | tabulate-by-comma \
         | sort -r \
-        | gstrip-quotes
+        | strip-quotes
 }
 
-# JIRA                              {{{2
 # ======================================
 
 function jira-my-issues() {
@@ -1021,15 +1024,15 @@ SHELLCHECK_OPTS+="-e SC2155 "    # Allow declare and assignment in the same stat
 # Python                            {{{2
 # ======================================
 
+alias py-env-activate='source bin/activate'
+
+alias py-env-deactivate='deactivate'
+
 function py-env-init() {
     python3 -m venv .
     touch requirements.txt
     py-env-activate
 }
-
-alias py-env-activate='source bin/activate'
-
-alias py-env-deactivate='deactivate'
 
 # Ripgrep                           {{{2
 # ======================================
@@ -1039,10 +1042,11 @@ export RIPGREP_CONFIG_PATH=~/.ripgreprc
 # SBT                               {{{2
 # ======================================
 
-export SBT_OPTS=-Xmx2G
+export SBT_OPTS='-Xmx2G'
 
 alias sbt-no-test='sbt "set test in assembly := {}"'
 alias sbt-test='sbt test it:test'
+alias sbt-profile='sbt -Dsbt.task.timings=true'
 
 # Switch between standard and cleanroom repositories
 function sbt-use-repository () {
@@ -1080,3 +1084,7 @@ if-darwin && {
 }
 
 source-if-exists "$HOME/.zshrc.$(uname -n)"
+
+function camera-logs() {
+    log show --last 5m --predicate '(sender == "VDCAssistant")' | grep kCameraStream
+}
