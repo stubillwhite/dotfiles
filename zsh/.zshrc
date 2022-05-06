@@ -641,7 +641,7 @@ function git-repos-status() {
         repo=$(basename $PWD) 
 
         local branchColor="${COLOR_RED}"
-        if [[ "$gitRepoStatus[branch]" =~ (main) ]]; then
+        if [[ "$gitRepoStatus[branch]" =~ (^main$) ]]; then
             branchColor="${COLOR_GREEN}"
         fi
         local branch="${branchColor}$gitRepoStatus[branch]${COLOR_NONE}"
