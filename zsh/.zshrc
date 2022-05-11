@@ -549,7 +549,7 @@ function git-for-each-repo() {
 # For each directory within the current directory, if the directory is a Git
 # repository then execute the supplied function in parallel
 function git-for-each-repo-parallel() {
-    local dirs=$(find . -type d -depth 1)
+    local dirs=$(find . -type d -maxdepth 1)
 
     echo "$dirs" \
         | env_parallel --env "$1" -j20 \
