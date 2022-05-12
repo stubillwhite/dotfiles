@@ -25,6 +25,7 @@
     contributor-stats = !git --no-pager log --format="%aN" --no-merges | sort | uniq -c | sort -r
     unmerged-branches = !git --no-pager branch --no-merged main
     unmerged-branches-all = !git --no-pager branch --all --no-merged main
+    unmergedv = !git for-each-ref --sort=-committerdate refs/heads refs/remotes --format='%(color:bold blue)%(objectname:short)%(color:reset) %(color:white)%(refname:short)%(color:reset) (%(color:green)%(committerdate:relative)%(color:reset))%(color:dim white) - %(authorname)%(color:reset)'
     author-line-count = !git ls-files | xargs -n1 git blame -w -M -C -C --line-porcelain | sed -n 's/^author //p' | sort -f | uniq -ic | sort -nr
 
 [core]
