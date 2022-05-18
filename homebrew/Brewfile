@@ -61,7 +61,7 @@ brew "ncdu"                                     # NCurses Disk Usage
 brew "neovim"                                   # Ambitious Vim-fork focused on extensibility and agility
 brew "openssh"                                  # OpenBSD freely-licensed SSH connectivity tools
 brew "parallel"                                 # Shell command parallelization utility
-brew "pass"                                     # Password manager
+brew "parquet-tools"                            # Apache Parquet command-line tools and utilities
 brew "pkg-config"                               # Manage compile and link flags for libraries
 brew "q"                                        # Run SQL directly on CSV or TSV files
 brew "ripgrep"                                  # Search tool like grep and The Silver Searcher
@@ -167,3 +167,4 @@ brew "nethack"                                  # Single-player roguelike video 
 brew "stone-soup"                               # Dungeon Crawl Stone Soup: a roguelike game
 brew "brogue"                                   # Roguelike game
 brew "angband"                                  # Dungeon exploration game
+brew "cataclysm"                                # For/variant of Cataclysm Roguelike
