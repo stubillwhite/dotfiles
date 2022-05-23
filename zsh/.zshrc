@@ -66,7 +66,6 @@ alias gg='rg'                                                               # Gr
 # Better command defaults
 alias env='env | sort'                                                      # env should be sorted
 alias tree='tree -A'                                                        # tree should be ascii
-alias watch='watch -x zsh -ic'                                              # watch should use interactive Zsh shell for functions
 alias entr='entr -c'                                                        # entr should be colourised
 alias gh='NO_COLOR=1 gh'                                                    # gh should not be colourised
 alias vi='nvim'                                                             # Use nvim instead of vi
@@ -435,6 +434,25 @@ function aws-lambda-statuses() {
         | highlight yellow '.*\(Enabling\|Disabling\|Updating\).*'
 }
 
+# List EMR statuses
+function aws-emr-status() {
+    if [[ $# -ne 1 ]]; then
+        echo "Usage: aws-recs-login (dev|staging|live)"
+    else
+        local clusterId=$1
+        aws emr list-steps \
+            --cluster-id "${clusterId}" \
+            | jq -r '.Steps[] | [.Name, .Status.State, .Status.Timeline.StartDateTime, .Status.Timeline.EndDateTime] | @csv' \
+            | column -t -s ',' \
+            | sed 's/"//g'
+
+        aws emr describe-cluster \
+            --cluster-id "${clusterId}" \
+            | jq -r ".Cluster | (.LogUri + .Id)" \
+            | sed 's/s3n:/s3:/'
+    fi
+}
+
 # Open the specified S3 bucket in the web browser
 function aws-s3-open() {
     local s3Path=$1
@@ -696,6 +714,22 @@ function git-repos-unmerged-branches-all() {
     git-for-each-repo display-unmerged-branches-all
 }
 
+# For each repo within the current directory, display whether the repo contains
+# unmerged branches locally and remote in pretty form
+function git-repos-unmerged-branches-all-pretty() {
+    display-unmerged-branches-all-pretty() {
+        local cmd="git unmergedv"
+        unmergedBranches=$(eval "$cmd") 
+        if [[ $unmergedBranches = *[![:space:]]* ]]; then
+            echo "$fnam"
+            eval "$cmd"
+            echo
+        fi
+    }
+
+    git-for-each-repo display-unmerged-branches-all-pretty
+}
+
 # For each repo within the current directory, display stashes
 function git-repos-code-stashes() {
     stashes() {
@@ -889,15 +923,29 @@ function git-rebase-branch() {
 
 # Squash the commits on the current branch to a single commit
 function git-squash-branch-commits() {
-    local trunk=main
-    local lastCommitMessage=$(git show -s --format=%s)
+    local untrackedFiles=$(git ls-files -o)
 
-    git branch --show-current \
-        | xargs git merge-base ${trunk} \
-        | xargs git reset --soft
-    git add -A
-    git commit -m "${lastCommitMessage}"
-    git commit --amend
+    if [[ -z "${untrackedFiles}" ]]; then
+        local trunk='main'
+        local lastCommitMessage=$(git show -s --format=%s)
+
+        git branch --show-current \
+            | xargs git merge-base ${trunk} \
+            | xargs git reset --soft
+
+        git add -A
+        git commit -m "${lastCommitMessage}"
+        git commit --amend
+    else
+        echo 'Untracked files exist:'
+        echo ${untrackedFiles}
+    fi
+
+}
+
+function git-squash-rebase() {
+    local trunk='main'
+    git rebase -i ${trunk}
 }
 
 # Display the meaning of characters used for the prompt markers
@@ -1060,6 +1108,8 @@ function sbt-use-repository () {
     rm ~/.sbt/repositories 
     rm ~/.ivy2
 
+    mkdir -p "$HOME/.ivy2-${1}"
+
     ln -s "$HOME/.sbt/repositories-${1}" ~/.sbt/repositories 
     ln -s "$HOME/.ivy2-${1}"             ~/.ivy2
 }
@@ -1087,4 +1137,68 @@ source-if-exists "$HOME/.zshrc.$(uname -n)"
 
 function camera-logs() {
     log show --last 5m --predicate '(sender == "VDCAssistant")' | grep kCameraStream
+}
+
+# read-heredoc myVariable <<'HEREDOC'
+# this is
+# multiline text
+# HEREDOC
+# echo $myVariable
+function read-heredoc() {
+    local varName=${1:-reply}
+    shift
+
+    local newlineChar=$'\n'
+
+    local value=""
+    while IFS="${newlineChar}" read -r line; do
+        value="${value}${line}${newlineChar}"
+    done 
+
+    eval ${varName}'="${value}"'
+}
+
+function git-stats-stuff() {
+    local awkScript
+
+    read-heredoc awkScript <<'HEREDOC'
+    {
+        loc = match($0, /^[a-f0-9]{7}$/) 
+        if (loc != 0) {
+            hash = substr($0, RSTART, RLENGTH)
+        }
+        else {
+            if (match($0, /^$/) == 0) {
+                print hash "," $0
+            }
+        }
+    }
+HEREDOC
+
+    hashToFileCsvFilename=dataset-commit-to-file.csv
+    
+    echo 'hash,file' > "${hashToFileCsvFilename}"
+    git --no-pager log --format='%h' --name-only \
+        | awk "${awkScript}" \
+        >> "${hashToFileCsvFilename}"
+    
+    commitToAuthorCsvFilename=dataset-commit-to-author.csv
+    
+    echo 'hash,author' > "${commitToAuthorCsvFilename}"
+    git --no-pager log --format='%h,%aE' \
+        >> "${commitToAuthorCsvFilename}"
+    
+    #q -d ',' -H "select * from dataset-commit-to-file.csv cf inner join dataset-commit-to-author.csv ca on cf.hash = ca.hash"
+
+    local sqlScript
+    read-heredoc sqlScript <<'HEREDOC'
+        SELECT author, count(*) as total
+        FROM dataset-commit-to-file.csv cf INNER JOIN dataset-commit-to-author.csv ca 
+        ON ca.hash = cf.hash
+        GROUP BY author
+        ORDER BY total DESC
+HEREDOC
+
+    q -d ',' -H "${sqlScript}" \
+        | tabulate-by-comma
 }
