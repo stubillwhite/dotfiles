@@ -24,6 +24,7 @@ FILES=(
     "motd/.hushlogin"
     "proselint/.proselintrc"
     "pylint/.pylintrc"
+    "q/.qrc"
     "ripgrep/.ripgreprc"
     "tig/.tigrc"
     "tmux/.tmux.conf"

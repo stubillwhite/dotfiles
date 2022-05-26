@@ -69,7 +69,7 @@ brew "openssh"                                  # OpenBSD freely-licensed SSH co
 brew "parallel"                                 # Shell command parallelization utility
 brew "parquet-tools"                            # Apache Parquet command-line tools and utilities
 brew "pkg-config"                               # Manage compile and link flags for libraries
-brew "q"                                        # Run SQL directly on CSV or TSV files
+brew "harelba/q/q"                              # Run SQL directly on CSV or TSV files
 brew "ripgrep"                                  # Search tool like grep and The Silver Searcher
 brew "sampler"                                  # Tool for shell commands execution, visualization and alerting
 brew "slackcat"                                 # Command-line utility for posting snippets to Slack

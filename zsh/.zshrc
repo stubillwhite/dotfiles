@@ -7,8 +7,17 @@
 # ======================================
 
 fpath=(~/.zsh-completion $fpath)
-autoload -U compinit
-compinit
+
+# See https://gist.github.com/ctechols/ca1035271ad134841284
+
+# Only regenerate .zcompdump once every day
+autoload -Uz compinit
+for dump in ~/.zcompdump(N.mh+24); do
+  compinit
+done
+compinit -C
+
+alias zsh-startup='time  zsh -i -c exit'
 
 # Included scripts                                                          {{{1
 # ==============================================================================
@@ -1163,7 +1172,7 @@ function git-stats-stuff() {
 
     read-heredoc awkScript <<'HEREDOC'
     {
-        loc = match($0, /^[a-f0-9]{7}$/) 
+        loc = match($0, /^[a-f0-9]{40}$/) 
         if (loc != 0) {
             hash = substr($0, RSTART, RLENGTH)
         }
@@ -1175,30 +1184,75 @@ function git-stats-stuff() {
     }
 HEREDOC
 
-    hashToFileCsvFilename=dataset-commit-to-file.csv
+    hashToFileCsvFilename=dataset-hash-to-file.csv
     
     echo 'hash,file' > "${hashToFileCsvFilename}"
-    git --no-pager log --format='%h' --name-only \
+    git --no-pager log --format='%H' --name-only \
         | awk "${awkScript}" \
         >> "${hashToFileCsvFilename}"
     
-    commitToAuthorCsvFilename=dataset-commit-to-author.csv
+    hashToAuthorCsvFilename=dataset-hash-to-author.csv
     
-    echo 'hash,author' > "${commitToAuthorCsvFilename}"
-    git --no-pager log --format='%h,%aE' \
-        >> "${commitToAuthorCsvFilename}"
-    
-    #q -d ',' -H "select * from dataset-commit-to-file.csv cf inner join dataset-commit-to-author.csv ca on cf.hash = ca.hash"
+    local repoName=$(pwd | xargs basename)
 
+    echo 'hash,author,repo_name,commit_date' > "${hashToAuthorCsvFilename}"
+    git --no-pager log --format="%H,%aN,${repoName},%cI" \
+        >> "${hashToAuthorCsvFilename}"
+    
     local sqlScript
-    read-heredoc sqlScript <<'HEREDOC'
-        SELECT author, count(*) as total
-        FROM dataset-commit-to-file.csv cf INNER JOIN dataset-commit-to-author.csv ca 
+    read-heredoc sqlScript <<HEREDOC
+        SELECT cf.hash, file, author, repo_name, commit_date
+        FROM ${hashToFileCsvFilename} cf INNER JOIN ${hashToAuthorCsvFilename} ca 
         ON ca.hash = cf.hash
-        GROUP BY author
-        ORDER BY total DESC
 HEREDOC
 
-    q -d ',' -H "${sqlScript}" \
+    q -d ',' -H -O "${sqlScript}" \
+        > git-stats.csv
+
+    rm "${hashToAuthorCsvFilename}" "${hashToFileCsvFilename}"
+}
+
+function git-repos-stats-stuff() {
+    stats() {
+        echo "Getting stats for $(basename $PWD)"
+        git-stats-stuff
+
+        local fnam="git-stats.csv"
+
+        if [[ -f "../${fnam}" ]]; then
+            cat "${fnam}" | tail -n +2 >> "../${fnam}"
+        else
+            cat "${fnam}" > "../${fnam}"
+        fi
+
+        rm "${fnam}"
+    }
+
+    rm "git-stats.csv"
+
+    git-for-each-repo stats
+
+    q 'select repo_name, author, count(*) as total from git-stats.csv group by repo_name, author' \
+        | q "select * from - where author in ('Anna Bladzich', 'Rich Lyne', 'Reinder Verlinde', 'Stu White', 'Tess Hoad', 'Gabby Stravinskaitė', 'Ryun Shub Kim', 'Manisha Sistum')" \
+        | q 'select *, row_number() over (partition by repo_name order by total desc) as idx from -' \
+        | q 'select repo_name, author, total from - where idx <= 5' \
         | tabulate-by-comma
+}
+
+function install-java-certificate() {
+    if [[ $# -ne 1 ]] ; then
+        echo 'Usage: install-java-certificate FILE'
+        return 1
+    fi
+
+    local certificate=$1
+
+    local keystores=$(find /Library -name cacerts | grep JavaVirtualMachines)
+    while IFS= read -r keystore; do 
+        echo
+        echo sudo keytool -importcert -file \
+            "${certificate}" -keystore "${keystore}" -alias Zscalar
+ 
+        # keytool -list -keystore "${keystore}" | grep -i zscalar
+    done <<< "${keystores}"
 }
