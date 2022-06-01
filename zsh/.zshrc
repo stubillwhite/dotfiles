@@ -17,8 +17,6 @@ for dump in ~/.zcompdump(N.mh+24); do
 done
 compinit -C
 
-alias zsh-startup='time  zsh -i -c exit'
-
 # Included scripts                                                          {{{1
 # ==============================================================================
 
@@ -83,6 +81,7 @@ alias sed='gsed'                                                            # Us
 
 # Other useful stuff
 alias reload-zsh-config="exec zsh"                                          # Reload Zsh config
+alias zsh-startup='time  zsh -i -c exit'                                    # Display Zsh start-up time
 alias display-colours='msgcat --color=test'                                 # Display terminal colors
 alias ssh-add-keys='ssh-add ~/.ssh/keys/id_rsa_personal'                    # Add standard keys to SSH agent
 alias list-ports='netstat -anv'                                             # List active ports
@@ -957,6 +956,11 @@ function git-squash-rebase() {
     git rebase -i ${trunk}
 }
 
+function git-squash-reset() {
+    local trunk='main'
+    git reset origin/${trunk}
+}
+
 # Display the meaning of characters used for the prompt markers
 function git-prompt-help() {
     # TODO: Would be neater to do this dynamically based on info_format
@@ -1167,7 +1171,7 @@ function read-heredoc() {
     eval ${varName}'="${value}"'
 }
 
-function git-stats-stuff() {
+function git-generate-stats() {
     local awkScript
 
     read-heredoc awkScript <<'HEREDOC'
@@ -1212,10 +1216,10 @@ HEREDOC
     rm "${hashToAuthorCsvFilename}" "${hashToFileCsvFilename}"
 }
 
-function git-repos-stats-stuff() {
+function git-repos-generate-stats() {
     stats() {
         echo "Getting stats for $(basename $PWD)"
-        git-stats-stuff
+        git-generate-stats
 
         local fnam="git-stats.csv"
 
@@ -1228,14 +1232,44 @@ function git-repos-stats-stuff() {
         rm "${fnam}"
     }
 
-    rm "git-stats.csv"
+    rm -f "git-stats.csv"
 
     git-for-each-repo stats
+}
 
+function git-stats-top-team-committers-by-repo() {
     q 'select repo_name, author, count(*) as total from git-stats.csv group by repo_name, author' \
         | q "select * from - where author in ('Anna Bladzich', 'Rich Lyne', 'Reinder Verlinde', 'Stu White', 'Tess Hoad', 'Gabby Stravinskaitė', 'Ryun Shub Kim', 'Manisha Sistum')" \
         | q 'select *, row_number() over (partition by repo_name order by total desc) as idx from -' \
         | q 'select repo_name, author, total from - where idx <= 5' \
+        | tabulate-by-comma
+}
+
+function git-stats-recent-commits-by-author() {
+    if [[ $# -ne 1 ]] ; then
+        echo 'Usage: git-stats-recent-commits-by-author AUTHOR'
+        return 1
+    fi
+
+    local authorName=$1
+    local cutoff=$(gdate --iso-8601=seconds -u -d "7 days ago")
+
+    q "select * from git-stats.csv where commit_date > '"${cutoff}"'" \
+        | q "select * from - where author in ('"${authorName}"')" \
+        | q "select repo_name, file, commit_date from - order by commit_date desc" \
+        | tabulate-by-comma
+}
+
+function git-stats-total-commits-by-author() {
+    if [[ $# -ne 1 ]] ; then
+        echo 'Usage: git-stats-total-commits-by-author AUTHOR'
+        return 1
+    fi
+
+    local authorName=$1
+
+    q 'select repo_name, author, count(*) as total from git-stats.csv group by repo_name, author' \
+        | q "select repo_name, total from - where author in ('"${authorName}"')" \
         | tabulate-by-comma
 }
 
@@ -1256,3 +1290,4 @@ function install-java-certificate() {
         # keytool -list -keystore "${keystore}" | grep -i zscalar
     done <<< "${keystores}"
 }
+
