@@ -1093,6 +1093,7 @@ function py-env-init() {
     python3 -m venv .
     touch requirements.txt
     py-env-activate
+    pip3 config set global.cert /Users/white1/Downloads/ZscalerRootCerts/ZscalerRootCertificate-2048-SHA256.crt
 }
 
 # Ripgrep                           {{{2
@@ -1245,6 +1246,11 @@ function git-stats-top-team-committers-by-repo() {
         | tabulate-by-comma
 }
 
+function git-stats-authors() {
+    q 'select distinct author from git-stats.csv order by author asc' \
+        | tail -n +2 -
+}
+
 function git-stats-recent-commits-by-author() {
     if [[ $# -ne 1 ]] ; then
         echo 'Usage: git-stats-recent-commits-by-author AUTHOR'
@@ -1259,6 +1265,33 @@ function git-stats-recent-commits-by-author() {
         | q "select repo_name, file, commit_date from - order by commit_date desc" \
         | tabulate-by-comma
 }
+#function _git_stats_authors() {
+#    q 'select distinct author from git-stats.csv limit 3' \
+#        | tail -n +2 - \
+#        | sed -r 's/^(.*)$/"\1"/g'
+#}
+#
+#function whitetest() {
+#    if [[ $# -ne 1 ]] ; then
+#        echo 'Usage: git-stats-recent-commits-by-author AUTHOR'
+#        return 1
+#    fi
+#
+#    local authorName=$1
+#    local cutoff=$(gdate --iso-8601=seconds -u -d "7 days ago")
+#
+#    q "select * from git-stats.csv where commit_date > '"${cutoff}"'" \
+#        | q "select * from - where author in ('"${authorName}"')" \
+#        | q "select repo_name, file, commit_date from - order by commit_date desc" \
+#        | tabulate-by-comma
+#}
+#compdef "_alternative \
+#    'arguments:author:_git_stats_authors'" \
+#    whitetest
+##compdef '_alternative \
+#    "arguments:custom arg:(red green yellow blue magenta cyan)"' \
+#    whitetest
+
 
 function git-stats-total-commits-by-author() {
     if [[ $# -ne 1 ]] ; then
@@ -1270,6 +1303,11 @@ function git-stats-total-commits-by-author() {
 
     q 'select repo_name, author, count(*) as total from git-stats.csv group by repo_name, author' \
         | q "select repo_name, total from - where author in ('"${authorName}"')" \
+        | tabulate-by-comma
+}
+
+function git-stats-last-commits() {
+    q -O "select repo_name, max(commit_date) as last_commit from git-stats.csv where file not in ('version.sbt') group by repo_name order by last_commit desc" \
         | tabulate-by-comma
 }
 
