@@ -95,7 +95,7 @@ stty -ixon
 
 if-darwin && {
     alias emacs='/Applications/Emacs.app/Contents/MacOS/Emacs'
-    alias emacsclient='/Applications/Emacs.app/Contents/MacOS/bin/emacsclient'
+    alias emacsclient='echo "When done with a buffer, type C-x #" && /Applications/Emacs.app/Contents/MacOS/bin/emacsclient'
     alias doom='emacs --with-profile doom'
     alias sqlworkbenchj='java -jar /Applications/SQLWorkbenchJ.app/Contents/Java/sqlworkbench.jar &'
 }
@@ -1096,6 +1096,8 @@ function py-env-init() {
     pip3 config set global.cert /Users/white1/Downloads/ZscalerRootCerts/ZscalerRootCertificate-2048-SHA256.crt
 }
 
+alias py-env-install='pip3 install --trusted-host files.pythonhosted.org --trusted-host pypi.org --trusted-host pypi.python.org'
+
 # Ripgrep                           {{{2
 # ======================================
 
@@ -1200,13 +1202,13 @@ HEREDOC
     
     local repoName=$(pwd | xargs basename)
 
-    echo 'hash,author,repo_name,commit_date' > "${hashToAuthorCsvFilename}"
-    git --no-pager log --format="%H,%aN,${repoName},%cI" \
+    echo 'hash,author,repo_name,commit_date,comment' > "${hashToAuthorCsvFilename}"
+    git --no-pager log --format="%H,%aN,${repoName},%cI,'%s'" \
         >> "${hashToAuthorCsvFilename}"
     
     local sqlScript
     read-heredoc sqlScript <<HEREDOC
-        SELECT cf.hash, file, author, repo_name, commit_date
+        SELECT cf.hash, file, author, repo_name, commit_date, comment
         FROM ${hashToFileCsvFilename} cf INNER JOIN ${hashToAuthorCsvFilename} ca 
         ON ca.hash = cf.hash
 HEREDOC
@@ -1248,7 +1250,7 @@ function git-stats-top-team-committers-by-repo() {
 
 function git-stats-authors() {
     q 'select distinct author from git-stats.csv order by author asc' \
-        | tail -n +2 -
+        | tail -n +2 
 }
 
 function git-stats-recent-commits-by-author() {
@@ -1265,30 +1267,32 @@ function git-stats-recent-commits-by-author() {
         | q "select repo_name, file, commit_date from - order by commit_date desc" \
         | tabulate-by-comma
 }
-#function _git_stats_authors() {
-#    q 'select distinct author from git-stats.csv limit 3' \
-#        | tail -n +2 - \
-#        | sed -r 's/^(.*)$/"\1"/g'
-#}
-#
-#function whitetest() {
-#    if [[ $# -ne 1 ]] ; then
-#        echo 'Usage: git-stats-recent-commits-by-author AUTHOR'
-#        return 1
-#    fi
-#
-#    local authorName=$1
-#    local cutoff=$(gdate --iso-8601=seconds -u -d "7 days ago")
-#
-#    q "select * from git-stats.csv where commit_date > '"${cutoff}"'" \
-#        | q "select * from - where author in ('"${authorName}"')" \
-#        | q "select repo_name, file, commit_date from - order by commit_date desc" \
-#        | tabulate-by-comma
-#}
-#compdef "_alternative \
-#    'arguments:author:_git_stats_authors'" \
-#    whitetest
-##compdef '_alternative \
+
+function _git_stats_authors() {
+    q 'select distinct author from git-stats.csv limit 3' \
+        | tail -n +2 \
+        | sed -r 's/^(.*)$/"\1"/g' \
+        | tr '\n' ' '
+}
+
+function whitetest() {
+    if [[ $# -ne 1 ]] ; then
+        echo 'Usage: git-stats-recent-commits-by-author AUTHOR'
+        return 1
+    fi
+
+    local authorName=$1
+    local cutoff=$(gdate --iso-8601=seconds -u -d "7 days ago")
+
+    q "select * from git-stats.csv where commit_date > '"${cutoff}"'" \
+        | q "select * from - where author in ('"${authorName}"')" \
+        | q "select repo_name, file, commit_date from - order by commit_date desc" \
+        | tabulate-by-comma
+}
+compdef "_alternative \
+    'arguments:author:_git_stats_authors'" \
+    whitetest
+#compdef '_alternative \
 #    "arguments:custom arg:(red green yellow blue magenta cyan)"' \
 #    whitetest
 
@@ -1314,18 +1318,29 @@ function git-stats-last-commits() {
 function install-java-certificate() {
     if [[ $# -ne 1 ]] ; then
         echo 'Usage: install-java-certificate FILE'
+        echo
+        echo 'Example:'
+        echo 'install-java-certificate /Users/white1/Downloads/ZscalerRootCerts/ZscalerRootCertificate-2048-SHA256.crt'
         return 1
     fi
 
     local certificate=$1
 
-    local keystores=$(find /Library -name cacerts | grep JavaVirtualMachines)
-    while IFS= read -r keystore; do 
-        echo
-        echo sudo keytool -importcert -file \
-            "${certificate}" -keystore "${keystore}" -alias Zscalar
- 
-        # keytool -list -keystore "${keystore}" | grep -i zscalar
-    done <<< "${keystores}"
+    local rootPathsToCheck=(
+        /Library
+        /Applications/DBeaver.app
+    )
+
+    for rootPath in "${rootPathsToCheck[@]}"
+    do
+        local keystores=$(find ${rootPath} -name cacerts)
+        while IFS= read -r keystore; do 
+            echo
+            echo sudo keytool -importcert -file \
+                "${certificate}" -keystore "${keystore}" -alias Zscalar
+     
+            # keytool -list -keystore "${keystore}" | grep -i zscalar
+        done <<< "${keystores}"
+    done
 }
 

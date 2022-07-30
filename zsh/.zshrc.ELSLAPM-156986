@@ -226,17 +226,12 @@ function recs-get-emr-logs() {
 
 function recs-api-statuses() {
     local APIS=(
-        #article-recommendations-popular.api
         article-recommendations-tailored.api
-        #article-recommendations-trending.api
         fi-recommender.api
-        #funding-logged-email-events.api
         library-stats.api
         raven-email-sent-stats.api
         recs-events-service.api
         recs-focus-stats.api
-        #recs-funding-institutional-recommender.api
-        #recs-mendeley-funding-recommender.api
         recs-reviewers-recommender.api
         sd-article-recommendations.api
         sd-hpcc-related-articles.api

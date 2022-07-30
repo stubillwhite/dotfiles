@@ -27,3 +27,5 @@ function power-usage() {
     echo
     top -l5 -n20 -stats pid,command,power -o power | tail -n21
 }
+
+alias heat-throttling='pmset -g therm'
