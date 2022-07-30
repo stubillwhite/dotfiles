@@ -19,7 +19,7 @@ k9s:
   clusters:
     recs-eks-main-live:
       namespace:
-        active: ""
+        active: all
         favorites:
         - all
         - default
@@ -39,7 +39,8 @@ k9s:
   thresholds:
     cpu:
       critical: 90
-      warn: 70
+      warn: 80
     memory:
       critical: 90
-      warn: 70
+      warn: 80
+  screenDumpDir: /var/folders/ch/4scrmzf51l1d0xk7rlj402t80000gn/T/k9s-screens-white1
