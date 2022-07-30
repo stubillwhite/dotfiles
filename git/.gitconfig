@@ -15,11 +15,14 @@
 
 [alias]
     pretty-log = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %aN%C(reset)%C(bold yellow)%d%C(reset)' 
+    pretty-log-with-dates = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%aI)%C(reset) %C(white)%s%C(reset) %C(dim white)- %aN%C(reset)%C(bold yellow)%d%C(reset)' 
     log-recent = pretty-log --since='3 days ago'
     logv = pretty-log --all
+    logvv = pretty-log-with-dates --all
     diff-base = !git diff --ignore-all-space $(git merge-base --fork-point main)
     difftool-base = !git difftool --trust-exit-code -y $(git merge-base --fork-point main)
     push-branch = !git push --set-upstream origin $(git symbolic-ref --short HEAD)
+    branch-statuses = branch -vv
     accept-ours = "!f() { [ -z \"$@\" ] && set - '.'; git checkout --ours -- \"$@\"; git add -u -- \"$@\"; }; f"
     accept-theirs = "!f() { [ -z \"$@\" ] && set - '.'; git checkout --theirs -- \"$@\"; git add -u -- \"$@\"; }; f"
     contributor-stats = !git --no-pager log --format="%aN" --no-merges | sort | uniq -c | sort -r
@@ -28,6 +31,10 @@
     unmergedv = !git --no-pager branch --all --no-merged main --sort=-committerdate --format='%(color:bold blue)%(objectname:short)%(color:reset) %(color:white)%(refname:short)%(color:reset) (%(color:green)%(committerdate:relative)%(color:reset))%(color:dim white) - %(authorname)%(color:reset)'
     author-line-count = !git ls-files | xargs -n1 git blame -w -M -C -C --line-porcelain | gsed -n 's/^author //p' | sort -f | uniq -ic | sort -nr
     author-commits = !git shortlog -sn --all
+    ;recent-branches = !git reflog show --pretty=format:'%gs ~ %gd' --date=relative | grep 'checkout:' | grep -oE '[^ ]+ ~ .*' | awk -F~ '!seen[$1]++' | head -n 10 | awk -F' ~ HEAD@{' '{printf(\"  \\033[33m%s: \\033[37m %s\\033[0m\\n\", substr($2, 1, length($2)-1), $1)}'
+    recent-branches = !git reflog show --pretty=format:'%gs ~ %gd' --date=relative | grep 'checkout:' | grep -oE '[^ ]+ ~ .*' | awk -F~ '!seen[$1]++' | gsed -r 's/(.+) ~ HEAD@\\{([^\\}]+)\\}$/\\2,\\1/g' | gsed 's/,,/,-,/g' | column -t -s '',''
+    find-deleted-file = log --full-history -1 -- 
+
 
 [core]
 	editor = nvim
@@ -76,6 +83,9 @@
     path = ~/Dev/recommenders/.gitconfig
 
 [includeIf "gitdir:~/Dev/labs/"]
+    path = ~/Dev/recommenders/.gitconfig
+
+[includeIf "gitdir:~/Dev/kedro/"]
     path = ~/Dev/recommenders/.gitconfig
 
 [mailmap]
