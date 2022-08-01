@@ -929,36 +929,10 @@ function git-rebase-branch() {
         | xargs git rebase -i
 }
 
-# Squash the commits on the current branch to a single commit
-function git-squash-branch-commits() {
-    local untrackedFiles=$(git ls-files -o)
-
-    if [[ -z "${untrackedFiles}" ]]; then
-        local trunk='main'
-        local lastCommitMessage=$(git show -s --format=%s)
-
-        git branch --show-current \
-            | xargs git merge-base ${trunk} \
-            | xargs git reset --soft
-
-        git add -A
-        git commit -m "${lastCommitMessage}"
-        git commit --amend
-    else
-        echo 'Untracked files exist:'
-        echo ${untrackedFiles}
-    fi
-
-}
-
+# Squash the commits on the current branch
 function git-squash-rebase() {
     local trunk='main'
     git rebase -i ${trunk}
-}
-
-function git-squash-reset() {
-    local trunk='main'
-    git reset origin/${trunk}
 }
 
 # Display the meaning of characters used for the prompt markers
