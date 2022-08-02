@@ -322,6 +322,15 @@ function recs-reviewers-quality-metrics() {
     wget -q "${dashboardUrl}" -O - | imgcat -R
 }
 
+function recs-reviewers-glue-job-status {
+    aws glue get-job-runs --job-name coalesce-daily-recommendations \
+        | jq -r '["Completed", "State"], (.JobRuns | sort_by(.CompletedOn) | .[] | [.CompletedOn, .JobRunState]) | @csv' \
+        | strip-quotes \
+        | tabulate-by-comma \
+        | highlight green SUCCEEDED \
+        | highlight red FAILED
+}
+
 # Lambda timings
 # ==============================================================================
 
