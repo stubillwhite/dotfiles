@@ -1295,6 +1295,7 @@ function install-java-certificate() {
         echo
         echo 'Example:'
         echo 'install-java-certificate /Users/white1/Downloads/ZscalerRootCerts/ZscalerRootCertificate-2048-SHA256.crt'
+        echo 'Default keystore password is changeit'
         return 1
     fi
 
