@@ -1214,6 +1214,36 @@ function git-repos-generate-stats() {
     git-for-each-repo stats
 }
 
+function _git_stats_authors() {
+    q 'select distinct author from git-stats.csv limit 100' \
+        | tail -n +2 \
+        | sed -r 's/^(.*)$/"\1"/g' \
+        | tr '\n' ' '
+}
+
+function whitetest() {
+    if [[ $# -ne 1 ]] ; then
+        echo 'Usage: git-stats-recent-commits-by-author AUTHOR'
+        return 1
+    fi
+
+    local authorName="$1"
+    local cutoff=$(gdate --iso-8601=seconds -u -d "70 days ago")
+
+    q "select * from git-stats.csv where commit_date > '"${cutoff}"'" \
+        | q "select * from - where author in ('"${authorName}"')" \
+        | q "select repo_name, file, commit_date from - order by commit_date desc" \
+        | tabulate-by-comma
+}
+#compdef "_alternative \
+#    'arguments:author:($(_git_stats_authors))'" \
+#    whitetest
+    #
+#compdef '_alternative \
+#    "arguments:custom arg:(red green yellow blue magenta cyan)"' \
+#    whitetest
+
+
 function git-stats-top-team-committers-by-repo() {
     q 'select repo_name, author, count(*) as total from git-stats.csv group by repo_name, author' \
         | q "select * from - where author in ('Anna Bladzich', 'Rich Lyne', 'Reinder Verlinde', 'Stu White', 'Tess Hoad', 'Gabby Stravinskaitė', 'Ryun Shub Kim', 'Manisha Sistum')" \
@@ -1234,42 +1264,13 @@ function git-stats-recent-commits-by-author() {
     fi
 
     local authorName=$1
-    local cutoff=$(gdate --iso-8601=seconds -u -d "7 days ago")
+    local cutoff=$(gdate --iso-8601=seconds -u -d "14 days ago")
 
     q "select * from git-stats.csv where commit_date > '"${cutoff}"'" \
         | q "select * from - where author in ('"${authorName}"')" \
         | q "select repo_name, file, commit_date from - order by commit_date desc" \
         | tabulate-by-comma
 }
-
-function _git_stats_authors() {
-    q 'select distinct author from git-stats.csv limit 3' \
-        | tail -n +2 \
-        | sed -r 's/^(.*)$/"\1"/g' \
-        | tr '\n' ' '
-}
-
-function whitetest() {
-    if [[ $# -ne 1 ]] ; then
-        echo 'Usage: git-stats-recent-commits-by-author AUTHOR'
-        return 1
-    fi
-
-    local authorName=$1
-    local cutoff=$(gdate --iso-8601=seconds -u -d "7 days ago")
-
-    q "select * from git-stats.csv where commit_date > '"${cutoff}"'" \
-        | q "select * from - where author in ('"${authorName}"')" \
-        | q "select repo_name, file, commit_date from - order by commit_date desc" \
-        | tabulate-by-comma
-}
-compdef "_alternative \
-    'arguments:author:_git_stats_authors'" \
-    whitetest
-#compdef '_alternative \
-#    "arguments:custom arg:(red green yellow blue magenta cyan)"' \
-#    whitetest
-
 
 function git-stats-total-commits-by-author() {
     if [[ $# -ne 1 ]] ; then

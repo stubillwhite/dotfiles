@@ -294,32 +294,40 @@ compdef "_arguments \
 # ==============================================================================
 
 function recs-reviewers-quality-metrics() {
-    dashboard="MjA5OTI0M3xWSVp8REFTSEJPQVJEfGRhOjQ1MDIyOA"
-
-    # Find the sub-dashboards in the main page
-    subDashboardsResponse=$(curl -s https://api.newrelic.com/graphql \
-        -H 'Content-Type: application/json' \
-        -H "API-Key: ${SECRET_NEWRELIC_API_KEY}" \
-        --data-binary '{"query":"{ actor { entity(guid: \"'${dashboard}'\") { ... on DashboardEntity { guid name pages { guid name } } } } } ", "variables":""}'
+    # Obtain the dashboard's GUID: 
+    #  - Click the  icon by the dashboard's name to access the See metadata and manage tags modal and see the dashboard's GUID.
+    local dashboards=(
+        "MjA5OTI0M3xWSVp8REFTSEJPQVJEfGRhOjE2MTI0ODE"
+        "MjA5OTI0M3xWSVp8REFTSEJPQVJEfGRhOjE2MDM1MzE"
+        "MjA5OTI0M3xWSVp8REFTSEJPQVJEfGRhOjE2MjI1MDY"
     )
 
-    subDashboard=$(echo "${subDashboardsResponse}" | jq -r '.data.actor.entity.pages[0].guid')
+    for dashboard in $dashboards[@]; do
+        # Find the sub-dashboards in the main page
+        subDashboardsResponse=$(curl -s https://api.newrelic.com/graphql \
+            -H 'Content-Type: application/json' \
+            -H "API-Key: ${SECRET_NEWRELIC_API_KEY}" \
+            --data-binary '{"query":"{ actor { entity(guid: \"'${dashboard}'\") { ... on DashboardEntity { guid name pages { guid name } } } } } ", "variables":""}'
+        )
 
-    # Generate a new URL for the current data
-    dashboardUrlResponse=$(curl -s https://api.newrelic.com/graphql \
-        -H 'Content-Type: application/json' \
-        -H "API-Key: ${SECRET_NEWRELIC_API_KEY}" \
-        --data-binary '{"query":"mutation { dashboardCreateSnapshotUrl(guid: \"'${subDashboard}'\") } ", "variables":""}'
-    )
+        subDashboard=$(echo "${subDashboardsResponse}" | jq -r '.data.actor.entity.pages[0].guid')
 
-    dashboardUrl=$( \
-        echo "${dashboardUrlResponse}" \
-        | jq -r '.data.dashboardCreateSnapshotUrl' \
-        | sed 's/format=PDF/format=PNG/' \
-    )
+        # Generate a new URL for the current data
+        dashboardUrlResponse=$(curl -s https://api.newrelic.com/graphql \
+            -H 'Content-Type: application/json' \
+            -H "API-Key: ${SECRET_NEWRELIC_API_KEY}" \
+            --data-binary '{"query":"mutation { dashboardCreateSnapshotUrl(guid: \"'${subDashboard}'\") } ", "variables":""}'
+        )
 
-    # Download and show
-    wget -q "${dashboardUrl}" -O - | imgcat -R
+        dashboardUrl=$( \
+            echo "${dashboardUrlResponse}" \
+            | jq -r '.data.dashboardCreateSnapshotUrl' \
+            | sed 's/format=PDF/format=PNG/' \
+        )
+
+        # Download and show
+        wget -q "${dashboardUrl}" -O - | imgcat -R
+    done
 }
 
 function recs-reviewers-glue-job-status {
