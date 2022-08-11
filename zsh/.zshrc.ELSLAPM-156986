@@ -1,5 +1,8 @@
 # vim:fdm=marker
 
+# SSH                                                                       {{{1
+# ==============================================================================
+
 function ssh-find-username() {
     if [[ $# -ne 1 ]] ; then
         echo 'Usage: ssh-find-username ADDRESS'
@@ -27,10 +30,6 @@ function ssh-find-username() {
     printf "${COLOR_CLEAR_LINE}Unable to find username for ${addr}\n"
     return 1
 }
-
-# Machine specific aliases                                                  {{{1
-# ==============================================================================
-
 
 # Kubernetes                                                                {{{1
 # ==============================================================================
@@ -82,6 +81,14 @@ function recs-get-k8s() {
         local recsSubEnv=$2
         aws s3 cp s3://com-elsevier-recs-${recsEnv}-certs/eks/recs-eks-${recsSubEnv}-${recsEnv}.conf ~/.kube/
         export KUBECONFIG=~/.kube/recs-eks-${recsSubEnv}-${recsEnv}.conf
+
+        # TODO: We need to upgrade our K8s config
+        # https://github.com/fluxcd/flux2/issues/2817
+        echo
+        echo 'WARNING: We need to upgrade our K8s config; patching'
+        local oldProtocol="client.authentication.k8s.io\/v1alpha1"
+        local newProtocol="client.authentication.k8s.io\/v1beta1"
+        gsed -i "s/${oldProtocol}/${newProtocol}/g" $HOME/.kube/recs-eks-main-${recsEnv}.conf
     fi
 }
 compdef "_arguments \
@@ -297,9 +304,9 @@ function recs-reviewers-quality-metrics() {
     # Obtain the dashboard's GUID: 
     #  - Click the  icon by the dashboard's name to access the See metadata and manage tags modal and see the dashboard's GUID.
     local dashboards=(
-        "MjA5OTI0M3xWSVp8REFTSEJPQVJEfGRhOjE2MTI0ODE"
-        "MjA5OTI0M3xWSVp8REFTSEJPQVJEfGRhOjE2MDM1MzE"
-        "MjA5OTI0M3xWSVp8REFTSEJPQVJEfGRhOjE2MjI1MDY"
+        "MjA5OTI0M3xWSVp8REFTSEJPQVJEfGRhOjE3Mzg1Njg"
+        "MjA5OTI0M3xWSVp8REFTSEJPQVJEfGRhOjE3Mzg1NzA"
+        "MjA5OTI0M3xWSVp8REFTSEJPQVJEfGRhOjE3Mzg1Njk"
     )
 
     for dashboard in $dashboards[@]; do
