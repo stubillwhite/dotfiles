@@ -68,6 +68,7 @@ export PATH=$PATH:/Applications/Beyond\ Compare.app/Contents/MacOS
 export PATH=$PATH:~/Dev/my-stuff/shell-utils
 export PATH=$PATH:/usr/bin
 export PATH=$PATH:~/.local/bin
+#export PATH=$PATH:/usr/local/opt/kubernetes-cli@1.22/bin
 export PATH=/Applications/Emacs.app/Contents/MacOS:$PATH
 
 # Java                                                                      {{{1

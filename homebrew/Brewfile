@@ -169,6 +169,7 @@ brew "yamllint"                                 # Linter for YAML files
 ################################################################################
 
 cask "anki"                                     # Memory training application
+cask "spotify"                                  # Spotify client
 
 brew "nethack"                                  # Single-player roguelike video game
 brew "stone-soup"                               # Dungeon Crawl Stone Soup: a roguelike game

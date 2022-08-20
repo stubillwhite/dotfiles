@@ -46,6 +46,8 @@ brew 'lazydocker'                               # The lazier way to manage every
 # Kubernetes
 brew 'kubectl'                                  # Kubernetes command-line interface
 brew 'kubernetes-cli'                           # Kubernetes command-line interface
+# brew 'kubectl@1.22'                             # Kubernetes command-line interface -- pinned at 1.22 to match our server
+# brew 'kubernetes-cli@1.22'                      # Kubernetes command-line interface -- pinned at 1.22 to match our server
 brew 'stern'                                    # Tail multiple Kubernetes pods & their containers
 cask 'lens'                                     # Kubernetes IDE
 
@@ -65,3 +67,6 @@ brew 'sonar-scanner'                            # Launcher to analyze a project 
 
 # Load tools
 brew 'hey'                                      # HTTP load generator, ApacheBench (ab) replacement
+
+# Text note management
+cask 'obsidian'                                 # Markdown note management
