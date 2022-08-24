@@ -81,7 +81,7 @@ alias sed='gsed'                                                            # Us
 
 # Other useful stuff
 alias reload-zsh-config="exec zsh"                                          # Reload Zsh config
-alias zsh-startup='time  zsh -i -c exit'                                    # Display Zsh start-up time
+alias zsh-startup='time zsh -i -c exit'                                    # Display Zsh start-up time
 alias display-colours='msgcat --color=test'                                 # Display terminal colors
 alias ssh-add-keys='ssh-add ~/.ssh/keys/id_rsa_personal'                    # Add standard keys to SSH agent
 alias list-ports='netstat -anv'                                             # List active ports
@@ -268,12 +268,19 @@ compdef '_alternative \
     "arguments:custom arg:(red green yellow blue magenta cyan)"' \
     highlight
 
-# Convert milliseconds since the epoch to the current date time
+# Convert milliseconds since the epoch to date time
 # echo 1633698951550 | epoch-to-date
 function epoch-to-date() {
     while IFS= read -r msSinceEpoch; do
         awk -v t="${msSinceEpoch}" 'BEGIN { print strftime("%Y-%m-%d %H:%M:%S", t/1000); }'
     done
+}
+
+# Convert date time to milliseconds since the epoch
+# echo 1633698951550 | epoch-to-date
+function date-to-epoch() {
+    local epochSeconds=$(date --date="${1}" +"%s")
+    $(( ${epochSeconds} * 1000))
 }
 
 # Calculate the result of an expression
@@ -404,7 +411,7 @@ compdef "_arguments \
 # ======================================
 
 # AWS CLI commands pointing at localstack
-alias aws-localstack='aws --endpoint-url=http://localhost:4566'
+alias aws-localstack='AWS_DEFAULT_REGION=us-east-1 aws --endpoint-url=http://localhost:4566'
 
 # List ECR images
 function aws-ecr-images() {
@@ -1233,7 +1240,8 @@ function whitetest() {
     q "select * from git-stats.csv where commit_date > '"${cutoff}"'" \
         | q "select * from - where author in ('"${authorName}"')" \
         | q "select repo_name, file, commit_date from - order by commit_date desc" \
-        | tabulate-by-comma
+        | q -D "$(printf '\t')" 'select * from -' \
+        | tabulate-by-tab
 }
 #compdef "_alternative \
 #    'arguments:author:($(_git_stats_authors))'" \
@@ -1249,7 +1257,8 @@ function git-stats-top-team-committers-by-repo() {
         | q "select * from - where author in ('Anna Bladzich', 'Rich Lyne', 'Reinder Verlinde', 'Stu White', 'Tess Hoad', 'Gabby Stravinskaitė', 'Ryun Shub Kim', 'Manisha Sistum')" \
         | q 'select *, row_number() over (partition by repo_name order by total desc) as idx from -' \
         | q 'select repo_name, author, total from - where idx <= 5' \
-        | tabulate-by-comma
+        | q -D "$(printf '\t')" 'select * from -' \
+        | tabulate-by-tab
 }
 
 function git-stats-authors() {
@@ -1269,7 +1278,8 @@ function git-stats-recent-commits-by-author() {
     q "select * from git-stats.csv where commit_date > '"${cutoff}"'" \
         | q "select * from - where author in ('"${authorName}"')" \
         | q "select repo_name, file, commit_date from - order by commit_date desc" \
-        | tabulate-by-comma
+        | q -D "$(printf '\t')" 'select * from -' \
+        | tabulate-by-tab
 }
 
 function git-stats-total-commits-by-author() {
@@ -1282,12 +1292,14 @@ function git-stats-total-commits-by-author() {
 
     q 'select repo_name, author, count(*) as total from git-stats.csv group by repo_name, author' \
         | q "select repo_name, total from - where author in ('"${authorName}"')" \
-        | tabulate-by-comma
+        | q -D "$(printf '\t')" 'select * from -' \
+        | tabulate-by-tab
 }
 
 function git-stats-last-commits() {
     q -O "select repo_name, max(commit_date) as last_commit from git-stats.csv where file not in ('version.sbt') group by repo_name order by last_commit desc" \
-        | tabulate-by-comma
+        | q -D "$(printf '\t')" 'select * from -' \
+        | tabulate-by-tab
 }
 
 function install-java-certificate() {
