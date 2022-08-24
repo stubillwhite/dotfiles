@@ -733,7 +733,7 @@ function git-repos-unmerged-branches-all() {
 # unmerged branches locally and remote in pretty form
 function git-repos-unmerged-branches-all-pretty() {
     display-unmerged-branches-all-pretty() {
-        local cmd="git unmergedv"
+        local cmd="git unmerged-branches-allv"
         unmergedBranches=$(eval "$cmd") 
         if [[ $unmergedBranches = *[![:space:]]* ]]; then
             echo "$fnam"
