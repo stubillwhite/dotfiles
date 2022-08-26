@@ -6,7 +6,7 @@ function _jira-branch() {
         | jq -r ".issues[] | [.key, .fields.summary] | @tsv" \
         | column -t -s $'\t' \
         | tr '[:upper:]' '[:lower:]' \
-        | tr '[\[\]]' ' ' \
+        | gsed -r 's/[^a-z0-9 ]/ /g' \
         | gsed -r 's/ +/-/g'
     )
 
