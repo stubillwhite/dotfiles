@@ -1,5 +1,10 @@
 # vim:fdm=marker
 
+# Zoom                                                                      {{{1
+# ==============================================================================
+
+alias recs-zoom="open '"${SECRET_RECS_ZOOM_URL}"'"
+
 # SSH                                                                       {{{1
 # ==============================================================================
 
@@ -297,16 +302,18 @@ compdef "_arguments \
     '1:environment arg:(dev live)'" \
     recs-reviewers-evise-dumps
 
-# Quality metrics
+# Dashboards
 # ==============================================================================
 
-function recs-reviewers-quality-metrics() {
+function recs-reviewers-dashboards() {
     # Obtain the dashboard's GUID: 
     #  - Click the  icon by the dashboard's name to access the See metadata and manage tags modal and see the dashboard's GUID.
     local dashboards=(
-        "MjA5OTI0M3xWSVp8REFTSEJPQVJEfGRhOjE3Mzg1Njg"
-        "MjA5OTI0M3xWSVp8REFTSEJPQVJEfGRhOjE3Mzg1NzA"
-        "MjA5OTI0M3xWSVp8REFTSEJPQVJEfGRhOjE3Mzg1Njk"
+        "MjA5OTI0M3xWSVp8REFTSEJPQVJEfGRhOjE3Mzg1Njg"   # https://onenr.io/0MRNqLGZGwn
+        "MjA5OTI0M3xWSVp8REFTSEJPQVJEfGRhOjE3Mzg1NzA"   # https://onenr.io/0nQx3vAX5jV
+        "MjA5OTI0M3xWSVp8REFTSEJPQVJEfGRhOjE3Mzg1Njk"   # https://onenr.io/0VjYnK7ZNQ0
+        "MjA5OTI0M3xWSVp8REFTSEJPQVJEfGRhOjkxOTY2MA"    # https://onenr.io/0BQ1p61dbjx
+        "MjA5OTI0M3xWSVp8REFTSEJPQVJEfGRhOjE3MDM2NjA"   # https://onenr.io/02R5Nanr1jb
     )
 
     for dashboard in $dashboards[@]; do
@@ -383,7 +390,6 @@ function sonarqube-run() {
         SONAR_SCANNER_HOME="${sonarScannerHome}" sbt -Dsonar.host.url="${sonarServer}" -Dsonar.login="${sonarToken}" sonarScan
     fi
 }
-
 
 # Conda                                                                     {{{1
 # ==============================================================================

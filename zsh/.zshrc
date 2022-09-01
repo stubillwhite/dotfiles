@@ -1266,22 +1266,6 @@ function git-stats-authors() {
         | tail -n +2 
 }
 
-function git-stats-recent-commits-by-author() {
-    if [[ $# -ne 1 ]] ; then
-        echo 'Usage: git-stats-recent-commits-by-author AUTHOR'
-        return 1
-    fi
-
-    local authorName=$1
-    local cutoff=$(gdate --iso-8601=seconds -u -d "14 days ago")
-
-    q "select * from git-stats.csv where commit_date > '"${cutoff}"'" \
-        | q "select * from - where author in ('"${authorName}"')" \
-        | q "select repo_name, file, commit_date from - order by commit_date desc" \
-        | q -D "$(printf '\t')" 'select * from -' \
-        | tabulate-by-tab
-}
-
 function git-stats-total-commits-by-author() {
     if [[ $# -ne 1 ]] ; then
         echo 'Usage: git-stats-total-commits-by-author AUTHOR'
@@ -1296,7 +1280,36 @@ function git-stats-total-commits-by-author() {
         | tabulate-by-tab
 }
 
-function git-stats-last-commits() {
+function git-stats-list-commits-by-author() {
+    if [[ $# -ne 1 ]] ; then
+        echo 'Usage: git-stats-list-commits-by-author AUTHOR'
+        return 1
+    fi
+
+    local authorName=$1
+
+    q "select * from git-stats.csv where author in ('"${authorName}"')" \
+        | q "select distinct repo_name, commit_date, comment from - order by commit_date desc" \
+        | q -D "$(printf '\t')" 'select * from -' \
+        | tabulate-by-tab
+}
+
+function git-stats-total-commits-by-author-per-month() {
+    if [[ $# -ne 1 ]] ; then
+        echo 'Usage: git-stats-total-commits-by-author-per-month AUTHOR'
+        return 1
+    fi
+
+    local authorName=$1
+
+    q "select * from git-stats.csv where author in ('"${authorName}"')" \
+        | q "select distinct repo_name, commit_date from -" \
+        | q "select strftime('%Y-%m', commit_date) as 'year_month', count(*) as total from - group by year_month order by year_month desc" \
+        | q -D "$(printf '\t')" 'select * from -' \
+        | tabulate-by-tab
+}
+
+function git-stats-last-commits-by-repo() {
     q -O "select repo_name, max(commit_date) as last_commit from git-stats.csv where file not in ('version.sbt') group by repo_name order by last_commit desc" \
         | q -D "$(printf '\t')" 'select * from -' \
         | tabulate-by-tab
