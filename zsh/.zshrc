@@ -1074,7 +1074,7 @@ function py-env-init() {
     python3 -m venv .
     touch requirements.txt
     py-env-activate
-    pip3 config set global.cert /Users/white1/Downloads/ZscalerRootCerts/ZscalerRootCertificate-2048-SHA256.crt
+    pip3 config set global.cert /Users/white1/Dev/certificates/ZscalerRootCertificate-2048-SHA256.crt
 }
 
 alias py-env-install='pip3 install --trusted-host files.pythonhosted.org --trusted-host pypi.org --trusted-host pypi.python.org'
@@ -1320,7 +1320,7 @@ function install-java-certificate() {
         echo 'Usage: install-java-certificate FILE'
         echo
         echo 'Example:'
-        echo 'install-java-certificate /Users/white1/Downloads/ZscalerRootCerts/ZscalerRootCertificate-2048-SHA256.crt'
+        echo 'install-java-certificate /Users/white1/Dev/certificates/ZscalerRootCertificate-2048-SHA256.crt'
         echo 'Default keystore password is changeit'
         return 1
     fi
