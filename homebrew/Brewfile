@@ -45,6 +45,9 @@ cask "evernote"                                 # App for note taking, organizin
 # APIs
 cask "insomnia"                                 # HTTP and GraphQL Client
 
+# Text note management
+cask 'obsidian'                                 # Markdown note management
+
 ################################################################################
 # Utilities
 ################################################################################

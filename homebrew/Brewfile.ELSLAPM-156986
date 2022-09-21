@@ -67,6 +67,3 @@ brew 'sonar-scanner'                            # Launcher to analyze a project 
 
 # Load tools
 brew 'hey'                                      # HTTP load generator, ApacheBench (ab) replacement
-
-# Text note management
-cask 'obsidian'                                 # Markdown note management
