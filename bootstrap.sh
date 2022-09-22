@@ -131,6 +131,7 @@ create-links-for-files $HOME         "$FILES[@]"
 mkdir -p $HOME/.config/
 create-links-for-files $HOME/.config "$CONFIG_DIRS[@]"
 
+create-links-for-files-at-path ~/Dropbox/Private/obsidian         git/personal-config
 create-links-for-files-at-path ~/Dev/my-stuff                     git/personal-config
 create-links-for-files-at-path ~/Dev/bos                          git/work-config
 create-links-for-files-at-path ~/Dev/recommenders                 git/work-config

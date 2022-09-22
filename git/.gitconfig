@@ -58,6 +58,9 @@
 [mergetool "vimmmerge"]
     cmd = nvim -d $BASE $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'
 
+[includeIf "gitdir:~/Dropbox/Private/obsidian/"]
+    path = ~/Dev/my-stuff/.gitconfig
+
 [includeIf "gitdir:~/Dev/my-stuff/"]
     path = ~/Dev/my-stuff/.gitconfig
 
