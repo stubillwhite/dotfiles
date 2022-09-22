@@ -1,0 +1,11 @@
+# /Users/white1/.config/tmuxinator/butter-chicken.yml
+
+name: butter-chicken
+root: ~/Dev/kd/butter-chicken/
+
+windows:
+  - recs:
+      layout: even-vertical
+      panes:
+        - main:
+            - git-repos-pull

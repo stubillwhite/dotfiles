@@ -1,0 +1,11 @@
+# /Users/white1/.config/tmuxinator/spirograph.yml
+
+name: spirograph
+root: ~/Dev/kd/spirograph/
+
+windows:
+  - recs:
+      layout: even-vertical
+      panes:
+        - main:
+            - git-repos-pull
