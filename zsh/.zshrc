@@ -1253,13 +1253,26 @@ function whitetest() {
 
 
 function git-stats-top-team-committers-by-repo() {
+    if [[ $# -ne 1 ]] ; then
+        echo 'Usage: git-stats-top-team-committers-by-repo TEAM'
+        return 1
+    fi
+
+    local team=$1
+    [ "${team}" = 'recs' ]           && teamMembers="'Anna Bladzich', 'Rich Lyne', 'Reinder Verlinde', 'Stu White', 'Tess Hoad', 'Manisha Sistum'"
+    [ "${team}" = 'butter-chicken' ] && teamMembers="'Asmaa Shoala', 'Carmen Mester', 'Colin Zhang', 'Hamid Haghayegh', 'Henry Cleland', 'Karthik Jaganathan', 'Krishna', 'Rama Sane'"
+    [ "${team}" = 'spirograph' ]     && teamMembers="'Paul Meyrick', 'Fraser Reid', 'Nancy Goyal', 'Richard Snoad', 'Ayce Keskinege'"
+
     q 'select repo_name, author, count(*) as total from git-stats.csv group by repo_name, author' \
-        | q "select * from - where author in ('Anna Bladzich', 'Rich Lyne', 'Reinder Verlinde', 'Stu White', 'Tess Hoad', 'Gabby Stravinskaitė', 'Ryun Shub Kim', 'Manisha Sistum')" \
+        | q "select * from - where author in (${teamMembers})" \
         | q 'select *, row_number() over (partition by repo_name order by total desc) as idx from -' \
         | q 'select repo_name, author, total from - where idx <= 5' \
         | q -D "$(printf '\t')" 'select * from -' \
         | tabulate-by-tab
 }
+compdef "_arguments \
+    '1:team arg:(recs butter-chicken spirograph)'" \
+    git-stats-top-team-committers-by-repo
 
 function git-stats-authors() {
     q 'select distinct author from git-stats.csv order by author asc' \
