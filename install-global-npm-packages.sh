@@ -1,3 +1,5 @@
 #!/bin/bash
 npm install -g \
-    git-split-diffs
+    git-split-diffs \
+    @stoplight/spectral-cli \
+    mermaid-filter
