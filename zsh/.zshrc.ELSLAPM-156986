@@ -383,10 +383,11 @@ function sonarqube-run() {
         local sonarToken=$1
 
         local sonarServer="https://sq.prod.tio.elsevier.systems"
-        local sonarScannerHome=$(full-path "$(which sonar-scanner | xargs readlink -f | xargs dirname)/..")
+        local sonarScannerHome=$(full-path "$(which sonar-scanner | xargs greadlink -f | xargs dirname)/..")
         local sonarOpts="-Dsonar.host.url=\"${sonarServer}\" -DsonarScanner.home=\"${sonarScannerHome}\" -Dsonar.login=\"${sonarToken}\""
 
         echo "NOTE: Ensure you have first generated coverage with 'sbt clean coverage test coverageReport'"
+        echo "Using sonar-scanner at ${sonarScannerHome}"
         SONAR_SCANNER_HOME="${sonarScannerHome}" sbt -Dsonar.host.url="${sonarServer}" -Dsonar.login="${sonarToken}" sonarScan
     fi
 }
