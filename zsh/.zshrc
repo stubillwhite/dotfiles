@@ -78,6 +78,7 @@ alias gh='NO_COLOR=1 gh'                                                    # gh
 alias vi='nvim'                                                             # Use nvim instead of vi
 alias vim='nvim'                                                            # Use nvim instead of vim
 alias sed='gsed'                                                            # Use gsed instead of sed
+alias date='gdate'                                                          # Use gdate instead of date
 
 # Other useful stuff
 alias reload-zsh-config="exec zsh"                                          # Reload Zsh config
@@ -277,10 +278,12 @@ function epoch-to-date() {
 }
 
 # Convert date time to milliseconds since the epoch
-# echo 1633698951550 | epoch-to-date
+#  echo '2021-10-08 14:15:51' | date-to-epoch
 function date-to-epoch() {
-    local epochSeconds=$(date --date="${1}" +"%s")
-    $(( ${epochSeconds} * 1000))
+    while IFS= read -r dateStr; do
+        local epochSeconds=$(date --date="${dateStr}" +"%s")
+    done
+    echo $(( ${epochSeconds} * 1000 ))
 }
 
 # Calculate the result of an expression
