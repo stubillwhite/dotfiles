@@ -201,6 +201,10 @@ function recs-get-emr-logs() {
                     aws-recs-dev
                     ;;
 
+                staging*)
+                    aws-recs-dev
+                    ;;
+
                 live*)
                     aws-recs-prod
                     ;;
