@@ -41,12 +41,10 @@ cask "keepassxc"                                # Password manager app
 
 # Notebook
 cask "evernote"                                 # App for note taking, organizing, task lists, and archiving
+cask 'obsidian'                                 # Markdown note management
 
 # APIs
 cask "insomnia"                                 # HTTP and GraphQL Client
-
-# Text note management
-cask 'obsidian'                                 # Markdown note management
 
 ################################################################################
 # Utilities

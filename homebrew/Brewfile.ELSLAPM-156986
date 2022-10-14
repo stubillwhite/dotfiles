@@ -11,7 +11,6 @@ cask 'onedrive'                                 # Cloud storage client
 # Database clients
 cask 'dbeaver-community'                        # Free universal database tool and SQL client
 
-
 ################################################################################
 # Utilities
 ################################################################################
