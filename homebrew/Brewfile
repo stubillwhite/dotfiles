@@ -15,12 +15,12 @@ tap "homebrew/core"
 tap "AdoptOpenJDK/openjdk"
 cask "adoptopenjdk8"                            # AdoptOpenJDK 8
 cask "adoptopenjdk11"                           # AdoptOpenJDK 11
-cask "temurin8"                                 # AdoptOpenJDK 8
 
 # Java under Eclipse Temurin
 # brew untap AdoptOpenJDK/openjdk
 tap "homebrew/cask-versions"
-cask "temurin17"                                # JDK 17 from https://adoptium.net/
+cask "temurin8"                                 # JDK 8 from https://adoptium.net/
+cask "temurin"                                  # JDK 19 from https://adoptium.net/
 
 # Basics
 cask "beyond-compare"                           # Compare files and folders
