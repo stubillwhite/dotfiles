@@ -93,7 +93,7 @@ function recs-get-k8s() {
         echo 'WARNING: My tools are running with newer clients than our servers; patching protocol'
         local oldProtocol="client.authentication.k8s.io\/v1alpha1"
         local newProtocol="client.authentication.k8s.io\/v1beta1"
-        gsed -i "s/${oldProtocol}/${newProtocol}/g" $HOME/.kube/recs-eks-main-${recsEnv}.conf
+        gsed -i "s/${oldProtocol}/${newProtocol}/g" $HOME/.kube/recs-eks-${recsSubEnv}-${recsEnv}.conf
     fi
 }
 compdef "_arguments \
