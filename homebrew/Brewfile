@@ -23,6 +23,7 @@ cask "temurin8"                                 # JDK 8 from https://adoptium.ne
 cask "temurin"                                  # JDK 19 from https://adoptium.net/
 
 # Basics
+cask "bartender"                                # Take control of your menu bar
 cask "beyond-compare"                           # Compare files and folders
 cask "dropbox"                                  # Client for the Dropbox cloud storage service
 cask "firefox"                                  # Mozilla Firefox
