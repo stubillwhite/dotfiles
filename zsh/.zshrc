@@ -82,7 +82,7 @@ alias date='gdate'                                                          # Us
 
 # Other useful stuff
 alias reload-zsh-config="exec zsh"                                          # Reload Zsh config
-alias zsh-startup='time zsh -i -c exit'                                    # Display Zsh start-up time
+alias zsh-startup='time zsh -i -c exit'                                     # Display Zsh start-up time
 alias display-colours='msgcat --color=test'                                 # Display terminal colors
 alias ssh-add-keys='ssh-add ~/.ssh/keys/id_rsa_personal'                    # Add standard keys to SSH agent
 alias list-ports='netstat -anv'                                             # List active ports
@@ -112,7 +112,6 @@ if-darwin && {
     if [ ! -d "$HOME/trash" ]; then ln -s "$HOME/.Trash" "$HOME/trash"; fi
 }
 
-
 # General functions                                                         {{{1
 # ==============================================================================
 
@@ -121,14 +120,27 @@ if-darwin && {
 
 alias fmt-xml='xmllint --format -'                                          # Prettify XML (cat foo.xml | fmt-xml)
 alias fmt-json='jq "."'                                                     # Prettify JSON (cat foo.json | fmt-json)
-alias tabulate-by-tab="gsed 's/\t\t/\t-\t/g' | column -t -s \$'\t'"         # Tabluate TSV (cat foo.tsv | tabulate-by-tab)
-alias tabulate-by-comma="gsed 's/,,/,-,/g' | column -t -s '','' "           # Tabluate CSV (cat foo.csv | tabulate-by-comma)
-alias tabulate-by-space='column -t -s '' '' '                               # Tabluate CSV (cat foo.txt | tabulate-by-space)
 alias as-stream='stdbuf -o0'                                                # Turn pipes to streams (tail -F foo.log | as-stream grep "bar")
 alias strip-color="gsed -r 's/\x1b\[[0-9;]*m//g'"                           # Strip ANSI colour codes (some-cmd | strip-color)
 alias strip-ansi="perl -pe 's/\x1b\[[0-9;]*[mG]//g'"                        # Strip all ANSI control codes (some-cmd | strip-ansi)
 alias strip-quotes='gsed "s/[''\"]//g"'                                     # Strip all quotes (some-cmd | strip-quotes)
 alias sum-of="paste -sd+ - | bc"                                            # Sum numbers from stdin (some-cmd | sum-of)
+
+# Tabluate CSV (cat foo.txt | tabulate-by-space)
+alias tabulate-by-space='column -t -s '' '' '
+
+# Tabluate TSV (cat foo.tsv | tabulate-by-tab)
+alias tabulate-by-tab="gsed 's/\t\t/\t-\t/g' \
+    | column -t -s \$'\t'"
+
+# Tabluate CSV (cat foo.csv | tabulate-by-comma)
+# "gsed -r ':loop;/,,/{s//,-,/g;b loop}'"
+alias stabulate-by-comma="gsed -r 's/^,/-,/g' \
+    | gsed -r ':loop;/,,/{s//,-,/g;b loop}' \
+    | gsed -r 's/,$/,-/g' \
+    | column -t -s '','' "
+
+alias tabulate-by-comma="gsed 's/,,/,-,/g' | column -t -s '','' "           # Tabluate CSV (cat foo.csv | tabulate-by-comma)
 
 alias csv-to-json="python3 -c 'import csv, json, sys; print(json.dumps([dict(r) for r in csv.DictReader(sys.stdin)]))'"
 alias json-to-csv='jq -r ''(map(keys) | add | unique) as $cols | map(. as $row | $cols | map($row[.])) as $rows | $cols, $rows[] | @csv'''
@@ -507,7 +519,7 @@ function aws-datapipeline-download-definitions() {
         echo $pipelineName
         aws datapipeline get-pipeline-definition --pipeline-id $pipelineId \
             | jq '.' \
-            > "pipeline-definition-${pipelineName}"
+            > "pipeline-definition-${pipelineName}.json"
     done < <(aws datapipeline list-pipelines | jq --raw-output '.pipelineIdList[] | [.id, .name] | @csv' | strip-quotes) \
 }
 
@@ -779,6 +791,29 @@ function git-repos-recent() {
 
     git-for-each-repo recent 
 }
+
+# For each repo within the current directory, check out the repo for the specified date
+function git-repos-checkout-by-date() {
+    local date="${1}"
+
+    checkout-by-date() {
+        git rev-list -n 1 --before="${date}" origin/main | xargs -I{} git checkout {}
+    }
+
+    git-for-each-repo checkout-by-date
+}
+
+# For each repo within the current directory, check out trunk
+function git-repos-checkout-trunk() {
+    local trunk="main"
+
+    checkout-trunk() {
+        git checkout "${trunk}"
+    }
+
+    git-for-each-repo checkout-trunk
+}
+
 
 # For each repo within the current directory, grep for the argument in the
 # history
