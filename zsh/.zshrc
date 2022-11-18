@@ -1300,6 +1300,7 @@ function git-stats-top-team-committers-by-repo() {
     [ "${team}" = 'recs' ]           && teamMembers="'Anna Bladzich', 'Rich Lyne', 'Reinder Verlinde', 'Stu White', 'Tess Hoad', 'Manisha Sistum'"
     [ "${team}" = 'butter-chicken' ] && teamMembers="'Asmaa Shoala', 'Carmen Mester', 'Colin Zhang', 'Hamid Haghayegh', 'Henry Cleland', 'Karthik Jaganathan', 'Krishna', 'Rama Sane'"
     [ "${team}" = 'spirograph' ]     && teamMembers="'Paul Meyrick', 'Fraser Reid', 'Nancy Goyal', 'Richard Snoad', 'Ayce Keskinege'"
+    [ "${team}" = 'dkp' ]            && teamMembers="'Ryan Moquin', 'Prakruthy Dhoopa Harish', 'Arun Kumar Kalahastri', 'Sivapriya Ganeshbabu', 'Sai Santoshi Vindamuri', 'Suganya Moorthy'"
 
     q 'select repo_name, author, count(*) as total from git-stats.csv group by repo_name, author' \
         | q "select * from - where author in (${teamMembers})" \
@@ -1309,7 +1310,7 @@ function git-stats-top-team-committers-by-repo() {
         | tabulate-by-tab
 }
 compdef "_arguments \
-    '1:team arg:(recs butter-chicken spirograph)'" \
+    '1:team arg:(recs butter-chicken spirograph dkp)'" \
     git-stats-top-team-committers-by-repo
 
 function git-stats-authors() {
