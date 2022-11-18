@@ -164,6 +164,7 @@ brew "bats-core"                                # Bash Automated Testing System
 # Linters
 brew "aspell"                                   # Spell checker with better logic than ispell
 brew "shellcheck"                               # Static analysis and lint tool, for (ba)sh scripts
+brew "sqlfluff"                                 # SQL linter and auto-formatter for Humans
 brew "yamllint"                                 # Linter for YAML files
 
 ################################################################################
