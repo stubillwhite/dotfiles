@@ -47,6 +47,9 @@ cask 'obsidian'                                 # Markdown note management
 # APIs
 cask "insomnia"                                 # HTTP and GraphQL Client
 
+# eBooks
+brew "kindle"                                   # Kindle for Mac
+
 ################################################################################
 # Utilities
 ################################################################################
@@ -86,6 +89,7 @@ cask "scroll-reverser"                          # Tool to reverse the direction 
 # Document and image manipulation
 brew "imagemagick"                              # Tools and libraries to manipulate images in many formats
 brew "pandoc"                                   # Swiss-army knife of markup format conversion
+brew "pngpaste"                                 # Paste PNG into files
 
 # tmux
 brew "tmux"                                     # Terminal multiplexer
@@ -121,6 +125,7 @@ brew "scala"                                    # JVM-based programming language
 brew "ammonite-repl"                            # Ammonite is a cleanroom re-implementation of the Scala REPL
 
 # Haskell
+brew "ghcup"                                    # Installer for the general purpose language Haskell
 brew "cabal-install"                            # Command-line interface for Cabal and Hackage
 brew "haskell-stack"                            # The Haskell Tool Stack
 
