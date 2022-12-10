@@ -1,0 +1,12 @@
+# /Users/white1/.config/tmuxinator/spotify.yml
+
+name: spotify
+root: ~/Dev/my-stuff/spotify-playlist-builder
+
+windows:
+  - spotify:
+      layout: even-vertical
+      panes:
+        - main:
+            - py-env-activate
+            - source ./setup-environment.sh
