@@ -855,7 +855,7 @@ function git-repos-contributor-stats() {
 # Build a list of authors for all repos within the current directory
 function git-repos-authors() {
     authors() {
-        git --no-pager log | grep "Author:" | sort | uniq
+        git --no-pager log | grep "^Author:" | sort | uniq
     }
 
     git-for-each-repo authors \
