@@ -29,6 +29,7 @@ cask "dropbox"                                  # Client for the Dropbox cloud s
 cask "firefox"                                  # Mozilla Firefox
 cask "google-chrome"                            # Cross-platform web browser
 cask "iterm2"                                   # Terminal emulator as alternative to Apple's Terminal app
+cask "syncthing"                                # Open source continuous file synchronization application
 
 # Screen capture
 cask "licecap"                                  # Animated screen capture application
