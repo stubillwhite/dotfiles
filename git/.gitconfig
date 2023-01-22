@@ -59,34 +59,37 @@
     cmd = nvim -d $BASE $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'
 
 [includeIf "gitdir:~/Dev/my-stuff/"]
-    path = ~/Dev/my-stuff/.gitconfig
+    path = ~/Dev/my-stuff/dotfiles/git/personal-config/.gitconfig
+
+[includeIf "gitdir:~/Dropbox/Private/obsidian/"]
+    path = ~/Dev/my-stuff/dotfiles/git/personal-config/.gitconfig
 
 [includeIf "gitdir:~/Dev/recommenders/"]
-    path = ~/Dev/recommenders/.gitconfig
+    path = ~/Dev/my-stuff/dotfiles/git/work-config/.gitconfig
 
 [includeIf "gitdir:~/Dev/code-review/recommenders/"]
-    path = ~/Dev/recommenders/.gitconfig
+    path = ~/Dev/my-stuff/dotfiles/git/work-config/.gitconfig
 
 [includeIf "gitdir:~/Dev/artifactory-migration/recommenders/"]
-    path = ~/Dev/recommenders/.gitconfig
+    path = ~/Dev/my-stuff/dotfiles/git/work-config/.gitconfig
 
 [includeIf "gitdir:~/Dev/code-review/mentoring/"]
-    path = ~/Dev/recommenders/.gitconfig
+    path = ~/Dev/my-stuff/dotfiles/git/work-config/.gitconfig
 
 [includeIf "gitdir:~/Dev/newsflo/"]
-    path = ~/Dev/recommenders/.gitconfig
+    path = ~/Dev/my-stuff/dotfiles/git/work-config/.gitconfig
 
 [includeIf "gitdir:~/Dev/vcs-tools/"]
-    path = ~/Dev/recommenders/.gitconfig
+    path = ~/Dev/my-stuff/dotfiles/git/work-config/.gitconfig
 
 [includeIf "gitdir:~/Dev/scratchpad/"]
-    path = ~/Dev/recommenders/.gitconfig
+    path = ~/Dev/my-stuff/dotfiles/git/work-config/.gitconfig
 
 [includeIf "gitdir:~/Dev/labs/"]
-    path = ~/Dev/recommenders/.gitconfig
+    path = ~/Dev/my-stuff/dotfiles/git/work-config/.gitconfig
 
 [includeIf "gitdir:~/Dev/kedro/"]
-    path = ~/Dev/recommenders/.gitconfig
+    path = ~/Dev/my-stuff/dotfiles/git/work-config/.gitconfig
 
 [mailmap]
 	file = ~/.mailmap
