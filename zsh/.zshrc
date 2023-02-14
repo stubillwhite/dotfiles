@@ -13,7 +13,7 @@ fpath=(~/.zsh-completion $fpath)
 # Only regenerate .zcompdump once every day
 autoload -Uz compinit
 for dump in ~/.zcompdump(N.mh+24); do
-  compinit
+    compinit
 done
 compinit -C
 
@@ -57,11 +57,11 @@ setopt menu_complete            # Tab autocompletes first option even if ambiguo
 # Aliases                                                                   {{{1
 # ==============================================================================
 
-if_darwin && {
+if-darwin && {
     alias gif-recorder='/Applications/LICEcap.app/Contents/MacOS/licecap'
 }
 
-if_linux && {
+if-linux && {
     alias gsed='sed'
     alias gawk='awk'
     alias open='xdg-open'
@@ -578,6 +578,21 @@ export FZF_DEFAULT_COMMAND="fd --exclude={.git,.idea,.vscode,target,node_modules
 
 # Git                               {{{2
 # ======================================
+
+export GIT_TRUNK=main
+
+function git-set-trunk() {
+    if [[ $# -ne 1 ]] ; then
+        echo 'Usage: git-set-trunk GIT_TRUNK'
+        return 1
+    fi
+
+    export GIT_TRUNK=$1
+    echo "GIT_TRUNK set to ${GIT_TRUNK}"
+}
+compdef "_arguments \
+    '1:branch arg:(main master)'" \
+    git-set-trunk
 
 # For each directory within the current directory, if the directory is a Git
 # repository then execute the supplied function 
@@ -1233,7 +1248,7 @@ HEREDOC
 HEREDOC
 
     q -d ',' -H -O "${sqlScript}" \
-        > git-stats.csv
+        > .git-stats.csv
 
     rm "${hashToAuthorCsvFilename}" "${hashToFileCsvFilename}"
 }
@@ -1243,7 +1258,7 @@ function git-repos-generate-stats() {
         echo "Getting stats for $(basename $PWD)"
         git-generate-stats
 
-        local fnam="git-stats.csv"
+        local fnam=".git-stats.csv"
 
         if [[ -f "../${fnam}" ]]; then
             cat "${fnam}" | tail -n +2 >> "../${fnam}"
@@ -1254,13 +1269,13 @@ function git-repos-generate-stats() {
         rm "${fnam}"
     }
 
-    rm -f "git-stats.csv"
+    rm -f ".git-stats.csv"
 
     git-for-each-repo stats
 }
 
 function _git_stats_authors() {
-    q 'select distinct author from git-stats.csv limit 100' \
+    q 'select distinct author from .git-stats.csv limit 100' \
         | tail -n +2 \
         | sed -r 's/^(.*)$/"\1"/g' \
         | tr '\n' ' '
@@ -1275,7 +1290,7 @@ function whitetest() {
     local authorName="$1"
     local cutoff=$(gdate --iso-8601=seconds -u -d "70 days ago")
 
-    q "select * from git-stats.csv where commit_date > '"${cutoff}"'" \
+    q "select * from .git-stats.csv where commit_date > '"${cutoff}"'" \
         | q "select * from - where author in ('"${authorName}"')" \
         | q "select repo_name, file, commit_date from - order by commit_date desc" \
         | q -D "$(printf '\t')" 'select * from -' \
@@ -1301,8 +1316,9 @@ function git-stats-top-team-committers-by-repo() {
     [ "${team}" = 'butter-chicken' ] && teamMembers="'Asmaa Shoala', 'Carmen Mester', 'Colin Zhang', 'Hamid Haghayegh', 'Henry Cleland', 'Karthik Jaganathan', 'Krishna', 'Rama Sane'"
     [ "${team}" = 'spirograph' ]     && teamMembers="'Paul Meyrick', 'Fraser Reid', 'Nancy Goyal', 'Richard Snoad', 'Ayce Keskinege'"
     [ "${team}" = 'dkp' ]            && teamMembers="'Ryan Moquin', 'Prakruthy Dhoopa Harish', 'Arun Kumar Kalahastri', 'Sivapriya Ganeshbabu', 'Sai Santoshi Vindamuri', 'Suganya Moorthy'"
+    [ "${team}" = 'cef' ]            && teamMembers="'Saad Rashid', 'Benoit Pasquereau', 'Adam Ladly', 'Jeremy Scadding', 'Anique von Berne', 'Nishant Singh', 'John Smith', 'Dominicano Luciano', 'Kanaga Ganesan', 'Akhil Babu', 'Gintautas Sulskus'"
 
-    q 'select repo_name, author, count(*) as total from git-stats.csv group by repo_name, author' \
+    q 'select repo_name, author, count(*) as total from .git-stats.csv group by repo_name, author' \
         | q "select * from - where author in (${teamMembers})" \
         | q 'select *, row_number() over (partition by repo_name order by total desc) as idx from -' \
         | q 'select repo_name, author, total from - where idx <= 5' \
@@ -1314,8 +1330,14 @@ compdef "_arguments \
     git-stats-top-team-committers-by-repo
 
 function git-stats-authors() {
-    q 'select distinct author from git-stats.csv order by author asc' \
+    q 'select distinct author from .git-stats.csv order by author asc' \
         | tail -n +2 
+}
+
+function git-stats-most-recent-commits-by-authors() {
+    q 'select commit_date, author from .git-stats.csv group by author order by commit_date desc' \
+        | q -D "$(printf '\t')" 'select * from -' \
+        | tabulate-by-tab
 }
 
 function git-stats-total-commits-by-author() {
@@ -1326,7 +1348,7 @@ function git-stats-total-commits-by-author() {
 
     local authorName=$1
 
-    q 'select repo_name, author, count(*) as total from git-stats.csv group by repo_name, author' \
+    q 'select repo_name, author, count(*) as total from .git-stats.csv group by repo_name, author' \
         | q "select repo_name, total from - where author in ('"${authorName}"')" \
         | q -D "$(printf '\t')" 'select * from -' \
         | tabulate-by-tab
@@ -1340,7 +1362,7 @@ function git-stats-list-commits-by-author() {
 
     local authorName=$1
 
-    q "select * from git-stats.csv where author in ('"${authorName}"')" \
+    q "select * from .git-stats.csv where author in ('"${authorName}"')" \
         | q "select distinct repo_name, commit_date, comment from - order by commit_date desc" \
         | q -D "$(printf '\t')" 'select * from -' \
         | tabulate-by-tab
@@ -1354,7 +1376,7 @@ function git-stats-total-commits-by-author-per-month() {
 
     local authorName=$1
 
-    q "select * from git-stats.csv where author in ('"${authorName}"')" \
+    q "select * from .git-stats.csv where author in ('"${authorName}"')" \
         | q "select distinct repo_name, commit_date from -" \
         | q "select strftime('%Y-%m', commit_date) as 'year_month', count(*) as total from - group by year_month order by year_month desc" \
         | q -D "$(printf '\t')" 'select * from -' \
@@ -1362,10 +1384,22 @@ function git-stats-total-commits-by-author-per-month() {
 }
 
 function git-stats-last-commits-by-repo() {
-    q -O "select repo_name, max(commit_date) as last_commit from git-stats.csv where file not in ('version.sbt') group by repo_name order by last_commit desc" \
+    q -O "select repo_name, max(commit_date) as last_commit from .git-stats.csv where file not in ('version.sbt') group by repo_name order by last_commit desc" \
         | q -D "$(printf '\t')" 'select * from -' \
         | tabulate-by-tab
 }
+
+function java-version() {
+    if [[ $# -ne 1 ]] ; then
+        echo 'Usage: java-version JVM'
+        return 1
+    fi
+
+    export JAVA_HOME=/Library/Java/JavaVirtualMachines/${1}/Contents/Home/
+}
+compdef '_alternative \
+    "arguments:custom arg:(adoptopenjdk-11.jdk adoptopenjdk-8.jdk temurin-8.jdk)"' \
+    java-version
 
 function install-java-certificate() {
     if [[ $# -ne 1 ]] ; then
