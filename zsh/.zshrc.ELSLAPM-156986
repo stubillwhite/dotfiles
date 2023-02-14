@@ -357,25 +357,6 @@ function recs-reviewers-glue-job-status {
         | highlight red FAILED
 }
 
-# Lambda timings
-# ==============================================================================
-
-function recs-reviewers-lambda-timings() {
-    if [[ $# -ne 1 ]]; then
-        echo "Usage: recs-reviewers-lambda-timings (dev|staging|live)"
-    else
-        local recsEnv=$1
-        awslogs get --no-group --no-stream --timestamp -s "5m" /aws/lambda/recs-reviewers-recommender-lambda-${recsEnv} \
-            | grep -e 'Instrumentation\$:' \
-            | gsed -r 's/^.* (.+) - ([0-9]+) ms$/\1 \2/' \
-            | datamash --sort --field-separator=' ' --round=1 --header-out -g 1 min 2 mean 2 max 2 \
-            | column -s ' ' -t
-    fi
-}
-compdef "_arguments \
-    '1:environment arg:(dev staging live)'" \
-    recs-reviewers-lambda-timings
-
 # SonarQube                                                                 {{{1
 # ==============================================================================
 
@@ -500,3 +481,231 @@ function recs-build-and-publish-jar() {
     fi
 }
 
+# Reviewer Recommender                                                      {{{1
+# ==============================================================================
+
+function rr-quality-metrics() {
+    aws-recs-login live > /dev/null
+
+    latestRun=$(aws s3 ls s3://com-elsevier-recs-live-reviewers/quality-metrics/metrics/demographic-parities/gender/selection-rates/ \
+        | tail -n 1 \
+        | gsed -r 's/.* PRE (.+)\/$/\1/')
+
+    runId=${latestRun}
+
+    echo ${runId}
+    echo
+
+    metrics=(
+        demographic-parities
+        equal-opportunity-statistics
+    )
+
+    characteristics=(
+        gender
+        geographicallocation
+        seniority
+    )
+
+    subMetrics=(
+        selection-rate-parities
+        selection-rates
+    )
+
+    for characteristic in "${characteristics[@]}"
+    do
+        for metric in "${metrics[@]}"
+        do
+            for subMetric in "${subMetrics[@]}"
+            do
+                echo "${metric}/${characteristic}/${subMetric}"
+                echo
+                jsonFile=$(aws s3 ls s3://com-elsevier-recs-live-reviewers/quality-metrics/metrics/${metric}/${characteristic}/${subMetric}/${runId}/data/ \
+                    | grep 'part-' \
+                    | gsed -r 's/.* (part-.+\.json)$/\1/g')
+
+                if [[ "${subMetric}" = 'selection-rates' ]]; then
+                    aws s3 cp s3://com-elsevier-recs-live-reviewers/quality-metrics/metrics/${metric}/${characteristic}/${subMetric}/${runId}/data/${jsonFile} - \
+                        | jq -s '.' \
+                        | json-to-csv \
+                        | strip-quotes \
+                        | tabulate-by-comma
+                else
+                    aws s3 cp s3://com-elsevier-recs-live-reviewers/quality-metrics/metrics/${metric}/${characteristic}/${subMetric}/${runId}/data/${jsonFile} - \
+                        | jq '[.label, .selectionRateA.model, .selectionRateParity]' \
+                        | jq -s '.' \
+                        | json-to-csv \
+                        | tail -n +2 \
+                        | strip-quotes \
+                        | tabulate-by-comma
+                fi
+                echo
+            done
+        done
+    done
+}
+
+function rr-lambda-performance() {
+    if [[ $# -ne 1 ]]; then
+        echo "Usage: rr-lambda-performance (dev|staging|live)"
+        return 1
+    fi
+
+    local recsEnv="${1}"
+    aws-recs-login "${recsEnv}" > /dev/null
+
+    # Pull out manuscript ID, stage, and duration from the logs
+    # Ignore JDBCService initialisation because there is no manuscript ID associated to group by
+    local timingData=$(
+        awslogs get --no-group --no-stream --timestamp -s "5m" /aws/lambda/recs-reviewers-recommender-lambda-${recsEnv} \
+            | grep -e 'Instrumentation\$:' \
+            | grep -v 'JDBCService#initialise' \
+            | gsed -r 's/^.* \[(.+)\] Instrumentation\$:.+ (.+) - ([0-9]+) ms$/\1 \2 \3/' \
+            | (echo 'ManuscriptId' 'Stage' 'Duration' && cat)
+    )
+
+    # Sum stages for each manuscript, so multiple invocations of the same operation are added together
+    local totalPerStage=$(
+        echo ${timingData} \
+            | datamash --sort --field-separator=' ' --header-in -g ManuscriptId,Stage sum Duration \
+            | (echo 'ManuscriptId' 'Stage' 'TotalDuration' && cat)
+    )
+
+    # Display min, mean, and max for each stage
+    local statsPerStage=$(
+        echo ${totalPerStage} \
+            | datamash --sort --field-separator=' ' --header-in --round=1 -g Stage min TotalDuration mean TotalDuration max TotalDuration \
+            | (echo 'Stage' 'Min' 'Mean' 'Max' && cat) \
+    )
+    echo ${statsPerStage} | tabulate-by-space
+
+    # Display min, mean, and max total time
+    echo
+    echo ${statsPerStage} \
+        | datamash --sort --field-separator=' ' --header-in --round=1 sum Min sum Mean sum Max \
+        | (echo 'TotalMin' 'TotalMean' 'TotalMax' && cat) \
+        | tabulate-by-space
+
+    # Display ElasticSearch configuration for reference
+    echo
+    aws es describe-elasticsearch-domain --domain-name "recs-reviewers" \
+        | jq -r '["Instance", "InstanceCount", "Master", "MasterCount", "VolumeType", "IOPs"], (.DomainStatus | [(.ElasticsearchClusterConfig | .InstanceType, .InstanceCount, .DedicatedMasterType, .DedicatedMasterCount), (.EBSOptions | .VolumeType, .Iops)]) | @tsv' \
+        | tabulate-by-tab
+}
+compdef "_arguments \
+    '1:environment arg:(dev staging live)'" \
+    rr-lambda-performance
+
+function rr-error-queue-depth-live() {
+    aws-recs-login live > /dev/null
+
+    aws sqs get-queue-attributes \
+        --queue-url https://sqs.us-east-1.amazonaws.com/589287149623/recs_rev_recommender_lambda_errors_dlq \
+        --attribute-names All \
+        | jq -r '.Attributes.ApproximateNumberOfMessages'
+}
+
+function rr-lambda-iterator-age() {
+    if [[ $# -ne 1 ]]; then
+        echo "Usage: rr-lambda-iterator-age (dev|staging|live)"
+        return 1
+    fi
+
+    local recsEnv="${1}"
+    aws-recs-login "${recsEnv}" > /dev/null
+
+    echo 'Iterator age at' $(date --iso-8601=seconds)
+    echo
+    aws cloudwatch get-metric-statistics \
+        --namespace 'AWS/Lambda' \
+        --dimensions Name=FunctionName,Value=recs-reviewers-recommender-lambda-${recsEnv} \
+        --metric-name 'IteratorAge' \
+        --start-time $(date --iso-8601=seconds --date='45 minutes ago') \
+        --end-time   $(date --iso-8601=seconds) \
+        --period 300 \
+        --statistics Maximum \
+        | jq -r '["Time", "Seconds", "Minutes", "Hours"], (.Datapoints | sort_by(.Timestamp) | .[] | [.Timestamp, .Maximum/1000, .Maximum/(60 * 1000), .Maximum/(60 * 60 * 1000)]) | @tsv' \
+        | tabulate-by-tab
+}
+compdef "_arguments \
+    '1:environment arg:(dev staging live)'" \
+    rr-lambda-iterator-age
+
+function rr-data-pump-lambda-submitted-manuscripts() {
+    if [[ $# -ne 1 ]]; then
+        echo "Usage: rr-data-pump-lambda-submitted-manuscripts (dev|staging|live)"
+        return 1
+    fi
+
+    local recsEnv="${1}"
+    aws-recs-login "${recsEnv}" > /dev/null
+
+    local KINESIS_STREAM_NAME="recs-reviewers-submitted-manuscripts-stream-${recsEnv}"
+
+    local SHARD_ITERATOR=$(aws kinesis get-shard-iterator \
+        --shard-id shardId-000000000000 \
+        --shard-iterator-type TRIM_HORIZON \
+        --stream-name $KINESIS_STREAM_NAME \
+        --query 'ShardIterator')
+
+    aws kinesis get-records --shard-iterator $SHARD_ITERATOR \
+        | jq -r '.Records[] | .Data | @base64d' \
+        | jq -r '.'
+}
+compdef "_arguments \
+    '1:environment arg:(dev staging live)'" \
+    rr-data-pump-lambda-submitted-manuscripts
+
+function rr-recent-recommendations() {
+    if [[ $# -ne 1 ]]; then
+        echo "Usage: rr-recent-recommendations (dev|staging|live)"
+        return 1
+    fi
+
+    local recsEnv="${1}"
+    aws-recs-login "${recsEnv}" > /dev/null
+
+    awslogs get --no-group --no-stream --timestamp "/aws/lambda/recs-reviewers-recommender-lambda-${recsEnv}" -f 'ManuscriptService' \
+        | gsed -r 's/.* Manuscript id: (.+)$/\1/g' \
+        | grep -e '^[^ ]\+$'
+}
+compdef "_arguments \
+    '1:environment arg:(dev staging live)'" \
+    rr-recent-recommendations
+
+function rr-lambda-invocations() {
+    if [[ $# -ne 1 ]]; then
+        echo "Usage: rr-lambda-invocations (dev|staging|live)"
+        return 1
+    fi
+
+    local recsEnv="${1}"
+    aws-recs-login "${recsEnv}" > /dev/null
+
+    lambdas=(
+        recs-rev-reviewers-data-pump-lambda-${recsEnv}
+        recs-rev-manuscripts-data-pump-lambda-${recsEnv}
+        recs-reviewers-recommender-lambda-${recsEnv}
+    )
+
+    for lambda in "${lambdas[@]}"
+    do
+        echo "${lambda}"
+        aws cloudwatch get-metric-statistics \
+            --namespace 'AWS/Lambda' \
+            --dimensions Name=FunctionName,Value="${lambda}" \
+            --metric-name 'Invocations' \
+            --start-time $(date --iso-8601=seconds --date='7 days ago') \
+            --end-time   $(date --iso-8601=seconds) \
+            --period $(calc '60 * 60 * 24') \
+            --statistics Sum \
+            | jq -r '["Time", "Total"], (.Datapoints | sort_by(.Timestamp) | .[] | [.Timestamp, .Sum]) | @csv' \
+            | gsed 's/"//g' \
+            | gsed "s/,,/,-,/g" \
+            | column -t -s ','
+        echo
+    done
+}
+compdef "_arguments \
+    '1:environment arg:(dev staging live)'" \
+    rr-lambda-invocations

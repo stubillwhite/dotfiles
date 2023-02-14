@@ -126,12 +126,26 @@ alias strip-ansi="perl -pe 's/\x1b\[[0-9;]*[mG]//g'"                        # St
 alias strip-quotes='gsed "s/[''\"]//g"'                                     # Strip all quotes (some-cmd | strip-quotes)
 alias sum-of="paste -sd+ - | bc"                                            # Sum numbers from stdin (some-cmd | sum-of)
 
-# Tabluate CSV (cat foo.txt | tabulate-by-space)
-alias tabulate-by-space='column -t -s '' '' '
+# Tabluate TSV
+# cat foo.tsv | tabulate-by-tab
+function tabulate-by-tab() {
+    gsed 's/\t\t/\t-\t/g' \
+        | column -t -s \$'\t'
+}
 
-# Tabluate TSV (cat foo.tsv | tabulate-by-tab)
-alias tabulate-by-tab="gsed 's/\t\t/\t-\t/g' \
-    | column -t -s \$'\t'"
+# Tabluate CSV
+# cat foo.csv | tabulate-by-comma
+function tabulate-by-comma() {
+    gsed 's/,,/,-,/g' \
+        | column -t -s '',''
+}
+
+# Tabluate by space
+# cat foo.txt | tabulate-by-space
+function tabulate-by-space() {
+    column -t -s '' '' 
+}
+
 
 # Tabluate CSV (cat foo.csv | tabulate-by-comma)
 # "gsed -r ':loop;/,,/{s//,-,/g;b loop}'"
@@ -139,8 +153,6 @@ alias stabulate-by-comma="gsed -r 's/^,/-,/g' \
     | gsed -r ':loop;/,,/{s//,-,/g;b loop}' \
     | gsed -r 's/,$/,-/g' \
     | column -t -s '','' "
-
-alias tabulate-by-comma="gsed 's/,,/,-,/g' | column -t -s '','' "           # Tabluate CSV (cat foo.csv | tabulate-by-comma)
 
 alias csv-to-json="python3 -c 'import csv, json, sys; print(json.dumps([dict(r) for r in csv.DictReader(sys.stdin)]))'"
 alias json-to-csv='jq -r ''(map(keys) | add | unique) as $cols | map(. as $row | $cols | map($row[.])) as $rows | $cols, $rows[] | @csv'''
@@ -550,10 +562,45 @@ function aws-secrets() {
     done <<< "${secretsNames}"
 }
 
+# Turn an AWS hostname into an IP
 function aws-ip() {
     local hostname=$1
     echo "${hostname}" | sed -r 's/ip-(.+)\.ec2\.internal/\1/g' | sed -r 's/-/./g'
 }
+
+function aws-sagemaker-endpoints() {
+    if [[ $# -ne 1 ]]; then
+        echo "Usage: aws-sagemaker-endpoints (dev|staging|live)"
+        return 1
+    fi
+
+    local recsEnv="${1}"
+    aws-recs-login "${recsEnv}" > /dev/null
+
+    aws sagemaker list-endpoints \
+        | jq -r '["EndpointName", "CreationTime"], (.Endpoints[] | [.EndpointName, .CreationTime]) | @tsv' \
+        | tabulate-by-tab
+}
+compdef "_arguments \
+    '1:environment arg:(dev staging live)'" \
+    aws-sagemaker-endpoints
+
+function aws-feature-groups() {
+    if [[ $# -ne 1 ]]; then
+        echo "Usage: aws-feature-groups (dev|staging|live)"
+        return 1
+    fi
+
+    local recsEnv="${1}"
+    aws-recs-login "${recsEnv}" > /dev/null
+
+    aws sagemaker list-feature-groups \
+        | jq -r '["Name", "Creation time", "Status", "Offline store status"], (.FeatureGroupSummaries[] | [.FeatureGroupName, .CreationTime, .FeatureGroupStatus, .OfflineStoreStatus.Status]) | @tsv' \
+        | tabulate-by-tab
+}
+compdef "_arguments \
+    '1:environment arg:(dev staging live)'" \
+    aws-feature-groups
 
 # Docker                            {{{2
 # ======================================
