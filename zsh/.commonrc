@@ -1,37 +1,5 @@
 # vim:fdm=marker
 
-# Conditional inclusion                                                     {{{1
-# ==============================================================================
-
-# Usage: if_darwin && { echo foo }
-function if_darwin() { [[ "$(uname)" == "Darwin" ]]; }
-function if_linux() { [[ "$(uname)" == "Linux" ]]; }
-
-# Source script if it exists
-# Usage: source_if_exists ".my-functions"
-function source_if_exists() { 
-    local fnam=$1
-
-    if [[ -s "${fnam}" ]]; then
-        source "${fnam}"
-    fi
-}
-
-# Source script if it exists
-# Usage: source_or_warn ".my-functions"
-function source_or_warn() { 
-    local fnam=$1
-    local msg=$2
-
-    if [[ -s "${fnam}" ]]; then
-        source "${fnam}"
-    else
-        echo "Skipping sourcing ${fnam} as it does not exist"
-    fi
-}
-
-source_if_exists "$HOME/Dev/my-stuff/shell-utils/.shell-helper-functions"
-
 # TODO: Move these to .zshrc
 # General settings                                                          {{{1
 # ==============================================================================
