@@ -130,7 +130,7 @@ alias sum-of="paste -sd+ - | bc"                                            # Su
 # cat foo.tsv | tabulate-by-tab
 function tabulate-by-tab() {
     gsed 's/\t\t/\t-\t/g' \
-        | column -t -s \$'\t'
+        | column -t -s $'\t'
 }
 
 # Tabluate CSV
