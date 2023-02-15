@@ -6,7 +6,9 @@ k9s:
   logoless: false
   crumbsless: false
   readOnly: false
+  noExitOnCtrlC: false
   noIcons: false
+  skipLatestRevCheck: false
   logger:
     tail: 100
     buffer: 5000
@@ -14,27 +16,28 @@ k9s:
     fullScreenLogs: false
     textWrap: false
     showTime: false
-  currentContext: recs-eks-main-live
-  currentCluster: recs-eks-main-live
+  currentContext: recs-eks-main-dev
+  currentCluster: recs-eks-main-dev
   clusters:
-    recs-eks-main-live:
+    recs-eks-main-dev:
       namespace:
         active: all
+        lockFavorites: false
         favorites:
-        - all
         - default
       view:
         active: po
       featureGates:
         nodeShell: false
       shellPod:
-        image: busybox:1.31
+        image: busybox:1.35.0
         command: []
         args: []
         namespace: default
         limits:
           cpu: 100m
           memory: 100Mi
+        labels: {}
       portForwardAddress: localhost
   thresholds:
     cpu:
