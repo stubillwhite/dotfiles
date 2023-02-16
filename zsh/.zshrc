@@ -1321,6 +1321,12 @@ function git-repos-generate-stats() {
     git-for-each-repo stats
 }
 
+function git-mailmap-update() {
+    git-repos-authors > .authors.txt
+    vim -d .authors.txt ~/.mailmap
+}
+
+# TODO: WIP - autoecomplete author names
 function _git_stats_authors() {
     q 'select distinct author from .git-stats.csv limit 100' \
         | tail -n +2 \
@@ -1328,6 +1334,7 @@ function _git_stats_authors() {
         | tr '\n' ' '
 }
 
+# TODO: WIP
 function whitetest() {
     if [[ $# -ne 1 ]] ; then
         echo 'Usage: git-stats-recent-commits-by-author AUTHOR'
