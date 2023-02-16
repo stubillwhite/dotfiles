@@ -21,9 +21,6 @@ cask 'microsoft-teams'                          # Microsoft Teams is your hub fo
 tap 'eddieantonio/eddieantonio'
 brew 'eddieantonio/eddieantonio/imgcat'         # It's like cat(1), but for images.
 
-tap 'saulpw/vd'
-brew 'saulpw/vd/visidata'                       # Terminal utility for exploring and arranging tabular data
-
 tap 'rockymadden/rockymadden'
 brew 'rockymadden/rockymadden/slack-cli'        # Powerful Slack CLI via pure bash
 
