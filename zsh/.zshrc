@@ -1028,7 +1028,7 @@ function git-large-objects() {
     }
 
 # Rebase the current branch on trunk
-function git-rebase-branch() {
+function git-rebase-branch-on-trunk() {
     local trunk='main'
 
     git branch --show-current \
@@ -1037,7 +1037,7 @@ function git-rebase-branch() {
 }
 
 # Squash the commits on the current branch
-function git-squash-rebase() {
+function git-squash-commits-on-current-branch() {
     local trunk='main'
     git rebase -i ${trunk}
 }
@@ -1366,7 +1366,7 @@ function git-stats-top-team-committers-by-repo() {
     fi
 
     local team=$1
-    [ "${team}" = 'recs' ]           && teamMembers="'Anna Bladzich', 'Rich Lyne', 'Reinder Verlinde', 'Stu White', 'Tess Hoad', 'Manisha Sistum'"
+    [ "${team}" = 'recs' ]           && teamMembers="'Anna Bladzich', 'Rich Lyne', 'Reinder Verlinde', 'Stu White', 'Tess Hoad', 'Manisha Sistum', 'Andrew Nguyen'"
     [ "${team}" = 'butter-chicken' ] && teamMembers="'Asmaa Shoala', 'Carmen Mester', 'Colin Zhang', 'Hamid Haghayegh', 'Henry Cleland', 'Karthik Jaganathan', 'Krishna', 'Rama Sane'"
     [ "${team}" = 'spirograph' ]     && teamMembers="'Paul Meyrick', 'Fraser Reid', 'Nancy Goyal', 'Richard Snoad', 'Ayce Keskinege'"
     [ "${team}" = 'dkp' ]            && teamMembers="'Ryan Moquin', 'Prakruthy Dhoopa Harish', 'Arun Kumar Kalahastri', 'Sivapriya Ganeshbabu', 'Sai Santoshi Vindamuri', 'Suganya Moorthy'"
@@ -1380,7 +1380,7 @@ function git-stats-top-team-committers-by-repo() {
         | tabulate-by-tab
 }
 compdef "_arguments \
-    '1:team arg:(recs butter-chicken spirograph dkp)'" \
+    '1:team arg:(recs butter-chicken spirograph dkp cef)'" \
     git-stats-top-team-committers-by-repo
 
 function git-stats-authors() {
@@ -1438,7 +1438,7 @@ function git-stats-total-commits-by-author-per-month() {
 }
 
 function git-stats-last-commits-by-repo() {
-    q -O "select repo_name, max(commit_date) as last_commit from .git-stats.csv where file not in ('version.sbt') group by repo_name order by last_commit desc" \
+    q -O "select max(commit_date) as last_commit, repo_name from .git-stats.csv where file not in ('version.sbt') group by repo_name order by last_commit desc" \
         | q -D "$(printf '\t')" 'select * from -' \
         | tabulate-by-tab
 }
@@ -1485,3 +1485,18 @@ function install-java-certificate() {
     done
 }
 
+function certificate-expiry-curl() {
+    if [[ $# -ne 1 ]] ; then
+        echo 'Usage: certificate-expiry-curl HOSTNAME'
+        return 1
+    fi
+    curl -Iv --stderr - "https://${1}" | grep "expire date"
+}
+
+function certificate-expiry-openssl() {
+    if [[ $# -ne 1 ]] ; then
+        echo 'Usage: certificate-expiry-openssl HOSTNAME'
+        return 1
+    fi
+    echo Q | openssl s_client -connect "${1}":443 | openssl x509 -noout -dates
+}

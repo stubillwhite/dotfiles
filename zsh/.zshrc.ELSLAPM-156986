@@ -311,13 +311,15 @@ compdef "_arguments \
 
 function recs-reviewers-dashboards() {
     # Obtain the dashboard's GUID: 
-    #  - Click the  icon by the dashboard's name to access the See metadata and manage tags modal and see the dashboard's GUID.
+    #  - Click the "tag" icon by the dashboard's name to access the See metadata and manage tags modal and see the dashboard's GUID.
     local dashboards=(
         "MjA5OTI0M3xWSVp8REFTSEJPQVJEfGRhOjE3Mzg1Njg"   # https://onenr.io/0MRNqLGZGwn
         "MjA5OTI0M3xWSVp8REFTSEJPQVJEfGRhOjE3Mzg1NzA"   # https://onenr.io/0nQx3vAX5jV
         "MjA5OTI0M3xWSVp8REFTSEJPQVJEfGRhOjE3Mzg1Njk"   # https://onenr.io/0VjYnK7ZNQ0
         "MjA5OTI0M3xWSVp8REFTSEJPQVJEfGRhOjkxOTY2MA"    # https://onenr.io/0BQ1p61dbjx
-        "MjA5OTI0M3xWSVp8REFTSEJPQVJEfGRhOjE3MDM2NjA"   # https://onenr.io/02R5Nanr1jb
+        "MjA5OTI0M3xWSVp8REFTSEJPQVJEfGRhOjI4NTYzNTc"   # https://onenr.io/0bRKaO7GzQE
+        "MjA5OTI0M3xWSVp8REFTSEJPQVJEfDEwMDA3MTc"       # https://onenr.io/0vwBpGeg1jp
+        "MjA5OTI0M3xWSVp8REFTSEJPQVJEfGRhOjQ1MDIzMQ"    # https://onenr.io/0VjYMox9Ej0
     )
 
     for dashboard in $dashboards[@]; do
@@ -459,7 +461,12 @@ function aws-ec2-instance-limits() {
 }
 
 function active-directory-service-user-info() {
-    dscl "/Active Directory/SCIENCE/All Domains" read "/Users/white1"
+    if [[ $# -ne 1 ]]; then
+        echo "Usage: active-directory-service-user-info USERNAME"
+        return 1
+    fi
+    dscl "/Active Directory/SCIENCE/All Domains" read "/Users/${1}"
+    echo "For more detailed information open the 'Directory Utility' app"
 }
 
 function recs-build-and-publish-jar() {
