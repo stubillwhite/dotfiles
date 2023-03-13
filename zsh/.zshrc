@@ -143,9 +143,8 @@ function tabulate-by-comma() {
 # Tabluate by space
 # cat foo.txt | tabulate-by-space
 function tabulate-by-space() {
-    column -t -s '' '' 
+    column -t -s ' ' 
 }
-
 
 # Tabluate CSV (cat foo.csv | tabulate-by-comma)
 # "gsed -r ':loop;/,,/{s//,-,/g;b loop}'"
@@ -403,6 +402,9 @@ alias aws-newsflo-prod="aws-developer-role $SECRET_ACC_NEWSFLO_PROD ADFS-Enterpr
 
 alias aws-recs-dev="aws-developer-role $SECRET_ACC_RECS_DEV ADFS-EnterpriseAdmin aws-rap-recommendersdev"
 alias aws-recs-prod="aws-developer-role $SECRET_ACC_RECS_PROD ADFS-EnterpriseAdmin aws-rap-recommendersprod"
+
+alias aws-dkp-non-prod="aws-developer-role $SECRET_ACC_DKP_NON_PROD ADFS-EnterpriseAdmin aws-bts-dkp-np"
+alias aws-dkp-prod="aws-developer-role $SECRET_ACC_DKP_PROD ADFS-EnterpriseAdmin aws-bts-dkp-prod"
 
 function aws-recs-login() {
     if [[ $# -ne 1 ]]; then
@@ -1162,6 +1164,8 @@ SHELLCHECK_OPTS+="-e SC1091 "    # Allow sourcing files from paths that do not e
 SHELLCHECK_OPTS+="-e SC2039 "    # Allow dash in function names
 SHELLCHECK_OPTS+="-e SC2112 "    # Allow 'function' keyword
 SHELLCHECK_OPTS+="-e SC2155 "    # Allow declare and assignment in the same statement
+SHELLCHECK_OPTS+="-e SC3033 "    # Allow dashes in functionn names, not in POSIX sh
+SHELLCHECK_OPTS+="-e SC3043 "    # Allow 'local', not in POSIX sh
 
 # Python                            {{{2
 # ======================================

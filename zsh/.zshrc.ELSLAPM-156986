@@ -582,7 +582,7 @@ function rr-lambda-performance() {
     local statsPerStage=$(
         echo ${totalPerStage} \
             | datamash --sort --field-separator=' ' --header-in --round=1 -g Stage min TotalDuration mean TotalDuration max TotalDuration \
-            | (echo 'Stage' 'Min' 'Mean' 'Max' && cat) \
+            | (echo 'Stage' 'Min' 'Mean' 'Max' && cat)
     )
     echo ${statsPerStage} | tabulate-by-space
 
