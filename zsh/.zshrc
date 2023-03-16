@@ -406,6 +406,12 @@ alias aws-recs-prod="aws-developer-role $SECRET_ACC_RECS_PROD ADFS-EnterpriseAdm
 alias aws-dkp-non-prod="aws-developer-role $SECRET_ACC_DKP_NON_PROD ADFS-EnterpriseAdmin aws-bts-dkp-np"
 alias aws-dkp-prod="aws-developer-role $SECRET_ACC_DKP_PROD ADFS-EnterpriseAdmin aws-bts-dkp-prod"
 
+alias aws-cef-candi="aws-developer-role $SECRET_ACC_CEF_CANDI ADFS-EnterpriseAdmin aws-bts-candi"
+alias aws-cef-embase="aws-developer-role $SECRET_ACC_CEF_EMBASE ADFS-EnterpriseAdmin aws-cbs-cefembase"
+alias aws-cef-backup="aws-developer-role $SECRET_ACC_CEF_BACKUP ADFS-EnterpriseAdmin aws-els-cefbackup"
+alias aws-cef-prod="aws-developer-role $SECRET_ACC_CEF_PROD ADFS-EnterpriseAdmin aws-els-cefprod"
+alias aws-cef-networkstorage="aws-developer-role $SECRET_ACC_CEF_NETWORKSTORAGE ADFS-EnterpriseAdmin aws-els-cefprod"
+
 function aws-recs-login() {
     if [[ $# -ne 1 ]]; then
         echo "Usage: aws-recs-login (dev|staging|live)"
@@ -435,6 +441,12 @@ function aws-recs-login() {
 compdef "_arguments \
     '1:environment arg:(dev staging live)'" \
     aws-recs-login
+
+function aws-login() {
+    local project=$1
+    local environment=$2
+    eval "aws-${project}-${environment}"
+}
 
 # AWS helper functions              {{{2
 # ======================================
