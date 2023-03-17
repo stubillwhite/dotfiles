@@ -1,0 +1,11 @@
+# /Users/white1/.config/tmuxinator/consumption.yml
+
+name: consumption
+root: ~/Dev/kf/consumption
+
+windows:
+  - consumption:
+      layout: even-vertical
+      panes:
+        - main:
+            - git-repos-pull

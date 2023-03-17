@@ -1,0 +1,11 @@
+# /Users/white1/.config/tmuxinator/dkp.yml
+
+name: dkp
+root: ~/Dev/kf/dkp
+
+windows:
+  - dkp:
+      layout: even-vertical
+      panes:
+        - main:
+            - git-repos-pull

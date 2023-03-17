@@ -1,0 +1,11 @@
+# /Users/white1/.config/tmuxinator/cef.yml
+
+name: cef
+root: ~/Dev/kf/cef
+
+windows:
+  - cef:
+      layout: even-vertical
+      panes:
+        - main:
+            - git-repos-pull
