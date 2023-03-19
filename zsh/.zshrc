@@ -1045,9 +1045,7 @@ function git-large-objects() {
 function git-rebase-branch-on-trunk() {
     local trunk='main'
 
-    git branch --show-current \
-        | xargs git merge-base ${trunk} \
-        | xargs git rebase -i
+    git rebase ${trunk}
 }
 
 # Squash the commits on the current branch
