@@ -1043,14 +1043,29 @@ function git-large-objects() {
 
 # Rebase the current branch on trunk
 function git-rebase-branch-on-trunk() {
-    local trunk='main'
+    local trunk
 
+    if [ -z "${GIT_TRUNK}" ] ; then
+        trunk='main'
+    else
+        trunk="${GIT_TRUNK}"
+    fi
+
+    echo "Rebasing branch on ${trunk}"
     git rebase ${trunk}
 }
 
-# Squash the commits on the current branch
-function git-squash-commits-on-current-branch() {
-    local trunk='main'
+# Rebase the current branch on trunk and squash the commits
+function git-rebase-branch-on-trunk-and-squash-commits() {
+    local trunk
+
+    if [ -z "${GIT_TRUNK}" ] ; then
+        trunk='main'
+    else
+        trunk="${GIT_TRUNK}"
+    fi
+
+    echo "Rebasing branch on ${trunk} and squashing commits"
     git rebase -i ${trunk}
 }
 
@@ -1207,26 +1222,45 @@ alias sbt-no-test='sbt "set test in assembly := {}"'
 alias sbt-test='sbt test it:test'
 alias sbt-profile='sbt -Dsbt.task.timings=true'
 
-# Switch between standard and cleanroom repositories
-function sbt-use-repository () {
+# Switch artefact resolution for SBT/Maven/Ivy between configurations
+function artefact-config () {
     if [[ $# -ne 1 ]] ; then
-        echo 'Usage: sbt-use-repository (cleanroom|standard)'
+        echo 'Usage: artefact-resolution CONFIG'
         return 1
     fi
 
-    echo "Switching to ${1} repository"
+    local config="${1}"
 
-    rm ~/.sbt/repositories 
-    rm ~/.ivy2
+    local artefactConfigDir=.artefact-config
 
-    mkdir -p "$HOME/.ivy2-${1}"
+    ARTEFACT_DIRS=(
+        ".m2"
+        ".ivy2"
+        ".sbt"
+    )
 
-    ln -s "$HOME/.sbt/repositories-${1}" ~/.sbt/repositories 
-    ln -s "$HOME/.ivy2-${1}"             ~/.ivy2
+    for file in "${ARTEFACT_DIRS[@]}"
+    do
+        local src="${HOME}/${artefactConfigDir}/${config}/${file}"
+        local dst="${HOME}/${file}"
+
+        if [[ -e ${src} ]]; then
+
+            if [[ (-e ${dst}) && ! (-L "${dst}" && -d "${dst}") ]]; then
+                msg-error "Error: ${dst} exists and is not a symbolic link"
+            else
+                unlink "${dst}"
+                ln -s "${src}" "${dst}"
+            fi
+
+        else
+            msg-error "Error: ${src} not found"
+        fi
+    done
 }
 compdef "_arguments \
-    '1:environment arg:(cleanroom standard)'" \
-    sbt-use-repository
+    '1:environment arg:(recs dkp)'" \
+    artefact-config
 
 # Tmuxinator                        {{{2
 # ======================================

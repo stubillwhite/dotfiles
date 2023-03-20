@@ -105,3 +105,18 @@ export COLOR_GREEN='\033[0;32m'
 export COLOR_YELLOW='\033[0;33m'
 export COLOR_NONE='\033[0m'
 export COLOR_CLEAR_LINE='\r\033[K'
+
+# Display success message
+# msg-success "Something succeeded"
+function msg-success() {
+    declare msg=$1
+    printf "${CLEAR_LINE}${COLOR_GREEN}✔ ${msg}${COLOR_NONE}\n"
+}
+
+# Display a warning message
+# msg-error "An error occurred"
+function msg-error() {
+    declare msg=$1
+    printf "${CLEAR_LINE}${COLOR_RED}✘ ${msg}${COLOR_NONE}\n"
+}
+
