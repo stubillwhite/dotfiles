@@ -252,7 +252,7 @@ function notify-on-change() {
 # Prompt for confirmation
 # confirm "Delete [y/n]?" && rm -rf *
 function confirm() {
-    read response\?"${1:-Are you sure?} [y/N] "
+    read response\?"${1:-Are you sure? [y/n]} "
     case "$response" in
         [Yy][Ee][Ss]|[Yy]) 
             true ;;
@@ -447,6 +447,8 @@ function aws-login() {
     local environment=$2
     eval "aws-${project}-${environment}"
 }
+
+alias aws-logout=aws-clear-variables
 
 # AWS helper functions              {{{2
 # ======================================
@@ -1259,8 +1261,22 @@ function artefact-config () {
     done
 }
 compdef "_arguments \
-    '1:environment arg:(recs dkp)'" \
+    '1:environment arg:(recs recs-cleanroom dkp)'" \
     artefact-config
+
+
+function artefact-config-clean() {
+    echo 'Current artefact configuration:'
+    echo "  $(realpath ~/.m2)"
+    echo "  $(realpath ~/.ivy2)"
+    echo "  $(realpath ~/.sbt)"
+    confirm "Really remove artefacts [y/n]?" && {
+        rm -rf ~/.m2/repository/
+        rm -rf ~/.ivy2/cache/
+        rm -rf ~/.ivy2/jars/
+        rm -rf ~/.ivy2/local/
+    }
+}
 
 # Tmuxinator                        {{{2
 # ======================================
