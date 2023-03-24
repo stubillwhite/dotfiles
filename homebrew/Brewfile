@@ -108,6 +108,7 @@ brew "jplot"                                    # iTerm2 expvar/JSON monitoring 
 
 # Version control
 brew "git"                                      # Distributed revision control system
+brew "git-lfs"                                  # Git extension for versioning large files
 brew "git-secret"                               # Bash-tool to store the private data inside a git repo
 brew "gh"                                       # GitHub command-line tool
 
