@@ -1,0 +1,11 @@
+# /Users/white1/.config/tmuxinator/sherlock.yml
+
+name: sherlock
+root: ~/trash/random-repos/sherlock/
+
+windows:
+  - recs:
+      layout: even-vertical
+      panes:
+        - main:
+            - py-env-activate
