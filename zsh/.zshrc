@@ -315,15 +315,6 @@ function calc () {
     echo "scale=2;$*" | bc | sed 's/\.0*$//'
 }
 
-# Switch between SSH configs
-function ssh-config() {
-    mv ~/.ssh/config ~/.ssh/config.bak
-    ln -s "$HOME/.ssh/config-${1}" ~/.ssh/config
-}
-compdef '_alternative \
-    "arguments:custom arg:(recs newsflo)"' \
-    ssh-config
-
 # Copy my base machine config to a remote host
 function scp-skeleton-config() {
     if [[ $# -ne 1 ]] ; then
@@ -366,6 +357,94 @@ function fast-ai-tunnel-open() {
     echo "Tunnel open ${connectionFile}"
 }
 alias tunnel-fast-ai='fast-ai-tunnel-open 8888 fast-ai-server 8888'
+
+# Multi-project configurations      {{{2
+# ======================================
+
+# Switch artefact resolution for SBT/Maven/Ivy between configurations
+function artefact-config () {
+    if [[ $# -ne 1 ]] ; then
+        echo 'Usage: artefact-config CONFIG'
+        return 1
+    fi
+
+    local config="${1}"
+
+    local artefactConfigDir=.artefact-config
+
+    ARTEFACT_DIRS=(
+        ".m2"
+        ".ivy2"
+        ".sbt"
+    )
+
+    for file in "${ARTEFACT_DIRS[@]}"
+    do
+        local src="${HOME}/${artefactConfigDir}/${config}/${file}"
+        local dst="${HOME}/${file}"
+
+        if [[ -e ${src} ]]; then
+
+            if [[ (-e ${dst}) && ! (-L "${dst}" && -d "${dst}") ]]; then
+                msg-error "Error: ${dst} exists and is not a symbolic link"
+            else
+                unlink "${dst}"
+                ln -s "${src}" "${dst}"
+            fi
+
+        else
+            msg-error "Error: ${src} not found"
+        fi
+    done
+}
+compdef "_arguments \
+    '1:environment arg:(recs recs-cleanroom dkp)'" \
+    artefact-config
+
+# Clean all artefacts from the current configuration
+function artefact-config-clean() {
+    echo 'Current artefact configuration:'
+    echo "  $(realpath ~/.m2)"
+    echo "  $(realpath ~/.ivy2)"
+    echo "  $(realpath ~/.sbt)"
+    confirm "Really remove artefacts [y/n]?" && {
+        rm -rf ~/.m2/repository/
+        rm -rf ~/.ivy2/cache/
+        rm -rf ~/.ivy2/jars/
+        rm -rf ~/.ivy2/local/
+    }
+}
+
+# Switch SSH config between configurations
+function ssh-config () {
+    if [[ $# -ne 1 ]] ; then
+        echo 'Usage: ssh-config CONFIG'
+        return 1
+    fi
+
+    local config="${1}"
+
+    local configDir=.ssh-config
+
+    local src="${HOME}/${configDir}/${config}-ssh-config"
+    local dst="${HOME}/.ssh/config"
+
+    if [[ -e ${src} ]]; then
+
+        if [[ (-e ${dst}) && ! (-L "${dst}") ]]; then
+            msg-error "Error: ${dst} exists and is not a symbolic link"
+        else
+            unlink "${dst}"
+            ln -s "${src}" "${dst}"
+        fi
+
+    else
+        msg-error "Error: ${src} not found"
+    fi
+}
+compdef "_arguments \
+    '1:environment arg:(recs newsflo)'" \
+    ssh-config
 
 # Specific tools                                                            {{{1
 # ==============================================================================
@@ -1154,6 +1233,7 @@ function github-list-user-repos() {
         | strip-quotes
 }
 
+# JIRA                              {{{2
 # ======================================
 
 function jira-my-issues() {
@@ -1223,60 +1303,6 @@ export SBT_OPTS='-Xmx2G'
 alias sbt-no-test='sbt "set test in assembly := {}"'
 alias sbt-test='sbt test it:test'
 alias sbt-profile='sbt -Dsbt.task.timings=true'
-
-# Switch artefact resolution for SBT/Maven/Ivy between configurations
-function artefact-config () {
-    if [[ $# -ne 1 ]] ; then
-        echo 'Usage: artefact-resolution CONFIG'
-        return 1
-    fi
-
-    local config="${1}"
-
-    local artefactConfigDir=.artefact-config
-
-    ARTEFACT_DIRS=(
-        ".m2"
-        ".ivy2"
-        ".sbt"
-    )
-
-    for file in "${ARTEFACT_DIRS[@]}"
-    do
-        local src="${HOME}/${artefactConfigDir}/${config}/${file}"
-        local dst="${HOME}/${file}"
-
-        if [[ -e ${src} ]]; then
-
-            if [[ (-e ${dst}) && ! (-L "${dst}" && -d "${dst}") ]]; then
-                msg-error "Error: ${dst} exists and is not a symbolic link"
-            else
-                unlink "${dst}"
-                ln -s "${src}" "${dst}"
-            fi
-
-        else
-            msg-error "Error: ${src} not found"
-        fi
-    done
-}
-compdef "_arguments \
-    '1:environment arg:(recs recs-cleanroom dkp)'" \
-    artefact-config
-
-
-function artefact-config-clean() {
-    echo 'Current artefact configuration:'
-    echo "  $(realpath ~/.m2)"
-    echo "  $(realpath ~/.ivy2)"
-    echo "  $(realpath ~/.sbt)"
-    confirm "Really remove artefacts [y/n]?" && {
-        rm -rf ~/.m2/repository/
-        rm -rf ~/.ivy2/cache/
-        rm -rf ~/.ivy2/jars/
-        rm -rf ~/.ivy2/local/
-    }
-}
 
 # Tmuxinator                        {{{2
 # ======================================
