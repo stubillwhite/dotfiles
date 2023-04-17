@@ -48,6 +48,17 @@ zstyle ':completion:*' cache-path ~/.zsh/cache
 # AWS tools
 source-if-exists "/usr/local/bin/aws_zsh_completer.sh"
 
+# General preferences                                                       {{{1
+# ==============================================================================
+
+# Unlimited history
+# export HISTFILESIZE=
+# export HISTSIZE=
+
+# Use NVim 
+export EDITOR=nvim
+export VISUAL=nvim
+
 # General options                                                           {{{1
 # ==============================================================================
 
@@ -86,7 +97,7 @@ alias zsh-startup='time zsh -i -c exit'                                     # Di
 alias display-colours='msgcat --color=test'                                 # Display terminal colors
 alias ssh-add-keys='ssh-add ~/.ssh/keys/id_rsa_personal'                    # Add standard keys to SSH agent
 alias list-ports='netstat -anv'                                             # List active ports
-alias create-react-app='npx create-react-app'                               # Shortcut to create a new React app
+alias new-react-app='npx create-react-app'                                  # Shortcut to create a new React app
 
 # No flow control, so C-s is free for C-r/C-s back/forward incremental search
 stty -ixon
@@ -481,6 +492,12 @@ alias aws-newsflo-prod="aws-developer-role $SECRET_ACC_NEWSFLO_PROD ADFS-Enterpr
 
 alias aws-recs-dev="aws-developer-role $SECRET_ACC_RECS_DEV ADFS-EnterpriseAdmin aws-rap-recommendersdev"
 alias aws-recs-prod="aws-developer-role $SECRET_ACC_RECS_PROD ADFS-EnterpriseAdmin aws-rap-recommendersprod"
+
+alias aws-cons-sc-non-prod="aws-developer-role $SECRET_ACC_CONTENT_SC_NON_PROD ADFS-EnterpriseAdmin aws-sc-content-prod"
+alias aws-cons-sc-prod="aws-developer-role $SECRET_ACC_CONTENT_SC_CONTENT_PROD=814132467461 ADFS-EnterpriseAdmin aws-sc-prod"
+alias aws-cons-sd-backup="aws-developer-role $SECRET_ACC_CONTENT_SD_CONTENT_BACKUP ADFS-EnterpriseAdmin aws-sd-backup"
+alias aws-cons-sd-non-prod="aws-developer-role $SECRET_ACC_CONTENT_SD_CONTENT_NON_PROD ADFS-EnterpriseAdmin aws-sd-non-prod"
+alias aws-cons-sd-prod="aws-developer-role $SECRET_ACC_CONTENT_SD_CONTENT_PROD ADFS-EnterpriseAdmin aws-sd-non-prod"
 
 alias aws-dkp-non-prod="aws-developer-role $SECRET_ACC_DKP_NON_PROD ADFS-EnterpriseAdmin aws-bts-dkp-np"
 alias aws-dkp-prod="aws-developer-role $SECRET_ACC_DKP_PROD ADFS-EnterpriseAdmin aws-bts-dkp-prod"

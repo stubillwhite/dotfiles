@@ -13,6 +13,7 @@ case "${state}" in
         local prjs; prjs=(
             'recs'
             'newsflo'
+            'consumption'
             'dkp'
             'cef'
          )
@@ -35,6 +36,16 @@ case "${state}" in
                 envs=(
                     'dev'
                     'prod'
+                )
+            ;;
+
+            (consumption)
+                envs=(
+                    'sc-non-prod'
+                    'sc-prod'
+                    'sd-backup'
+                    'sd-non-prod'
+                    'sd-prod'
                 )
             ;;
 

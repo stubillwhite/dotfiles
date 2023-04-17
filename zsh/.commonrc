@@ -4,16 +4,6 @@
 # General settings                                                          {{{1
 # ==============================================================================
 
-# Unlimited history
-
-export HISTFILESIZE=
-export HISTSIZE=
-
-# Use NVim 
-
-export EDITOR=nvim
-export VISUAL=nvim
-
 # Perl
 
 PATH="/Users/white1/perl5/bin${PATH:+:${PATH}}"; export PATH;
