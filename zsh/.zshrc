@@ -591,7 +591,7 @@ function aws-lambda-statuses() {
 # List EMR statuses
 function aws-emr-status() {
     if [[ $# -ne 1 ]]; then
-        echo "Usage: aws-recs-login (dev|staging|live)"
+        echo "Usage: aws-recs-login CLUSTER_ID"
     else
         local clusterId=$1
         aws emr list-steps \
@@ -1559,7 +1559,7 @@ function java-version() {
     export JAVA_HOME=/Library/Java/JavaVirtualMachines/${1}/Contents/Home/
 }
 compdef '_alternative \
-    "arguments:custom arg:(adoptopenjdk-11.jdk adoptopenjdk-8.jdk temurin-8.jdk)"' \
+    "arguments:custom arg:(temurin-8.jdk temurin-11.jdk)"' \
     java-version
 
 function install-java-certificate() {
