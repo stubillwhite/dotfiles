@@ -181,7 +181,6 @@ brew "yamllint"                                 # Linter for YAML files
 
 cask "anki"                                     # Memory training application
 cask "spotify"                                  # Spotify client
-cask "dwarf-fortress"                           # Single-player fantasy game
 
 brew "nethack"                                  # Single-player roguelike video game
 brew "stone-soup"                               # Dungeon Crawl Stone Soup: a roguelike game
