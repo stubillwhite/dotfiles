@@ -1,7 +1,12 @@
 #!/bin/bash
 
-COLOR_RED='\033[0;31m'
-COLOR_NONE='\033[0m'
+if [[ "$TERM" == "dumb" ]]; then
+    COLOR_RED=''
+    COLOR_NONE=''
+else
+    COLOR_RED='\033[0;31m'
+    COLOR_NONE='\033[0m'
+fi
 
 branchName=$(git rev-parse --abbrev-ref HEAD)
 
