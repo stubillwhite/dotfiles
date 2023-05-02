@@ -2,10 +2,11 @@
 # Applications
 ################################################################################
 
+# Drawing
 cask 'drawio'                                   # draw.io Desktop
-cask 'hook'                                     # Hook
 
-# OneDrive integration
+# Microsoft office software
+cask 'microsoft-teams'                          # Microsoft Teams is your hub for teamwork
 cask 'onedrive'                                 # Cloud storage client
 
 # Database clients
@@ -16,7 +17,6 @@ cask 'dbeaver-community'                        # Free universal database tool a
 ################################################################################
 
 brew 'borkdude/brew/babashka'                   # A Clojure babushka for the grey areas of Bash.
-cask 'microsoft-teams'                          # Microsoft Teams is your hub for teamwork
 
 tap 'eddieantonio/eddieantonio'
 brew 'eddieantonio/eddieantonio/imgcat'         # It's like cat(1), but for images.
