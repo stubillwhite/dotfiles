@@ -99,6 +99,8 @@ alias ssh-add-keys='ssh-add ~/.ssh/keys/id_rsa_personal'                    # Ad
 alias list-ports='netstat -anv'                                             # List active ports
 alias new-react-app='npx create-react-app'                                  # Shortcut to create a new React app
 
+alias charm='pycharm . & 2>&1 1>/dev/null'                                  # Launch PyCharm
+
 # No flow control, so C-s is free for C-r/C-s back/forward incremental search
 stty -ixon
 
@@ -467,46 +469,46 @@ alias aws-which="env | grep AWS | sort"
 alias aws-clear-variables="for i in \$(aws-which | cut -d= -f1,1 | paste -); do unset \$i; done"
 
 function aws-switch-role() {
-    declare roleARN=$1 profile=$2
+    declare roleARN=$1 profile=$2 region=$3
 
     export username=white1@science.regn.net
-    LOGIN_OUTPUT="$(aws-adfs login --adfs-host federation.reedelsevier.com --region us-east-1 --session-duration 14400 --role-arn $roleARN --env --profile $profile --printenv | grep export)"
-    AWS_ENV="$(echo $LOGIN_OUTPUT | grep export)"
-    eval $AWS_ENV
-    export AWS_REGION=us-east-1
+    local loginOutput="$(aws-adfs login --adfs-host federation.reedelsevier.com --region ${region} --session-duration 14400 --role-arn ${roleARN} --env --profile ${profile} --printenv | grep export)"
+    local awsEnv="$(echo ${loginOutput} | grep export)"
+    eval ${awsEnv}
+    export AWS_REGION="${region}"
     aws-which
 }
 
 function aws-developer-role() {
-    declare accountId=$1 role=$2 profile=$3
-    aws-switch-role "arn:aws:iam::${accountId}:role/${role}" "${profile}"
+    declare accountId=$1 role=$2 profile=$3 region=$4
+    aws-switch-role "arn:aws:iam::${accountId}:role/${role}" "${profile}" "${region}"
 }
 
-alias aws-bos-utility="aws-developer-role $SECRET_ACC_BOS_UTILITY ADFS-Developer aws-rap-bosutility"
-alias aws-bos-dev="aws-developer-role $SECRET_ACC_BOS_DEV ADFS-Developer aws-rap-bosdev"
-alias aws-bos-staging="aws-developer-role $SECRET_ACC_BOS_STAGING ADFS-Developer aws-rap-bosstaging"
-alias aws-bos-prod="aws-developer-role $SECRET_ACC_BOS_PROD ADFS-Developer aws-rap-bosprod"
+alias aws-bos-utility="aws-developer-role $SECRET_ACC_BOS_UTILITY ADFS-Developer aws-rap-bosutility us-east-1"
+alias aws-bos-dev="aws-developer-role $SECRET_ACC_BOS_DEV ADFS-Developer aws-rap-bosdev us-east-1"
+alias aws-bos-staging="aws-developer-role $SECRET_ACC_BOS_STAGING ADFS-Developer aws-rap-bosstaging us-east-1"
+alias aws-bos-prod="aws-developer-role $SECRET_ACC_BOS_PROD ADFS-Developer aws-rap-bosprod us-east-1"
 
-alias aws-newsflo-dev="aws-developer-role $SECRET_ACC_NEWSFLO_DEV ADFS-EnterpriseAdmin aws-rap-recommendersdev"
-alias aws-newsflo-prod="aws-developer-role $SECRET_ACC_NEWSFLO_PROD ADFS-EnterpriseAdmin aws-rap-recommendersprod"
+alias aws-newsflo-dev="aws-developer-role $SECRET_ACC_NEWSFLO_DEV ADFS-EnterpriseAdmin aws-els-newsflo us-east-1"
+alias aws-newsflo-prod="aws-developer-role $SECRET_ACC_NEWSFLO_PROD ADFS-EnterpriseAdmin aws-els-newsflo us-east-1"
 
-alias aws-recs-dev="aws-developer-role $SECRET_ACC_RECS_DEV ADFS-EnterpriseAdmin aws-rap-recommendersdev"
-alias aws-recs-prod="aws-developer-role $SECRET_ACC_RECS_PROD ADFS-EnterpriseAdmin aws-rap-recommendersprod"
+alias aws-recs-dev="aws-developer-role $SECRET_ACC_RECS_DEV ADFS-EnterpriseAdmin aws-rap-recommendersdev us-east-1"
+alias aws-recs-prod="aws-developer-role $SECRET_ACC_RECS_PROD ADFS-EnterpriseAdmin aws-rap-recommendersprod us-east-1"
 
-alias aws-cons-sc-non-prod="aws-developer-role $SECRET_ACC_CONTENT_SC_NON_PROD ADFS-EnterpriseAdmin aws-sc-content-prod"
-alias aws-cons-sc-prod="aws-developer-role $SECRET_ACC_CONTENT_SC_CONTENT_PROD=814132467461 ADFS-EnterpriseAdmin aws-sc-prod"
-alias aws-cons-sd-backup="aws-developer-role $SECRET_ACC_CONTENT_SD_CONTENT_BACKUP ADFS-EnterpriseAdmin aws-sd-backup"
-alias aws-cons-sd-non-prod="aws-developer-role $SECRET_ACC_CONTENT_SD_CONTENT_NON_PROD ADFS-EnterpriseAdmin aws-sd-non-prod"
-alias aws-cons-sd-prod="aws-developer-role $SECRET_ACC_CONTENT_SD_CONTENT_PROD ADFS-EnterpriseAdmin aws-sd-non-prod"
+# alias aws-consumption-sc-non-prod="aws-developer-role $SECRET_ACC_CONTENT_SC_NON_PROD ADFS-EnterpriseAdmin aws-sc-content-prod us-east-1"
+# alias aws-consumption-sc-prod="aws-developer-role $SECRET_ACC_CONTENT_SC_CONTENT_PROD=814132467461 ADFS-EnterpriseAdmin aws-sc-prod us-east-1"
+# alias aws-consumption-sd-backup="aws-developer-role $SECRET_ACC_CONTENT_SD_CONTENT_BACKUP ADFS-EnterpriseAdmin aws-sd-backup us-east-1"
+# alias aws-consumption-sd-non-prod="aws-developer-role $SECRET_ACC_CONTENT_SD_CONTENT_NON_PROD ADFS-EnterpriseAdmin aws-sd-non-prod us-east-1"
+# alias aws-consumption-sd-prod="aws-developer-role $SECRET_ACC_CONTENT_SD_CONTENT_PROD ADFS-EnterpriseAdmin aws-sd-non-prod us-east-1"
 
-alias aws-dkp-non-prod="aws-developer-role $SECRET_ACC_DKP_NON_PROD ADFS-EnterpriseAdmin aws-bts-dkp-np"
-alias aws-dkp-prod="aws-developer-role $SECRET_ACC_DKP_PROD ADFS-EnterpriseAdmin aws-bts-dkp-prod"
+alias aws-dkp-non-prod="aws-developer-role $SECRET_ACC_DKP_NON_PROD ADFS-EnterpriseAdmin aws-bts-dkp-np us-east-1"
+alias aws-dkp-prod="aws-developer-role $SECRET_ACC_DKP_PROD ADFS-EnterpriseAdmin aws-bts-dkp-prod us-east-1"
 
-alias aws-cef-candi="aws-developer-role $SECRET_ACC_CEF_CANDI ADFS-EnterpriseAdmin aws-bts-candi"
-alias aws-cef-embase="aws-developer-role $SECRET_ACC_CEF_EMBASE ADFS-EnterpriseAdmin aws-cbs-cefembase"
-alias aws-cef-backup="aws-developer-role $SECRET_ACC_CEF_BACKUP ADFS-EnterpriseAdmin aws-els-cefbackup"
-alias aws-cef-prod="aws-developer-role $SECRET_ACC_CEF_PROD ADFS-EnterpriseAdmin aws-els-cefprod"
-alias aws-cef-networkstorage="aws-developer-role $SECRET_ACC_CEF_NETWORKSTORAGE ADFS-EnterpriseAdmin aws-els-cefprod"
+alias aws-cef-candi="aws-developer-role $SECRET_ACC_CEF_CANDI ADFS-EnterpriseAdmin aws-bts-candi eu-west-1"
+alias aws-cef-embase="aws-developer-role $SECRET_ACC_CEF_EMBASE ADFS-EnterpriseAdmin aws-cbs-cefembase eu-west-1"
+alias aws-cef-backup="aws-developer-role $SECRET_ACC_CEF_BACKUP ADFS-EnterpriseAdmin aws-els-cefbackup eu-west-1"
+alias aws-cef-prod="aws-developer-role $SECRET_ACC_CEF_PROD ADFS-EnterpriseAdmin aws-els-cefprod eu-west-1"
+alias aws-cef-networkstorage="aws-developer-role $SECRET_ACC_CEF_NETWORKSTORAGE ADFS-EnterpriseAdmin aws-els-cefprod eu-west-1"
 
 function aws-recs-login() {
     if [[ $# -ne 1 ]]; then
@@ -922,6 +924,14 @@ function git-repos-unmerged-branches-all() {
 # unmerged branches locally and remote in pretty form
 function git-repos-unmerged-branches-all-pretty() {
     display-unmerged-branches-all-pretty() {
+
+        ## # Handle legacy repos with trunks named 'master'
+        ## if [[ ! -z $(git ls-remote --heads origin main 2>/dev/null) ]]; then
+        ##     export GIT_TRUNK=main
+        ## else 
+        ##     export GIT_TRUNK=master
+        ## fi
+
         local cmd="git unmerged-branches-allv"
         unmergedBranches=$(eval "$cmd") 
         if [[ $unmergedBranches = *[![:space:]]* ]]; then
@@ -931,7 +941,11 @@ function git-repos-unmerged-branches-all-pretty() {
         fi
     }
 
+    local originalGitTrunk="${GIT_TRUNK}"
+
     git-for-each-repo display-unmerged-branches-all-pretty
+
+    export GIT_TRUNK=${originalGitTrunk} 
 }
 
 # For each repo within the current directory, display stashes
@@ -1473,7 +1487,7 @@ function git-stats-top-team-committers-by-repo() {
     fi
 
     local team=$1
-    [ "${team}" = 'recs' ]           && teamMembers="'Anna Bladzich', 'Rich Lyne', 'Reinder Verlinde', 'Stu White', 'Tess Hoad', 'Manisha Sistum', 'Andrew Nguyen'"
+    [ "${team}" = 'recs' ]           && teamMembers="'Anna Bladzich', 'Rich Lyne', 'Reinder Verlinde', 'Stu White', 'Tess Hoad', 'Manisha Sistum', 'Andrew Nguyen', 'Jerry Yang'"
     [ "${team}" = 'butter-chicken' ] && teamMembers="'Asmaa Shoala', 'Carmen Mester', 'Colin Zhang', 'Hamid Haghayegh', 'Henry Cleland', 'Karthik Jaganathan', 'Krishna', 'Rama Sane'"
     [ "${team}" = 'spirograph' ]     && teamMembers="'Paul Meyrick', 'Fraser Reid', 'Nancy Goyal', 'Richard Snoad', 'Ayce Keskinege'"
     [ "${team}" = 'dkp' ]            && teamMembers="'Ryan Moquin', 'Prakruthy Dhoopa Harish', 'Arun Kumar Kalahastri', 'Sivapriya Ganeshbabu', 'Sai Santoshi Vindamuri', 'Suganya Moorthy'"

@@ -6,6 +6,11 @@
 # Enable profiling (display report with `zprof`)
 zmodload zsh/zprof
 
+# For coarser profiling, wrap blocks with time commands
+# { time (
+# ...
+# ) }
+
 # Conditional inclusion                                                     {{{1
 # ==============================================================================
 
@@ -46,12 +51,12 @@ function source-or-warn() {
 source-or-warn /usr/local/bin/env_parallel.zsh
 
 # Include common configuration
-source $HOME/.commonrc
+source-or-warn $HOME/.commonrc
 
 # Secrets                           {{{2
 # ======================================
 
-source-if-exists "$HOME/.zshenv.no-commit"
+source-or-warn "$HOME/.zshenv.no-commit"
 
 function _assert-variables-defined() {
     local variables=("$@")
