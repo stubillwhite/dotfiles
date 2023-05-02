@@ -925,12 +925,14 @@ function git-repos-unmerged-branches-all() {
 function git-repos-unmerged-branches-all-pretty() {
     display-unmerged-branches-all-pretty() {
 
-        ## # Handle legacy repos with trunks named 'master'
-        ## if [[ ! -z $(git ls-remote --heads origin main 2>/dev/null) ]]; then
-        ##     export GIT_TRUNK=main
-        ## else 
-        ##     export GIT_TRUNK=master
-        ## fi
+        # Handle legacy repos with trunks named 'master'
+        if [[ ${inferTrunk} -eq 1 ]]; then
+            if [[ -z $(git ls-remote --heads origin main 2>/dev/null) ]]; then
+                export GIT_TRUNK=main
+            else 
+                export GIT_TRUNK=master
+            fi
+        fi
 
         local cmd="git unmerged-branches-allv"
         unmergedBranches=$(eval "$cmd") 
@@ -940,6 +942,15 @@ function git-repos-unmerged-branches-all-pretty() {
             echo
         fi
     }
+
+    if [[ $# -eq 1 ]]; then
+        if [[ $1 == '--infer-trunk' ]]; then
+            local inferTrunk=1
+        else
+            echo 'Usage: git-repos-unmerged-branches-all-pretty [--infer-trunk]'
+            return 1
+        fi
+    fi
 
     local originalGitTrunk="${GIT_TRUNK}"
 
