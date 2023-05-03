@@ -1280,7 +1280,7 @@ function github-list-user-repos() {
 
 function jira-my-issues() {
     curl -s -G 'https://elsevier.atlassian.net/rest/api/2/search' \
-        --data-urlencode "jql=project=SDPR AND assignee = currentUser() AND status IN (\"In Progress\")" \
+        --data-urlencode "jql=assignee = currentUser() AND status IN (\"In Progress\")" \
         --user "${SECRET_JIRA_USER}:${SECRET_JIRA_API_KEY}" \
         | jq -r ".issues[] | [.key, .fields.summary] | @tsv" \
         | tabulate-by-tab
