@@ -91,6 +91,9 @@
 [includeIf "gitdir:~/Dev/kedro/"]
     path = ~/Dev/my-stuff/dotfiles/git/work-config/.gitconfig
 
+[includeIf "gitdir:~/Dev/rdp/"]
+    path = ~/Dev/my-stuff/dotfiles/git/work-config/.gitconfig
+
 [mailmap]
 	file = ~/.mailmap
 
