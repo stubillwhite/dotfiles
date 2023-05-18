@@ -99,7 +99,8 @@ alias ssh-add-keys='ssh-add ~/.ssh/keys/id_rsa_personal'                    # Ad
 alias list-ports='netstat -anv'                                             # List active ports
 alias new-react-app='npx create-react-app'                                  # Shortcut to create a new React app
 
-alias charm='pycharm . & 2>&1 1>/dev/null'                                  # Launch PyCharm
+alias charm='pycharm . > /dev/null 2>&1 &'                                  # Launch PyCharm
+alias idea='idea . > /dev/null 2>&1 &'                                      # Launch IntelliJ
 
 # No flow control, so C-s is free for C-r/C-s back/forward incremental search
 stty -ixon
@@ -928,9 +929,9 @@ function git-repos-unmerged-branches-all-pretty() {
         # Handle legacy repos with trunks named 'master'
         if [[ ${inferTrunk} -eq 1 ]]; then
             if [[ -z $(git ls-remote --heads origin main 2>/dev/null) ]]; then
-                export GIT_TRUNK=main
-            else 
                 export GIT_TRUNK=master
+            else 
+                export GIT_TRUNK=main
             fi
         fi
 
@@ -958,6 +959,9 @@ function git-repos-unmerged-branches-all-pretty() {
 
     export GIT_TRUNK=${originalGitTrunk} 
 }
+compdef "_arguments \
+    '1:flags arg:(--infer-trunk)'" \
+    git-repos-unmerged-branches-all-pretty
 
 # For each repo within the current directory, display stashes
 function git-repos-code-stashes() {
@@ -1149,7 +1153,7 @@ function git-archive-branch() {
     git branch -D $1
 }
 compdef '_alternative \
-  "arguments:custom arg:($(git branch --no-merged main))" \
+  "arguments:custom arg:($(git branch --no-merged ${GIT_TRUNK}))" \
   ' \
   git-archive-branch
 
