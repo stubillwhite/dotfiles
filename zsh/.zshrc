@@ -99,11 +99,26 @@ alias ssh-add-keys='ssh-add ~/.ssh/keys/id_rsa_personal'                    # Ad
 alias list-ports='netstat -anv'                                             # List active ports
 alias new-react-app='npx create-react-app'                                  # Shortcut to create a new React app
 
-alias charm='pycharm . > /dev/null 2>&1 &'                                  # Launch PyCharm
-alias idea='idea . > /dev/null 2>&1 &'                                      # Launch IntelliJ
-
 # No flow control, so C-s is free for C-r/C-s back/forward incremental search
 stty -ixon
+
+# IntelliJ and Pycharm                                                      {{{1
+# ==============================================================================
+
+function _launch-jetbrains-tool() {
+    local cmd=$1
+    shift
+    local args=$@
+    
+    if [[ $# -eq 0 ]] ; then
+        args='.'
+    fi
+
+    zsh -c "${cmd} ${args} > /dev/null 2>&1 &"
+}
+
+alias charm='_launch-jetbrains-tool pycharm'                                # Launch PyCharm
+alias idea='_launch-jetbrains-tool idea'                                    # Launch IntelliJ
 
 # Minor machine-specific differences                                        {{{1
 # ==============================================================================
@@ -262,6 +277,17 @@ function notify-on-change() {
 
 # Miscellaneous utilities           {{{2
 # ======================================
+
+# Extract text from an image
+# image-to-text FNAM
+function image-to-text() {
+    if [[ $# -ne 1 ]] ; then
+        echo 'Usage: image-to-text FNAM'
+        return 1
+    fi
+
+    tesseract $1 $(basename ${1:t:r})
+}
 
 # Prompt for confirmation
 # confirm "Delete [y/n]?" && rm -rf *
