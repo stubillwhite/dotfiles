@@ -1,7 +1,7 @@
 # /Users/white1/.config/tmuxinator/cef.yml
 
 name: cef
-root: ~/Dev/kf/cef
+root: ~/Dev/rdp/cef/
 
 windows:
   - cef:

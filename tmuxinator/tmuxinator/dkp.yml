@@ -1,7 +1,7 @@
 # /Users/white1/.config/tmuxinator/dkp.yml
 
 name: dkp
-root: ~/Dev/kf/dkp
+root: ~/Dev/rdp/dkp
 
 windows:
   - dkp:

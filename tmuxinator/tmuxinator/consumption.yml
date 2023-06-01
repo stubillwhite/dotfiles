@@ -1,7 +1,7 @@
 # /Users/white1/.config/tmuxinator/consumption.yml
 
 name: consumption
-root: ~/Dev/kf/consumption
+root: ~/Dev/rdp/consumption
 
 windows:
   - consumption:
