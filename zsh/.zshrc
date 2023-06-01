@@ -495,32 +495,48 @@ compdef "_arguments \
 alias aws-which="env | grep AWS | sort"
 alias aws-clear-variables="for i in \$(aws-which | cut -d= -f1,1 | paste -); do unset \$i; done"
 
-function aws-switch-role() {
-    declare roleARN=$1 profile=$2 region=$3
+function aws-sso-login() {
+    local profile=$1
 
-    export username=white1@science.regn.net
-    local loginOutput="$(aws-adfs login --adfs-host federation.reedelsevier.com --region ${region} --session-duration 14400 --role-arn ${roleARN} --env --profile ${profile} --printenv | grep export)"
-    local awsEnv="$(echo ${loginOutput} | grep export)"
-    eval ${awsEnv}
-    export AWS_REGION="${region}"
+    aws sso login --profile ${profile}
+
+    local ssoCachePath=~/.aws/sso/cache
+
+    local ssoAccountId=$(aws configure get --profile ${profile} sso_account_id)
+    local ssoRoleName=$(aws configure get --profile ${profile} sso_role_name)
+    local mostRecentSSOLogin=$(ls -c1 ${ssoCachePath} | head -n 1)
+
+    local response=$(aws sso get-role-credentials \
+        --role-name ${ssoRoleName} \
+        --account-id ${ssoAccountId} \
+        --access-token "$(jq -r '.accessToken' ${ssoCachePath}/${mostRecentSSOLogin})" \
+        --region eu-west-1
+    )
+
+    local accessKeyId=$(echo "${response}" | jq -r '.roleCredentials | .accessKeyId')
+    local secretAccessKey=$(echo "${response}" | jq -r '.roleCredentials | .secretAccessKey')
+    local sessionToken=$(echo "${response}" | jq -r '.roleCredentials | .sessionToken')
+
+    export AWS_ACCESS_KEY_ID="${accessKeyId}"
+    export AWS_SECRET_ACCESS_KEY="${secretAccessKey}"
+    export AWS_SESSION_TOKEN="${sessionToken}"
+    export AWS_DEFAULT_REGION="us-east-1"
+    export AWS_REGION="us-east-1"
+
+    echo
     aws-which
 }
 
-function aws-developer-role() {
-    declare accountId=$1 role=$2 profile=$3 region=$4
-    aws-switch-role "arn:aws:iam::${accountId}:role/${role}" "${profile}" "${region}"
-}
+alias aws-bos-utility="aws-sso-login bos-utility"
+alias aws-bos-dev="aws-sso-login bos-dev"
+alias aws-bos-staging="aws-sso-login bos-staging"
+alias aws-bos-prod="aws-sso-login bos-prod"
 
-alias aws-bos-utility="aws-developer-role $SECRET_ACC_BOS_UTILITY ADFS-Developer aws-rap-bosutility us-east-1"
-alias aws-bos-dev="aws-developer-role $SECRET_ACC_BOS_DEV ADFS-Developer aws-rap-bosdev us-east-1"
-alias aws-bos-staging="aws-developer-role $SECRET_ACC_BOS_STAGING ADFS-Developer aws-rap-bosstaging us-east-1"
-alias aws-bos-prod="aws-developer-role $SECRET_ACC_BOS_PROD ADFS-Developer aws-rap-bosprod us-east-1"
+alias aws-newsflo-dev="aws-sso-login newsflo-dev"
+alias aws-newsflo-prod="aws-sso-login newsflo-prod-readonly"
 
-alias aws-newsflo-dev="aws-developer-role $SECRET_ACC_NEWSFLO_DEV ADFS-EnterpriseAdmin aws-els-newsflo us-east-1"
-alias aws-newsflo-prod="aws-developer-role $SECRET_ACC_NEWSFLO_PROD ADFS-EnterpriseAdmin aws-els-newsflo us-east-1"
-
-alias aws-recs-dev="aws-developer-role $SECRET_ACC_RECS_DEV ADFS-EnterpriseAdmin aws-rap-recommendersdev us-east-1"
-alias aws-recs-prod="aws-developer-role $SECRET_ACC_RECS_PROD ADFS-EnterpriseAdmin aws-rap-recommendersprod us-east-1"
+alias aws-recs-dev="aws-sso-login recs-dev"
+alias aws-recs-prod="aws-sso-login recs-prod"
 
 # alias aws-consumption-sc-non-prod="aws-developer-role $SECRET_ACC_CONTENT_SC_NON_PROD ADFS-EnterpriseAdmin aws-sc-content-prod us-east-1"
 # alias aws-consumption-sc-prod="aws-developer-role $SECRET_ACC_CONTENT_SC_CONTENT_PROD=814132467461 ADFS-EnterpriseAdmin aws-sc-prod us-east-1"
@@ -528,14 +544,14 @@ alias aws-recs-prod="aws-developer-role $SECRET_ACC_RECS_PROD ADFS-EnterpriseAdm
 # alias aws-consumption-sd-non-prod="aws-developer-role $SECRET_ACC_CONTENT_SD_CONTENT_NON_PROD ADFS-EnterpriseAdmin aws-sd-non-prod us-east-1"
 # alias aws-consumption-sd-prod="aws-developer-role $SECRET_ACC_CONTENT_SD_CONTENT_PROD ADFS-EnterpriseAdmin aws-sd-non-prod us-east-1"
 
-alias aws-dkp-non-prod="aws-developer-role $SECRET_ACC_DKP_NON_PROD ADFS-EnterpriseAdmin aws-bts-dkp-np us-east-1"
-alias aws-dkp-prod="aws-developer-role $SECRET_ACC_DKP_PROD ADFS-EnterpriseAdmin aws-bts-dkp-prod us-east-1"
+alias aws-dkp-non-prod="aws-sso-login dkp-non-prod"
+alias aws-dkp-prod="aws-sso-login dkp-prod"
 
-alias aws-cef-candi="aws-developer-role $SECRET_ACC_CEF_CANDI ADFS-EnterpriseAdmin aws-bts-candi eu-west-1"
-alias aws-cef-embase="aws-developer-role $SECRET_ACC_CEF_EMBASE ADFS-EnterpriseAdmin aws-cbs-cefembase eu-west-1"
-alias aws-cef-backup="aws-developer-role $SECRET_ACC_CEF_BACKUP ADFS-EnterpriseAdmin aws-els-cefbackup eu-west-1"
-alias aws-cef-prod="aws-developer-role $SECRET_ACC_CEF_PROD ADFS-EnterpriseAdmin aws-els-cefprod eu-west-1"
-alias aws-cef-networkstorage="aws-developer-role $SECRET_ACC_CEF_NETWORKSTORAGE ADFS-EnterpriseAdmin aws-els-cefprod eu-west-1"
+alias aws-cef-candi="aws-sso-login cef-candi"
+alias aws-cef-embase="aws-sso-login cef-embase"
+alias aws-cef-backup="aws-sso-login cef-backup"
+alias aws-cef-prod="aws-sso-login cef-prod"
+alias aws-cef-networkstorage="aws-sso-login cef-networkstorage"
 
 function aws-recs-login() {
     if [[ $# -ne 1 ]]; then
