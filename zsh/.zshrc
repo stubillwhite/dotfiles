@@ -464,9 +464,9 @@ function ssh-config () {
 
     local config="${1}"
 
-    local configDir=.ssh-config
+    local configDir="${HOME}/.ssh/ssh-configs"
 
-    local src="${HOME}/${configDir}/${config}-ssh-config"
+    local src="${configDir}/${config}-ssh-config"
     local dst="${HOME}/.ssh/config"
 
     if [[ -e ${src} ]]; then
@@ -504,12 +504,12 @@ function aws-sso-login() {
 
     local ssoAccountId=$(aws configure get --profile ${profile} sso_account_id)
     local ssoRoleName=$(aws configure get --profile ${profile} sso_role_name)
-    local mostRecentSSOLogin=$(ls -c1 ${ssoCachePath} | head -n 1)
+    local mostRecentSSOLogin=$(ls -t1 ${ssoCachePath}/*.json | head -n 1)
 
     local response=$(aws sso get-role-credentials \
         --role-name ${ssoRoleName} \
         --account-id ${ssoAccountId} \
-        --access-token "$(jq -r '.accessToken' ${ssoCachePath}/${mostRecentSSOLogin})" \
+        --access-token "$(jq -r '.accessToken' ${mostRecentSSOLogin})" \
         --region eu-west-1
     )
 
@@ -590,6 +590,8 @@ function aws-login() {
 }
 
 alias aws-logout=aws-clear-variables
+
+alias aws-whoami='aws sts get-caller-identity | jq'
 
 # AWS helper functions              {{{2
 # ======================================
