@@ -457,7 +457,12 @@ compdef _aws-tag aws-instance-ips
 
 # List the IPs for all AWS instances
 function aws-all-instance-ips() {
-    aws ec2 describe-instances | jq --raw-output '["Name", "IP address", "Instance ID", "Instance type", "AMI ID", "Launch time", "Monitoring"], (.Reservations[].Instances[]? | select(.State.Name=="running") | [ (.Tags[]? | (select(.Key=="Name")).Value) // "-", .NetworkInterfaces[].PrivateIpAddresses[].PrivateIpAddress, .InstanceId, .InstanceType, .ImageId, .LaunchTime, .Monitoring.State]) | @csv' | sort | column -t -s "," | sed 's/\"//g'
+    aws ec2 describe-instances \
+        | jq --raw-output '(.Reservations[].Instances[]? | select(.State.Name=="running") | [ (.Tags[]? | (select(.Key=="Name")).Value) // "-", .NetworkInterfaces[].PrivateIpAddresses[].PrivateIpAddress, .InstanceId, .InstanceType, .ImageId, .LaunchTime, .Monitoring.State]) | @csv' \
+        | sort \
+        | strip-quotes \
+        | prepend 'Name,IP address,Instance ID,Instance type,AMI ID,Launch time,Monitoring' \
+        | tabulate-by-comma
 }
 
 # List AWS instance limits
