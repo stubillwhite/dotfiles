@@ -74,6 +74,7 @@ if-darwin && {
 
 if-linux && {
     alias gsed='sed'
+    alias gecho='echo'
     alias gawk='awk'
     alias open='xdg-open'
 }
@@ -89,6 +90,7 @@ alias gh='NO_COLOR=1 gh'                                                    # gh
 alias vi='nvim'                                                             # Use nvim instead of vi
 alias vim='nvim'                                                            # Use nvim instead of vim
 alias sed='gsed'                                                            # Use gsed instead of sed
+alias echo='gecho'                                                          # Use gecho nstead of echo
 alias date='gdate'                                                          # Use gdate instead of date
 
 # Other useful stuff
@@ -116,6 +118,7 @@ function _launch-jetbrains-tool() {
 
     zsh -c "${cmd} ${args} > /dev/null 2>&1 &"
 }
+compdef _files _launch-jetbrains-tool
 
 alias charm='_launch-jetbrains-tool pycharm'                                # Launch PyCharm
 alias idea='_launch-jetbrains-tool idea'                                    # Launch IntelliJ
@@ -173,6 +176,14 @@ function tabulate-by-comma() {
 # cat foo.txt | tabulate-by-space
 function tabulate-by-space() {
     column -t -s ' ' 
+}
+
+# Prepend a line of text to output
+# cat data.csv | prepend "Results are below:"
+function prepend() {
+    local text=$@
+    echo "$@"
+    cat -
 }
 
 # Tabluate CSV (cat foo.csv | tabulate-by-comma)
