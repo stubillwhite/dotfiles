@@ -157,6 +157,7 @@ alias strip-color="gsed -r 's/\x1b\[[0-9;]*m//g'"                           # St
 alias strip-ansi="perl -pe 's/\x1b\[[0-9;]*[mG]//g'"                        # Strip all ANSI control codes (some-cmd | strip-ansi)
 alias strip-quotes='gsed "s/[''\"]//g"'                                     # Strip all quotes (some-cmd | strip-quotes)
 alias sum-of="paste -sd+ - | bc"                                            # Sum numbers from stdin (some-cmd | sum-of)
+alias utf-16-to-8="iconv -f 'utf-16' -t 'utf-8'"                            # Convert UTF-16 stream to UTF-8
 
 # Tabluate TSV
 # cat foo.tsv | tabulate-by-tab
