@@ -160,7 +160,7 @@ function recs-ecr-login() {
         esac
 
         aws ecr get-login-password --region "${region}" | docker login --username AWS --password-stdin "${accountId}.dkr.ecr.${region}.amazonaws.com"
-        echo "Pull images with:" 
+        echo "Pull images with:"
         echo "  " docker pull "${accountId}.dkr.ecr.${region}.amazonaws.com/IMAGE:VERSION"
     fi
 }
@@ -186,7 +186,7 @@ function recs-api-versions() {
             | sort \
             | uniq \
             | tr ':' ',' \
-            | tabulate-by-comma    
+            | tabulate-by-comma
     fi
 }
 compdef "_arguments \
@@ -315,7 +315,7 @@ compdef "_arguments \
 # ==============================================================================
 
 function recs-reviewers-dashboards() {
-    # Obtain the dashboard's GUID: 
+    # Obtain the dashboard's GUID:
     #  - Click the "tag" icon by the dashboard's name to access the See metadata and manage tags modal and see the dashboard's GUID.
     local dashboards=(
         "MjA5OTI0M3xWSVp8REFTSEJPQVJEfGRhOjE3Mzg1Njg"   # https://onenr.io/0MRNqLGZGwn
@@ -457,12 +457,43 @@ compdef _aws-tag aws-instance-ips
 
 # List the IPs for all AWS instances
 function aws-all-instance-ips() {
+    local jqScript
+    read-heredoc jqScript <<HEREDOC
+    [.Reservations[].Instances[]?
+        | select(.State.Name=="running")
+        | {
+             name:         (.Tags[]? | (select(.Key=="Name")).Value // "-"),
+             ipAddress:    .NetworkInterfaces[].PrivateIpAddresses[].PrivateIpAddress,
+             instanceId:   .InstanceId,
+             instanceType: .InstanceType,
+             imageId:      .ImageId,
+             launchTime:   .LaunchTime,
+             monitoring:   .Monitoring.State
+          }
+          ]
+HEREDOC
+
     aws ec2 describe-instances \
-        | jq --raw-output '(.Reservations[].Instances[]? | select(.State.Name=="running") | [ (.Tags[]? | (select(.Key=="Name")).Value) // "-", .NetworkInterfaces[].PrivateIpAddresses[].PrivateIpAddress, .InstanceId, .InstanceType, .ImageId, .LaunchTime, .Monitoring.State]) | @csv' \
-        | sort \
+        | jq -r "${jqScript}" \
+        | json-to-csv \
         | strip-quotes \
-        | prepend 'Name,IP address,Instance ID,Instance type,AMI ID,Launch time,Monitoring' \
         | tabulate-by-comma
+}
+
+# List the IPs for all AWS instances in all regions
+function aws-all-instance-ips-all-regions() {
+    local originalRegion=${AWS_REGION}
+
+    local regions=$(aws ec2 describe-regions | jq -r '.Regions[].RegionName')
+
+    while read -r region; do
+        echo "$region"
+        export AWS_REGION=${region}
+        aws-all-instance-ips 2>/dev/null
+        echo
+    done < <(echo ${regions})
+
+    export AWS_REGION=${originalRegion}
 }
 
 # List AWS instance limits
@@ -798,7 +829,7 @@ HEREDOC
             "backlog.txt" using 1:4 title "Backlog"      linewidth 3
 HEREDOC
 
-    echo ${gnuplotScript} | gnuplot 
+    echo ${gnuplotScript} | gnuplot
     imgcat backlog.png
 
     rm ${pumpDataFilename}

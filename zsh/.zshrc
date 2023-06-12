@@ -195,7 +195,7 @@ alias stabulate-by-comma="gsed -r 's/^,/-,/g' \
     | column -t -s '','' "
 
 alias csv-to-json="python3 -c 'import csv, json, sys; print(json.dumps([dict(r) for r in csv.DictReader(sys.stdin)]))'"
-alias json-to-csv='jq -r ''(map(keys) | add | unique) as $cols | map(. as $row | $cols | map($row[.])) as $rows | $cols, $rows[] | @csv'''
+alias json-to-csv='jq -r ''(.[0] | keys_unsorted), (.[] | to_entries | map(.value)) | @csv'''
 
 # File helpers                      {{{2
 # ======================================
