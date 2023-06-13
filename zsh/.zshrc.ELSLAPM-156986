@@ -462,8 +462,8 @@ function aws-all-instance-ips() {
     [.Reservations[].Instances[]?
         | select(.State.Name=="running")
         | {
-             name:         (.Tags[]? | (select(.Key=="Name")).Value // "-"),
-             ipAddress:    .NetworkInterfaces[].PrivateIpAddresses[].PrivateIpAddress,
+             name:         (.Tags | map({key: .Key, value: .Value}) | from_entries | .Name // "-"),
+             ipAddress:    .PrivateIpAddress,
              instanceId:   .InstanceId,
              instanceType: .InstanceType,
              imageId:      .ImageId,
