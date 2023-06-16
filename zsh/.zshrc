@@ -605,7 +605,7 @@ alias aws-logout=aws-clear-variables
 
 alias aws-whoami='aws sts get-caller-identity | jq'
 
-# AWS helper functions              {{{2
+# AWS                               {{{2
 # ======================================
 
 # AWS CLI commands pointing at localstack
@@ -772,6 +772,13 @@ function aws-feature-groups() {
 compdef "_arguments \
     '1:environment arg:(dev staging live)'" \
     aws-feature-groups
+
+# Azure                             {{{2
+# ======================================
+
+function az-login() {
+     az login -u white1@science.regn.net
+}
 
 # Docker                            {{{2
 # ======================================
