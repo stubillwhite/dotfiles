@@ -939,7 +939,7 @@ function git-repos-status() {
         local dirty="${COLOR_GREEN}clean${COLOR_NONE}"
         (($gitRepoStatus[added] + $gitRepoStatus[modified] + $gitRepoStatus[deleted] + $gitRepoStatus[renamed] > 0)) && dirty="${COLOR_RED}dirty${COLOR_NONE}"
 
-        echo "${branch},${sync},${dirty},${repo}"
+        print "${branch},${sync},${dirty},${repo}\n"
     }
 
     git-for-each-repo display-status | column -t -s ','
