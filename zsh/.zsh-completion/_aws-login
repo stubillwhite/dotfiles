@@ -16,6 +16,7 @@ case "${state}" in
             'consumption'
             'dkp'
             'cef'
+            'taxonomy'
          )
 
          _describe -t prjs 'project' prjs && ret=0
@@ -63,6 +64,12 @@ case "${state}" in
                     'backup'
                     'networkstorage'
                     'candi'
+                )
+            ;;
+
+            (taxonomy)
+                envs=(
+                    'prod'
                 )
             ;;
         esac

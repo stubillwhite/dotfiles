@@ -1,0 +1,15 @@
+# /Users/white1/.config/tmuxinator/sebright.yml
+
+name: sebright
+root: ~/Dev/kd/butter-chicken/
+
+windows:
+  - sebright:
+      layout: even-vertical
+      panes:
+        - genai:
+            - cd kd-genai-service
+            - git pull -r --autostash
+        - performance:
+            - cd kd-performance-genai
+            - git pull -r --autostash
