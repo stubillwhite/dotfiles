@@ -16,7 +16,7 @@
 [alias]
     pretty-log = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %aN%C(reset)%C(bold yellow)%d%C(reset)' 
     pretty-log-with-dates = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%aI)%C(reset) %C(white)%s%C(reset) %C(dim white)- %aN%C(reset)%C(bold yellow)%d%C(reset)' 
-    log-recent = pretty-log --since='3 days ago'
+    log-recent = pretty-log --since='${GIT_RECENT_DAYS:-3} days ago'
     logv = pretty-log --all
     logvv = pretty-log-with-dates --all
     diff-base = !git diff --ignore-all-space $(git merge-base --fork-point ${GIT_TRUNK})
@@ -92,6 +92,9 @@
     path = ~/Dev/my-stuff/dotfiles/git/work-config/.gitconfig
 
 [includeIf "gitdir:~/Dev/rdp/"]
+    path = ~/Dev/my-stuff/dotfiles/git/work-config/.gitconfig
+
+[includeIf "gitdir:~/Dev/kd/"]
     path = ~/Dev/my-stuff/dotfiles/git/work-config/.gitconfig
 
 [mailmap]
