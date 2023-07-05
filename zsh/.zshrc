@@ -92,6 +92,7 @@ alias vim='nvim'                                                            # Us
 alias sed='gsed'                                                            # Use gsed instead of sed
 alias echo='gecho'                                                          # Use gecho nstead of echo
 alias date='gdate'                                                          # Use gdate instead of date
+alias pygmentize='pygmentize -O style=nord-darker'                          # Default to nord-darker style for pygmentize
 
 # Other useful stuff
 alias reload-zsh-config="exec zsh"                                          # Reload Zsh config
@@ -150,8 +151,8 @@ if-darwin && {
 # Useful things to pipe into        {{{2
 # ======================================
 
-alias fmt-xml='xmllint --format -'                                          # Prettify XML (cat foo.xml | fmt-xml)
-alias fmt-json='jq "."'                                                     # Prettify JSON (cat foo.json | fmt-json)
+alias format-xml='xmllint --format -'                                       # Prettify XML (cat foo.xml | fmt-xml)
+alias format-json='jq "."'                                                  # Prettify JSON (cat foo.json | fmt-json)
 alias as-stream='stdbuf -o0'                                                # Turn pipes to streams (tail -F foo.log | as-stream grep "bar")
 alias strip-color="gsed -r 's/\x1b\[[0-9;]*m//g'"                           # Strip ANSI colour codes (some-cmd | strip-color)
 alias strip-ansi="perl -pe 's/\x1b\[[0-9;]*[mG]//g'"                        # Strip all ANSI control codes (some-cmd | strip-ansi)
@@ -565,6 +566,8 @@ alias aws-cef-backup="aws-sso-login cef-backup"
 alias aws-cef-prod="aws-sso-login cef-prod"
 alias aws-cef-networkstorage="aws-sso-login cef-networkstorage"
 
+alias aws-taxonomy-prod="aws-sso-login taxonomy prod"
+
 function aws-recs-login() {
     if [[ $# -ne 1 ]]; then
         echo "Usage: aws-recs-login (dev|staging|live)"
@@ -773,11 +776,57 @@ compdef "_arguments \
     '1:environment arg:(dev staging live)'" \
     aws-feature-groups
 
+function aws-bucket-sizes() {
+    local endTime=$(date --iso-8601=seconds)
+    local startTime=$(date --iso-8601=seconds -d "-2 day")
+
+    local buckets=$(aws s3 ls | cut -d ' ' -f 3)
+
+    while read -r bucketName; do
+        local region=$(aws s3api get-bucket-location --bucket ${bucketName} | jq -r ".LocationConstraint")
+
+        if [[ ${region} = "null" ]]; then
+            local size="?"
+        else
+            local size=$(aws cloudwatch get-metric-statistics \
+                --namespace AWS/S3 \
+                --start-time ${startTime} \
+                --end-time ${endTime} \
+                --period 86400 \
+                --statistics Average \
+                --region ${region} \
+                --metric-name BucketSizeBytes \
+                --dimensions Name=BucketName,Value=${bucketName} Name=StorageType,Value=StandardStorage \
+                | jq ".Datapoints[].Average" \
+                | numfmt --to=iec \
+            )
+        fi
+
+        echo "${bucketName} ${region} ${size}"
+    done < <(echo ${buckets})
+}
+
+function white-test() {
+    local sinceDate=$(gdate -d "-2 days" --iso-8601=seconds)
+    local clusterIds=$(aws emr list-clusters --created-after "${sinceDate}" | jq -r '.Clusters[].Id')
+
+    while read -r clusterId; do
+        echo "${clusterId}"
+        aws emr describe-cluster --cluster-id "${clusterId}" \
+            | jq -r "{ clusterId: .Cluster.Id, clusterName: .Cluster.Name, name: .Cluster.InstanceGroups[].Name, type: .Cluster.InstanceGroups[].InstanceType, groupType: .Cluster.InstanceGroups[].InstanceGroupType, count: .Cluster.InstanceGroups[].RequestedInstanceCount }" \
+            | jq -r --slurp \
+            | json-to-csv \
+            | strip-quotes \
+            | tabulate-by-comma
+        echo
+    done < <(echo ${clusterIds} | head -n 3)
+}
+
 # Azure                             {{{2
 # ======================================
 
 function az-login() {
-     az login -u white1@science.regn.net
+     az login -u white1@science.regn.net -o table
 }
 
 # Docker                            {{{2
@@ -1386,15 +1435,14 @@ SHELLCHECK_OPTS+="-e SC3043 "    # Allow 'local', not in POSIX sh
 # Python                            {{{2
 # ======================================
 
-alias py-env-activate='source bin/activate'
+alias py-env-activate='source ./bin/activate'
 
 alias py-env-deactivate='deactivate'
 
 function py-env-init() {
     python3 -m venv .
     touch requirements.txt
-    py-env-activate
-    pip3 config set global.cert /Users/white1/Dev/certificates/ZscalerRootCertificate-2048-SHA256.crt
+    py-env-activate && pip3 config set global.cert /Users/white1/Dev/certificates/ZscalerRootCertificate-2048-SHA256.crt
 }
 
 alias py-env-install='pip3 install --trusted-host files.pythonhosted.org --trusted-host pypi.org --trusted-host pypi.python.org --default-timeout=1000'
