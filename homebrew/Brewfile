@@ -26,6 +26,9 @@ cask "google-chrome"                            # Cross-platform web browser
 cask "iterm2"                                   # Terminal emulator as alternative to Apple's Terminal app
 cask "syncthing"                                # Open source continuous file synchronization application
 
+# Database clients
+cask 'dbeaver-community'                        # Free universal database tool and SQL client
+
 # Screen capture
 cask "licecap"                                  # Animated screen capture application
 
