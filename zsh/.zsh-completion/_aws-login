@@ -12,6 +12,7 @@ case "${state}" in
     (prjs)
         local prjs; prjs=(
             'recs'
+            'scopus-search'
             'newsflo'
             'consumption'
             'dkp'
@@ -29,6 +30,13 @@ case "${state}" in
             (recs)
                 envs=(
                     'dev'
+                    'prod'
+                )
+            ;;
+
+            (scopus-search)
+                envs=(
+                    'non-prod'
                     'prod'
                 )
             ;;
