@@ -8,6 +8,7 @@ cask 'drawio'                                   # draw.io Desktop
 # Microsoft office software
 cask 'microsoft-teams'                          # Microsoft Teams is your hub for teamwork
 cask 'onedrive'                                 # Cloud storage client
+cask 'powershell'                               # Command-line shell and scripting language
 
 ################################################################################
 # Utilities
