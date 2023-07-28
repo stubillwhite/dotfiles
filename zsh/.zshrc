@@ -611,6 +611,11 @@ alias aws-logout=aws-clear-variables
 
 alias aws-whoami='aws sts get-caller-identity | jq'
 
+function aws-account-info() {
+    print 'Account name:  ' $(aws iam list-account-aliases | jq -r ".AccountAliases[]")
+    print 'Account number:' $(aws sts get-caller-identity  | jq -r ".Account")
+}
+
 # AWS                               {{{2
 # ======================================
 
@@ -1702,7 +1707,7 @@ function java-version() {
     export JAVA_HOME=/Library/Java/JavaVirtualMachines/${1}/Contents/Home/
 }
 compdef '_alternative \
-    "arguments:custom arg:(temurin-8.jdk temurin-11.jdk temurin-17.jdk temurin.jdk)"' \
+    "arguments:custom arg:(temurin-8.jdk temurin-11.jdk temurin-17.jdk temurin-20.jdk)"' \
     java-version
 
 function install-java-certificate() {
