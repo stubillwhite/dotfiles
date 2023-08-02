@@ -1,6 +1,6 @@
-# /Users/white1/.config/tmuxinator/sebright.yml
+# /Users/white1/.config/tmuxinator/scopus-ai.yml
 
-name: sebright
+name: scopus-ai
 root: ~/Dev/kd/butter-chicken/
 
 windows:
