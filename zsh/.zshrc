@@ -197,6 +197,7 @@ alias stabulate-by-comma="gsed -r 's/^,/-,/g' \
 
 alias csv-to-json="python3 -c 'import csv, json, sys; print(json.dumps([dict(r) for r in csv.DictReader(sys.stdin)]))'"
 alias json-to-csv='jq -r ''(.[0] | keys_unsorted), (.[] | to_entries | map(.value)) | @csv'''
+alias json-to-tsv='jq -r ''(.[0] | keys_unsorted), (.[] | to_entries | map(.value)) | @tsv'''
 
 # File helpers                      {{{2
 # ======================================
@@ -416,20 +417,27 @@ alias tunnel-fast-ai='fast-ai-tunnel-open 8888 fast-ai-server 8888'
 
 # Switch artefact resolution for SBT/Maven/Ivy between configurations
 function artefact-config () {
+    ARTEFACT_DIRS=(
+        ".m2"
+        ".ivy2"
+        ".sbt"
+    )
+
     if [[ $# -ne 1 ]] ; then
         echo 'Usage: artefact-config CONFIG'
+        echo
+        echo 'Current config:'
+        for file in "${ARTEFACT_DIRS[@]}"
+        do
+            echo "~/${file} -> $(readlink ~/$file)"
+        done \
+            | tabulate-by-space
         return 1
     fi
 
     local config="${1}"
 
     local artefactConfigDir=.artefact-config
-
-    ARTEFACT_DIRS=(
-        ".m2"
-        ".ivy2"
-        ".sbt"
-    )
 
     for file in "${ARTEFACT_DIRS[@]}"
     do
@@ -794,23 +802,23 @@ function aws-bucket-sizes() {
         local region=$(aws s3api get-bucket-location --bucket ${bucketName} | jq -r ".LocationConstraint")
 
         if [[ ${region} = "null" ]]; then
-            local size="?"
-        else
-            local size=$(aws cloudwatch get-metric-statistics \
-                --namespace AWS/S3 \
-                --start-time ${startTime} \
-                --end-time ${endTime} \
-                --period 86400 \
-                --statistics Average \
-                --region ${region} \
-                --metric-name BucketSizeBytes \
-                --dimensions Name=BucketName,Value=${bucketName} Name=StorageType,Value=StandardStorage \
-                | jq ".Datapoints[].Average" \
-                | numfmt --to=iec \
-            )
+            region='us-east-1'
         fi
 
-        echo "${bucketName} ${region} ${size}"
+        local size=$(aws cloudwatch get-metric-statistics \
+            --namespace AWS/S3 \
+            --start-time ${startTime} \
+            --end-time ${endTime} \
+            --period 86400 \
+            --statistics Average \
+            --region ${region} \
+            --metric-name BucketSizeBytes \
+            --dimensions Name=BucketName,Value=${bucketName} Name=StorageType,Value=StandardStorage \
+            | jq ".Datapoints[].Average" \
+            | numfmt --to=iec \
+        )
+
+        printf "%-7s %-10s %s\n" ${size} ${region} ${bucketName}
     done < <(echo ${buckets})
 }
 
@@ -1621,21 +1629,29 @@ function git-stats-top-team-committers-by-repo() {
     fi
 
     local team=$1
-    [ "${team}" = 'recs' ]           && teamMembers="'Anna Bladzich', 'Rich Lyne', 'Reinder Verlinde', 'Stu White', 'Tess Hoad', 'Manisha Sistum', 'Andrew Nguyen', 'Jerry Yang'"
+    [ "${team}" = 'recs' ]           && teamMembers="'Rich Lyne', 'Reinder Verlinde', 'Tess Hoad', 'Luci Curnow', 'Andy Nguyen', 'Jerry Yang'"
+    [ "${team}" = 'recs-extended' ]  && teamMembers="'Rich Lyne', 'Reinder Verlinde', 'Tess Hoad', 'Luci Curnow', 'Andy Nguyen', 'Jerry Yang', 'Stu White', 'Dimi Alexiou', 'Ligia Stan'"
     [ "${team}" = 'butter-chicken' ] && teamMembers="'Asmaa Shoala', 'Carmen Mester', 'Colin Zhang', 'Hamid Haghayegh', 'Henry Cleland', 'Karthik Jaganathan', 'Krishna', 'Rama Sane'"
     [ "${team}" = 'spirograph' ]     && teamMembers="'Paul Meyrick', 'Fraser Reid', 'Nancy Goyal', 'Richard Snoad', 'Ayce Keskinege'"
-    [ "${team}" = 'dkp' ]            && teamMembers="'Ryan Moquin', 'Prakruthy Dhoopa Harish', 'Arun Kumar Kalahastri', 'Sivapriya Ganeshbabu', 'Sai Santoshi Vindamuri', 'Suganya Moorthy'"
-    [ "${team}" = 'cef' ]            && teamMembers="'Saad Rashid', 'Benoit Pasquereau', 'Adam Ladly', 'Jeremy Scadding', 'Anique von Berne', 'Nishant Singh', 'John Smith', 'Dominicano Luciano', 'Kanaga Ganesan', 'Akhil Babu', 'Gintautas Sulskus'"
+    [ "${team}" = 'dkp' ]            && teamMembers="'Ryan Moquin', 'Gautam Chakrabarty', 'Prakruthy Dhoopa Harish', 'Arun Kumar Kalahastri', 'Sivapriya Ganeshbabu', 'Sai Santoshi Vindamuri', 'Suganya Moorthy'"
+    [ "${team}" = 'cef' ]            && teamMembers="'Saad Rashid', 'Benoit Pasquereau', 'Adam Ladly', 'Jeremy Scadding', 'Anique von Berne', 'Nishant Singh', 'Dominicano Luciano', 'Kanaga Ganesan', 'Akhil Babu', 'Gintautas Sulskus'"
 
+    echo
+    echo 'Repos with authors in the team'
     q 'select repo_name, author, count(*) as total from .git-stats.csv group by repo_name, author' \
         | q "select * from - where author in (${teamMembers})" \
         | q 'select *, row_number() over (partition by repo_name order by total desc) as idx from -' \
         | q 'select repo_name, author, total from - where idx <= 5' \
         | q -D "$(printf '\t')" 'select * from -' \
-        | tabulate-by-tab
+        | tabulate-by-tab 
+
+    echo
+    echo 'Repos with no authors in the team'
+    q "select distinct repo_name from .git-stats.csv where author in (${teamMembers})" \
+        | q 'select distinct stats.repo_name from .git-stats.csv stats where stats.repo_name not in (select distinct repo_name from -)'
 }
 compdef "_arguments \
-    '1:team arg:(recs butter-chicken spirograph dkp cef)'" \
+    '1:team arg:(recs recs-extended butter-chicken spirograph dkp cef)'" \
     git-stats-top-team-committers-by-repo
 
 function git-stats-authors() {
