@@ -1,10 +1,8 @@
-# /Users/white1/.config/tmuxinator/my-stuff.yml
-
 name: my-stuff
 root: ~/Dev/my-stuff/
 
 windows:
-  - cef:
+  - my-stuff:
       layout: even-vertical
       panes:
         - main:

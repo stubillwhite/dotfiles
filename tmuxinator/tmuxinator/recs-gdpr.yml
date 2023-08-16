@@ -1,5 +1,3 @@
-# /Users/white1/.config/tmuxinator/recs-gdpr.yml
-
 name: recs-gdpr
 root: ~/Dev/recommenders/kd-recs-utils/gdpr
 

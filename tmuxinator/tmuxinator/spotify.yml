@@ -1,5 +1,3 @@
-# /Users/white1/.config/tmuxinator/spotify.yml
-
 name: spotify
 root: ~/Dev/my-stuff/spotify-playlist-builder
 
