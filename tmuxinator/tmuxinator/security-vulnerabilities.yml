@@ -1,0 +1,10 @@
+name: security-vulnerabilities
+root: ~/Dev/scratchpad/security-vulnerabilities
+
+windows:
+  - security-vulnerabilities:
+      layout: even-vertical
+      panes:
+        - main:
+            - python3 ./extract-data.py
+            - source ./generate-graph.sh

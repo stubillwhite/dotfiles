@@ -1,0 +1,9 @@
+name: scopus-ai-queries
+root: ~/Dev/scratchpad/download-kibana-data
+
+windows:
+  - scopus-ai:
+      layout: even-vertical
+      panes:
+        - queries:
+            - make run
