@@ -1660,7 +1660,7 @@ function git-stats-authors() {
 }
 
 function git-stats-most-recent-commits-by-authors() {
-    q 'select commit_date, author from .git-stats.csv group by author order by commit_date desc' \
+    q 'select max(commit_date), author from .git-stats.csv group by author order by commit_date desc' \
         | q -D "$(printf '\t')" 'select * from -' \
         | tabulate-by-tab
 }
