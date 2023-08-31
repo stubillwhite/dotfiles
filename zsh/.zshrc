@@ -89,6 +89,7 @@ alias entr='entr -c'                                                        # en
 alias gh='NO_COLOR=1 gh'                                                    # gh should not be colourised
 alias vi='nvim'                                                             # Use nvim instead of vi
 alias vim='nvim'                                                            # Use nvim instead of vim
+alias python='python3'                                                      # Use Python 3
 alias sed='gsed'                                                            # Use gsed instead of sed
 alias echo='gecho'                                                          # Use gecho nstead of echo
 alias date='gdate'                                                          # Use gdate instead of date
