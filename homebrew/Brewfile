@@ -158,10 +158,6 @@ brew "tfenv", link: true                        # Terraform version manager insp
 # Azure
 brew "azure-cli"                                # Microsoft Azure CLI 2.0
 
-# Heroku
-tap "heroku/brew" 
-brew "heroku"                                   # Everything you need to get started with Heroku
-
 # SQL
 cask "sequel-pro"                               # MySQL/MariaDB database management platform
 cask "sqlworkbenchj"                            # Java-based SQL client
