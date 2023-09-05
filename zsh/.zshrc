@@ -1638,6 +1638,13 @@ function git-stats-top-team-committers-by-repo() {
     [ "${team}" = 'cef' ]            && teamMembers="'Saad Rashid', 'Benoit Pasquereau', 'Adam Ladly', 'Jeremy Scadding', 'Anique von Berne', 'Nishant Singh', 'Dominicano Luciano', 'Kanaga Ganesan', 'Akhil Babu', 'Gintautas Sulskus'"
 
     echo
+    echo 'Team'
+    while read teamMember
+    do
+        echo $teamMember | gsed "s/'//g"
+    done < <(echo ${teamMembers} | tr ',' '\n' | sort)
+
+    echo
     echo 'Repos with authors in the team'
     q 'select repo_name, author, count(*) as total from .git-stats.csv group by repo_name, author' \
         | q "select * from - where author in (${teamMembers})" \
