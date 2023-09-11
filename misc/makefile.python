@@ -1,0 +1,61 @@
+# vim:fdm=marker
+
+# Constants                                                                 {{{1
+# ==============================================================================
+
+COLOR_BLUE=\033[0;34m
+COLOR_NONE=\033[0m
+
+SHELL=/usr/local/bin/zsh
+.SHELLFLAGS=-i
+
+PYTHON=python3
+PIP=pip3
+
+# Targets                                                                   {{{1
+# ==============================================================================
+
+# Help                              {{{2
+# ======================================
+
+help:
+	@grep -E '^[0-9a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
+		| sort \
+		| awk 'BEGIN {FS = ":.*?## "}; {printf "$(COLOR_BLUE)%s|$(COLOR_NONE)%s\n", $$1, $$2}' \
+		| column -t -s '|'
+
+# Clean                             {{{2
+# ======================================
+
+.PHONY: clean
+clean: ## Remove all artefacts
+	@echo 'Cleaning application'
+
+.PHONY: clean-all
+clean-all: clean ## Remove all artefacts and dependencies
+	@echo 'Cleaning dependencies'
+	@rm -rf include bin lib pyvenv.cfg
+
+# Dependencies                      {{{2
+# ======================================
+
+bin/activate:
+	@echo 'Creating virtual environment'
+	@$(PYTHON) -m venv .
+
+venv: bin/activate
+
+.make-sentinel.deps: bin/activate requirements.txt
+	@echo 'Fetching dependencies'
+	@source ./bin/activate \
+		&& $(PIP) install --trusted-host files.pythonhosted.org --trusted-host pypi.org --trusted-host pypi.python.org --default-timeout=1000 -r requirements.txt
+	@touch .make-sentinel.deps
+
+deps: .make-sentinel.deps ## Install dependencies
+
+# Running                           {{{2
+# ======================================
+
+run: venv deps ## Run the server
+	@source ./bin/activate \
+		&& $(PYTHON) app.py

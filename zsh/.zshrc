@@ -233,6 +233,18 @@ function untarf() {
     tar -zxvf "$1"
 }
 
+# Remove an entry from $PATH
+# path-remove "/usr/local/bin/python-old-version"
+function path-remove() {
+    if [[ $# -ne 1 ]] ; then
+        echo 'Usage: path-remove PATH'
+        return 1
+    fi
+
+    local toRemove=$1
+    export PATH=$(echo $PATH | tr ":" "\n" | grep -v "${toRemove}" | xargs | tr ' ' ':')
+}
+
 # Long running jobs                 {{{2
 # ======================================
 
@@ -1457,8 +1469,10 @@ alias py-env-activate='source ./bin/activate'
 alias py-env-deactivate='deactivate'
 
 function py-env-init() {
-    python3 -m venv .
+    python -m venv .
     touch requirements.txt
+    touch app.py
+    cp -n ~/Dev/my-stuff/dotfiles/misc/makefile.python makefile
     py-env-activate && pip3 config set global.cert /Users/white1/Dev/certificates/ZscalerRootCertificate-2048-SHA256.crt
 }
 
@@ -1614,6 +1628,7 @@ function whitetest() {
         | q -D "$(printf '\t')" 'select * from -' \
         | tabulate-by-tab
 }
+compdef _whitetest whitetest
 #compdef "_alternative \
 #    'arguments:author:($(_git_stats_authors))'" \
 #    whitetest
@@ -1630,8 +1645,8 @@ function git-stats-top-team-committers-by-repo() {
     fi
 
     local team=$1
-    [ "${team}" = 'recs' ]           && teamMembers="'Rich Lyne', 'Reinder Verlinde', 'Tess Hoad', 'Luci Curnow', 'Andy Nguyen', 'Jerry Yang'"
-    [ "${team}" = 'recs-extended' ]  && teamMembers="'Rich Lyne', 'Reinder Verlinde', 'Tess Hoad', 'Luci Curnow', 'Andy Nguyen', 'Jerry Yang', 'Stu White', 'Dimi Alexiou', 'Ligia Stan'"
+    [ "${team}" = 'recs' ]           && teamMembers="'Anamaria Mocanu', 'Rich Lyne', 'Reinder Verlinde', 'Tess Hoad', 'Luci Curnow', 'Andy Nguyen', 'Jerry Yang'"
+    [ "${team}" = 'recs-extended' ]  && teamMembers="'Anamaria Mocanu', 'Rich Lyne', 'Reinder Verlinde', 'Tess Hoad', 'Luci Curnow', 'Andy Nguyen', 'Jerry Yang', 'Stu White', 'Dimi Alexiou', 'Ligia Stan'"
     [ "${team}" = 'butter-chicken' ] && teamMembers="'Asmaa Shoala', 'Carmen Mester', 'Colin Zhang', 'Hamid Haghayegh', 'Henry Cleland', 'Karthik Jaganathan', 'Krishna', 'Rama Sane'"
     [ "${team}" = 'spirograph' ]     && teamMembers="'Paul Meyrick', 'Fraser Reid', 'Nancy Goyal', 'Richard Snoad', 'Ayce Keskinege'"
     [ "${team}" = 'dkp' ]            && teamMembers="'Ryan Moquin', 'Gautam Chakrabarty', 'Prakruthy Dhoopa Harish', 'Arun Kumar Kalahastri', 'Sivapriya Ganeshbabu', 'Sai Santoshi Vindamuri', 'Suganya Moorthy'"
@@ -1641,8 +1656,8 @@ function git-stats-top-team-committers-by-repo() {
     echo 'Team'
     while read teamMember
     do
-        echo $teamMember | gsed "s/'//g"
-    done < <(echo ${teamMembers} | tr ',' '\n' | sort)
+        echo $teamMember
+    done < <(echo ${teamMembers} | tr ',' '\n' | gsed "s/'//g" | sort)
 
     echo
     echo 'Repos with authors in the team'
