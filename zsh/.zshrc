@@ -1657,7 +1657,7 @@ function git-stats-top-team-committers-by-repo() {
     while read teamMember
     do
         echo $teamMember
-    done < <(echo ${teamMembers} | tr ',' '\n' | gsed "s/'//g" | sort)
+    done < <(echo ${teamMembers} | gsed 's/, /\n/g' | gsed "s/'//g" | sort)
 
     echo
     echo 'Repos with authors in the team'
