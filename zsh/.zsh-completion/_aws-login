@@ -18,6 +18,7 @@ case "${state}" in
             'dkp'
             'cef'
             'taxonomy'
+            'innovation'
          )
 
          _describe -t prjs 'project' prjs && ret=0
@@ -78,6 +79,12 @@ case "${state}" in
             (taxonomy)
                 envs=(
                     'prod'
+                )
+            ;;
+
+            (innovation)
+                envs=(
+                    'bedrock'
                 )
             ;;
         esac

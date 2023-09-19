@@ -592,6 +592,8 @@ alias aws-cef-networkstorage="aws-sso-login cef-networkstorage"
 
 alias aws-taxonomy-prod="aws-sso-login taxonomy prod"
 
+alias aws-innovation-bedrock="aws-sso-login innovation-bedrock"
+
 function aws-recs-login() {
     if [[ $# -ne 1 ]]; then
         echo "Usage: aws-recs-login (dev|staging|live)"
@@ -1649,8 +1651,7 @@ function git-stats-top-team-committers-by-repo() {
     [ "${team}" = 'recs-extended' ]  && teamMembers="'Anamaria Mocanu', 'Rich Lyne', 'Reinder Verlinde', 'Tess Hoad', 'Luci Curnow', 'Andy Nguyen', 'Jerry Yang', 'Stu White', 'Dimi Alexiou', 'Ligia Stan'"
     [ "${team}" = 'butter-chicken' ] && teamMembers="'Asmaa Shoala', 'Carmen Mester', 'Colin Zhang', 'Hamid Haghayegh', 'Henry Cleland', 'Karthik Jaganathan', 'Krishna', 'Rama Sane'"
     [ "${team}" = 'spirograph' ]     && teamMembers="'Paul Meyrick', 'Fraser Reid', 'Nancy Goyal', 'Richard Snoad', 'Ayce Keskinege'"
-    [ "${team}" = 'dkp' ]            && teamMembers="'Ryan Moquin', 'Gautam Chakrabarty', 'Prakruthy Dhoopa Harish', 'Arun Kumar Kalahastri', 'Sivapriya Ganeshbabu', 'Sai Santoshi Vindamuri', 'Suganya Moorthy'"
-    [ "${team}" = 'cef' ]            && teamMembers="'Saad Rashid', 'Benoit Pasquereau', 'Adam Ladly', 'Jeremy Scadding', 'Anique von Berne', 'Nishant Singh', 'Dominicano Luciano', 'Kanaga Ganesan', 'Akhil Babu', 'Gintautas Sulskus'"
+    [ "${team}" = 'dkp' ]            && teamMembers="'Ryan Moquin', 'Gautam Chakraborty', 'Prakruthy Dhoopa Harish', 'Arun Kumar Kalahastri', 'Sangavi Durairaj', 'Vidhya Shaghar A P', 'Suganya Moorthy', 'Chinar Jaiswal'",
 
     echo
     echo 'Team'
@@ -1731,7 +1732,7 @@ function git-stats-total-commits-by-author-per-month() {
         | tabulate-by-tab
 }
 
-function git-stats-last-commits-by-repo() {
+function git-stats-most-recent-commits-by-repo() {
     q -O "select max(commit_date) as last_commit, repo_name from .git-stats.csv where file not in ('version.sbt') group by repo_name order by last_commit desc" \
         | q -D "$(printf '\t')" 'select * from -' \
         | tabulate-by-tab
