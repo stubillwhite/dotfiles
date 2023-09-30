@@ -313,7 +313,12 @@ function image-to-text() {
         return 1
     fi
 
-    tesseract $1 $(basename ${1:t:r})
+    local destName=$(basename ${1:t:r})
+    tesseract $1 ${destName}
+
+    local dest=${destName}.txt
+    cat ${dest} 
+    rm ${dest}
 }
 
 # Prompt for confirmation
@@ -1651,7 +1656,9 @@ function git-stats-top-team-committers-by-repo() {
     [ "${team}" = 'recs-extended' ]  && teamMembers="'Anamaria Mocanu', 'Rich Lyne', 'Reinder Verlinde', 'Tess Hoad', 'Luci Curnow', 'Andy Nguyen', 'Jerry Yang', 'Stu White', 'Dimi Alexiou', 'Ligia Stan'"
     [ "${team}" = 'butter-chicken' ] && teamMembers="'Asmaa Shoala', 'Carmen Mester', 'Colin Zhang', 'Hamid Haghayegh', 'Henry Cleland', 'Karthik Jaganathan', 'Krishna', 'Rama Sane'"
     [ "${team}" = 'spirograph' ]     && teamMembers="'Paul Meyrick', 'Fraser Reid', 'Nancy Goyal', 'Richard Snoad', 'Ayce Keskinege'"
-    [ "${team}" = 'dkp' ]            && teamMembers="'Ryan Moquin', 'Gautam Chakraborty', 'Prakruthy Dhoopa Harish', 'Arun Kumar Kalahastri', 'Sangavi Durairaj', 'Vidhya Shaghar A P', 'Suganya Moorthy', 'Chinar Jaiswal'",
+    [ "${team}" = 'dkp' ]            && teamMembers="'Ryan Moquin', 'Gautam Chakraborty', 'Prakruthy Dhoopa Harish', 'Arun Kumar Kalahastri', 'Sangavi Durairaj', 'Vidhya Shaghar A P', 'Suganya Moorthy', 'Chinar Jaiswal'"
+    [ "${team}" = 'cef' ]            && teamMembers="'Saad Rashid', 'Benoit Pasquereau', 'Adam Ladly', 'Jeremy Scadding', 'Anique von Berne', 'Nishant Singh', 'Dominicano Luciano', 'Kanaga Ganesan', 'Akhil Babu', 'Gintautas Sulskus'"
+    [ "${team}" = 'cef-extended' ]   && teamMembers="'Saad Rashid', 'Benoit Pasquereau', 'Adam Ladly', 'Jeremy Scadding', 'Anique von Berne', 'Nishant Singh', 'Dominicano Luciano', 'Kanaga Ganesan', 'Akhil Babu', 'Gintautas Sulskus', 'John Smith'"
 
     echo
     echo 'Team'
