@@ -1,5 +1,5 @@
-name: cef
-root: ~/Dev/rdp/cef/
+name: concept
+root: ~/Dev/rdp/concept/
 
 windows:
   - cef:

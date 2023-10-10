@@ -7,3 +7,6 @@ windows:
       panes:
         - main:
             - git-repos-pull
+        - infra:
+            - pushd infra
+            - git-repos-pull
