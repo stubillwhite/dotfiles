@@ -580,10 +580,10 @@ alias aws-recs-prod="aws-sso-login recs-prod"
 alias aws-scopus-search-non-prod="aws-sso-login scopus-search-non-prod"
 alias aws-scopus-search-prod="aws-sso-login scopus-search-prod"
 
-# alias aws-consumption-sc-non-prod="aws-developer-role $SECRET_ACC_CONTENT_SC_NON_PROD ADFS-EnterpriseAdmin aws-sc-content-prod us-east-1"
+alias aws-consumption-sc-non-prod="aws-sso-login scopus-content-non-prod"
 # alias aws-consumption-sc-prod="aws-developer-role $SECRET_ACC_CONTENT_SC_CONTENT_PROD=814132467461 ADFS-EnterpriseAdmin aws-sc-prod us-east-1"
 # alias aws-consumption-sd-backup="aws-developer-role $SECRET_ACC_CONTENT_SD_CONTENT_BACKUP ADFS-EnterpriseAdmin aws-sd-backup us-east-1"
-# alias aws-consumption-sd-non-prod="aws-developer-role $SECRET_ACC_CONTENT_SD_CONTENT_NON_PROD ADFS-EnterpriseAdmin aws-sd-non-prod us-east-1"
+ alias aws-consumption-sd-non-prod="aws-sso-login sd-content-non-prod"
 # alias aws-consumption-sd-prod="aws-developer-role $SECRET_ACC_CONTENT_SD_CONTENT_PROD ADFS-EnterpriseAdmin aws-sd-non-prod us-east-1"
 
 alias aws-dkp-non-prod="aws-sso-login dkp-non-prod"
