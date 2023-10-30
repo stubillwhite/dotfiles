@@ -152,8 +152,8 @@ if-darwin && {
 # Useful things to pipe into        {{{2
 # ======================================
 
-alias format-xml='xmllint --format -'                                       # Prettify XML (cat foo.xml | fmt-xml)
-alias format-json='jq "."'                                                  # Prettify JSON (cat foo.json | fmt-json)
+alias format-xml='xmllint --format -'                                       # Prettify XML (cat foo.xml | format-xml)
+alias format-json='jq "."'                                                  # Prettify JSON (cat foo.json | format-json)
 alias as-stream='stdbuf -o0'                                                # Turn pipes to streams (tail -F foo.log | as-stream grep "bar")
 alias strip-color="gsed -r 's/\x1b\[[0-9;]*m//g'"                           # Strip ANSI colour codes (some-cmd | strip-color)
 alias strip-ansi="perl -pe 's/\x1b\[[0-9;]*[mG]//g'"                        # Strip all ANSI control codes (some-cmd | strip-ansi)
@@ -403,6 +403,11 @@ function scp-skeleton-config() {
 }
 compdef _ssh scp-skeleton-config=ssh
 
+# Generate a UUID
+function uuid() {
+    uuidgen | tr '[A-Z]' '[a-z]'
+}
+
 # Fast AI course helpers            {{{2
 # ======================================
 
@@ -581,10 +586,9 @@ alias aws-scopus-search-non-prod="aws-sso-login scopus-search-non-prod"
 alias aws-scopus-search-prod="aws-sso-login scopus-search-prod"
 
 alias aws-consumption-sc-non-prod="aws-sso-login scopus-content-non-prod"
-# alias aws-consumption-sc-prod="aws-developer-role $SECRET_ACC_CONTENT_SC_CONTENT_PROD=814132467461 ADFS-EnterpriseAdmin aws-sc-prod us-east-1"
-# alias aws-consumption-sd-backup="aws-developer-role $SECRET_ACC_CONTENT_SD_CONTENT_BACKUP ADFS-EnterpriseAdmin aws-sd-backup us-east-1"
- alias aws-consumption-sd-non-prod="aws-sso-login sd-content-non-prod"
-# alias aws-consumption-sd-prod="aws-developer-role $SECRET_ACC_CONTENT_SD_CONTENT_PROD ADFS-EnterpriseAdmin aws-sd-non-prod us-east-1"
+alias aws-consumption-sc-prod="aws-sso-login scopus-content-prod"
+alias aws-consumption-sd-non-prod="aws-sso-login sd-content-non-prod"
+alias aws-consumption-sd-prod="aws-sso-login sd-content-prod"
 
 alias aws-dkp-non-prod="aws-sso-login dkp-non-prod"
 alias aws-dkp-prod="aws-sso-login dkp-prod"
@@ -925,7 +929,7 @@ function git-for-each-repo-parallel() {
     local dirs=$(find . -type d -maxdepth 1)
 
     echo "$dirs" \
-        | env_parallel --env "$1" -j20 \
+        | env_parallel --env "$1" -j5 \
             "
             pushd {} > /dev/null;                               \
             if git rev-parse --git-dir > /dev/null 2>&1; then   \
@@ -1585,6 +1589,22 @@ HEREDOC
     rm "${hashToAuthorCsvFilename}" "${hashToFileCsvFilename}"
 }
 
+function git-stats-merge-files() {
+    if [[ $# -ne 1 ]] ; then
+        echo 'Usage: git-stats-merge-files DIR'
+        exit -1
+    fi
+
+    local dir=$1
+    local fnam=".git-stats.csv"
+
+    if [[ -f "${dir}/${fnam}" ]]; then
+        cat "${dir}/${fnam}" | tail -n +2 >> "./${fnam}"
+    else
+        cat "${dir}/${fnam}" > "./${fnam}"
+    fi
+}
+
 function git-repos-generate-stats() {
     stats() {
         echo "Getting stats for $(basename $PWD)"
@@ -1800,4 +1820,24 @@ function certificate-expiry-openssl() {
         return 1
     fi
     echo Q | openssl s_client -connect "${1}":443 | openssl x509 -noout -dates
+}
+
+export OPENAI_API_KEY=${SECRET_OPENAI_API_KEY}
+
+# Testing
+# echo "$(greyscale 123) testing"
+function greyscale() {
+    local level=$1
+    printf "\e[38;2;${level};${level};${level}m"
+}
+
+function days-between() {
+    local date1=$1
+    local date2=$2
+    
+    echo $(( ( $(date -d "${date2}" "+%s") - $(date -d "${date1}" "+%s") ) / 86400))
+}
+
+function age() {
+    days-between $1 $(date --iso-8601=s)
 }

@@ -11,6 +11,7 @@ _arguments -C \
 case "${state}" in
     (prjs)
         local prjs; prjs=(
+            'bos'
             'recs'
             'scopus-search'
             'newsflo'
@@ -28,6 +29,15 @@ case "${state}" in
         local envs 
 
         case "${line[1]}" in
+            (bos)
+                envs=(
+                    'utility'
+                    'dev'
+                    'staging'
+                    'prod'
+                )
+            ;;
+
             (recs)
                 envs=(
                     'dev'
@@ -52,7 +62,9 @@ case "${state}" in
             (consumption)
                 envs=(
                     'sc-non-prod'
+                    'sc-prod'
                     'sd-non-prod'
+                    'sd-prod'
                 )
             ;;
 

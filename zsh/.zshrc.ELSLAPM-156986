@@ -480,8 +480,8 @@ HEREDOC
         | tabulate-by-comma
 }
 
-# List the IPs for all AWS instances in all regions
-function aws-all-instance-ips-all-regions() {
+# For each region in AWS, execute the specified function
+function aws-for-all-regions() {
     local originalRegion=${AWS_REGION}
 
     local regions=$(aws ec2 describe-regions | jq -r '.Regions[].RegionName')
@@ -489,12 +489,33 @@ function aws-all-instance-ips-all-regions() {
     while read -r region; do
         echo "$region"
         export AWS_REGION=${region}
-        aws-all-instance-ips 2>/dev/null
+        "$@"
         echo
     done < <(echo ${regions})
 
     export AWS_REGION=${originalRegion}
 }
+
+# List the IPs for all AWS instances in all regions
+function aws-all-instance-ips-all-regions() {
+
+    list-instances() {
+        aws-all-instance-ips 2>/dev/null
+    }
+
+    aws-for-all-regions list-instances
+}
+
+# List the DynamoDB tables in all regions
+function aws-all-regions-dynamodb-tables() {
+
+    list-tables() {
+        aws dynamodb list-tables | jq -r '.TableNames[]'
+    }
+
+    aws-for-all-regions list-tables
+}
+
 
 # List AWS instance limits
 function aws-ec2-instance-limits() {
