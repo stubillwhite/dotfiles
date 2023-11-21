@@ -55,7 +55,7 @@ source-if-exists "/usr/local/bin/aws_zsh_completer.sh"
 # export HISTFILESIZE=
 # export HISTSIZE=
 
-# Use NVim 
+# Use NVim
 export EDITOR=nvim
 export VISUAL=nvim
 
@@ -64,6 +64,11 @@ export VISUAL=nvim
 
 setopt BASH_REMATCH             # Bash regex support
 setopt menu_complete            # Tab autocompletes first option even if ambiguous
+
+# ZScaler                                                                   {{{1
+# ==============================================================================
+
+export SSL_CERT_FILE=~/Dev/certificates/ZscalerRootCertificate-2048-SHA256.crt
 
 # Aliases                                                                   {{{1
 # ==============================================================================
@@ -93,6 +98,7 @@ alias python='python3'                                                      # Us
 alias sed='gsed'                                                            # Use gsed instead of sed
 alias echo='gecho'                                                          # Use gecho nstead of echo
 alias date='gdate'                                                          # Use gdate instead of date
+alias find='gfind'                                                          # Use gfind instead of find
 alias pygmentize='pygmentize -O style=nord-darker'                          # Default to nord-darker style for pygmentize
 
 # Other useful stuff
@@ -113,7 +119,7 @@ function _launch-jetbrains-tool() {
     local cmd=$1
     shift
     local args=$@
-    
+
     if [[ $# -eq 0 ]] ; then
         args='.'
     fi
@@ -178,7 +184,7 @@ function tabulate-by-comma() {
 # Tabluate by space
 # cat foo.txt | tabulate-by-space
 function tabulate-by-space() {
-    column -t -s ' ' 
+    column -t -s ' '
 }
 
 # Prepend a line of text to output
@@ -261,7 +267,7 @@ function tell-me() {
 
     if [[ $# -lt 1 ]] ; then
         msg="${exitStatus}"
-    else 
+    else
         msg="${exitStatus} : $1"
     fi
 
@@ -280,7 +286,7 @@ function tell-me() {
 #       f() {
 #           ls
 #       }
-#   
+#
 #       notify-on-change f 1 "Directory contents changed"
 #   }
 function notify-on-change() {
@@ -317,7 +323,7 @@ function image-to-text() {
     tesseract $1 ${destName}
 
     local dest=${destName}.txt
-    cat ${dest} 
+    cat ${dest}
     rm ${dest}
 }
 
@@ -326,7 +332,7 @@ function image-to-text() {
 function confirm() {
     read response\?"${1:-Are you sure? [y/n]} "
     case "$response" in
-        [Yy][Ee][Ss]|[Yy]) 
+        [Yy][Ee][Ss]|[Yy])
             true ;;
         *)
             false ;;
@@ -383,7 +389,7 @@ function date-to-epoch() {
 
 # Calculate the result of an expression
 # calc 2 + 2
-function calc () { 
+function calc () {
     echo "scale=2;$*" | bc | sed 's/\.0*$//'
 }
 
@@ -648,6 +654,19 @@ function aws-account-info() {
     print 'Account number:' $(aws sts get-caller-identity  | jq -r ".Account")
 }
 
+function aws-ssh-send-key() {
+    if [[ $# -ne 1 ]]; then
+        echo "Usage: aws-ssh-send-key INSTANCE_ID"
+        return 1
+    fi
+
+    local instanceId=$1
+    AWS_PAGER="" aws ec2-instance-connect send-ssh-public-key \
+        --instance-id ${instanceId} \
+        --instance-os-user ec2-user \
+        --ssh-public-key file://~/.ssh/keys/id_rsa.pub
+}
+
 # AWS                               {{{2
 # ======================================
 
@@ -660,7 +679,7 @@ function aws-ecr-images() {
         | jq -r ".repositories[].repositoryName" \
         | sort)
 
-    while IFS= read -r repo; do 
+    while IFS= read -r repo; do
         echo $repo
         AWS_PAGER="" aws ecr describe-images --repository-name "${repo}" \
             | jq -r '.imageDetails[] | select(has("imageTags")) | .imageTags[] | select(test( "^\\d+\\.\\d+\\.\\d+$" ))' \
@@ -738,7 +757,7 @@ function aws-ec2-service-quotas() {
 
 # Download data pipeline definitions to local files
 function aws-datapipeline-download-definitions() {
-    while IFS=, read -rA x 
+    while IFS=, read -rA x
     do
         pipelineId=${x[@]:0:1}
         pipelineName=$(echo "${x[@]:1:1}" | tr '[A-Z]' '[a-z]' | tr ' ' '-')
@@ -751,7 +770,7 @@ function aws-datapipeline-download-definitions() {
 
 # Display data pipeline instance requirements
 function aws-datapipeline-instance-requirements() {
-    while IFS=, read -rA x 
+    while IFS=, read -rA x
     do
         pipelineId=${x[@]:0:1}
         pipelineName=${x[@]:1:1}
@@ -766,7 +785,7 @@ function aws-datapipeline-instance-requirements() {
 function aws-secrets() {
     local secretsNames=$(aws secretsmanager list-secrets | jq -r '.SecretList[].Name')
 
-    while IFS= read -r secret ; do 
+    while IFS= read -r secret ; do
         echo ${secret}
         aws secretsmanager list-secrets \
             | jq -r ".SecretList[] | select(.Name == \"$secret\") | .Tags[] // [] | select(.Key == \"Description\") | .Value"
@@ -782,6 +801,7 @@ function aws-ip() {
     echo "${hostname}" | sed -r 's/ip-(.+)\.ec2\.internal/\1/g' | sed -r 's/-/./g'
 }
 
+# List AWS SageMaker endpoints
 function aws-sagemaker-endpoints() {
     if [[ $# -ne 1 ]]; then
         echo "Usage: aws-sagemaker-endpoints (dev|staging|live)"
@@ -799,6 +819,7 @@ compdef "_arguments \
     '1:environment arg:(dev staging live)'" \
     aws-sagemaker-endpoints
 
+# List AWS SageMaker Feature Store
 function aws-feature-groups() {
     if [[ $# -ne 1 ]]; then
         echo "Usage: aws-feature-groups (dev|staging|live)"
@@ -909,7 +930,7 @@ compdef "_arguments \
     git-set-trunk
 
 # For each directory within the current directory, if the directory is a Git
-# repository then execute the supplied function 
+# repository then execute the supplied function
 function git-for-each-repo() {
     setopt local_options glob_dots
     for fnam in *; do
@@ -947,7 +968,7 @@ function git-repos-pull() {
         echo
     }
 
-    git-for-each-repo-parallel pull-repo 
+    git-for-each-repo-parallel pull-repo
     git-repos-status
 }
 
@@ -961,7 +982,7 @@ function git-repos-fetch() {
         echo
     }
 
-    git-for-each-repo-parallel fetch-repo 
+    git-for-each-repo-parallel fetch-repo
     git-repos-status
 }
 
@@ -1015,7 +1036,7 @@ function git-parse-repo-status() {
 function git-repos-status() {
     display-status() {
         git-parse-repo-status
-        repo=$(basename $PWD) 
+        repo=$(basename $PWD)
 
         local branchColor="${COLOR_RED}"
         if [[ "$gitRepoStatus[branch]" =~ (^main$) ]]; then
@@ -1046,7 +1067,7 @@ function git-repos-status() {
 function git-repos-unmerged-branches() {
     display-unmerged-branches() {
         local cmd="git unmerged-branches"
-        unmergedBranches=$(eval "$cmd") 
+        unmergedBranches=$(eval "$cmd")
         if [[ $unmergedBranches = *[![:space:]]* ]]; then
             echo "$fnam"
             eval "$cmd"
@@ -1062,7 +1083,7 @@ function git-repos-unmerged-branches() {
 function git-repos-unmerged-branches-all() {
     display-unmerged-branches-all() {
         local cmd="git unmerged-branches-all"
-        unmergedBranches=$(eval "$cmd") 
+        unmergedBranches=$(eval "$cmd")
         if [[ $unmergedBranches = *[![:space:]]* ]]; then
             echo "$fnam"
             eval "$cmd"
@@ -1082,13 +1103,13 @@ function git-repos-unmerged-branches-all-pretty() {
         if [[ ${inferTrunk} -eq 1 ]]; then
             if [[ -z $(git ls-remote --heads origin main 2>/dev/null) ]]; then
                 export GIT_TRUNK=master
-            else 
+            else
                 export GIT_TRUNK=main
             fi
         fi
 
         local cmd="git unmerged-branches-allv"
-        unmergedBranches=$(eval "$cmd") 
+        unmergedBranches=$(eval "$cmd")
         if [[ $unmergedBranches = *[![:space:]]* ]]; then
             echo "$fnam"
             eval "$cmd"
@@ -1109,7 +1130,7 @@ function git-repos-unmerged-branches-all-pretty() {
 
     git-for-each-repo display-unmerged-branches-all-pretty
 
-    export GIT_TRUNK=${originalGitTrunk} 
+    export GIT_TRUNK=${originalGitTrunk}
 }
 compdef "_arguments \
     '1:flags arg:(--infer-trunk)'" \
@@ -1119,7 +1140,7 @@ compdef "_arguments \
 function git-repos-code-stashes() {
     stashes() {
         local cmd="git stash list"
-        local output=$(eval "$cmd") 
+        local output=$(eval "$cmd")
         if [[ $output = *[![:space:]]* ]]; then
             pwd
             eval "$cmd"
@@ -1127,7 +1148,7 @@ function git-repos-code-stashes() {
         fi
     }
 
-    git-for-each-repo stashes 
+    git-for-each-repo stashes
 }
 
 # For each repo within the current directory, display recent changes in the
@@ -1135,7 +1156,7 @@ function git-repos-code-stashes() {
 function git-repos-recent() {
     recent() {
         local cmd='git --no-pager log-recent --perl-regexp --author="^((?!Jenkins).*)$" --invert-grep'
-        local output=$(eval "$cmd") 
+        local output=$(eval "$cmd")
         if [[ $output = *[![:space:]]* ]]; then
             pwd
             eval "$cmd"
@@ -1144,7 +1165,7 @@ function git-repos-recent() {
         fi
     }
 
-    git-for-each-repo recent 
+    git-for-each-repo recent
 }
 
 # For each repo within the current directory, check out the repo for the specified date
@@ -1191,7 +1212,7 @@ function git-repos-author-line-count() {
     author-line-count() {
         git ls-files \
             | xargs -n1 git blame -w -M -C -C --line-porcelain \
-            | sed -n 's/^author //p' 
+            | sed -n 's/^author //p'
     }
 
     git-for-each-repo author-line-count | sort -f | uniq -ic | sort -nr
@@ -1230,11 +1251,11 @@ function git-repos-remotes() {
 }
 
 # For each directory within the current directory, generate a hacky lines of
-# code count 
+# code count
 function git-repos-hacky-line-count() {
     display-hacky-line-count() {
         git ls-files > ../file-list.txt
-        lineCount=$(cat < ../file-list.txt | grep -e "\(scala\|py\|java\|sql\|elm\|tf\|yaml\|pp\|yml\)" | xargs cat | wc -l)
+        lineCount=$(cat < ../file-list.txt | grep -e "\(scala\|py\|js\|java\|sql\|elm\|tf\|yaml\|pp\|yml\)" | xargs cat | wc -l)
         echo "$fnam $lineCount"
         totalCount=$((totalCount + lineCount))
     }
@@ -1248,7 +1269,7 @@ function git-merged-branches() {
 }
 
 # Open the Git repo in the browser
-#   Open repo: git-open 
+#   Open repo: git-open
 #   Open file: git-open foo/bar/baz.txt
 function git-open() {
     local filename=$1
@@ -1448,7 +1469,7 @@ function jira-my-issues() {
 # Display the paths to the values in the JSON
 # cat foo.json | jq-paths
 function jq-paths() {
-    # Taken from https://github.com/stedolan/jq/issues/243 
+    # Taken from https://github.com/stedolan/jq/issues/243
     jq '[path(..)|map(if type=="number" then "[]" else tostring end)|join(".")|split(".[]")|join("[]")]|unique|map("."+.)|.[]'
 }
 
@@ -1469,6 +1490,7 @@ SHELLCHECK_OPTS+="-e SC1091 "    # Allow sourcing files from paths that do not e
 SHELLCHECK_OPTS+="-e SC2039 "    # Allow dash in function names
 SHELLCHECK_OPTS+="-e SC2112 "    # Allow 'function' keyword
 SHELLCHECK_OPTS+="-e SC2155 "    # Allow declare and assignment in the same statement
+SHELLCHECK_OPTS+="-e SC3011 "    # Allow here-strings, not in POSIX sh
 SHELLCHECK_OPTS+="-e SC3033 "    # Allow dashes in functionn names, not in POSIX sh
 SHELLCHECK_OPTS+="-e SC3043 "    # Allow 'local', not in POSIX sh
 
@@ -1483,8 +1505,18 @@ function py-env-init() {
     python -m venv .
     touch requirements.txt
     touch app.py
+
+    print 'truststore'                                        >> requirements.txt
+    print 'import truststore\ntruststore.inject_into_ssl()\n' >> app.py
+
     cp -n ~/Dev/my-stuff/dotfiles/misc/makefile.python makefile
-    py-env-activate && pip3 config set global.cert /Users/white1/Dev/certificates/ZscalerRootCertificate-2048-SHA256.crt
+
+	# TODO: Certificates still seem iffy
+	local certificate=/Users/white1/Dev/certificates/ZscalerRootCertificate-2048-SHA256.crt
+    py-env-activate \
+    	&& pip3 config set global.cert ${certificate}
+
+    #echo cat ${certificate} >> `python -c 'import certifi; print(certifi.where())'`
 }
 
 alias py-env-install='pip3 install --trusted-host files.pythonhosted.org --trusted-host pypi.org --trusted-host pypi.python.org --default-timeout=1000'
@@ -1539,7 +1571,7 @@ function read-heredoc() {
     local value=""
     while IFS="${newlineChar}" read -r line; do
         value="${value}${line}${newlineChar}"
-    done 
+    done
 
     eval ${varName}'="${value}"'
 }
@@ -1549,7 +1581,7 @@ function git-generate-stats() {
 
     read-heredoc awkScript <<'HEREDOC'
     {
-        loc = match($0, /^[a-f0-9]{40}$/) 
+        loc = match($0, /^[a-f0-9]{40}$/)
         if (loc != 0) {
             hash = substr($0, RSTART, RLENGTH)
         }
@@ -1562,24 +1594,24 @@ function git-generate-stats() {
 HEREDOC
 
     hashToFileCsvFilename=dataset-hash-to-file.csv
-    
+
     echo 'hash,file' > "${hashToFileCsvFilename}"
     git --no-pager log --format='%H' --name-only \
         | awk "${awkScript}" \
         >> "${hashToFileCsvFilename}"
-    
+
     hashToAuthorCsvFilename=dataset-hash-to-author.csv
-    
+
     local repoName=$(pwd | xargs basename)
 
     echo 'hash,author,repo_name,commit_date,comment' > "${hashToAuthorCsvFilename}"
     git --no-pager log --format="%H,%aN,${repoName},%cI,'%s'" \
         >> "${hashToAuthorCsvFilename}"
-    
+
     local sqlScript
     read-heredoc sqlScript <<HEREDOC
         SELECT cf.hash, file, author, repo_name, commit_date, comment
-        FROM ${hashToFileCsvFilename} cf INNER JOIN ${hashToAuthorCsvFilename} ca 
+        FROM ${hashToFileCsvFilename} cf INNER JOIN ${hashToAuthorCsvFilename} ca
         ON ca.hash = cf.hash
 HEREDOC
 
@@ -1693,7 +1725,7 @@ function git-stats-top-team-committers-by-repo() {
         | q 'select *, row_number() over (partition by repo_name order by total desc) as idx from -' \
         | q 'select repo_name, author, total from - where idx <= 5' \
         | q -D "$(printf '\t')" 'select * from -' \
-        | tabulate-by-tab 
+        | tabulate-by-tab
 
     echo
     echo 'Repos with no authors in the team'
@@ -1706,7 +1738,7 @@ compdef "_arguments \
 
 function git-stats-authors() {
     q 'select distinct author from .git-stats.csv order by author asc' \
-        | tail -n +2 
+        | tail -n +2
 }
 
 function git-stats-most-recent-commits-by-authors() {
@@ -1796,11 +1828,11 @@ function install-java-certificate() {
     for rootPath in "${rootPathsToCheck[@]}"
     do
         local keystores=$(find ${rootPath} -name cacerts)
-        while IFS= read -r keystore; do 
+        while IFS= read -r keystore; do
             echo
             echo sudo keytool -importcert -file \
                 "${certificate}" -keystore "${keystore}" -alias Zscalar
-     
+
             # keytool -list -keystore "${keystore}" | grep -i zscalar
         done <<< "${keystores}"
     done
@@ -1834,7 +1866,7 @@ function greyscale() {
 function days-between() {
     local date1=$1
     local date2=$2
-    
+
     echo $(( ( $(date -d "${date2}" "+%s") - $(date -d "${date1}" "+%s") ) / 86400))
 }
 

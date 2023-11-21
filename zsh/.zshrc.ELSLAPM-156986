@@ -470,7 +470,8 @@ function aws-all-instance-ips() {
              launchTime:   .LaunchTime,
              monitoring:   .Monitoring.State
           }
-          ]
+    ]
+    | sort_by(.name)
 HEREDOC
 
     aws ec2 describe-instances \
