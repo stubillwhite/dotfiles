@@ -667,6 +667,35 @@ function aws-ssh-send-key() {
         --ssh-public-key file://~/.ssh/keys/id_rsa.pub
 }
 
+function aws-ssh-send-key-for-ip() {
+    if [[ $# -ne 1 ]]; then
+        echo "Usage: aws-ssh-send-key-for-ip IP"
+        return 1
+    fi
+
+    local ipAddress=$1
+
+    local output=$(
+        aws ec2 describe-instances \
+            --output text \
+            --query 'Reservations[*].Instances[*].[InstanceId,Placement.AvailabilityZone,PrivateIpAddress]' \
+            --filter "Name=private-ip-address,Values=${ipAddress}" \
+            | tr ',' \t
+    )
+
+    local instanceId=$(echo "${output}" | cut -f 1)
+    local availabilityZone=$(echo "${output}" | cut -f 2)
+
+    echo "Sending key to ${instanceId}"
+    local success=$(AWS_PAGER="" aws ec2-instance-connect send-ssh-public-key \
+        --instance-id ${instanceId} \
+        --instance-os-user ec2-user \
+        --ssh-public-key file://~/.ssh/keys/id_rsa.pub \
+        | jq '.Success'
+    )
+    echo "Success: ${success}"
+}
+
 # AWS                               {{{2
 # ======================================
 
