@@ -1492,7 +1492,7 @@ function jira-my-issues() {
         | tabulate-by-tab
 }
 
-# jq                                {{{2
+# jq / xq                           {{{2
 # ======================================
 
 # Display the paths to the values in the JSON
@@ -1500,6 +1500,13 @@ function jira-my-issues() {
 function jq-paths() {
     # Taken from https://github.com/stedolan/jq/issues/243
     jq '[path(..)|map(if type=="number" then "[]" else tostring end)|join(".")|split(".[]")|join("[]")]|unique|map("."+.)|.[]'
+}
+
+# Display the paths to the values in the XML
+# cat foo.xml | xq-paths
+function xq-paths() {
+    # Taken from https://github.com/stedolan/jq/issues/243
+    xq '[path(..)|map(if type=="number" then "[]" else tostring end)|join(".")|split(".[]")|join("[]")]|unique|map("."+.)|.[]'
 }
 
 # KeePassXC                         {{{2

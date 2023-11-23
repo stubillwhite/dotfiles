@@ -42,7 +42,7 @@ cask "evernote"                                 # App for note taking, organizin
 cask 'obsidian'                                 # Markdown note management
 
 # APIs
-cask "insomnia"                                 # HTTP and GraphQL Client
+cask "insomnium"                                # HTTP and GraphQL Client
 
 # eBooks
 cask "kindle"                                   # Kindle for Mac
@@ -73,6 +73,7 @@ brew "parallel"                                 # Shell command parallelization 
 brew "parquet-tools"                            # Apache Parquet command-line tools and utilities
 brew "pkg-config"                               # Manage compile and link flags for libraries
 brew "pygments"                                 # Generic syntax highlighter
+brew "python-yq"                                # Command-line YAML and XML processor that wraps jq
 brew "q"                                        # Run SQL directly on CSV or TSV files
 brew "ripgrep"                                  # Search tool like grep and The Silver Searcher
 brew "sampler"                                  # Tool for shell commands execution, visualization and alerting
