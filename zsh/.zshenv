@@ -88,6 +88,8 @@ EXPECTED_SECRETS=(
 
 _assert-variables-defined "${EXPECTED_SECRETS[@]}"
 
+export OPENAI_API_KEY=${SECRET_OPENAI_API_KEY}
+
 # General settings                                                          {{{1
 # ==============================================================================
 

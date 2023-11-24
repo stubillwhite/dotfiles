@@ -1557,6 +1557,116 @@ function py-env-init() {
 
 alias py-env-install='pip3 install --trusted-host files.pythonhosted.org --trusted-host pypi.org --trusted-host pypi.python.org --default-timeout=1000'
 
+# Java                              {{{2
+# ======================================
+
+# Switch Java version
+function java-version() {
+    if [[ $# -ne 1 ]] ; then
+        echo 'Usage: java-version JVM'
+        return 1
+    fi
+
+    export JAVA_HOME=/Library/Java/JavaVirtualMachines/${1}/Contents/Home/
+}
+compdef '_alternative \
+    "arguments:custom arg:(temurin-8.jdk temurin-11.jdk temurin-17.jdk temurin-20.jdk)"' \
+    java-version
+
+# SSL certificates                  {{{2
+# ======================================
+
+function certificate-download() {
+    if [[ $# -ne 1 ]] ; then
+        echo 'Usage: certificate-download HOSTNAME'
+        return 1
+    fi
+
+    local hostname=$1
+    local certFile="$(echo ${hostname} | tr '.' '-')".crt
+
+    echo "Downloading certificate to ${certFile}"
+    openssl x509 -in <(openssl s_client -connect ${hostname}:443 -prexit 2>/dev/null) -out "./${certFile}"
+}
+
+function certificate-java-list() {
+    local defaultPassword=changeit
+
+    local rootPathsToCheck=(
+        /Library
+        /Applications/DBeaver.app
+    )
+
+    for rootPath in "${rootPathsToCheck[@]}"
+    do
+        local keystores=$(find ${rootPath} -name cacerts)
+        while IFS= read -r keystore; do
+            echo
+            echo "${keystore}"
+            local output=$(keytool -storepass ${defaultPassword} -keystore "${keystore}" -list)
+            echo "${output}" | highlight blue '.*'
+        done <<< "${keystores}"
+    done
+}
+
+function certificate-java-install() {
+    if [[ $# -ne 1 ]] ; then
+        echo 'Usage: certificate-java-install FILE'
+        echo
+        echo 'Example:'
+        echo 'certificate-java-install /Users/white1/Dev/certificates/ZscalerRootCertificate-2048-SHA256.crt'
+        echo 'Default keystore password is changeit'
+        return 1
+    fi
+
+    local certFile=$1
+    local certAlias=$(basename ${certFile})
+    local defaultPassword=changeit
+
+    local rootPathsToCheck=(
+        /Library
+        /Applications/DBeaver.app
+    )
+
+    for rootPath in "${rootPathsToCheck[@]}"
+    do
+        local keystores=$(find ${rootPath} -name cacerts)
+        while IFS= read -r keystore; do
+            echo
+            echo "Checking ${keystore}"
+            local output=$(keytool -storepass ${defaultPassword} -keystore "${keystore}" -list -alias ${certAlias})
+            if [[ ${output} =~ 'trustedCertEntry' ]]; then
+                msg-success "Certificate present"
+            else
+                msg-error "Certificate missing -- run the following to install"
+                echo sudo keytool \
+                    -storepass ${defaultPassword} \
+                    -keystore "${keystore}" \
+                    -importcert \
+                    -file "${certFile}" \
+                    -alias ${certAlias} \
+                    -noprompt
+            fi
+        done <<< "${keystores}"
+    done
+}
+
+function certificate-expiry-curl() {
+    if [[ $# -ne 1 ]] ; then
+        echo 'Usage: certificate-expiry-curl HOSTNAME'
+        return 1
+    fi
+    curl -Iv --stderr - "https://${1}" | grep "expire date"
+}
+
+function certificate-expiry-openssl() {
+    if [[ $# -ne 1 ]] ; then
+        echo 'Usage: certificate-expiry-openssl HOSTNAME'
+        return 1
+    fi
+    echo Q | openssl s_client -connect "${1}":443 | openssl x509 -noout -dates
+}
+
 # Ripgrep                           {{{2
 # ======================================
 
@@ -1830,64 +1940,6 @@ function git-stats-most-recent-commits-by-repo() {
     q -O "select max(commit_date) as last_commit, repo_name from .git-stats.csv where file not in ('version.sbt') group by repo_name order by last_commit desc" \
         | q -D "$(printf '\t')" 'select * from -' \
         | tabulate-by-tab
-}
-
-function java-version() {
-    if [[ $# -ne 1 ]] ; then
-        echo 'Usage: java-version JVM'
-        return 1
-    fi
-
-    export JAVA_HOME=/Library/Java/JavaVirtualMachines/${1}/Contents/Home/
-}
-compdef '_alternative \
-    "arguments:custom arg:(temurin-8.jdk temurin-11.jdk temurin-17.jdk temurin-20.jdk)"' \
-    java-version
-
-function install-java-certificate() {
-    if [[ $# -ne 1 ]] ; then
-        echo 'Usage: install-java-certificate FILE'
-        echo
-        echo 'Example:'
-        echo 'install-java-certificate /Users/white1/Dev/certificates/ZscalerRootCertificate-2048-SHA256.crt'
-        echo 'Default keystore password is changeit'
-        return 1
-    fi
-
-    local certificate=$1
-
-    local rootPathsToCheck=(
-        /Library
-        /Applications/DBeaver.app
-    )
-
-    for rootPath in "${rootPathsToCheck[@]}"
-    do
-        local keystores=$(find ${rootPath} -name cacerts)
-        while IFS= read -r keystore; do
-            echo
-            echo sudo keytool -importcert -file \
-                "${certificate}" -keystore "${keystore}" -alias Zscalar
-
-            # keytool -list -keystore "${keystore}" | grep -i zscalar
-        done <<< "${keystores}"
-    done
-}
-
-function certificate-expiry-curl() {
-    if [[ $# -ne 1 ]] ; then
-        echo 'Usage: certificate-expiry-curl HOSTNAME'
-        return 1
-    fi
-    curl -Iv --stderr - "https://${1}" | grep "expire date"
-}
-
-function certificate-expiry-openssl() {
-    if [[ $# -ne 1 ]] ; then
-        echo 'Usage: certificate-expiry-openssl HOSTNAME'
-        return 1
-    fi
-    echo Q | openssl s_client -connect "${1}":443 | openssl x509 -noout -dates
 }
 
 export OPENAI_API_KEY=${SECRET_OPENAI_API_KEY}
