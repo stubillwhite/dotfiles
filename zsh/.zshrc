@@ -1942,8 +1942,6 @@ function git-stats-most-recent-commits-by-repo() {
         | tabulate-by-tab
 }
 
-export OPENAI_API_KEY=${SECRET_OPENAI_API_KEY}
-
 # Testing
 # echo "$(greyscale 123) testing"
 function greyscale() {
