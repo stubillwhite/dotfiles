@@ -2,10 +2,6 @@
 # Applications
 ################################################################################
 
-# Java
-tap "AdoptOpenJDK/openjdk"
-cask "adoptopenjdk14"                           # AdoptOpenJDK 14
-
 cask "zoom"                                     # Video communication and virtual meeting platform
 cask "homebrew/cask-drivers/garmin-express"     # Garmin desktop tool
 

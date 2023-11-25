@@ -339,6 +339,27 @@ function confirm() {
     esac
 }
 
+# Read HEREDOC into a variable
+# read-heredoc myVariable <<'HEREDOC'
+# this is
+# multiline text
+# HEREDOC
+# echo $myVariable
+function read-heredoc() {
+    local varName=${1:-reply}
+    shift
+
+    local newlineChar=$'\n'
+
+    local value=""
+    while IFS="${newlineChar}" read -r line; do
+        value="${value}${line}${newlineChar}"
+    done
+
+    eval ${varName}'="${value}"'
+}
+
+
 # Highlight output using sed regex
 # cat my-log.txt | highlight red ERROR | highlight yellow WARNING
 function highlight() {
@@ -1416,6 +1437,243 @@ function git-prompt-help() {
     echo $promptKey
 }
 
+# Git stats                         {{{2
+# ======================================
+
+# Generate CSV data about a Git repo
+function git-generate-stats() {
+    local awkScript
+
+    read-heredoc awkScript <<'HEREDOC'
+    {
+        loc = match($0, /^[a-f0-9]{40}$/)
+        if (loc != 0) {
+            hash = substr($0, RSTART, RLENGTH)
+        }
+        else {
+            if (match($0, /^$/) == 0) {
+                print hash "," $0
+            }
+        }
+    }
+HEREDOC
+
+    hashToFileCsvFilename=dataset-hash-to-file.csv
+
+    echo 'hash,file' > "${hashToFileCsvFilename}"
+    git --no-pager log --format='%H' --name-only \
+        | awk "${awkScript}" \
+        >> "${hashToFileCsvFilename}"
+
+    hashToAuthorCsvFilename=dataset-hash-to-author.csv
+
+    local repoName=$(pwd | xargs basename)
+
+    echo 'hash,author,repo_name,commit_date,comment' > "${hashToAuthorCsvFilename}"
+    git --no-pager log --format="%H,%aN,${repoName},%cI,'%s'" \
+        >> "${hashToAuthorCsvFilename}"
+
+    local sqlScript
+    read-heredoc sqlScript <<HEREDOC
+        SELECT cf.hash, file, author, repo_name, commit_date, comment
+        FROM ${hashToFileCsvFilename} cf INNER JOIN ${hashToAuthorCsvFilename} ca
+        ON ca.hash = cf.hash
+HEREDOC
+
+    q -d ',' -H -O "${sqlScript}" \
+        > .git-stats.csv
+
+    rm "${hashToAuthorCsvFilename}" "${hashToFileCsvFilename}"
+}
+
+# Merge CSV data about a Git repo
+function git-stats-merge-files() {
+    if [[ $# -ne 1 ]] ; then
+        echo 'Usage: git-stats-merge-files DIR'
+        exit -1
+    fi
+
+    local dir=$1
+    local fnam=".git-stats.csv"
+
+    if [[ -f "${dir}/${fnam}" ]]; then
+        cat "${dir}/${fnam}" | tail -n +2 >> "./${fnam}"
+    else
+        cat "${dir}/${fnam}" > "./${fnam}"
+    fi
+}
+
+# For each repo within the current directory, generate statistics and merge the files
+function git-repos-generate-stats() {
+    stats() {
+        echo "Getting stats for $(basename $PWD)"
+        git-generate-stats
+
+        local fnam=".git-stats.csv"
+
+        if [[ -f "../${fnam}" ]]; then
+            cat "${fnam}" | tail -n +2 >> "../${fnam}"
+        else
+            cat "${fnam}" > "../${fnam}"
+        fi
+
+        rm "${fnam}"
+    }
+
+    rm -f ".git-stats.csv"
+
+    git-for-each-repo stats
+}
+
+# For each repo within the current directory, extact the authors and diff with mailmap
+function git-mailmap-update() {
+    git-repos-authors > .authors.txt
+    vim -d .authors.txt ~/.mailmap
+}
+
+# TODO: WIP - autoecomplete author names
+function _git_stats_authors() {
+    q 'select distinct author from .git-stats.csv limit 100' \
+        | tail -n +2 \
+        | sed -r 's/^(.*)$/"\1"/g' \
+        | tr '\n' ' '
+}
+
+# TODO: WIP
+function whitetest() {
+    if [[ $# -ne 1 ]] ; then
+        echo 'Usage: git-stats-recent-commits-by-author AUTHOR'
+        return 1
+    fi
+
+    local authorName="$1"
+    local cutoff=$(gdate --iso-8601=seconds -u -d "70 days ago")
+
+    q "select * from .git-stats.csv where commit_date > '"${cutoff}"'" \
+        | q "select * from - where author in ('"${authorName}"')" \
+        | q "select repo_name, file, commit_date from - order by commit_date desc" \
+        | q -D "$(printf '\t')" 'select * from -' \
+        | tabulate-by-tab
+}
+compdef _whitetest whitetest
+#compdef "_alternative \
+#    'arguments:author:($(_git_stats_authors))'" \
+#    whitetest
+    #
+#compdef '_alternative \
+#    "arguments:custom arg:(red green yellow blue magenta cyan)"' \
+#    whitetest
+
+# For the Git stats in the current directory, display who on the team knows most about a repo
+function git-stats-top-team-committers-by-repo() {
+    if [[ $# -ne 1 ]] ; then
+        echo 'Usage: git-stats-top-team-committers-by-repo TEAM'
+        return 1
+    fi
+
+    local team=$1
+    [ "${team}" = 'recs' ]           && teamMembers="'Anamaria Mocanu', 'Rich Lyne', 'Reinder Verlinde', 'Tess Hoad', 'Luci Curnow', 'Andy Nguyen', 'Jerry Yang'"
+    [ "${team}" = 'recs-extended' ]  && teamMembers="'Anamaria Mocanu', 'Rich Lyne', 'Reinder Verlinde', 'Tess Hoad', 'Luci Curnow', 'Andy Nguyen', 'Jerry Yang', 'Stu White', 'Dimi Alexiou', 'Ligia Stan'"
+    [ "${team}" = 'butter-chicken' ] && teamMembers="'Asmaa Shoala', 'Carmen Mester', 'Colin Zhang', 'Hamid Haghayegh', 'Henry Cleland', 'Karthik Jaganathan', 'Krishna', 'Rama Sane'"
+    [ "${team}" = 'spirograph' ]     && teamMembers="'Paul Meyrick', 'Fraser Reid', 'Nancy Goyal', 'Richard Snoad', 'Ayce Keskinege'"
+    [ "${team}" = 'dkp' ]            && teamMembers="'Ryan Moquin', 'Gautam Chakraborty', 'Prakruthy Dhoopa Harish', 'Arun Kumar Kalahastri', 'Sangavi Durairaj', 'Vidhya Shaghar A P', 'Suganya Moorthy', 'Chinar Jaiswal'"
+    [ "${team}" = 'concept' ]        && teamMembers="'Saad Rashid', 'Benoit Pasquereau', 'Adam Ladly', 'Jeremy Scadding', 'Anique von Berne', 'Nishant Singh', 'Neil Stevens', 'Dominicano Luciano', 'Kanaga Ganesan', 'Akhil Babu', 'Gintautas Sulskus'"
+
+    echo
+    echo 'Team'
+    while read teamMember
+    do
+        echo $teamMember
+    done < <(echo ${teamMembers} | gsed 's/, /\n/g' | gsed "s/'//g" | sort)
+
+    echo
+    echo 'Repos with authors in the team'
+    q 'select repo_name, author, count(*) as total from .git-stats.csv group by repo_name, author' \
+        | q "select * from - where author in (${teamMembers})" \
+        | q 'select *, row_number() over (partition by repo_name order by total desc) as idx from -' \
+        | q 'select repo_name, author, total from - where idx <= 5' \
+        | q -D "$(printf '\t')" 'select * from -' \
+        | tabulate-by-tab
+
+    echo
+    echo 'Repos with no authors in the team'
+    q "select distinct repo_name from .git-stats.csv where author in (${teamMembers})" \
+        | q 'select distinct stats.repo_name from .git-stats.csv stats where stats.repo_name not in (select distinct repo_name from -)'
+}
+compdef "_arguments \
+    '1:team arg:(recs recs-extended butter-chicken spirograph dkp concept)'" \
+    git-stats-top-team-committers-by-repo
+
+# For the Git stats in the current directory, display all authors
+function git-stats-authors() {
+    q 'select distinct author from .git-stats.csv order by author asc' \
+        | tail -n +2
+}
+
+# For the Git stats in the current directory, display the most recent commits
+# by each author
+function git-stats-most-recent-commits-by-authors() {
+    q 'select max(commit_date), author from .git-stats.csv group by author order by commit_date desc' \
+        | q -D "$(printf '\t')" 'select * from -' \
+        | tabulate-by-tab
+}
+
+# For the Git stats in the current directory, display the total number of
+# commits by each author
+function git-stats-total-commits-by-author() {
+    if [[ $# -ne 1 ]] ; then
+        echo 'Usage: git-stats-total-commits-by-author AUTHOR'
+        return 1
+    fi
+
+    local authorName=$1
+
+    q 'select repo_name, author, count(*) as total from .git-stats.csv group by repo_name, author' \
+        | q "select repo_name, total from - where author in ('"${authorName}"')" \
+        | q -D "$(printf '\t')" 'select * from -' \
+        | tabulate-by-tab
+}
+
+# For the Git stats in the current directory, list the commits for a given author
+function git-stats-list-commits-by-author() {
+    if [[ $# -ne 1 ]] ; then
+        echo 'Usage: git-stats-list-commits-by-author AUTHOR'
+        return 1
+    fi
+
+    local authorName=$1
+
+    q "select * from .git-stats.csv where author in ('"${authorName}"')" \
+        | q "select distinct repo_name, commit_date, comment from - order by commit_date desc" \
+        | q -D "$(printf '\t')" 'select * from -' \
+        | tabulate-by-tab
+}
+
+# For the Git stats in the current directory, list the commits for a given
+# author by month
+function git-stats-total-commits-by-author-per-month() {
+    if [[ $# -ne 1 ]] ; then
+        echo 'Usage: git-stats-total-commits-by-author-per-month AUTHOR'
+        return 1
+    fi
+
+    local authorName=$1
+
+    q "select * from .git-stats.csv where author in ('"${authorName}"')" \
+        | q "select distinct repo_name, commit_date from -" \
+        | q "select strftime('%Y-%m', commit_date) as 'year_month', count(*) as total from - group by year_month order by year_month desc" \
+        | q -D "$(printf '\t')" 'select * from -' \
+        | tabulate-by-tab
+}
+
+# For the Git stats in the current directory, list the most recent commits for
+# each repo
+function git-stats-most-recent-commits-by-repo() {
+    q -O "select max(commit_date) as last_commit, repo_name from .git-stats.csv where file not in ('version.sbt') group by repo_name order by last_commit desc" \
+        | q -D "$(printf '\t')" 'select * from -' \
+        | tabulate-by-tab
+}
+
 # GitHub                            {{{2
 # ======================================
 
@@ -1701,245 +1959,6 @@ source-if-exists "$HOME/.zshrc.$(uname -n)"
 
 function camera-logs() {
     log show --last 5m --predicate '(sender == "VDCAssistant")' | grep kCameraStream
-}
-
-# read-heredoc myVariable <<'HEREDOC'
-# this is
-# multiline text
-# HEREDOC
-# echo $myVariable
-function read-heredoc() {
-    local varName=${1:-reply}
-    shift
-
-    local newlineChar=$'\n'
-
-    local value=""
-    while IFS="${newlineChar}" read -r line; do
-        value="${value}${line}${newlineChar}"
-    done
-
-    eval ${varName}'="${value}"'
-}
-
-function git-generate-stats() {
-    local awkScript
-
-    read-heredoc awkScript <<'HEREDOC'
-    {
-        loc = match($0, /^[a-f0-9]{40}$/)
-        if (loc != 0) {
-            hash = substr($0, RSTART, RLENGTH)
-        }
-        else {
-            if (match($0, /^$/) == 0) {
-                print hash "," $0
-            }
-        }
-    }
-HEREDOC
-
-    hashToFileCsvFilename=dataset-hash-to-file.csv
-
-    echo 'hash,file' > "${hashToFileCsvFilename}"
-    git --no-pager log --format='%H' --name-only \
-        | awk "${awkScript}" \
-        >> "${hashToFileCsvFilename}"
-
-    hashToAuthorCsvFilename=dataset-hash-to-author.csv
-
-    local repoName=$(pwd | xargs basename)
-
-    echo 'hash,author,repo_name,commit_date,comment' > "${hashToAuthorCsvFilename}"
-    git --no-pager log --format="%H,%aN,${repoName},%cI,'%s'" \
-        >> "${hashToAuthorCsvFilename}"
-
-    local sqlScript
-    read-heredoc sqlScript <<HEREDOC
-        SELECT cf.hash, file, author, repo_name, commit_date, comment
-        FROM ${hashToFileCsvFilename} cf INNER JOIN ${hashToAuthorCsvFilename} ca
-        ON ca.hash = cf.hash
-HEREDOC
-
-    q -d ',' -H -O "${sqlScript}" \
-        > .git-stats.csv
-
-    rm "${hashToAuthorCsvFilename}" "${hashToFileCsvFilename}"
-}
-
-function git-stats-merge-files() {
-    if [[ $# -ne 1 ]] ; then
-        echo 'Usage: git-stats-merge-files DIR'
-        exit -1
-    fi
-
-    local dir=$1
-    local fnam=".git-stats.csv"
-
-    if [[ -f "${dir}/${fnam}" ]]; then
-        cat "${dir}/${fnam}" | tail -n +2 >> "./${fnam}"
-    else
-        cat "${dir}/${fnam}" > "./${fnam}"
-    fi
-}
-
-function git-repos-generate-stats() {
-    stats() {
-        echo "Getting stats for $(basename $PWD)"
-        git-generate-stats
-
-        local fnam=".git-stats.csv"
-
-        if [[ -f "../${fnam}" ]]; then
-            cat "${fnam}" | tail -n +2 >> "../${fnam}"
-        else
-            cat "${fnam}" > "../${fnam}"
-        fi
-
-        rm "${fnam}"
-    }
-
-    rm -f ".git-stats.csv"
-
-    git-for-each-repo stats
-}
-
-function git-mailmap-update() {
-    git-repos-authors > .authors.txt
-    vim -d .authors.txt ~/.mailmap
-}
-
-# TODO: WIP - autoecomplete author names
-function _git_stats_authors() {
-    q 'select distinct author from .git-stats.csv limit 100' \
-        | tail -n +2 \
-        | sed -r 's/^(.*)$/"\1"/g' \
-        | tr '\n' ' '
-}
-
-# TODO: WIP
-function whitetest() {
-    if [[ $# -ne 1 ]] ; then
-        echo 'Usage: git-stats-recent-commits-by-author AUTHOR'
-        return 1
-    fi
-
-    local authorName="$1"
-    local cutoff=$(gdate --iso-8601=seconds -u -d "70 days ago")
-
-    q "select * from .git-stats.csv where commit_date > '"${cutoff}"'" \
-        | q "select * from - where author in ('"${authorName}"')" \
-        | q "select repo_name, file, commit_date from - order by commit_date desc" \
-        | q -D "$(printf '\t')" 'select * from -' \
-        | tabulate-by-tab
-}
-compdef _whitetest whitetest
-#compdef "_alternative \
-#    'arguments:author:($(_git_stats_authors))'" \
-#    whitetest
-    #
-#compdef '_alternative \
-#    "arguments:custom arg:(red green yellow blue magenta cyan)"' \
-#    whitetest
-
-
-function git-stats-top-team-committers-by-repo() {
-    if [[ $# -ne 1 ]] ; then
-        echo 'Usage: git-stats-top-team-committers-by-repo TEAM'
-        return 1
-    fi
-
-    local team=$1
-    [ "${team}" = 'recs' ]           && teamMembers="'Anamaria Mocanu', 'Rich Lyne', 'Reinder Verlinde', 'Tess Hoad', 'Luci Curnow', 'Andy Nguyen', 'Jerry Yang'"
-    [ "${team}" = 'recs-extended' ]  && teamMembers="'Anamaria Mocanu', 'Rich Lyne', 'Reinder Verlinde', 'Tess Hoad', 'Luci Curnow', 'Andy Nguyen', 'Jerry Yang', 'Stu White', 'Dimi Alexiou', 'Ligia Stan'"
-    [ "${team}" = 'butter-chicken' ] && teamMembers="'Asmaa Shoala', 'Carmen Mester', 'Colin Zhang', 'Hamid Haghayegh', 'Henry Cleland', 'Karthik Jaganathan', 'Krishna', 'Rama Sane'"
-    [ "${team}" = 'spirograph' ]     && teamMembers="'Paul Meyrick', 'Fraser Reid', 'Nancy Goyal', 'Richard Snoad', 'Ayce Keskinege'"
-    [ "${team}" = 'dkp' ]            && teamMembers="'Ryan Moquin', 'Gautam Chakraborty', 'Prakruthy Dhoopa Harish', 'Arun Kumar Kalahastri', 'Sangavi Durairaj', 'Vidhya Shaghar A P', 'Suganya Moorthy', 'Chinar Jaiswal'"
-    [ "${team}" = 'concept' ]        && teamMembers="'Saad Rashid', 'Benoit Pasquereau', 'Adam Ladly', 'Jeremy Scadding', 'Anique von Berne', 'Nishant Singh', 'Neil Stevens', 'Dominicano Luciano', 'Kanaga Ganesan', 'Akhil Babu', 'Gintautas Sulskus'"
-
-    echo
-    echo 'Team'
-    while read teamMember
-    do
-        echo $teamMember
-    done < <(echo ${teamMembers} | gsed 's/, /\n/g' | gsed "s/'//g" | sort)
-
-    echo
-    echo 'Repos with authors in the team'
-    q 'select repo_name, author, count(*) as total from .git-stats.csv group by repo_name, author' \
-        | q "select * from - where author in (${teamMembers})" \
-        | q 'select *, row_number() over (partition by repo_name order by total desc) as idx from -' \
-        | q 'select repo_name, author, total from - where idx <= 5' \
-        | q -D "$(printf '\t')" 'select * from -' \
-        | tabulate-by-tab
-
-    echo
-    echo 'Repos with no authors in the team'
-    q "select distinct repo_name from .git-stats.csv where author in (${teamMembers})" \
-        | q 'select distinct stats.repo_name from .git-stats.csv stats where stats.repo_name not in (select distinct repo_name from -)'
-}
-compdef "_arguments \
-    '1:team arg:(recs recs-extended butter-chicken spirograph dkp concept)'" \
-    git-stats-top-team-committers-by-repo
-
-function git-stats-authors() {
-    q 'select distinct author from .git-stats.csv order by author asc' \
-        | tail -n +2
-}
-
-function git-stats-most-recent-commits-by-authors() {
-    q 'select max(commit_date), author from .git-stats.csv group by author order by commit_date desc' \
-        | q -D "$(printf '\t')" 'select * from -' \
-        | tabulate-by-tab
-}
-
-function git-stats-total-commits-by-author() {
-    if [[ $# -ne 1 ]] ; then
-        echo 'Usage: git-stats-total-commits-by-author AUTHOR'
-        return 1
-    fi
-
-    local authorName=$1
-
-    q 'select repo_name, author, count(*) as total from .git-stats.csv group by repo_name, author' \
-        | q "select repo_name, total from - where author in ('"${authorName}"')" \
-        | q -D "$(printf '\t')" 'select * from -' \
-        | tabulate-by-tab
-}
-
-function git-stats-list-commits-by-author() {
-    if [[ $# -ne 1 ]] ; then
-        echo 'Usage: git-stats-list-commits-by-author AUTHOR'
-        return 1
-    fi
-
-    local authorName=$1
-
-    q "select * from .git-stats.csv where author in ('"${authorName}"')" \
-        | q "select distinct repo_name, commit_date, comment from - order by commit_date desc" \
-        | q -D "$(printf '\t')" 'select * from -' \
-        | tabulate-by-tab
-}
-
-function git-stats-total-commits-by-author-per-month() {
-    if [[ $# -ne 1 ]] ; then
-        echo 'Usage: git-stats-total-commits-by-author-per-month AUTHOR'
-        return 1
-    fi
-
-    local authorName=$1
-
-    q "select * from .git-stats.csv where author in ('"${authorName}"')" \
-        | q "select distinct repo_name, commit_date from -" \
-        | q "select strftime('%Y-%m', commit_date) as 'year_month', count(*) as total from - group by year_month order by year_month desc" \
-        | q -D "$(printf '\t')" 'select * from -' \
-        | tabulate-by-tab
-}
-
-function git-stats-most-recent-commits-by-repo() {
-    q -O "select max(commit_date) as last_commit, repo_name from .git-stats.csv where file not in ('version.sbt') group by repo_name order by last_commit desc" \
-        | q -D "$(printf '\t')" 'select * from -' \
-        | tabulate-by-tab
 }
 
 # Testing
