@@ -278,6 +278,28 @@ function recs-api-statuses() {
       | highlight green '\b[2][0-9]\+\b'
 }
 
+function dkp-api-statuses() {
+    local APIS=(
+        data.elsevier.com
+        data-dev.elsevier.com
+        data-sandbox.elsevier.com
+    )
+    (
+        #printf "%s|%s|%s|%s|%s\n" "API" "Dev" "Staging" "Live" "Dev URL"
+        printf "%s|%s|%s|%s\n" "API" "Status" "Endpoint"
+        for API in "${APIS[@]}"
+        do
+            local url="https://${API}/api/"
+            printf "%s" "${API}"
+            curl -s -w "%{http_code}" -o >(printf "|%s") -X GET "${url}" 2>/dev/null
+            printf "|%s" "${url}"
+            printf "\n"
+        done
+    ) | column -t -s '|' \
+      | highlight red   '\b[045][0-9]\+\b' \
+      | highlight green '\b[2][0-9]\+\b'
+}
+
 function recs-fi-performance() {
     hey -n 20 -c 3 -H 'Accept: application/json' -m GET 'https://fi-recommender.api.recs.d.elsevier.com/api/fi-recommendations/webuser/37325013/author/23982012500'
 }
