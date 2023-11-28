@@ -137,36 +137,14 @@ function recs-k9s-live-util() {
 }
 
 function recs-ecr-login() {
-    if [[ $# -ne 1 ]]; then
-        echo "Usage: recs-ecr-login (dev|live)"
-    else
-        local recsEnv=$1
-        local region="us-east-1"
+    local region="us-east-1"
 
-        local accountId
-        case "${recsEnv}" in
-            dev*)
-                accountId=$SECRET_ACC_RECS_DEV
-            ;;
+    local accountId=$(aws sts get-caller-identity  | jq -r ".Account")
 
-            live*)
-                accountId=$SECRET_ACC_RECS_PROD
-            ;;
-
-            *)
-                echo "ERROR: Unrecognised environment ${recsEnv}"
-                return -1
-            ;;
-        esac
-
-        aws ecr get-login-password --region "${region}" | docker login --username AWS --password-stdin "${accountId}.dkr.ecr.${region}.amazonaws.com"
-        echo "Pull images with:"
-        echo "  " docker pull "${accountId}.dkr.ecr.${region}.amazonaws.com/IMAGE:VERSION"
-    fi
+    aws ecr get-login-password --region "${region}" | docker login --username AWS --password-stdin "${accountId}.dkr.ecr.${region}.amazonaws.com"
+    echo "Pull images with:"
+    echo "  " docker pull "${accountId}.dkr.ecr.${region}.amazonaws.com/IMAGE:VERSION"
 }
-compdef "_arguments \
-    '1:environment arg:(dev live)'" \
-    recs-ecr-login
 
 function recs-api-versions() {
     if [[ $# -ne 1 ]] ; then
