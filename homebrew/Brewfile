@@ -42,7 +42,7 @@ cask "evernote"                                 # App for note taking, organizin
 cask 'obsidian'                                 # Markdown note management
 
 # APIs
-cask "insomnium"                                # HTTP and GraphQL Client
+# cask "insomnium"                                # HTTP and GraphQL Client
 
 # eBooks
 cask "kindle"                                   # Kindle for Mac

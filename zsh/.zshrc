@@ -1525,6 +1525,19 @@ function git-repos-generate-stats() {
     git-for-each-repo stats
 }
 
+# For each repo within the current directory, track all branches
+function git-repos-track-and-pull-all() {
+    track-and-pull-all() {
+        echo "Tracking all branches for $(basename $PWD)"
+        git track-all
+        git fetch --all
+        git pull --all
+        echo
+    }
+
+    git-for-each-repo track-and-pull-all
+}
+
 # For each repo within the current directory, extact the authors and diff with mailmap
 function git-mailmap-update() {
     git-repos-authors > .authors.txt

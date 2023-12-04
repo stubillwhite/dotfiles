@@ -34,7 +34,7 @@
     ;recent-branches = !git reflog show --pretty=format:'%gs ~ %gd' --date=relative | grep 'checkout:' | grep -oE '[^ ]+ ~ .*' | awk -F~ '!seen[$1]++' | head -n 10 | awk -F' ~ HEAD@{' '{printf(\"  \\033[33m%s: \\033[37m %s\\033[0m\\n\", substr($2, 1, length($2)-1), $1)}'
     recent-branches = !git reflog show --pretty=format:'%gs ~ %gd' --date=relative | grep 'checkout:' | grep -oE '[^ ]+ ~ .*' | awk -F~ '!seen[$1]++' | gsed -r 's/(.+) ~ HEAD@\\{([^\\}]+)\\}$/\\2,\\1/g' | gsed 's/,,/,-,/g' | column -t -s '',''
     find-deleted-file = log --full-history -1 -- 
-
+    track-all = "!for remote in $(git branch -r | grep -v -- '->'); do git branch --track ${remote##origin/} $remote; done"
 
 [core]
 	editor = nvim

@@ -10,3 +10,6 @@ conf:*.{conf}*
 
 --type-add
 properties:*.{properties}*
+
+--type-add
+clojure:*.{clj}*
