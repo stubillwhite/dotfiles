@@ -136,16 +136,6 @@ function recs-k9s-live-util() {
     k9s
 }
 
-function recs-ecr-login() {
-    local region="us-east-1"
-
-    local accountId=$(aws sts get-caller-identity  | jq -r ".Account")
-
-    aws ecr get-login-password --region "${region}" | docker login --username AWS --password-stdin "${accountId}.dkr.ecr.${region}.amazonaws.com"
-    echo "Pull images with:"
-    echo "  " docker pull "${accountId}.dkr.ecr.${region}.amazonaws.com/IMAGE:VERSION"
-}
-
 function recs-api-versions() {
     if [[ $# -ne 1 ]] ; then
         echo "Usage: recs-api-versions (dev|live)"

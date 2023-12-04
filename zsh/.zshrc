@@ -738,6 +738,17 @@ function aws-ecr-images() {
     done <<< "$repos"
 }
 
+# Log into ECR
+function aws-ecr-login() {
+    local region="us-east-1"
+
+    local accountId=$(aws sts get-caller-identity  | jq -r ".Account")
+
+    aws ecr get-login-password --region "${region}" | docker login --username AWS --password-stdin "${accountId}.dkr.ecr.${region}.amazonaws.com"
+    echo "Pull images with:"
+    echo "  " docker pull "${accountId}.dkr.ecr.${region}.amazonaws.com/IMAGE:VERSION"
+}
+
 # Describe OpenSearch clusters
 function aws-opensearch-describe-clusters() {
     while IFS=, read -rA domainName
