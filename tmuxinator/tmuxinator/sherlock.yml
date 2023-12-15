@@ -2,7 +2,7 @@ name: sherlock
 root: ~/trash/random-repos/sherlock/
 
 windows:
-  - recs:
+  - sherlock:
       layout: even-vertical
       panes:
         - main:

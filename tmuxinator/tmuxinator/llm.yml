@@ -1,0 +1,11 @@
+name: llm
+root: ~/Dev/my-stuff/llm-scratchpad
+
+windows:
+  - llm-scratchpad:
+      layout: even-horizontal
+      panes:
+        - prompt:
+            - vim prompt.txt
+        - response:
+            - ls | entr -s 'make run'
