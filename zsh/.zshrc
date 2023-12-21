@@ -717,6 +717,39 @@ function aws-ssh-send-key-for-ip() {
     echo "Success: ${success}"
 }
 
+function aws-persist-credentials() {
+    if [[ $# -ne 1 ]]; then
+        echo "Usage: aws-persist-credentials PROFILE"
+        return 1
+    fi
+
+    local name=$1
+
+    local profile
+    read-heredoc profile <<HEREDOC
+
+[${name}]
+aws_access_key_id=${AWS_ACCESS_KEY_ID}
+aws_default_region=${AWS_DEFAULT_REGION}
+aws_region=${AWS_REGION}
+aws_secret_access_key=${AWS_SECRET_KEY}
+aws_session_token=${AWS_SESSION_TOKEN}
+HEREDOC
+
+    echo ${profile} >> ~/.aws/credentials
+}
+
+function aws-unpersist-credentials() {
+    if [[ $# -ne 1 ]]; then
+        echo "Usage: aws-unpersist-credentials PROFILE"
+        return 1
+    fi
+
+    local name=$1
+
+    perl -i -pe "BEGIN{undef $/;} s/\[${name}\][^[]*//smg" ~/.aws/credentials
+}
+
 # AWS                               {{{2
 # ======================================
 
