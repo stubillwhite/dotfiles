@@ -1,6 +1,8 @@
 #!/bin/bash
 
-cat "Brewfile" "Brewfile.$(uname -n)" \
+machineName=$(scutil --get ComputerName)
+
+cat "Brewfile" "Brewfile.${machineName}" \
     | brew bundle --file=- cleanup "$@"
 
 [[ $# -eq 0 ]] && echo 'Run with -f to force clean up of the above formulae'

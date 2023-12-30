@@ -19,8 +19,8 @@ function if-darwin() { [[ "$(uname)" == "Darwin" ]]; }
 function if-linux() { [[ "$(uname)" == "Linux" ]]; }
 
 # Usage: if-work-machine && { echo foo }
-function if-work-machine() { [[ "$(uname -n)" == "ELSLAPM-156986" ]]; }
-function if-personal-machine() { [[ "$(uname -n)" == "stubillwhite-macbook-pro" ]] || [[ "$(uname -n)" == "stubillwhite-ThinkPad-X240" ]] ; }
+function if-work-machine() { [[ "$(scutil --get ComputerName)" == "ELSLAPM-156986" ]]; }
+function if-personal-machine() { [[ "$(scutil --get ComputerName)" == "stubillwhite-macbook-pro" ]] || [[ "$(scutil --get ComputerName)" == "stubillwhite-ThinkPad-X240" ]] ; }
 
 # Source script if it exists
 # Usage: source-if-exists ".my-functions"

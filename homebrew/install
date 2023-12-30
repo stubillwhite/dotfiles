@@ -1,4 +1,6 @@
 #!/bin/bash
 
-cat "Brewfile" "Brewfile.$(uname -n)" \
+machineName=$(scutil --get ComputerName)
+
+cat "Brewfile" "Brewfile.${machineName}" \
     | brew bundle --file=- install --verbose --no-upgrade

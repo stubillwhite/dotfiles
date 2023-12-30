@@ -1979,7 +1979,7 @@ if-darwin && {
     source-if-exists "$HOME/.zshrc.darwin"
 }
 
-source-if-exists "$HOME/.zshrc.$(uname -n)"
+source-if-exists "$HOME/.zshrc.$(scutil --get ComputerName)"
 
 function camera-logs() {
     log show --last 5m --predicate '(sender == "VDCAssistant")' | grep kCameraStream
