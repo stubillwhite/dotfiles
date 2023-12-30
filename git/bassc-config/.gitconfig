@@ -1,0 +1,6 @@
+[user]
+    name = bassc-github
+    email = bassc-github@protonmail.com
+
+[include]
+    path = .gitconfig.local

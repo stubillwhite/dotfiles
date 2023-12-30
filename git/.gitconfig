@@ -58,6 +58,9 @@
 [mergetool "vimmmerge"]
     cmd = nvim -d $BASE $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'
 
+[includeIf "gitdir:~/Dev/bassc/"]
+    path = ~/Dev/my-stuff/dotfiles/git/bassc-config/.gitconfig
+
 [includeIf "gitdir:~/Dev/my-stuff/"]
     path = ~/Dev/my-stuff/dotfiles/git/personal-config/.gitconfig
 
