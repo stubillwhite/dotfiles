@@ -3,7 +3,14 @@
 # Printing                                                                  {{{1
 # ==============================================================================
 
-alias start-printer-service="open /Applications/uniFLOW\ SmartClient.app"
+function start-printer-service() {
+    if [[ -n $(ps aux | grep -i 'UniFLOW SmartClient' | grep -v 'grep') ]]; then 
+        echo 'Printer service already running'
+    else 
+        echo 'Starting printer service'
+        alias start-printer-service="open /Applications/uniFLOW\ SmartClient.app"
+    fi
+}
 
 # Zoom                                                                      {{{1
 # ==============================================================================
