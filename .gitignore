@@ -4,5 +4,6 @@
 /ssh/.ssh/keys
 /homebrew/Brewfile.lock.json
 /homebrew/Brewfile.*.lock.json
+/vale/styles
 .gitconfig.local
 **/*.no-commit
