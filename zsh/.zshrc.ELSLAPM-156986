@@ -255,18 +255,19 @@ function recs-api-statuses() {
 
 function dkp-api-statuses() {
     local APIS=(
-        data.elsevier.com
-        data-dev.elsevier.com
-        data-sandbox.elsevier.com
+        https://data.elsevier.com/api/
+        https://data-dev.elsevier.com/api/
+        https://data-sandbox.elsevier.com/api/
+        https://prod.topbraid.elsevier.net
     )
     (
-        #printf "%s|%s|%s|%s|%s\n" "API" "Dev" "Staging" "Live" "Dev URL"
         printf "%s|%s|%s|%s\n" "API" "Status" "Endpoint"
         for API in "${APIS[@]}"
         do
-            local url="https://${API}/api/"
-            printf "%s" "${API}"
-            curl -s -w "%{http_code}" -o >(printf "|%s") -X GET "${url}" 2>/dev/null
+            local url="${API}"
+            local host=$(echo ${API} | get-hostname)
+            printf "%s" "${host}"
+            curl --connect-timeout 5 -s -w "%{http_code}" -o >(printf "|%s") -X GET "${url}" 2>/dev/null
             printf "|%s" "${url}"
             printf "\n"
         done
