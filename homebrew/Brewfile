@@ -82,6 +82,7 @@ brew "tree"                                     # Display directories as trees (
 brew "watch"                                    # Executes a program periodically, showing output fullscreen
 brew "wget"                                     # Internet file retriever
 brew "xsv"                                      # Fast CSV toolkit written in Rust
+brew "yq"                                       # Process YAML, JSON, XML, CSV and properties documents from the CLI
 brew "zsh"                                      # UNIX shell (command interpreter)
 cask "scroll-reverser"                          # Tool to reverse the direction of scrolling
 
@@ -100,6 +101,9 @@ brew "reattach-to-user-namespace"               # Reattach process (e.g., tmux) 
 tap "rs/tap"
 brew "jaggr"                                    # JSON Aggregation CLI
 brew "jplot"                                    # iTerm2 expvar/JSON monitoring tool
+
+# OSX scripting
+brew "hammerspoon"                              # Desktop automation application
 
 ################################################################################
 # Development

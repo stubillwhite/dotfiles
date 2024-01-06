@@ -12,11 +12,10 @@ cask "homebrew/cask-drivers/garmin-express"     # Garmin desktop tool
 # EmptyEpsilon
 brew "cmake"                                    # Cross-platform make
 brew "sdl2"                                     # Low-level access to audio, keyboard, mouse, joystick, and graphics
+brew "mingw-w64"                                # Minimalist GNU for Windows and GCC cross-compilers
+brew "wine-stable"                              # Compatibility layer to run Windows applications
 
 # Containers
-brew "docker"                                   # Pack, ship and run any application as a lightweight container
-brew "docker-compose"                           # Isolated development environments using Docker
-brew "docker-machine"                           # Create Docker hosts locally and on cloud providers
 brew "lazydocker"                               # The lazier way to manage everything docker
 
 # Game dev
