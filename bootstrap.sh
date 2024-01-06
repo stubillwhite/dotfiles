@@ -22,7 +22,6 @@ FILES=(
     "nethack/.nethackrc"
     "leiningen/.lein"
     "motd/.hushlogin"
-    "proselint/.proselintrc.json"
     "pylint/.pylintrc"
     "q/.qrc"
     "ripgrep/.ripgreprc"
