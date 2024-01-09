@@ -1,4 +1,4 @@
 extends: spelling
 message: "Did you really mean '%s'?"
 level: error
-ignore: /Users/white1/Dev/my-stuff/.emacs.d/.aspell-darwin
+ignore: ../../../.emacs.d/.aspell-darwin
