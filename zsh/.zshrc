@@ -402,12 +402,36 @@ function epoch-to-date() {
 }
 
 # Convert date time to milliseconds since the epoch
-#  echo '2021-10-08 14:15:51' | date-to-epoch
+# echo '2021-10-08 14:15:51' | date-to-epoch
 function date-to-epoch() {
     while IFS= read -r dateStr; do
         local epochSeconds=$(date --date="${dateStr}" +"%s")
     done
     echo $(( ${epochSeconds} * 1000 ))
+}
+
+# Display a time in the timezones we collaborate with
+# clock 
+# clock 12:30
+function() clock() {
+    local currTimeArgs=""
+    if [[ $# -eq 1 ]]; then
+        currTimeArgs="--date=$1"
+    fi
+
+    local currTime=$(date ${currTimeArgs})
+
+    local TIMEZONES=(
+        EST             # East US
+        GMT             # London
+        CET             # Amsterdam
+        Asia/Kolkata    # India standard time
+    )
+
+    for timezone in "${TIMEZONES[@]}"
+    do
+        TZ=${timezone} date -d ${currTime} '+%Y-%m-%d %H:%M %Z'
+    done
 }
 
 # Calculate the result of an expression
