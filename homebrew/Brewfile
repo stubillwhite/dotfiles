@@ -140,6 +140,7 @@ brew "groovy"                                   # Java-based scripting language
 
 # Python
 brew "python"                                   # Interpreted, interactive, object-oriented programming language
+brew "python@3.10"                              # Python 3.10 for legacy systems
 
 # Elm
 brew "elm"                                      # Functional programming language for building browser-based GUIs

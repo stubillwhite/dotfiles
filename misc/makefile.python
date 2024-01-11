@@ -9,8 +9,8 @@ COLOR_NONE=\033[0m
 SHELL=/usr/local/bin/zsh
 .SHELLFLAGS=-i
 
-PYTHON=python3
-PIP=pip3
+PYTHON=/usr/local/Cellar/python@3.10/3.10.13_1/bin/python3.10
+PIP=/usr/local/Cellar/python@3.10/3.10.13_1/bin/pip3.10
 
 # Targets                                                                   {{{1
 # ==============================================================================
