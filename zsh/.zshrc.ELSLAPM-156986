@@ -276,6 +276,23 @@ function dkp-api-statuses() {
       | highlight green '\b[2][0-9]\+\b'
 }
 
+function dkp-certificate-statuses() {
+    local DOMAINS=(
+        data.elsevier.com
+        data-dev.elsevier.com
+        data-sandbox.elsevier.com
+        prod.topbraid.elsevier.net
+    )
+    (
+        printf "%s|%s\n" "Domain" "Expiry"
+        for DOMAIN in "${DOMAINS[@]}"
+        do
+            local expiry=$(certificate-expiry-curl ${DOMAIN} | gsed 's/^.* date: \(.*\)/\1/g')
+            printf "%s|%s\n" "${DOMAIN}" "${expiry}"
+        done
+    ) | column -t -s '|'
+}
+
 function recs-fi-performance() {
     hey -n 20 -c 3 -H 'Accept: application/json' -m GET 'https://fi-recommender.api.recs.d.elsevier.com/api/fi-recommendations/webuser/37325013/author/23982012500'
 }
