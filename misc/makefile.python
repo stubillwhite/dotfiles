@@ -42,13 +42,15 @@ clean-all: clean ## Remove all artefacts and dependencies
 bin/activate:
 	@echo 'Creating virtual environment'
 	@$(PYTHON) -m venv .
+	@source ./bin/activate \
+		&& $(PYTHON) -m pip install --upgrade pip
 
 venv: bin/activate
 
 .make-sentinel.deps: bin/activate requirements.txt
 	@echo 'Fetching dependencies'
 	@source ./bin/activate \
-		&& $(PIP) install --trusted-host files.pythonhosted.org --trusted-host pypi.org --trusted-host pypi.python.org --default-timeout=1000 -r requirements.txt
+		&& $(PIP) install --default-timeout=1000 -r requirements.txt
 	@touch .make-sentinel.deps
 
 deps: .make-sentinel.deps ## Install dependencies

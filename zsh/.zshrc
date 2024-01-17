@@ -1883,15 +1883,15 @@ function py-env-init() {
     touch requirements.txt
     touch app.py
 
-    print 'truststore'                                        >> requirements.txt
-    print 'import truststore\ntruststore.inject_into_ssl()\n' >> app.py
+    ## print 'truststore'                                        >> requirements.txt
+    ## print 'import truststore\ntruststore.inject_into_ssl()\n' >> app.py
 
     cp -n ~/Dev/my-stuff/dotfiles/misc/makefile.python makefile
 
-	# TODO: Certificates still seem iffy
-	local certificate=/Users/white1/Dev/certificates/ZscalerRootCertificate-2048-SHA256.crt
-    py-env-activate \
-    	&& pip3 config set global.cert ${certificate}
+	## # TODO: Certificates still seem iffy
+	## local certificate=/Users/white1/Dev/certificates/ZscalerRootCertificate-2048-SHA256.crt
+    ## py-env-activate \
+    ## 	&& pip3 config set global.cert ${certificate}
 
     #echo cat ${certificate} >> `python -c 'import certifi; print(certifi.where())'`
 }
@@ -1989,6 +1989,32 @@ function certificate-java-install() {
                     -noprompt
             fi
         done <<< "${keystores}"
+    done
+}
+
+function certificate-python-install() {
+    if [[ $# -ne 1 ]] ; then
+        echo 'Usage: certificate-python-install FILE'
+        echo
+        echo 'Example:'
+        echo 'certificate-python-install /Users/white1/Dev/certificates/ZscalerRootCertificate-2048-SHA256.crt'
+        return 1
+    fi
+
+    local certFile=$1
+    local certAlias=$(basename ${certFile})
+    for localCertFile in $(find . -name cacert.pem); do
+            echo
+            echo "Checking ${localCertFile}"
+            local output=$(grep ${certAlias} ${localCertFile})
+            if [[ ${output} =~ "${certAlias}" ]]; then
+                msg-success "Certificate present"
+            else
+                msg-error "Certificate missing -- adding"
+                echo ""                >> ${localCertFile}
+                echo "# ${certAlias}"  >> ${localCertFile}
+                cat ${certFile}        >> ${localCertFile}
+            fi
     done
 }
 
