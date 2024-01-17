@@ -1,5 +1,12 @@
 #!/bin/bash 
 
+# Configure defaults
+#
+# See https://macos-defaults.com/
+#
+# defaults domains      # List domains
+# defaults find WORD    # Search for WORD
+
 function configure-osx-preferences() {
     echo 'Configuring OSX preferences'
 
@@ -11,6 +18,11 @@ function configure-osx-preferences() {
 
     echo "- AppSwitcher should display on all monitors"
     defaults write com.apple.dock appswitcher-all-displays -bool true
+
+    echo "- Operating system should be silent"
+    defaults write com.apple.sound.beep.flash      -int 0
+    defaults write com.apple.sound.beep.volume     -int 0
+    defaults write com.apple.sound.uiaudio.enabled -int 0
 
     # Hot corners
     # Possible values:
