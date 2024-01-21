@@ -422,16 +422,21 @@ function() clock() {
     local currTime=$(date ${currTimeArgs})
 
     local TIMEZONES=(
-        EST             # East US
-        GMT             # London
-        CET             # Amsterdam
-        Asia/Kolkata    # India standard time
+        "EST:East US"
+        "GMT:London"
+        "CET:Amsterdam"
+        "Asia/Kolkata:India standard time"
     )
 
     for timezone in "${TIMEZONES[@]}"
     do
-        TZ=${timezone} date -d ${currTime} '+%Y-%m-%d %H:%M %Z'
-    done
+        local fields=("${(s/:/)timezone}")
+        local timezoneCode=${fields[1]}
+        local description=${fields[2]}
+
+        local currTimeInTimezone=$(TZ=${timezoneCode} date -d ${currTime} '+%Y-%m-%d %H:%M %Z')
+        echo "${description},${currTimeInTimezone}"
+    done | tabulate-by-comma
 }
 
 # Calculate the result of an expression
