@@ -425,7 +425,7 @@ function() clock() {
         "EST:East US"
         "GMT:London"
         "CET:Amsterdam"
-        "Asia/Kolkata:India standard time"
+        "Asia/Kolkata:India"
     )
 
     for timezone in "${TIMEZONES[@]}"
