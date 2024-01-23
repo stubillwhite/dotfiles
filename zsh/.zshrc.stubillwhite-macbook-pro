@@ -1,0 +1,6 @@
+# vim:fdm=marker
+
+# Node                                                                      {{{1
+# ==============================================================================
+
+export NODE_EXTRA_CA_CERTS=/usr/local/etc/openssl/cert.pem
