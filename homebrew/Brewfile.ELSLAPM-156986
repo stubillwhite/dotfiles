@@ -10,6 +10,10 @@ cask 'microsoft-teams'                          # Microsoft Teams is your hub fo
 cask 'onedrive'                                 # Cloud storage client
 cask 'powershell'                               # Command-line shell and scripting language
 
+# MongoDB
+tap 'mongodb/brew'
+brew 'mongodb-community@4.4'
+
 ################################################################################
 # Utilities
 ################################################################################
