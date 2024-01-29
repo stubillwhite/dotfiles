@@ -47,6 +47,10 @@ cask "insomnium"                                # HTTP and GraphQL Client
 # eBooks
 cask "kindle"                                   # Kindle for Mac
 
+# Presentations
+brew "marp-cli"                                 # Easily convert Marp Markdown files into static HTML/CSS, PDF, PPT and images
+cask "deckset"                                  # Presentations from Markdown
+
 ################################################################################
 # Utilities
 ################################################################################
@@ -103,36 +107,37 @@ brew "jaggr"                                    # JSON Aggregation CLI
 brew "jplot"                                    # iTerm2 expvar/JSON monitoring tool
 
 # OSX scripting
-brew "hammerspoon"                              # Desktop automation application
+cask "hammerspoon"                              # Desktop automation application
 
 ################################################################################
 # Development
 ################################################################################
 
 # Version control
+brew "gh"                                       # GitHub command-line tool
 brew "git"                                      # Distributed revision control system
+brew "git-delta"                                # Syntax-highlighting pager for git and diff output
+brew "git-filter-repo"                          # Quickly rewrite git repository history
 brew "git-lfs"                                  # Git extension for versioning large files
 brew "git-secret"                               # Bash-tool to store the private data inside a git repo
-brew "git-delta"                                # Syntax-highlighting pager for git and diff output
-brew "gh"                                       # GitHub command-line tool
 
 # Java
-cask "visualvm"                                 # JVM visualiser
-brew "maven"                                    # Java-based project management
 brew "gradle"                                   # Open-source build automation tool based on the Groovy and Kotlin DSL
+brew "maven"                                    # Java-based project management
+cask "visualvm"                                 # JVM visualiser
 
 # Clojure
 brew "leiningen"                                # Build tool for Clojure
 
 # Scala
+brew "ammonite-repl"                            # Ammonite is a cleanroom re-implementation of the Scala REPL
 brew "mill"                                     # Scala build tool
 brew "sbt"                                      # Build tool for Scala projects
 brew "scala"                                    # JVM-based programming language
-brew "ammonite-repl"                            # Ammonite is a cleanroom re-implementation of the Scala REPL
 
 # Haskell
-brew "ghcup"                                    # Installer for the general purpose language Haskell
 brew "cabal-install"                            # Command-line interface for Cabal and Hackage
+brew "ghcup"                                    # Installer for the general purpose language Haskell
 brew "haskell-stack"                            # The Haskell Tool Stack
 
 # Groovy
