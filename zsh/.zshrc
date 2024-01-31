@@ -619,11 +619,14 @@ function aws-sso-login() {
     local secretAccessKey=$(echo "${response}" | jq -r '.roleCredentials | .secretAccessKey')
     local sessionToken=$(echo "${response}" | jq -r '.roleCredentials | .sessionToken')
 
+    local expireAfter=$(date -d "+3 hours" --iso-8601=s)
+
     export AWS_ACCESS_KEY_ID="${accessKeyId}"
     export AWS_SECRET_ACCESS_KEY="${secretAccessKey}"
     export AWS_SESSION_TOKEN="${sessionToken}"
     export AWS_DEFAULT_REGION="us-east-1"
     export AWS_REGION="us-east-1"
+    export AWS_SSO_LOGIN_PARAMS="${profile}__${expireAfter}"
 
     echo
     aws-which
@@ -1058,7 +1061,7 @@ compdef "_arguments \
 # repository then execute the supplied function
 function git-for-each-repo() {
     setopt local_options glob_dots
-    for fnam in *; do
+    for fnam in *(N/); do
         if [[ -d $fnam ]]; then
             pushd "$fnam" > /dev/null || return 1
             if git rev-parse --git-dir > /dev/null 2>&1; then
@@ -1164,7 +1167,7 @@ function git-repos-status() {
         repo=$(basename $PWD)
 
         local branchColor="${COLOR_RED}"
-        if [[ "$gitRepoStatus[branch]" =~ (^main$) ]]; then
+        if [[ "$gitRepoStatus[branch]" =~ (^\(main\|master\)$) ]]; then
             branchColor="${COLOR_GREEN}"
         fi
         local branch="${branchColor}$gitRepoStatus[branch]${COLOR_NONE}"
@@ -1442,7 +1445,6 @@ function git-open() {
 # Archive the Git branch by tagging then deleting it
 function git-archive-branch() {
     if [[ $# -ne 1 ]] ; then
-        echo 'Archive Git branch by tagging then deleting it'
         echo 'Usage: git-archive-branch BRANCH'
         return 1
     fi
@@ -1511,6 +1513,24 @@ function git-prompt-help() {
     "
     echo $promptKey
 }
+
+function git-update-projects() {
+    local projects=(
+        ~/Dev/rdp/concept 
+        ~/Dev/rdp/consumption
+        ~/Dev/rdp/dkp 
+        ~/Dev/recommenders 
+    )
+
+    for project in "${projects[@]}"
+    do
+        pushd ${project}       && git-repos-pull && git-repos-generate-stats && popd
+        pushd ${project}/infra && git-repos-pull && git-repos-generate-stats && popd
+    done
+}
+compdef '_alternative \
+    "arguments:custom arg:(~/Dev/recommenders ~/Dev/rdp/dkp ~/Dev/rdp/concept ~/Dev/rdp/consumption)"' \
+    git-update-project
 
 # Git stats                         {{{2
 # ======================================
