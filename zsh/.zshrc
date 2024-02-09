@@ -397,7 +397,7 @@ compdef '_alternative \
 # echo 1633698951550 | epoch-to-date
 function epoch-to-date() {
     while IFS= read -r msSinceEpoch; do
-        awk -v t="${msSinceEpoch}" 'BEGIN { print strftime("%Y-%m-%d %H:%M:%S", t/1000); }'
+        gawk -v t="${msSinceEpoch}" 'BEGIN { print strftime("%Y-%m-%d %H:%M:%S", t/1000); }'
     done
 }
 
@@ -597,6 +597,9 @@ compdef "_arguments \
 alias aws-which="env | grep AWS | sort"
 alias aws-clear-variables="for i in \$(aws-which | cut -d= -f1,1 | paste -); do unset \$i; done"
 
+# Look at
+#   https://ben11kehoe.medium.com/you-only-need-to-call-aws-sso-login-once-for-all-your-profiles-41a334e1b37e
+#   https://docs.aws.amazon.com/cli/latest/userguide/sso-configure-profile-token.html
 function aws-sso-login() {
     local profile=$1
 
@@ -1030,7 +1033,7 @@ function docker-rm-images() {
     if confirm; then
         docker-rm-instances
         docker images -q | xargs docker rmi
-        docker images | grep "<none>" | awk '{print $3}' | xargs docker rmi
+        docker images | grep "<none>" | gawk '{print $3}' | xargs docker rmi
     fi
 }
 
@@ -1372,7 +1375,7 @@ function git-repos-authors() {
 # For each repo within the current directory, list the remote
 function git-repos-remotes() {
     remotes() {
-        git remote -v | grep '(fetch)' | awk '{ print $2 }'
+        git remote -v | grep '(fetch)' | gawk '{ print $2 }'
     }
 
     git-for-each-repo remotes
@@ -1418,7 +1421,7 @@ function git-open() {
         [[ -n "${pathInRepo}" ]] && pathInRepo="tree/${branch}/${pathInRepo}"
 
         local hostAlias=$(echo "$URL" | sed -E "s|git@(.*):(.*).git|\1|")
-        local hostname=$(ssh -G "${hostAlias}" | awk '$1 == "hostname" { print $2 }')
+        local hostname=$(ssh -G "${hostAlias}" | gawk '$1 == "hostname" { print $2 }')
 
         echo "$URL" \
             | sed -E "s|git@(.*):(.*).git|https://${hostname}/\2/${pathInRepo}|" \
@@ -1557,7 +1560,7 @@ HEREDOC
 
     echo 'hash,file' > "${hashToFileCsvFilename}"
     git --no-pager log --format='%H' --name-only \
-        | awk "${awkScript}" \
+        | gawk "${awkScript}" \
         >> "${hashToFileCsvFilename}"
 
     hashToAuthorCsvFilename=dataset-hash-to-author.csv

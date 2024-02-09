@@ -8,7 +8,7 @@ function start-printer-service() {
         echo 'Printer service already running'
     else 
         echo 'Starting printer service'
-        alias start-printer-service="open /Applications/uniFLOW\ SmartClient.app"
+        alias start-printer-service="/Applications/uniFLOW\ SmartClient.app/Contents/MacOS/SmartClient &"
     fi
 }
 
@@ -253,10 +253,39 @@ function recs-api-statuses() {
       | highlight green '\b[2][0-9]\+\b'
 }
 
+function recs-certificate-statuses() {
+    local DOMAINS=(
+        article-recommendations-tailored.api
+        fi-recommender.api
+        library-stats.api
+        raven-email-sent-stats.api
+        recs-events-service.api
+        recs-focus-stats.api
+        recs-reviewers-recommender.api
+        sd-article-recommendations.api
+        sd-hpcc-related-articles.api
+        sd-logged-email-events.api
+        sd-related-articles.api
+        sd-user-activity.api
+        sd-user-recommendations.api
+        recs.d.elsevier.com
+    )
+    (
+        printf "%s|%s\n" "Domain" "Expiry"
+        for DOMAIN in "${DOMAINS[@]}"
+        do
+            local expiry=$(certificate-expiry-curl "${DOMAIN}.recs.d.elsevier.com" | gsed 's/^.* date: \(.*\)/\1/g')
+            printf "%s|%s\n" "${DOMAIN}" "${expiry}"
+        done
+    ) | column -t -s '|'
+}
+
+
 function dkp-api-statuses() {
     local APIS=(
-        https://data.elsevier.com/api/
+        https://collections.elsevier.com/
         https://data-dev.elsevier.com/api/
+        https://data.elsevier.com/api/
         https://data-sandbox.elsevier.com/api/
         https://prod.topbraid.elsevier.net
     )
@@ -278,6 +307,7 @@ function dkp-api-statuses() {
 
 function dkp-certificate-statuses() {
     local DOMAINS=(
+        collections.elsevier.com
         data.elsevier.com
         data-dev.elsevier.com
         data-sandbox.elsevier.com

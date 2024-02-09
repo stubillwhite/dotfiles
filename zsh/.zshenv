@@ -84,11 +84,12 @@ EXPECTED_SECRETS=(
     SECRET_SLACK_WEBHOOK_URL
     SECRET_SPOTIFY_CLIENT_ID
     SECRET_SPOTIFY_CLIENT_SECRET
+    SECRET_TABLEAU_API_KEY
 )
 
 _assert-variables-defined "${EXPECTED_SECRETS[@]}"
 
-export OPENAI_API_KEY=${SECRET_OPENAI_API_KEY}
+export OPENAI_API_KEY=${SECRET_OPENAI_API_KEY_DKP}
 
 # General settings                                                          {{{1
 # ==============================================================================
