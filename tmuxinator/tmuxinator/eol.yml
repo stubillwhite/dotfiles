@@ -1,11 +1,11 @@
-name: llm
-root: ~/Dev/my-stuff/llm-scratchpad
+name: eol
+root: ~/Dev/scratchpad/eol-tracking
 
 windows:
-  - llm-scratchpad:
+  - eol-tracking:
       layout: even-horizontal
       panes:
         - prompt:
-            - vim app.py prompt.txt
+            - vim app.py
         - response:
             - git ls-files | entr -s 'make run'

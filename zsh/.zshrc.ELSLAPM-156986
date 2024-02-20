@@ -283,10 +283,11 @@ function recs-certificate-statuses() {
 
 function dkp-api-statuses() {
     local APIS=(
-        https://collections.elsevier.com/
-        https://data-dev.elsevier.com/api/
         https://data.elsevier.com/api/
+        https://data-dev.elsevier.com/api/
         https://data-sandbox.elsevier.com/api/
+        https://collections.elsevier.com/
+        https://imagefinder.elsevier.com/
         https://prod.topbraid.elsevier.net
     )
     (
@@ -307,10 +308,11 @@ function dkp-api-statuses() {
 
 function dkp-certificate-statuses() {
     local DOMAINS=(
-        collections.elsevier.com
-        data.elsevier.com
         data-dev.elsevier.com
         data-sandbox.elsevier.com
+        data.elsevier.com
+        collections.elsevier.com
+        imagefinder.elsevier.com
         prod.topbraid.elsevier.net
     )
     (

@@ -1,0 +1,11 @@
+name: llm-dnd
+root: ~/Dev/my-stuff/llm-dnd
+
+windows:
+  - llm-dnd:
+      layout: even-horizontal
+      panes:
+        - prompt:
+            - vim prompt.txt
+        - response:
+            - ls | entr -s 'make run'

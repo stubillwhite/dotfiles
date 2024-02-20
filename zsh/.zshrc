@@ -1914,7 +1914,8 @@ function py-env-init() {
     ## print 'truststore'                                        >> requirements.txt
     ## print 'import truststore\ntruststore.inject_into_ssl()\n' >> app.py
 
-    cp -n ~/Dev/my-stuff/dotfiles/misc/makefile.python makefile
+    cp -n ~/Dev/my-stuff/dotfiles/misc/makefile.python   makefile
+    cp -n ~/Dev/my-stuff/dotfiles/misc/.gitignore.python .gitignore
 
 	## # TODO: Certificates still seem iffy
 	## local certificate=/Users/white1/Dev/certificates/ZscalerRootCertificate-2048-SHA256.crt
@@ -1936,7 +1937,9 @@ function java-version() {
         return 1
     fi
 
-    export JAVA_HOME=/Library/Java/JavaVirtualMachines/${1}/Contents/Home/
+    local NEW_JAVA_HOME=/Library/Java/JavaVirtualMachines/${1}/Contents/Home/
+    export PATH=$(echo $PATH | sed "s|${JAVA_HOME}|${NEW_JAVA_HOME}|")
+    export JAVA_HOME=${NEW_JAVA_HOME}
 }
 compdef '_alternative \
     "arguments:custom arg:(temurin-8.jdk temurin-11.jdk temurin-17.jdk temurin-20.jdk)"' \
