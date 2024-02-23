@@ -114,6 +114,7 @@ cask "hammerspoon"                              # Desktop automation application
 ################################################################################
 
 # Version control
+brew "bfg"                                      # Remove large files or passwords from Git history like git-filter-branch
 brew "gh"                                       # GitHub command-line tool
 brew "git"                                      # Distributed revision control system
 brew "git-delta"                                # Syntax-highlighting pager for git and diff output
@@ -152,6 +153,9 @@ brew "elm"                                      # Functional programming languag
 
 # Go
 brew "go"                                       # Open source programming language to build simple/reliable/efficient software
+
+# Lua
+brew "lua-language-server"                      # Language Server for the Lua language
 
 # Ruby
 brew "ruby"                                     # Powerful, clean, object-oriented scripting language

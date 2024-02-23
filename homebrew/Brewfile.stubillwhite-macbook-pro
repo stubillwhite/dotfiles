@@ -13,7 +13,11 @@ cask "homebrew/cask-drivers/garmin-express"     # Garmin desktop tool
 brew "cmake"                                    # Cross-platform make
 brew "sdl2"                                     # Low-level access to audio, keyboard, mouse, joystick, and graphics
 brew "mingw-w64"                                # Minimalist GNU for Windows and GCC cross-compilers
-brew "wine-stable"                              # Compatibility layer to run Windows applications
+cask "wine-stable"                              # Compatibility layer to run Windows applications
+brew "llvm"                                     # Next-gen compiler infrastructure
+brew "libopusenc"                               # Convenience library for creating .opus files
+brew "sfml"                                     # Multi-media library with bindings for multiple languages
+brew "glm"                                      # C++ mathematics library for graphics software
 
 # Containers
 brew "lazydocker"                               # The lazier way to manage everything docker
