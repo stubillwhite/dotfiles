@@ -466,6 +466,23 @@ function uuid() {
     uuidgen | tr '[A-Z]' '[a-z]'
 }
 
+# Kill process by name
+function ps-kill() {
+    if [[ $# -ne 1 ]] ; then
+        echo 'Usage: ps-kill NAME'
+        exit -1
+    fi
+
+    local process=$(ps aux | grep -i $1 | grep -v grep | gsed -e 's/ \+/ /g')
+    if [[ -n "${process}" ]]; then
+        local processName=$(echo ${process} | gcut -d ' ' -f 11-)
+        local processID=$(echo ${process} | gcut -d ' ' -f 2)
+        confirm "Kill '${processName}' [y/n]?" && {
+            kill ${processID}
+        }
+    fi
+}
+
 # Fast AI course helpers            {{{2
 # ======================================
 
