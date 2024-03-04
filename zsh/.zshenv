@@ -89,7 +89,7 @@ EXPECTED_SECRETS=(
 
 _assert-variables-defined "${EXPECTED_SECRETS[@]}"
 
-export OPENAI_API_KEY=${SECRET_OPENAI_API_KEY_DKP}
+export OPENAI_API_KEY=${SECRET_OPENAI_API_KEY}
 
 # General settings                                                          {{{1
 # ==============================================================================
@@ -98,6 +98,9 @@ export COLOR_RED='\033[0;31m'
 export COLOR_GREEN='\033[0;32m'
 export COLOR_YELLOW='\033[0;33m'
 export COLOR_NONE='\033[0m'
+export COLOR_BLUE="\033[0;34m"
+export COLOR_MAGENTA="\033[0;35m"
+export COLOR_CYAN="\033[0;36m"
 export COLOR_CLEAR_LINE='\r\033[K'
 
 # Display success message
