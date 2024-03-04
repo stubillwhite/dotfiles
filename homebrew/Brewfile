@@ -86,7 +86,6 @@ brew "tree"                                     # Display directories as trees (
 brew "watch"                                    # Executes a program periodically, showing output fullscreen
 brew "wget"                                     # Internet file retriever
 brew "xsv"                                      # Fast CSV toolkit written in Rust
-brew "yq"                                       # Process YAML, JSON, XML, CSV and properties documents from the CLI
 brew "zsh"                                      # UNIX shell (command interpreter)
 cask "scroll-reverser"                          # Tool to reverse the direction of scrolling
 
