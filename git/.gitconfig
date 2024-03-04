@@ -64,6 +64,9 @@
 [includeIf "gitdir:~/Dev/my-stuff/"]
     path = ~/Dev/my-stuff/dotfiles/git/personal-config/.gitconfig
 
+[includeIf "gitdir:~/Dev/for-nat/"]
+    path = ~/Dev/my-stuff/dotfiles/git/personal-config/.gitconfig
+
 [includeIf "gitdir:~/Dropbox/Private/obsidian/"]
     path = ~/Dev/my-stuff/dotfiles/git/personal-config/.gitconfig
 
