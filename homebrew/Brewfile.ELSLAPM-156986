@@ -12,7 +12,8 @@ cask 'powershell'                               # Command-line shell and scripti
 
 # MongoDB
 tap 'mongodb/brew'
-brew 'mongodb-community@4.4'
+brew 'mongodb-community@4.4'                    # High-performance, schema-free, document-oriented database
+brew 'mongodb-database-tools'                   # This package contains standard utilities for interacting with MongoDB
 
 ################################################################################
 # Utilities
