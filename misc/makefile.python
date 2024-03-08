@@ -41,7 +41,7 @@ clean-all: clean ## Remove all artefacts and dependencies
 # Dependencies                      {{{2
 # ======================================
 
-bin/activate:
+$(VENV_DIR)/bin/activate:
 	@echo 'Creating virtual environment'
 	@$(PYTHON) -m venv $(VENV_DIR)
 	@source $(VENV_DIR)/bin/activate \
