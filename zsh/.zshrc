@@ -108,6 +108,7 @@ alias display-colours='msgcat --color=test'                                 # Di
 alias ssh-add-keys='ssh-add ~/.ssh/keys/id_rsa_personal'                    # Add standard keys to SSH agent
 alias list-ports='netstat -anv'                                             # List active ports
 alias new-react-app='npx create-react-app'                                  # Shortcut to create a new React app
+alias fzv='fzf --bind "enter:become(nvim {})"'                              # Fuzzy-find a file and open Vim
 
 # No flow control, so C-s is free for C-r/C-s back/forward incremental search
 stty -ixon
@@ -1924,15 +1925,13 @@ alias py-env-activate='source ./bin/activate'
 alias py-env-deactivate='deactivate'
 
 function py-env-init() {
-    python -m venv .
     touch requirements.txt
     touch app.py
+    cp -n ~/Dev/my-stuff/dotfiles/misc/makefile.python   makefile
+    cp -n ~/Dev/my-stuff/dotfiles/misc/.gitignore.python .gitignore
 
     ## print 'truststore'                                        >> requirements.txt
     ## print 'import truststore\ntruststore.inject_into_ssl()\n' >> app.py
-
-    cp -n ~/Dev/my-stuff/dotfiles/misc/makefile.python   makefile
-    cp -n ~/Dev/my-stuff/dotfiles/misc/.gitignore.python .gitignore
 
 	## # TODO: Certificates still seem iffy
 	## local certificate=/Users/white1/Dev/certificates/ZscalerRootCertificate-2048-SHA256.crt

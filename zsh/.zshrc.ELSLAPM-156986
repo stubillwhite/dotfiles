@@ -101,11 +101,11 @@ function recs-get-k8s() {
 
         # TODO: We need to upgrade our K8s config
         # https://github.com/fluxcd/flux2/issues/2817
-        echo
-        echo 'WARNING: My tools are running with newer clients than our servers; patching protocol'
-        local oldProtocol="client.authentication.k8s.io\/v1alpha1"
-        local newProtocol="client.authentication.k8s.io\/v1beta1"
-        gsed -i "s/${oldProtocol}/${newProtocol}/g" $HOME/.kube/recs-eks-${recsSubEnv}-${recsEnv}.conf
+        # echo
+        # echo 'WARNING: My tools are running with newer clients than our servers; patching protocol'
+        # local oldProtocol="client.authentication.k8s.io\/v1alpha1"
+        # local newProtocol="client.authentication.k8s.io\/v1beta1"
+        # gsed -i "s/${oldProtocol}/${newProtocol}/g" $HOME/.kube/recs-eks-${recsSubEnv}-${recsEnv}.conf
     fi
 }
 compdef "_arguments \
