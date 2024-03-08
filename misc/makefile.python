@@ -60,6 +60,6 @@ deps: .make-sentinel.deps ## Install dependencies
 # Running                           {{{2
 # ======================================
 
-run: venv deps ## Run the server
+run: venv deps ## Run the app
 	@source $(VENV_DIR)/bin/activate \
 		&& $(PYTHON) app.py
