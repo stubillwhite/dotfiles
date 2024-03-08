@@ -12,6 +12,8 @@ SHELL=/usr/local/bin/zsh
 PYTHON=python3
 PIP=pip3
 
+VENV_DIR=./.venv
+
 # Targets                                                                   {{{1
 # ==============================================================================
 
@@ -34,22 +36,22 @@ clean: ## Remove all artefacts
 .PHONY: clean-all
 clean-all: clean ## Remove all artefacts and dependencies
 	@echo 'Cleaning dependencies'
-	@rm -rf include bin lib pyvenv.cfg
+	@rm -rf $(VENV_DIR)
 
 # Dependencies                      {{{2
 # ======================================
 
 bin/activate:
 	@echo 'Creating virtual environment'
-	@$(PYTHON) -m venv .
-	@source ./bin/activate \
+	@$(PYTHON) -m venv $(VENV_DIR)
+	@source $(VENV_DIR)/bin/activate \
 		&& $(PYTHON) -m pip install --upgrade pip
 
-venv: bin/activate
+venv: $(VENV_DIR)/bin/activate
 
-.make-sentinel.deps: bin/activate requirements.txt
+.make-sentinel.deps: $(VENV_DIR)/bin/activate requirements.txt
 	@echo 'Fetching dependencies'
-	@source ./bin/activate \
+	@source $(VENV_DIR)/bin/activate \
 		&& $(PIP) install --default-timeout=1000 -r requirements.txt
 	@touch .make-sentinel.deps
 
@@ -59,5 +61,5 @@ deps: .make-sentinel.deps ## Install dependencies
 # ======================================
 
 run: venv deps ## Run the server
-	@source ./bin/activate \
+	@source $(VENV_DIR)/bin/activate \
 		&& $(PYTHON) app.py
