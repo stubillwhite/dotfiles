@@ -68,7 +68,7 @@ setopt menu_complete            # Tab autocompletes first option even if ambiguo
 # ZScaler                                                                   {{{1
 # ==============================================================================
 
-export SSL_CERT_FILE=/usr/local/etc/openssl@3/certs
+#export SSL_CERT_FILE=/usr/local/etc/openssl@3/certs
 #export SSL_CERT_FILE="${SSL_CERT_FILE}"      # openssl
 #export REQUESTS_CA_BUNDLE="${SSL_CERT_FILE}" # requests
 #export AWS_CA_BUNDLE="${SSL_CERT_FILE}"      # botocore
