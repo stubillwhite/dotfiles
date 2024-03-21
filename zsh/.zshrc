@@ -45,9 +45,6 @@ unsetopt PATH_DIRS                   # Don't automcomplete foo/bar to my_path_di
 zstyle ':completion:*' use-cache on
 zstyle ':completion:*' cache-path ~/.zsh/cache
 
-# AWS tools
-source-if-exists "/usr/local/bin/aws_zsh_completer.sh"
-
 # General preferences                                                       {{{1
 # ==============================================================================
 
@@ -68,6 +65,7 @@ setopt menu_complete            # Tab autocompletes first option even if ambiguo
 # ZScaler                                                                   {{{1
 # ==============================================================================
 
+export SSL_CERT_FILE=~/Dev/certificates/ZscalerRootCertificate-2048-SHA256.crt
 #export SSL_CERT_FILE=/usr/local/etc/openssl@3/certs
 #export SSL_CERT_FILE="${SSL_CERT_FILE}"      # openssl
 #export REQUESTS_CA_BUNDLE="${SSL_CERT_FILE}" # requests
