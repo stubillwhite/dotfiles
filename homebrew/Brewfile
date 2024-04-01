@@ -200,4 +200,3 @@ brew "nethack"                                  # Single-player roguelike video 
 brew "stone-soup"                               # Dungeon Crawl Stone Soup: a roguelike game
 brew "brogue"                                   # Roguelike game
 brew "angband"                                  # Dungeon exploration game
-brew "cataclysm"                                # For/variant of Cataclysm Roguelike
