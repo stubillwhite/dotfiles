@@ -38,6 +38,7 @@ clean: ## Remove all artefacts
 .PHONY: clean-all
 clean-all: clean ## Remove all artefacts and dependencies
 	@echo 'Cleaning dependencies'
+	@rm .make-sentinel.deps
 	@rm -rf $(VENV_DIR)
 
 # Dependencies                      {{{2
