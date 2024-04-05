@@ -15,6 +15,9 @@ tap 'mongodb/brew'
 brew 'mongodb-community@4.4'                    # High-performance, schema-free, document-oriented database
 brew 'mongodb-database-tools'                   # This package contains standard utilities for interacting with MongoDB
 
+# Video conferencing
+cask 'amazon-chime'                             # Communications service
+
 ################################################################################
 # Utilities
 ################################################################################
