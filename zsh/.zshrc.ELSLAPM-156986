@@ -909,3 +909,54 @@ HEREDOC
 compdef "_arguments \
     '1:environment arg:(dev staging live)'" \
     rr-lambda-backlog
+
+# Azure                                                                     {{{1
+# ==============================================================================
+
+function az-list-models-for-project() {
+    if [[ $# -ne 1 ]]; then
+        echo "Usage: az-list-models-for-project (innovation|sebright)"
+        return 1
+    fi
+
+    local project=$1
+
+    [ "${project}" = 'sebright' ] && SUBSCRIPTIONS=(
+        az-ag-ScopusGPT-backup
+        az-ag-ScopusGPT-nonprod
+        az-ag-ScopusGPT-prod
+    )
+
+    [ "${project}" = 'innovation' ] && SUBSCRIPTIONS=(
+        az-ag-Hackathon1-nonprod
+        az-ag-Hackathon2-nonprod
+    )
+
+    for subscription in "${SUBSCRIPTIONS[@]}"; do
+        echo "--"
+        echo "-- ${subscription}"
+        echo "--"
+        echo
+        az account set --subscription "${subscription}"
+
+        while IFS=, read -rA azureInfo; do
+            IFS=' ' read -rA azureFields <<< "${azureInfo}"
+            resourceGroup="${azureFields[1]}"
+            name="${azureFields[2]}"
+
+            echo "${name}"
+            az cognitiveservices account deployment list --resource-group "${resourceGroup}" --name "${name}" --output json \
+                | jq -r '.[] | .properties | [ (.model | .name, .version), (.rateLimits[] | select(.key == "request").count,select(.key == "token").count  ) ] | @csv' \
+                | gsed 's/"//g' \
+                | sort \
+                | prepend "model,version,request_limit,token_limit" \
+                | tabulate-by-comma
+            echo
+
+        done < <(az cognitiveservices account list --output json | jq -r '.[] | [ .resourceGroup, .name ] | @csv' | sed 's/"//g' | sort)
+    done
+}
+compdef "_arguments \
+    '1:environment arg:(innovation sebright)'" \
+    az-list-models-for-project
+
