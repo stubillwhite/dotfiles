@@ -1552,9 +1552,6 @@ function git-update-projects() {
         pushd ${project}/infra && git-repos-pull && git-repos-generate-stats && popd
     done
 }
-compdef '_alternative \
-    "arguments:custom arg:(~/Dev/recommenders ~/Dev/rdp/dkp ~/Dev/rdp/concept ~/Dev/rdp/consumption)"' \
-    git-update-project
 
 # Git stats                         {{{2
 # ======================================
@@ -1871,6 +1868,28 @@ function github-list-user-repos() {
         | strip-quotes
 }
 
+# Homebrew                          {{{2
+# ======================================
+export HOMEBREW_NO_ENV_HINTS=1
+
+# Java                              {{{2
+# ======================================
+
+# Switch Java version
+function java-version() {
+    if [[ $# -ne 1 ]] ; then
+        echo 'Usage: java-version JVM'
+        return 1
+    fi
+
+    local NEW_JAVA_HOME=/Library/Java/JavaVirtualMachines/${1}/Contents/Home/
+    export PATH=$(echo $PATH | sed "s|${JAVA_HOME}|${NEW_JAVA_HOME}|")
+    export JAVA_HOME=${NEW_JAVA_HOME}
+}
+compdef '_alternative \
+    "arguments:custom arg:(temurin-8.jdk temurin-11.jdk temurin-17.jdk temurin-20.jdk)"' \
+    java-version
+
 # JIRA                              {{{2
 # ======================================
 
@@ -1908,18 +1927,6 @@ alias keepassxc-get-ssh='keepassxc-cli clip ~/Dropbox/Private/keepassx/personal.
 
 alias keepassxc-get-gpg='keepassxc-cli clip ~/Dropbox/Private/keepassx/elsevier.kdbx /Elsevier/GPG'
 
-# Shellcheck                        {{{2
-# ======================================
-
-export SHELLCHECK_OPTS=""
-SHELLCHECK_OPTS+="-e SC1091 "    # Allow sourcing files from paths that do not exist yet
-SHELLCHECK_OPTS+="-e SC2039 "    # Allow dash in function names
-SHELLCHECK_OPTS+="-e SC2112 "    # Allow 'function' keyword
-SHELLCHECK_OPTS+="-e SC2155 "    # Allow declare and assignment in the same statement
-SHELLCHECK_OPTS+="-e SC3011 "    # Allow here-strings, not in POSIX sh
-SHELLCHECK_OPTS+="-e SC3033 "    # Allow dashes in functionn names, not in POSIX sh
-SHELLCHECK_OPTS+="-e SC3043 "    # Allow 'local', not in POSIX sh
-
 # Python                            {{{2
 # ======================================
 
@@ -1944,25 +1951,34 @@ function py-env-init() {
     #echo cat ${certificate} >> `python -c 'import certifi; print(certifi.where())'`
 }
 
-alias py-env-install='pip3 install --trusted-host files.pythonhosted.org --trusted-host pypi.org --trusted-host pypi.python.org --default-timeout=1000'
+# Should no longer be required
+# alias py-env-install='pip3 install --trusted-host files.pythonhosted.org --trusted-host pypi.org --trusted-host pypi.python.org --default-timeout=1000'
 
-# Java                              {{{2
+# Ripgrep                           {{{2
 # ======================================
 
-# Switch Java version
-function java-version() {
-    if [[ $# -ne 1 ]] ; then
-        echo 'Usage: java-version JVM'
-        return 1
-    fi
+export RIPGREP_CONFIG_PATH=~/.ripgreprc
 
-    local NEW_JAVA_HOME=/Library/Java/JavaVirtualMachines/${1}/Contents/Home/
-    export PATH=$(echo $PATH | sed "s|${JAVA_HOME}|${NEW_JAVA_HOME}|")
-    export JAVA_HOME=${NEW_JAVA_HOME}
-}
-compdef '_alternative \
-    "arguments:custom arg:(temurin-8.jdk temurin-11.jdk temurin-17.jdk temurin-20.jdk)"' \
-    java-version
+# SBT                               {{{2
+# ======================================
+
+export SBT_OPTS='-Xmx2G'
+
+alias sbt-no-test='sbt "set test in assembly := {}"'
+alias sbt-test='sbt test it:test'
+alias sbt-profile='sbt -Dsbt.task.timings=true'
+
+# Shellcheck                        {{{2
+# ======================================
+
+export SHELLCHECK_OPTS=""
+SHELLCHECK_OPTS+="-e SC1091 "    # Allow sourcing files from paths that do not exist yet
+SHELLCHECK_OPTS+="-e SC2039 "    # Allow dash in function names
+SHELLCHECK_OPTS+="-e SC2112 "    # Allow 'function' keyword
+SHELLCHECK_OPTS+="-e SC2155 "    # Allow declare and assignment in the same statement
+SHELLCHECK_OPTS+="-e SC3011 "    # Allow here-strings, not in POSIX sh
+SHELLCHECK_OPTS+="-e SC3033 "    # Allow dashes in functionn names, not in POSIX sh
+SHELLCHECK_OPTS+="-e SC3043 "    # Allow 'local', not in POSIX sh
 
 # SSL certificates                  {{{2
 # ======================================
@@ -2088,20 +2104,6 @@ function certificate-expiry-openssl() {
     fi
     echo Q | openssl s_client -connect "${1}":443 | openssl x509 -noout -dates
 }
-
-# Ripgrep                           {{{2
-# ======================================
-
-export RIPGREP_CONFIG_PATH=~/.ripgreprc
-
-# SBT                               {{{2
-# ======================================
-
-export SBT_OPTS='-Xmx2G'
-
-alias sbt-no-test='sbt "set test in assembly := {}"'
-alias sbt-test='sbt test it:test'
-alias sbt-profile='sbt -Dsbt.task.timings=true'
 
 # Tmuxinator                        {{{2
 # ======================================
