@@ -1042,6 +1042,13 @@ function az-login() {
      az login -u white1@science.regn.net -o table
 }
 
+#
+# cookiecutter                      {{{2
+# ======================================
+
+alias cookiecutter-new-python='cookiecutter https://github.com/stubillwhite/cookiecutters --directory python'
+
+#
 # Docker                            {{{2
 # ======================================
 
@@ -1540,6 +1547,9 @@ function git-prompt-help() {
 
 function git-update-projects() {
     local projects=(
+        ~/Dev/kd/butter-chicken
+        ~/Dev/kd/misc
+        ~/Dev/kd/spirograph
         ~/Dev/rdp/concept 
         ~/Dev/rdp/consumption
         ~/Dev/rdp/dkp 
@@ -1604,19 +1614,19 @@ HEREDOC
 
 # Merge CSV data about a Git repo
 function git-stats-merge-files() {
-    if [[ $# -ne 1 ]] ; then
-        echo 'Usage: git-stats-merge-files DIR'
-        exit -1
-    fi
-
-    local dir=$1
     local fnam=".git-stats.csv"
 
-    if [[ -f "${dir}/${fnam}" ]]; then
-        cat "${dir}/${fnam}" | tail -n +2 >> "./${fnam}"
-    else
-        cat "${dir}/${fnam}" > "./${fnam}"
-    fi
+    rm "./${fnam}"
+
+    for f in $(gfind . -name ${fnam}); do
+        echo "Merging ${f} into ${fnam}"
+
+        if [[ -f "./${fnam}" ]]; then
+            cat "${f}" | tail -n +2 >> "./${fnam}"
+        else
+            cat "${f}" > "./${fnam}"
+        fi
+    done
 }
 
 # For each repo within the current directory, generate statistics and merge the files
