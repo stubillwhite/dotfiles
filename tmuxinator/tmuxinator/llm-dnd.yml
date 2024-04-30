@@ -8,4 +8,4 @@ windows:
         - prompt:
             - vim prompt.txt
         - response:
-            - ls | entr -s 'make run'
+            - git ls-files | entr -s 'make run'

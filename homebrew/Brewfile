@@ -147,9 +147,10 @@ brew "haskell-stack"                            # The Haskell Tool Stack
 brew "groovy"                                   # Java-based scripting language
 
 # Python
+brew "mypy"                                     # Experimental optional static type checker for Python
+brew "poetry"                                   # Python package management tool
 brew "python"                                   # Interpreted, interactive, object-oriented programming language
 brew "python@3.10"                              # Interpreted, interactive, object-oriented programming language
-brew "poetry"                                   # Python package management tool
 
 # Elm
 brew "elm"                                      # Functional programming language for building browser-based GUIs
