@@ -164,6 +164,9 @@ brew "lua-language-server"                      # Language Server for the Lua la
 # Ruby
 brew "ruby"                                     # Powerful, clean, object-oriented scripting language
 
+# DuckDB
+brew "duckdb"                                   # Embeddable SQL OLAP Database Management System
+
 # Javascript
 brew "node"                                     # platform built on v8 to build network applications
 cask "visual-studio-code"                       # Open-source code editor
