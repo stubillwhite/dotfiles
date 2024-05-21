@@ -960,3 +960,28 @@ compdef "_arguments \
     '1:environment arg:(innovation sebright)'" \
     az-list-models-for-project
 
+function az-generate-model-stats() {
+    regions=$(az account list-locations --output json | jq -r ".[].name")
+
+    echo "Generating .az-model-stats.csv"
+    echo '"region", "kind", "model", "version", "skus"' > .az-model-stats.csv
+    while read -rA region; do
+        az cognitiveservices model list --location ${region} --output json \
+            | jq -r --arg region ${region} '.[] | .model.skus[].name as $skusName | [$region, .kind, .model.name, .model.version, $skusName] | @csv'
+    done <<< "${regions}" >> .az-model-stats.csv
+}
+
+function az-stats-model-regions() {
+    local query
+    read-heredoc query <<HEREDOC
+    SELECT model, version, count(region) AS total_regions, group_concat(region, '; ') AS regions 
+    FROM .az-model-stats.csv
+    WHERE model LIKE '%gpt%' 
+        AND kind IS 'OpenAI'
+        AND skus IS 'Standard'
+    GROUP BY model,version
+HEREDOC
+
+    echo 'Regions for OpenAI GPT models with standard SKUs'
+    q "${query}" | tabulate-by-comma
+}
