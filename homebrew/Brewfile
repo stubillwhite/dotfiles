@@ -151,6 +151,8 @@ brew "mypy"                                     # Experimental optional static t
 brew "poetry"                                   # Python package management tool
 brew "python"                                   # Interpreted, interactive, object-oriented programming language
 brew "python@3.10"                              # Interpreted, interactive, object-oriented programming language
+brew "ruff"                                     # Extremely fast Python linter, written in Rust
+brew "ruff-lsp"                                 # Language Server Protocol implementation for Ruff
 
 # Elm
 brew "elm"                                      # Functional programming language for building browser-based GUIs
