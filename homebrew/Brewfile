@@ -10,9 +10,10 @@ tap "homebrew/bundle"
 
 # Java
 tap "homebrew/cask-versions"
-cask "temurin8"                                 # JDK 8 LTS from https://adoptium.net/
-cask "temurin11"                                # JDK 11 LTS from https://adoptium.net/
-cask "temurin17"                                # JDK 17 LTS from https://adoptium.net/
+cask "temurin@8"                                # JDK 8 LTS from https://adoptium.net/
+cask "temurin@11"                               # JDK 11 LTS from https://adoptium.net/
+cask "temurin@17"                               # JDK 17 LTS from https://adoptium.net/
+cask "temurin@21"                               # JDK 21 LTS from https://adoptium.net/
 cask "temurin"                                  # Latest JDK from https://adoptium.net/
 
 # Basics
