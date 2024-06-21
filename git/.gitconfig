@@ -101,6 +101,9 @@
 [includeIf "gitdir:~/Dev/kd/"]
     path = ~/Dev/my-stuff/dotfiles/git/work-config/.gitconfig
 
+[includeIf "gitdir:~/Dev/scratchpad/"]
+    path = ~/Dev/my-stuff/dotfiles/git/work-config/.gitconfig
+
 [mailmap]
 	file = ~/.mailmap
 

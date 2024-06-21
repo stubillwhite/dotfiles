@@ -67,11 +67,13 @@ setopt menu_complete            # Tab autocompletes first option even if ambiguo
 
 export SSL_CERT_FILE=~/Dev/certificates/ZscalerRootCertificate-2048-SHA256.crt
 #export SSL_CERT_FILE=/usr/local/etc/openssl@3/certs
-#export SSL_CERT_FILE="${SSL_CERT_FILE}"      # openssl
-#export REQUESTS_CA_BUNDLE="${SSL_CERT_FILE}" # requests
-#export AWS_CA_BUNDLE="${SSL_CERT_FILE}"      # botocore
-#export CURL_CA_BUNDLE="${SSL_CERT_FILE}"     # curl
-#export HTTPLIB2_CA_CERTS="${SSL_CERT_FILE}"  # httplib2
+#export SSL_CERT_FILE="${SSL_CERT_FILE}"        # openssl
+#export REQUESTS_CA_BUNDLE="${SSL_CERT_FILE}"   # requests
+#export AWS_CA_BUNDLE="${SSL_CERT_FILE}"        # botocore
+#export CURL_CA_BUNDLE="${SSL_CERT_FILE}"       # curl
+#export HTTPLIB2_CA_CERTS="${SSL_CERT_FILE}"    # httplib2
+#export NODE_EXTRA_CA_CERTS="${SSL_CERT_FILE}"  # node
+
 
 # Aliases                                                                   {{{1
 # ==============================================================================
@@ -98,6 +100,7 @@ alias gh='NO_COLOR=1 gh'                                                    # gh
 alias vi='nvim'                                                             # Use nvim instead of vi
 alias vim='nvim'                                                            # Use nvim instead of vim
 alias python='python3'                                                      # Use Python 3
+alias pip='pip3'                                                            # Use Pip for Python 3
 alias sed='gsed'                                                            # Use gsed instead of sed
 alias echo='gecho'                                                          # Use gecho nstead of echo
 alias date='gdate'                                                          # Use gdate instead of date
@@ -606,7 +609,7 @@ function ssh-config () {
     fi
 }
 compdef "_arguments \
-    '1:environment arg:(recs newsflo)'" \
+    '1:environment arg:(recs newsflo steel-thread)'" \
     ssh-config
 
 # Specific tools                                                            {{{1
@@ -1130,6 +1133,21 @@ function git-repos-pull() {
     git-for-each-repo-parallel pull-repo
     git-repos-status
 }
+
+function git-repos-change-remote() {
+    pull-repo() {
+        local oldRemote=$(git remote -v | grep '(fetch)' | gsed -r 's/.*(git@github.*) .*/\1/g')
+        #local newRemote=$(echo ${oldRemote} | gsed -r 's/-work/.com/g')
+        local newRemote=$(echo ${oldRemote} | gsed -r 's/.com/-work/g')
+        git remote remove origin
+        git remote add origin ${newRemote}
+        echo git remote add origin ${newRemote}
+    }
+
+    git-for-each-repo-parallel pull-repo
+    git-repos-status
+}
+
 
 # For each repo within the current directory, fetch the repo
 function git-repos-fetch() {
@@ -1885,6 +1903,8 @@ export HOMEBREW_NO_ENV_HINTS=1
 # Java                              {{{2
 # ======================================
 
+# https://www.zsh.org/mla/users/2011/msg00514.html
+
 # Switch Java version
 function java-version() {
     if [[ $# -ne 1 ]] ; then
@@ -1896,9 +1916,14 @@ function java-version() {
     export PATH=$(echo $PATH | sed "s|${JAVA_HOME}|${NEW_JAVA_HOME}|")
     export JAVA_HOME=${NEW_JAVA_HOME}
 }
-compdef '_alternative \
-    "arguments:custom arg:(temurin-8.jdk temurin-11.jdk temurin-17.jdk temurin-20.jdk)"' \
-    java-version
+compdef _java-version java-version
+
+_java-version() {          
+  local -a installedJDKs
+  installedJDKs=(/Library/Java/JavaVirtualMachines/)
+  _files -/ -W installedJDKs -g '*'
+}
+
 
 # JIRA                              {{{2
 # ======================================
@@ -1930,6 +1955,8 @@ function xq-paths() {
 
 # KeePassXC                         {{{2
 # ======================================
+
+alias keepassxc='/Applications/KeePassXC.app/Contents/MacOS/KeePassXC --allow-screencapture'
 
 alias keepassxc-cli='/Applications/KeePassXC.app/Contents/MacOS/keepassxc-cli'
 

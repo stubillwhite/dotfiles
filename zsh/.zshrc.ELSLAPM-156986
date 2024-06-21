@@ -545,7 +545,7 @@ function aws-for-all-regions() {
 }
 
 # List the IPs for all AWS instances in all regions
-function aws-all-instance-ips-all-regions() {
+function aws-all-regions-all-instance-ips() {
 
     list-instances() {
         aws-all-instance-ips 2>/dev/null
@@ -558,12 +558,34 @@ function aws-all-instance-ips-all-regions() {
 function aws-all-regions-dynamodb-tables() {
 
     list-tables() {
-        aws dynamodb list-tables | jq -r '.TableNames[]'
+        aws dynamodb list-tables | jq -r '.'
     }
 
     aws-for-all-regions list-tables
 }
 
+# List the DynamoDB tables in all regions
+function aws-all-regions-rds-instances() {
+
+    list-tables() {
+        aws rds describe-db-instances | jq -r '.TableNames[]'
+    }
+
+    aws-for-all-regions list-tables
+}
+
+function aws-all-regions-unattached-ebs-volumes() {
+
+    unnattached-ebs() {
+        aws ec2 describe-volumes \
+            | jq -r '.Volumes[] | select(.State != "in-use") | [.VolumeId, .State] | @csv' \
+            | gsed 's/"//g' \
+            | prepend "VolumeId,State" \
+            | tabulate-by-comma
+    }
+
+    aws-for-all-regions unnattached-ebs
+}
 
 # List AWS instance limits
 function aws-ec2-instance-limits() {
@@ -960,28 +982,37 @@ compdef "_arguments \
     '1:environment arg:(innovation sebright)'" \
     az-list-models-for-project
 
+function az-list-model-limits() {
+    az cognitiveservices model list --location eastus --output json \
+        | jq -r '.[] | .model.name as $modelName | .model.skus[] | .name as $skuName | .capacity.maximum as $capMax | .rateLimits[] | [$modelName, $skuName, $capMax, .key, .count] | @csv' \
+        | gsed 's/"//g' \
+        | prepend 'model,sku,max,limit,value' \
+        | tabulate-by-comma
+}
+
 function az-generate-model-stats() {
     regions=$(az account list-locations --output json | jq -r ".[].name")
 
     echo "Generating .az-model-stats.csv"
-    echo '"region", "kind", "model", "version", "skus"' > .az-model-stats.csv
+    echo '"region", "kind", "model", "version", "skus", "deprecation"' > .az-model-stats.csv
     while read -rA region; do
         az cognitiveservices model list --location ${region} --output json \
-            | jq -r --arg region ${region} '.[] | .model.skus[].name as $skusName | [$region, .kind, .model.name, .model.version, $skusName] | @csv'
+            | jq -r --arg region ${region} '.[] | .model.skus[].name as $skusName | [$region, .kind, .model.name, .model.version, $skusName, .model.deprecation.inference] | @csv'
     done <<< "${regions}" >> .az-model-stats.csv
 }
 
 function az-stats-model-regions() {
     local query
     read-heredoc query <<HEREDOC
-    SELECT model, version, count(region) AS total_regions, group_concat(region, '; ') AS regions 
+    SELECT model, version, deprecation, count(region) AS total_regions, group_concat(region, '; ') AS regions 
     FROM .az-model-stats.csv
     WHERE model LIKE '%gpt%' 
         AND kind IS 'OpenAI'
         AND skus IS 'Standard'
-    GROUP BY model,version
+    GROUP BY model,version,deprecation
 HEREDOC
 
     echo 'Regions for OpenAI GPT models with standard SKUs'
     q "${query}" | tabulate-by-comma
 }
+

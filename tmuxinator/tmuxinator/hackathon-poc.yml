@@ -1,0 +1,11 @@
+name: hackathon-poc
+root: ~/Dev/scratchpad/hackathon/hackathon-poc/
+
+windows:
+  - azure:
+      layout: even-horizontal
+      panes:
+        - code:
+            - vim src/hackathon_poc/app.py
+        - output:
+            - git ls-files | entr -s 'make run'

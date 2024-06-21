@@ -1,0 +1,11 @@
+name: azure-utils
+root: ~/Dev/scratchpad/azure-utils/
+
+windows:
+  - azure:
+      layout: even-horizontal
+      panes:
+        - code:
+            - vim src/azure_utils/app.py
+        - output:
+            - git ls-files | entr -s 'make run'
