@@ -2,6 +2,9 @@
 # Applications
 ################################################################################
 
+# Basics
+cask 'microsoft-edge'                           # Web browser
+
 # Drawing
 cask 'drawio'                                   # draw.io Desktop
 
