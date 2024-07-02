@@ -106,6 +106,7 @@ alias echo='gecho'                                                          # Us
 alias date='gdate'                                                          # Use gdate instead of date
 alias find='gfind'                                                          # Use gfind instead of find
 alias pygmentize='pygmentize -O style=nord-darker'                          # Default to nord-darker style for pygmentize
+alias rsync='rsync -r --progress'                                           # Default to recursive and show progress
 
 # Other useful stuff
 alias reload-zsh-config="exec zsh"                                          # Reload Zsh config
@@ -453,20 +454,18 @@ function calc () {
 }
 
 # Copy my base machine config to a remote host
-function scp-skeleton-config() {
+function copy-skeleton-config() {
     if [[ $# -ne 1 ]] ; then
-        echo 'Usage: scp-skeleton-config HOST'
-        exit -1
+        echo 'Usage: copy-skeleton-config HOST'
+        return -1
     fi
 
-    pushd ~/Dev/my-stuff/dotfiles/skeleton-config || exit 1
+    pushd ~/Dev/my-stuff/dotfiles/skeleton-config || return 1
     echo "Uploading config to $1"
-    for file in $(find . \! -name .); do
-        scp $file $1:$file
-    done
-    popd || exit 1
+    rsync --progress -v . $1:.
+    popd || return 1
 }
-compdef _ssh scp-skeleton-config=ssh
+compdef _ssh copy-skeleton-config=ssh
 
 # Generate a UUID
 function uuid() {
@@ -477,7 +476,7 @@ function uuid() {
 function ps-kill() {
     if [[ $# -ne 1 ]] ; then
         echo 'Usage: ps-kill NAME'
-        exit -1
+        return 1
     fi
 
     local process=$(ps aux | grep -i $1 | grep -v grep | gsed -e 's/ \+/ /g')
@@ -1861,7 +1860,7 @@ function github-notify-on-change() {
 function github-list-user-repos() {
     if [[ $# -ne 1 ]] ; then
         echo 'Usage: github-list-user-repos USERNAME'
-        exit -1
+        return -1
     fi
 
     local user=$1
