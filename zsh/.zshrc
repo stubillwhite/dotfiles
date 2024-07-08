@@ -1017,6 +1017,8 @@ function aws-bucket-sizes() {
             | numfmt --to=iec \
         )
 
+        [[ -z "${size}" ]] && size="?"
+
         printf "%-7s %-10s %s\n" ${size} ${region} ${bucketName}
     done < <(echo ${buckets})
 }
@@ -1733,6 +1735,7 @@ function git-stats-top-team-committers-by-repo() {
     [ "${team}" = 'butter-chicken' ] && teamMembers="'Asmaa Shoala', 'Carmen Mester', 'Colin Zhang', 'Hamid Haghayegh', 'Henry Cleland', 'Karthik Jaganathan', 'Krishna', 'Rama Sane'"
     [ "${team}" = 'spirograph' ]     && teamMembers="'Paul Meyrick', 'Fraser Reid', 'Nancy Goyal', 'Richard Snoad', 'Ayce Keskinege'"
     [ "${team}" = 'dkp' ]            && teamMembers="'Ryan Moquin', 'Gautam Chakrabarty', 'Prakruthy Dhoopa Harish', 'Arun Kumar Kalahastri', 'Sangavi Durairaj', 'Vidhya Shaghar A P', 'Suganya Moorthy', 'Chinar Jaiswal'"
+    [ "${team}" = 'consumption' ]    && teamMembers="'Nitin Dumbre', 'Narasimha Reddybhumireddygari', 'Delia Bute', 'Mustafa Toplu', 'Talvinder Matharu', 'Bikramjit Singh', 'Harprit Singh', 'Parimala Balaraju'"
     [ "${team}" = 'concept' ]        && teamMembers="'Saad Rashid', 'Benoit Pasquereau', 'Adam Ladly', 'Jeremy Scadding', 'Anique von Berne', 'Nishant Singh', 'Neil Stevens', 'Dominicano Luciano', 'Kanaga Ganesan', 'Akhil Babu', 'Gintautas Sulskus'"
 
     echo
@@ -1757,7 +1760,7 @@ function git-stats-top-team-committers-by-repo() {
         | q 'select distinct stats.repo_name from .git-stats.csv stats where stats.repo_name not in (select distinct repo_name from -)'
 }
 compdef "_arguments \
-    '1:team arg:(recs recs-extended butter-chicken spirograph dkp concept)'" \
+    '1:team arg:(recs recs-extended butter-chicken spirograph dkp concept consumption)'" \
     git-stats-top-team-committers-by-repo
 
 # For the Git stats in the current directory, display all authors
