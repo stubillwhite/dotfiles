@@ -1014,6 +1014,7 @@ function aws-bucket-sizes() {
             --metric-name BucketSizeBytes \
             --dimensions Name=BucketName,Value=${bucketName} Name=StorageType,Value=StandardStorage \
             | jq ".Datapoints[].Average" \
+            | tail -n 1 \
             | numfmt --to=iec \
         )
 
