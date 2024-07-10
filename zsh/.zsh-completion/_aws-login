@@ -11,6 +11,7 @@ _arguments -C \
 case "${state}" in
     (prjs)
         local prjs; prjs=(
+            'agdatascience'
             'bos'
             'recs'
             'scopus-search'
@@ -29,6 +30,12 @@ case "${state}" in
         local envs 
 
         case "${line[1]}" in
+            (agdatascience)
+                envs=(
+                    'non-prod'
+                )
+            ;;
+
             (bos)
                 envs=(
                     'utility'

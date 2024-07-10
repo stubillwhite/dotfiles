@@ -684,7 +684,7 @@ alias aws-cef-candi="aws-sso-login cef-candi"
 alias aws-cef-embase="aws-sso-login cef-embase"
 alias aws-cef-backup="aws-sso-login cef-backup"
 alias aws-cef-prod="aws-sso-login cef-prod"
-alias aws-cef-networkstorage="aws-sso-login cef-networkstorage"
+alias aws-agdatascience-non-prod="aws-sso-login agdatascience-non-prod"
 
 alias aws-taxonomy-prod="aws-sso-login taxonomy prod"
 
