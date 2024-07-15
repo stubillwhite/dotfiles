@@ -27,7 +27,7 @@ function if-personal-machine() { [[ "$(scutil --get ComputerName)" == "stubillwh
 function source-if-exists() { 
     local fnam=$1
 
-    if [[ -s "${fnam}" ]]; then
+    if [[ -e "${fnam}" ]]; then
         source "${fnam}"
     fi
 }
@@ -37,7 +37,7 @@ function source-if-exists() {
 function source-or-warn() { 
     local fnam=$1
 
-    if [[ -s "${fnam}" ]]; then
+    if [[ -e "${fnam}" ]]; then
         source "${fnam}"
     else
         echo "Skipping sourcing ${fnam} as it does not exist"
