@@ -67,7 +67,10 @@ set fileencodings=ucs-bom,utf8,prc
 " Misc options
 let g:netrw_altv=1                          " Netrw vertical split puts cursor on the right
 
-colorscheme zellner
+set t_Co=256
+set term=xterm-256color
+set termguicolors
+colorscheme slate
 
 syntax on
 
