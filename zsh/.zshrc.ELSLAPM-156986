@@ -63,15 +63,15 @@ function aws-recs-login() {
 
         case "${recsEnv}" in
             dev*)
-                aws-recs-dev
+                aws-sso-login recs-dev
             ;;
 
             staging*)
-                aws-recs-dev
+                aws-sso-login recs-dev
             ;;
 
             live*)
-                aws-recs-prod
+                aws-sso-login recs-prod
             ;;
 
             *)
@@ -114,31 +114,31 @@ compdef "_arguments \
     recs-get-k8s
 
 function recs-k9s-dev() {
-    aws-recs-dev
+    aws-sso-login recs-dev
     recs-get-k8s dev main
     k9s
 }
 
 function recs-k9s-dev-util() {
-    aws-recs-dev
+    aws-sso-login recs-dev
     recs-get-k8s dev util
     k9s
 }
 
 function recs-k9s-staging() {
-    aws-recs-dev
+    aws-sso-login recs-dev
     recs-get-k8s staging main
     k9s
 }
 
 function recs-k9s-live() {
-    aws-recs-prod
+    aws-sso-login recs-prod
     recs-get-k8s live main
     k9s
 }
 
 function recs-k9s-live-util() {
-    aws-recs-prod
+    aws-sso-login recs-prod
     recs-get-k8s live util
     k9s
 }
@@ -149,8 +149,8 @@ function recs-api-versions() {
     else
         local recsEnv=$1
 
-        [[ ${recsEnv} == "dev" ]]  && aws-recs-dev  > /dev/null
-        [[ ${recsEnv} == "live" ]] && aws-recs-prod > /dev/null
+        [[ ${recsEnv} == "dev" ]]  && aws-sso-login recs-dev  > /dev/null
+        [[ ${recsEnv} == "live" ]] && aws-sso-login recs-prod > /dev/null
 
         recs-get-k8s $1 main > /dev/null
 
@@ -178,15 +178,15 @@ function recs-get-emr-logs() {
             local recsEnv=$BASH_REMATCH[2]
             case "${recsEnv}" in
                 dev*)
-                    aws-recs-dev
+                    aws-sso-login recs-dev
                     ;;
 
                 staging*)
-                    aws-recs-dev
+                    aws-sso-login recs-dev
                     ;;
 
                 live*)
-                    aws-recs-prod
+                    aws-sso-login recs-prod
                     ;;
 
                 *)
@@ -340,8 +340,8 @@ function recs-reviewers-evise-dumps() {
     else
         local recsEnv=$1
 
-        [[ ${recsEnv} == "dev" ]]  && aws-recs-dev  > /dev/null
-        [[ ${recsEnv} == "live" ]] && aws-recs-prod > /dev/null
+        [[ ${recsEnv} == "dev" ]]  && aws-sso-login recs-dev  > /dev/null
+        [[ ${recsEnv} == "live" ]] && aws-sso-login recs-prod > /dev/null
 
         manuscriptsPath="s3://com-elsevier-recs-${recsEnv}-reviewers/raw/batched-manuscripts"
         reviewersPath="s3://com-elsevier-recs-${recsEnv}-reviewers/raw/batched-reviewers"
@@ -603,6 +603,14 @@ function active-directory-service-user-info() {
     echo "For more detailed information open the 'Directory Utility' app"
 }
 
+function active-directory-all-users() {
+    dscl . readall /users
+}
+
+function active-directory-all-groups() {
+    dscl . readall /groups
+}
+
 function recs-build-and-publish-jar() {
     sbt-no-test clean assembly
 
@@ -615,7 +623,7 @@ function recs-build-and-publish-jar() {
         local timestamp=$(date +"%Y%m%d-%H%M")
         local name="${prefix}-assembly-hacked-app-${timestamp}.jar"
 
-        aws-recs-prod
+        aws-sso-login recs-prod
         aws s3 cp "${assembly}" "${appsPath}/${name}"
     else
         echo "Assembly not found"

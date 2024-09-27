@@ -8,13 +8,29 @@
 
 fpath=(~/.zsh-completion $fpath)
 
-# See https://gist.github.com/ctechols/ca1035271ad134841284
-
-# Only regenerate .zcompdump once every day
 autoload -Uz compinit
-for dump in ~/.zcompdump(N.mh+24); do
-    compinit
-done
+
+function maybe-regenerate-zcompdump() {
+    local fnam=${HOME}/.zcompdump
+    local fnam=/Users/white1/.zcompdump
+    local fnam=tmp.txt
+
+    # Globbing pattern (#qN.mh+24):
+    # - '#q'    Enable glob inside Zsh [[ ]]
+    # - 'N'     Glob pattern evaluates to nothing when it doesn't match instead of erroring
+    # - '.'     Match regular files
+    # - 'mh+24' Matches things that are older than 24 hours
+
+    ls -ahl ${fnam}
+    if [[ -e "${fnam}" && -f "${fnam}(#qN.mh+24)" ]]; then
+        echo Updating ${fnam}
+        compinit
+    else
+        echo Not updating ${fnam}
+    fi
+}
+
+#maybe-regenerate-zcompdump
 compinit -C
 
 # Included scripts                                                          {{{1
@@ -102,6 +118,7 @@ alias vim='nvim'                                                            # Us
 alias python='python3'                                                      # Use Python 3
 alias pip='pip3'                                                            # Use Pip for Python 3
 alias sed='gsed'                                                            # Use gsed instead of sed
+alias touch='gtouch'                                                        # Use gtouch instead of touch
 alias echo='gecho'                                                          # Use gecho nstead of echo
 alias date='gdate'                                                          # Use gdate instead of date
 alias find='gfind'                                                          # Use gfind instead of find
@@ -146,6 +163,7 @@ if-darwin && {
     alias emacs='/Applications/Emacs.app/Contents/MacOS/Emacs'
     alias emacsclient='echo "When done with a buffer, type C-x #" && /Applications/Emacs.app/Contents/MacOS/bin/emacsclient'
     alias doom='emacs --with-profile doom'
+    alias bankrupcy='emacs --with-profile bankrupcy'
     alias sqlworkbenchj='java -jar /Applications/SQLWorkbenchJ.app/Contents/Java/sqlworkbench.jar &'
 }
 
@@ -553,17 +571,18 @@ function artefact-config () {
             if [[ (-e ${dst}) && ! (-L "${dst}" && -d "${dst}") ]]; then
                 msg-error "Error: ${dst} exists and is not a symbolic link"
             else
-                unlink "${dst}"
+                unlink "${dst}" || msg-error "Error: ${dst} not found, not removing"
                 ln -s "${src}" "${dst}"
             fi
 
         else
-            msg-error "Error: ${src} not found"
+            unlink "${dst}"
+            msg-error "Error: ${src} not found, not creating new link"
         fi
     done
 }
 compdef "_arguments \
-    '1:environment arg:(recs recs-cleanroom dkp)'" \
+    '1:environment arg:(recs recs-cleanroom dkp scibite)'" \
     artefact-config
 
 # Clean all artefacts from the current configuration
@@ -652,43 +671,10 @@ function aws-sso-login() {
     export AWS_SESSION_TOKEN="${sessionToken}"
     export AWS_DEFAULT_REGION="us-east-1"
     export AWS_REGION="us-east-1"
-    export AWS_SSO_LOGIN_PARAMS="${profile}__${expireAfter}"
 
     echo
     aws-which
 }
-
-alias aws-bos-utility="aws-sso-login bos-utility"
-alias aws-bos-dev="aws-sso-login bos-dev"
-alias aws-bos-staging="aws-sso-login bos-staging"
-alias aws-bos-prod="aws-sso-login bos-prod"
-
-alias aws-newsflo-dev="aws-sso-login newsflo-dev"
-alias aws-newsflo-prod="aws-sso-login newsflo-prod-readonly"
-
-alias aws-recs-dev="aws-sso-login recs-dev"
-alias aws-recs-prod="aws-sso-login recs-prod"
-
-alias aws-scopus-search-non-prod="aws-sso-login scopus-search-non-prod"
-alias aws-scopus-search-prod="aws-sso-login scopus-search-prod"
-
-alias aws-consumption-sc-non-prod="aws-sso-login scopus-content-non-prod"
-alias aws-consumption-sc-prod="aws-sso-login scopus-content-prod"
-alias aws-consumption-sd-non-prod="aws-sso-login sd-content-non-prod"
-alias aws-consumption-sd-prod="aws-sso-login sd-content-prod"
-
-alias aws-dkp-non-prod="aws-sso-login dkp-non-prod"
-alias aws-dkp-prod="aws-sso-login dkp-prod"
-
-alias aws-cef-candi="aws-sso-login cef-candi"
-alias aws-cef-embase="aws-sso-login cef-embase"
-alias aws-cef-backup="aws-sso-login cef-backup"
-alias aws-cef-prod="aws-sso-login cef-prod"
-alias aws-agdatascience-non-prod="aws-sso-login agdatascience-non-prod"
-
-alias aws-taxonomy-prod="aws-sso-login taxonomy prod"
-
-alias aws-innovation-bedrock="aws-sso-login innovation-bedrock"
 
 function aws-recs-login() {
     if [[ $# -ne 1 ]]; then
@@ -698,15 +684,15 @@ function aws-recs-login() {
 
         case "${recsEnv}" in
             dev*)
-                aws-recs-dev
+                aws-sso-login recs-dev
             ;;
 
             staging*)
-                aws-recs-dev
+                aws-sso-login recs-dev
             ;;
 
             live*)
-                aws-recs-prod
+                aws-sso-login recs-prod
             ;;
 
             *)
@@ -723,7 +709,7 @@ compdef "_arguments \
 function aws-login() {
     local project=$1
     local environment=$2
-    eval "aws-${project}-${environment}"
+    aws-sso-login "${project}-${environment}"
 }
 
 alias aws-logout=aws-clear-variables
@@ -1014,8 +1000,7 @@ function aws-bucket-sizes() {
             --metric-name BucketSizeBytes \
             --dimensions Name=BucketName,Value=${bucketName} Name=StorageType,Value=StandardStorage \
             | jq ".Datapoints[].Average" \
-            | tail -n 1 \
-            | numfmt --to=iec \
+            | tail -n 1 
         )
 
         [[ -z "${size}" ]] && size="?"
@@ -1429,17 +1414,27 @@ function git-repos-remotes() {
     git-for-each-repo remotes
 }
 
-# For each directory within the current directory, generate a hacky lines of
-# code count
+# For each directory within the current directory, generate a hacky count of
+# lines of code files
 function git-repos-hacky-line-count() {
     display-hacky-line-count() {
-        git ls-files > ../file-list.txt
-        lineCount=$(cat < ../file-list.txt | grep -e "\(scala\|py\|js\|java\|sql\|elm\|tf\|yaml\|pp\|yml\)" | xargs cat | wc -l)
+        lineCount=$(git ls-files | grep -e '\.\(scala\|py\|go\|java\|js\|ts\|sql\)$' | xargs -I{} cat {} | wc -l)
         echo "$fnam $lineCount"
-        totalCount=$((totalCount + lineCount))
     }
 
     git-for-each-repo display-hacky-line-count | column -t -s ' ' | sort -b -k 2.1 -n --reverse
+}
+
+# For each directory within the current directory, generate a hacky count of
+# test and source files
+function git-repos-hacky-test-count() {
+    display-hacky-test-count() {
+        tstCount=$(git ls-files | grep -e '\.\(scala\|py\|go\|java\|js\|ts\|sql\)$' | grep -ie  '.*test.*\.\(scala\|py\|go\|java\|js\|ts\|sql\)$' | wc -l)
+        srcCount=$(git ls-files | grep -e '\.\(scala\|py\|go\|java\|js\|ts\|sql\)$' | grep -ive '.*test.*\.\(scala\|py\|go\|java\|js\|ts\|sql\)$' | wc -l)
+        echo "$fnam $srcCount $tstCount"
+    }
+
+    git-for-each-repo display-hacky-test-count | sort -b -k 2.1 -n --reverse | prepend 'repo src tst' | column -t -s ' ' 
 }
 
 # Display remote branches which have been merged
@@ -1570,9 +1565,14 @@ function git-update-projects() {
         ~/Dev/kd/butter-chicken
         ~/Dev/kd/misc
         ~/Dev/kd/spirograph
+        ~/Dev/rdp/architecture
+        #~/Dev/rdp/bos
         ~/Dev/rdp/concept 
         ~/Dev/rdp/consumption
+        ~/Dev/rdp/core
         ~/Dev/rdp/dkp 
+        ~/Dev/rdp/foundations
+        ~/Dev/rdp/scibite
         ~/Dev/recommenders 
     )
 
@@ -1582,6 +1582,85 @@ function git-update-projects() {
         pushd ${project}/infra && git-repos-pull && git-repos-generate-stats && popd
     done
 }
+
+function git-repos-list-prs() {
+    list-prs() {
+        local output=$(PAGER='' gh pr list --json title,author,headRefName,createdAt)
+        if [[ "${output}" != "[]" ]]; then
+            echo "$(basename $PWD)"
+            echo "${output}" | jq -r '["title", "author", "branch", "created"], (.[] | [.title, .author.login, .headRefName, .createdAt]) | @tsv' | column -t -s $'\t'
+            echo
+        fi
+    }
+
+    git-for-each-repo list-prs
+}
+
+function gh-pr () {
+    PR_LIST=$(gh pr list --head "$(git branch --show-current)" --json number,title,url,baseRefName,closed,createdAt,latestReviews)
+    PR_COUNT=$(echo "$PR_LIST" | jq '. | length')
+
+    if [ "$PR_COUNT" -gt 0 ]; then
+        FILTERED_PR_LIST=$(echo "$PR_LIST" | jq '[.[] | select(.closed == false)] | sort_by(.createdAt) | reverse')
+        
+        # TODO: prettify the output table
+        echo -e "ID\tTITLE\tURL\tBASE BRANCH\tCREATED AT"
+        echo "$FILTERED_PR_LIST" | jq -r '.[] | [.number, .title, .url, .baseRefName, .createdAt] | @tsv' | while IFS=$'\t' read -r number title url baseRefName createdAt; do
+        relative_created_at=$(relative-time "$createdAt")
+        printf "%s\t%s\t%s\t%s\t%s\t%s\n" "$number" "$title" "$url" "$baseRefName" "$relative_created_at"
+        done | column -t -s $'\t'
+        # echo "$PR_LIST" | jq -r '.[] | [.number, .title, .url, .baseRefName, .closed, (.createdAt | relative-time), .latestReviews] | @tsv' | column -t -s $'\t'
+    else
+        echo "No pull requests found."
+    fi
+}
+
+function gh-open-prs-mine () {
+    # Define the organization and author
+    ORG="elsevier-research"
+    AUTHOR="JerryYang42"
+
+    # Get the current date and subtract 6 months
+    SIX_MONTHS_AGO=$(date -v -6m +"%Y-%m-%dT%H:%M:%SZ")
+
+    # Fetch the PRs using GitHub GraphQL API
+    response=$(curl --silent --request POST \
+    --url https://api.github.com/graphql \
+    --header "Authorization: bearer $GITHUB_TOKEN" \
+    --header 'User-Agent: zsh-script' \
+    --data "{\"query\":\"{ search(query: \\\"org:$ORG author:$AUTHOR is:pr is:open\\\", type: ISSUE, first: 100) { edges { node { ... on PullRequest { title url createdAt updatedAt repository { name url } } } } } }\"}")
+
+    # Parse and filter the JSON response
+    echo "Updated At\t\tTITLE\t\tURL"
+    echo "$response" | jq -r --arg date "$SIX_MONTHS_AGO" '
+        .data.search.edges
+        | map(select(.node.updatedAt > $date))
+        | sort_by(.node.updatedAt)
+        | reverse
+        | .[]
+        | "\(.node.updatedAt) --> \(.node.title) --> \(.node.url)"
+    ' | awk '{
+        cmd = "ddiff " $1 " now -f %S"
+        cmd | getline diff_time
+        close(cmd)
+        
+        # Convert the difference to a human-readable format
+        if (diff_time < 60) {
+            rel_time = diff " seconds ago"
+        } else if (diff_time < 3600) {
+            rel_time = int(diff / 60) " minutes ago"
+        } else if (diff_time < 86400) {
+            rel_time = int(diff_time / 3600) " hours ago"
+        } else {
+            rel_time = int(diff_time / 86400) " days ago"
+        }
+        
+        $1 = rel_time
+        print
+    }'
+}
+
+
 
 # Git stats                         {{{2
 # ======================================
@@ -1736,8 +1815,10 @@ function git-stats-top-team-committers-by-repo() {
     [ "${team}" = 'butter-chicken' ] && teamMembers="'Asmaa Shoala', 'Carmen Mester', 'Colin Zhang', 'Hamid Haghayegh', 'Henry Cleland', 'Karthik Jaganathan', 'Krishna', 'Rama Sane'"
     [ "${team}" = 'spirograph' ]     && teamMembers="'Paul Meyrick', 'Fraser Reid', 'Nancy Goyal', 'Richard Snoad', 'Ayce Keskinege'"
     [ "${team}" = 'dkp' ]            && teamMembers="'Ryan Moquin', 'Gautam Chakrabarty', 'Prakruthy Dhoopa Harish', 'Arun Kumar Kalahastri', 'Sangavi Durairaj', 'Vidhya Shaghar A P', 'Suganya Moorthy', 'Chinar Jaiswal'"
+    [ "${team}" = 'foundations' ]    && teamMembers="'Adrian Musial', 'Alex Harris', 'Prasann Grampurohit', 'Syeeda Banu C', 'Ashish Wakchaure', 'Pavel Ryzhov', 'Sachin Kumar', 'Shantanu Sinha', 'Prasanth Rave', 'Pavel Kashmin'"
     [ "${team}" = 'consumption' ]    && teamMembers="'Nitin Dumbre', 'Narasimha Reddybhumireddygari', 'Delia Bute', 'Mustafa Toplu', 'Talvinder Matharu', 'Bikramjit Singh', 'Harprit Singh', 'Parimala Balaraju'"
     [ "${team}" = 'concept' ]        && teamMembers="'Saad Rashid', 'Benoit Pasquereau', 'Adam Ladly', 'Jeremy Scadding', 'Anique von Berne', 'Nishant Singh', 'Neil Stevens', 'Dominicano Luciano', 'Kanaga Ganesan', 'Akhil Babu', 'Gintautas Sulskus'"
+    [ "${team}" = 'scibite' ]        && teamMembers="'Olivier Feller', 'Yoana Ivanova', 'Nick Drummond', 'Blessan Kunjumon', 'Liv Watson', 'Thom Pijnenburg', 'Zahra Hosseini-Pozvehz', 'Fernando Almeida', 'Thales Valias', 'Claudia Millán', 'Arren Prior', 'Ken Robertson', 'William Mitchell', 'Emma Cooke', 'Samuel Syed', 'Alan Son', 'Andrew Green', 'Mark McDowall', 'Ali Raza', 'Peter Yordanov', 'Divya Nair', 'Barry Wilks', 'Brandon Walts', 'Emma Hatton-Ellis', 'Georgiana Dumitrica', 'Joseph Mullen', 'Tim Medcalf', 'Alex Biddle', 'Arvind Swaminathan', 'Mike Gostev', 'Rebecca Foulger', 'Pedro Morais', 'Simon Jupp', 'Gabby Santos', 'Simon White', 'Maaly Nassar', 'Ian Hart', 'Oliver Giles', 'David Styles', 'Antonis Loizou', 'Phil Verdemato'"
 
     echo
     echo 'Team'
@@ -1761,7 +1842,7 @@ function git-stats-top-team-committers-by-repo() {
         | q 'select distinct stats.repo_name from .git-stats.csv stats where stats.repo_name not in (select distinct repo_name from -)'
 }
 compdef "_arguments \
-    '1:team arg:(recs recs-extended butter-chicken spirograph dkp concept consumption)'" \
+    '1:team arg:(recs recs-extended butter-chicken foundations spirograph dkp concept consumption scibite)'" \
     git-stats-top-team-committers-by-repo
 
 # For the Git stats in the current directory, display all authors
