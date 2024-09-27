@@ -151,7 +151,7 @@ brew "groovy"                                   # Java-based scripting language
 
 # Python
 brew "mypy"                                     # Experimental optional static type checker for Python
-brew "poetry"                                   # Python package management tool
+brew "pipx"                                     # Execute binaries from Python packages in isolated environments
 brew "python"                                   # Interpreted, interactive, object-oriented programming language
 brew "python@3.10"                              # Interpreted, interactive, object-oriented programming language
 brew "ruff"                                     # Extremely fast Python linter, written in Rust
