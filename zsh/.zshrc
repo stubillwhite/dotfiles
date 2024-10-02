@@ -1810,15 +1810,22 @@ function git-stats-top-team-committers-by-repo() {
     fi
 
     local team=$1
-    [ "${team}" = 'recs' ]           && teamMembers="'Anamaria Mocanu', 'Rich Lyne', 'Reinder Verlinde', 'Tess Hoad', 'Luci Curnow', 'Andy Nguyen', 'Jerry Yang'"
-    [ "${team}" = 'recs-extended' ]  && teamMembers="'Anamaria Mocanu', 'Rich Lyne', 'Reinder Verlinde', 'Tess Hoad', 'Luci Curnow', 'Andy Nguyen', 'Jerry Yang', 'Stu White', 'Dimi Alexiou', 'Ligia Stan'"
-    [ "${team}" = 'butter-chicken' ] && teamMembers="'Asmaa Shoala', 'Carmen Mester', 'Colin Zhang', 'Hamid Haghayegh', 'Henry Cleland', 'Karthik Jaganathan', 'Krishna', 'Rama Sane'"
-    [ "${team}" = 'spirograph' ]     && teamMembers="'Paul Meyrick', 'Fraser Reid', 'Nancy Goyal', 'Richard Snoad', 'Ayce Keskinege'"
-    [ "${team}" = 'dkp' ]            && teamMembers="'Ryan Moquin', 'Gautam Chakrabarty', 'Prakruthy Dhoopa Harish', 'Arun Kumar Kalahastri', 'Sangavi Durairaj', 'Vidhya Shaghar A P', 'Suganya Moorthy', 'Chinar Jaiswal'"
-    [ "${team}" = 'foundations' ]    && teamMembers="'Adrian Musial', 'Alex Harris', 'Prasann Grampurohit', 'Syeeda Banu C', 'Ashish Wakchaure', 'Pavel Ryzhov', 'Sachin Kumar', 'Shantanu Sinha', 'Prasanth Rave', 'Pavel Kashmin'"
-    [ "${team}" = 'consumption' ]    && teamMembers="'Nitin Dumbre', 'Narasimha Reddybhumireddygari', 'Delia Bute', 'Mustafa Toplu', 'Talvinder Matharu', 'Bikramjit Singh', 'Harprit Singh', 'Parimala Balaraju'"
-    [ "${team}" = 'concept' ]        && teamMembers="'Saad Rashid', 'Benoit Pasquereau', 'Adam Ladly', 'Jeremy Scadding', 'Anique von Berne', 'Nishant Singh', 'Neil Stevens', 'Dominicano Luciano', 'Kanaga Ganesan', 'Akhil Babu', 'Gintautas Sulskus'"
-    [ "${team}" = 'scibite' ]        && teamMembers="'Olivier Feller', 'Yoana Ivanova', 'Nick Drummond', 'Blessan Kunjumon', 'Liv Watson', 'Thom Pijnenburg', 'Zahra Hosseini-Pozvehz', 'Fernando Almeida', 'Thales Valias', 'Claudia Millán', 'Arren Prior', 'Ken Robertson', 'William Mitchell', 'Emma Cooke', 'Samuel Syed', 'Alan Son', 'Andrew Green', 'Mark McDowall', 'Ali Raza', 'Peter Yordanov', 'Divya Nair', 'Barry Wilks', 'Brandon Walts', 'Emma Hatton-Ellis', 'Georgiana Dumitrica', 'Joseph Mullen', 'Tim Medcalf', 'Alex Biddle', 'Arvind Swaminathan', 'Mike Gostev', 'Rebecca Foulger', 'Pedro Morais', 'Simon Jupp', 'Gabby Santos', 'Simon White', 'Maaly Nassar', 'Ian Hart', 'Oliver Giles', 'David Styles', 'Antonis Loizou', 'Phil Verdemato'"
+    [ "${team}" = 'recs' ]               && teamMembers="'Anamaria Mocanu', 'Rich Lyne', 'Reinder Verlinde', 'Tess Hoad', 'Luci Curnow', 'Andy Nguyen', 'Jerry Yang'"
+    [ "${team}" = 'recs-extended' ]      && teamMembers="'Anamaria Mocanu', 'Rich Lyne', 'Reinder Verlinde', 'Tess Hoad', 'Luci Curnow', 'Andy Nguyen', 'Jerry Yang', 'Stu White', 'Dimi Alexiou', 'Ligia Stan'"
+    [ "${team}" = 'butter-chicken' ]     && teamMembers="'Asmaa Shoala', 'Carmen Mester', 'Colin Zhang', 'Hamid Haghayegh', 'Henry Cleland', 'Karthik Jaganathan', 'Krishna', 'Rama Sane'"
+    [ "${team}" = 'spirograph' ]         && teamMembers="'Paul Meyrick', 'Fraser Reid', 'Nancy Goyal', 'Richard Snoad', 'Ayce Keskinege'"
+    [ "${team}" = 'dkp' ]                && teamMembers="'Ryan Moquin', 'Gautam Chakrabarty', 'Prakruthy Dhoopa Harish', 'Arun Kumar Kalahastri', 'Sangavi Durairaj', 'Vidhya Shaghar A P', 'Suganya Moorthy', 'Chinar Jaiswal'"
+    [ "${team}" = 'foundations' ]        && teamMembers="'Adrian Musial', 'Alex Harris', 'Prasann Grampurohit', 'Syeeda Banu C', 'Ashish Wakchaure', 'Pavel Ryzhov', 'Sachin Kumar', 'Shantanu Sinha', 'Prasanth Rave', 'Pavel Kashmin'"
+    [ "${team}" = 'consumption' ]        && teamMembers="'Nitin Dumbre', 'Narasimha Reddybhumireddygari', 'Delia Bute', 'Mustafa Toplu', 'Talvinder Matharu', 'Bikramjit Singh', 'Harprit Singh', 'Parimala Balaraju'"
+    [ "${team}" = 'concept' ]            && teamMembers="'Saad Rashid', 'Benoit Pasquereau', 'Adam Ladly', 'Jeremy Scadding', 'Anique von Berne', 'Nishant Singh', 'Neil Stevens', 'Dominicano Luciano', 'Kanaga Ganesan', 'Akhil Babu', 'Gintautas Sulskus'"
+    [ "${team}" = 'scibite-centree' ]    && teamMembers="'Simon Jupp', 'Olivier Feller', 'Barry Wilks', 'Georgianna Dumitraica', 'Blessan Kunjumon', 'Tim Medcalf', 'Mohammad Haroon'"
+    [ "${team}" = 'scibite-search' ]     && teamMembers="'Phil Verdemato', 'Andrew Cowley', 'Rob Martin', 'David Styles', 'Alex Biddle', 'Kieran Whiteman', 'Svetlana Taneva'"
+    [ "${team}" = 'scibite-ai' ]         && teamMembers="'Brandon Walts', 'Mark McDowall', 'Oliver Giles', 'Olivia Watson'"
+    [ "${team}" = 'scibite-termite-6' ]  && teamMembers="'Phil Verdemato', 'Thales Valias', 'Petar Yordanov'"
+    [ "${team}" = 'scibite-termite-7' ]  && teamMembers="'Phil Vermedmato', 'Pedro Morais', 'Antonis Loizou', 'Fernando Almeida', 'Thales Valias', 'Kieran Whiteman', 'Petar Yordanov'"
+    [ "${team}" = 'scibite-workbench' ]  && teamMembers="'Simon Jupp', 'Santhi Nalukurthy', 'Alex Biddle', 'Ali Raza'"
+    [ "${team}" = 'scibite-ontologies' ] && teamMembers="'Jane Lomax', 'Rebecca Foulger', 'Mark McDowall'"
+    [ "${team}" = 'scibite-ds' ]         && teamMembers="'Michael Huges', 'Maaly Nasar', 'Zahra Hosseini'"
 
     echo
     echo 'Team'
@@ -1842,9 +1849,9 @@ function git-stats-top-team-committers-by-repo() {
         | q 'select distinct stats.repo_name from .git-stats.csv stats where stats.repo_name not in (select distinct repo_name from -)'
 }
 compdef "_arguments \
-    '1:team arg:(recs recs-extended butter-chicken foundations spirograph dkp concept consumption scibite)'" \
+    '1:team arg:(recs recs-extended butter-chicken foundations spirograph dkp concept consumption scibite-ai scibite-centree scibite-ds scibite-ontologies scibite-search scibite-termite-6 scibite-termite-7 scibite-workbench)'" \
     git-stats-top-team-committers-by-repo
-
+    
 # For the Git stats in the current directory, display all authors
 function git-stats-authors() {
     q 'select distinct author from .git-stats.csv order by author asc' \
@@ -2204,6 +2211,34 @@ function certificate-python-install() {
             fi
     done
 }
+
+# function certificate-insinuate() {
+#     if [[ $# -ne 1 ]] ; then
+#         echo 'Usage: certificate-insinuate FILE'
+#         echo
+#         echo 'Example:'
+#         echo 'certificate-insinuate CERTFIL'
+#         return 1
+#     fi
+# 
+#     local ZSCALER_CERT_FILE=/Users/white1/Dev/certificates/ZscalerRootCertificate-2048-SHA256.crt
+#     local MARKER_STRING="zscaler-certificate"
+# 
+# 
+#     while read -r certFile;
+#     do
+#         grep -i "${MARKER_STRING}" "${certFile}" > /dev/null
+#         exitCode="$?"
+#         if [[ $exitCode -eq 0 ]]; then
+#             true
+#         else
+#             echo "Patching ${certFile} to include ZScaler certificate from ${ZSCALER_CERT_FILE}"
+#             cat ${certFile} <(echo "${MARKER_STRING}") ${ZSCALER_CERT_FILE} > new-cert-file.pem
+#             mv new-cert-file.pem ${certFile}
+#         fi
+#     done < <(find . -name *.pem)
+# 
+# }
 
 function certificate-python-show-paths() {
     python -c "import ssl; print(ssl.get_default_verify_paths())" 
