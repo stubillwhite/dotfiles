@@ -12,7 +12,6 @@ setopt EXTENDED_GLOB
 
 # Files to link to in $HOME
 FILES=(
-    "boot/.boot"
     "ctags/.ctags"
     "ssh/.ssh"
     "chemacs/.emacs-profiles.el"
@@ -28,7 +27,6 @@ FILES=(
     "tig/.tigrc"
     "tmux/.tmux.conf"
     "vale/.vale.ini"
-    "zoe/.zoe"
     "zsh/.bashrc"
     "zsh/.commonrc"
     "zsh/.zsh-completion"
@@ -132,3 +130,10 @@ mkdir -p $HOME/.config/
 create-links-for-files $HOME/.config "$CONFIG_DIRS[@]"
 
 create-links-for-files-at-path ~/Library/Application\ Support/k9s k9s
+
+
+
+git clone https://github.com/plexus/chemacs2.git ~/.emacs.d
+
+
+
