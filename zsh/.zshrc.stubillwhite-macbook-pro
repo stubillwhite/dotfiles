@@ -1,6 +1,13 @@
 # vim:fdm=marker
 
-# Node                                                                      {{{1
+# Certificates                                                              {{{1
 # ==============================================================================
 
-export NODE_EXTRA_CA_CERTS=/usr/local/etc/openssl/cert.pem
+export SSL_CERT_FILE=/opt/homebrew/etc/openssl@3/cert.pem
+
+#export SSL_CERT_FILE="${SSL_CERT_FILE}"        # openssl
+#export REQUESTS_CA_BUNDLE="${SSL_CERT_FILE}"   # requests
+#export AWS_CA_BUNDLE="${SSL_CERT_FILE}"        # botocore
+#export CURL_CA_BUNDLE="${SSL_CERT_FILE}"       # curl
+#export HTTPLIB2_CA_CERTS="${SSL_CERT_FILE}"    # httplib2
+#export NODE_EXTRA_CA_CERTS="${SSL_CERT_FILE}"  # node

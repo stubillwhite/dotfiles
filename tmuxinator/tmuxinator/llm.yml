@@ -1,5 +1,5 @@
 name: llm
-root: ~/Dev/my-stuff/llm-scratchpad
+root: ~/dev/my-stuff/llm-scratchpad
 
 windows:
   - llm-scratchpad:

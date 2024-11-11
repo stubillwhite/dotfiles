@@ -1,5 +1,5 @@
 name: dkp
-root: ~/Dev/rdp/dkp
+root: ~/dev/rdp/dkp
 
 windows:
   - dkp:

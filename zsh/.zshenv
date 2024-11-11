@@ -42,7 +42,7 @@ function source-or-warn() {
 # ==============================================================================
 
 # GNU parallel
-source-or-warn /usr/local/bin/env_parallel.zsh
+source-or-warn /opt/homebrew/bin/env_parallel.zsh
 
 # Include common configuration
 source-or-warn $HOME/.commonrc

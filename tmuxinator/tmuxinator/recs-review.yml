@@ -1,5 +1,5 @@
 name: recs-review
-root: ~/Dev/code-review/recommenders/
+root: ~/dev/code-review/recommenders/
 
 windows:
   - recs-review:

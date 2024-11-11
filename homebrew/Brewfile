@@ -119,6 +119,10 @@ cask "hammerspoon"                              # Desktop automation application
 # Development
 ################################################################################
 
+# Fonts
+tap "homebrew/cask-fonts"
+cask "font-fantasque-sans-mono"                 # A font family with a great monospaced variant for programmers
+
 # Version control
 brew "bfg"                                      # Remove large files or passwords from Git history like git-filter-branch
 brew "gh"                                       # GitHub command-line tool

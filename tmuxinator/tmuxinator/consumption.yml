@@ -1,5 +1,5 @@
 name: consumption
-root: ~/Dev/rdp/consumption
+root: ~/dev/rdp/consumption
 
 windows:
   - consumption:

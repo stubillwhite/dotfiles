@@ -1,5 +1,5 @@
 name: eol
-root: ~/Dev/scratchpad/eol-tracking
+root: ~/dev/scratchpad/eol-tracking
 
 windows:
   - eol-tracking:

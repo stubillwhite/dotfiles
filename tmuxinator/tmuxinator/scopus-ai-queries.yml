@@ -1,5 +1,5 @@
 name: scopus-ai-queries
-root: ~/Dev/scratchpad/download-kibana-data
+root: ~/dev/scratchpad/download-kibana-data
 
 windows:
   - scopus-ai:
