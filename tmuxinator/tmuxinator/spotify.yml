@@ -1,5 +1,5 @@
 name: spotify
-root: ~/Dev/my-stuff/spotify-playlist-builder
+root: ~/dev/my-stuff/spotify-playlist-builder
 
 windows:
   - spotify:

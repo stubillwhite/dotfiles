@@ -1,5 +1,5 @@
 name: my-stuff
-root: ~/Dev/my-stuff/
+root: ~/dev/my-stuff/
 
 windows:
   - my-stuff:

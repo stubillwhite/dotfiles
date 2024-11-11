@@ -1,5 +1,5 @@
 name: llm-dnd
-root: ~/Dev/my-stuff/llm-dnd
+root: ~/dev/my-stuff/llm-dnd
 
 windows:
   - llm-dnd:

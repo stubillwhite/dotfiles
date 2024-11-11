@@ -62,50 +62,50 @@
 [url "github-work"]
     insteadOf = git@github.com/elsevier-research
 
-[includeIf "gitdir:~/Dev/bassc/"]
-    path = ~/Dev/my-stuff/dotfiles/git/bassc-config/.gitconfig
+[includeIf "gitdir:~/dev/bassc/"]
+    path = ~/dev/my-stuff/dotfiles/git/bassc-config/.gitconfig
 
-[includeIf "gitdir:~/Dev/my-stuff/"]
-    path = ~/Dev/my-stuff/dotfiles/git/personal-config/.gitconfig
+[includeIf "gitdir:~/dev/my-stuff/"]
+    path = ~/dev/my-stuff/dotfiles/git/personal-config/.gitconfig
 
-[includeIf "gitdir:~/Dev/for-nat/"]
-    path = ~/Dev/my-stuff/dotfiles/git/personal-config/.gitconfig
+[includeIf "gitdir:~/dev/for-nat/"]
+    path = ~/dev/my-stuff/dotfiles/git/personal-config/.gitconfig
 
 [includeIf "gitdir:~/Dropbox/Private/org/"]
     path = ~/Dev/my-stuff/dotfiles/git/personal-config/.gitconfig
 
 [includeIf "gitdir:~/Dropbox/Private/obsidian/"]
-    path = ~/Dev/my-stuff/dotfiles/git/personal-config/.gitconfig
+    path = ~/dev/my-stuff/dotfiles/git/personal-config/.gitconfig
 
-[includeIf "gitdir:~/Dev/recommenders/"]
-    path = ~/Dev/my-stuff/dotfiles/git/work-config/.gitconfig
+[includeIf "gitdir:~/dev/recommenders/"]
+    path = ~/dev/my-stuff/dotfiles/git/work-config/.gitconfig
 
-[includeIf "gitdir:~/Dev/code-review/recommenders/"]
-    path = ~/Dev/my-stuff/dotfiles/git/work-config/.gitconfig
+[includeIf "gitdir:~/dev/code-review/recommenders/"]
+    path = ~/dev/my-stuff/dotfiles/git/work-config/.gitconfig
 
-[includeIf "gitdir:~/Dev/code-review/rdp/"]
-    path = ~/Dev/my-stuff/dotfiles/git/work-config/.gitconfig
+[includeIf "gitdir:~/dev/code-review/rdp/"]
+    path = ~/dev/my-stuff/dotfiles/git/work-config/.gitconfig
 
-[includeIf "gitdir:~/Dev/code-review/mentoring/"]
-    path = ~/Dev/my-stuff/dotfiles/git/work-config/.gitconfig
+[includeIf "gitdir:~/dev/code-review/mentoring/"]
+    path = ~/dev/my-stuff/dotfiles/git/work-config/.gitconfig
 
-[includeIf "gitdir:~/Dev/newsflo/"]
-    path = ~/Dev/my-stuff/dotfiles/git/work-config/.gitconfig
+[includeIf "gitdir:~/dev/newsflo/"]
+    path = ~/dev/my-stuff/dotfiles/git/work-config/.gitconfig
 
-[includeIf "gitdir:~/Dev/scratchpad/"]
-    path = ~/Dev/my-stuff/dotfiles/git/work-config/.gitconfig
+[includeIf "gitdir:~/dev/scratchpad/"]
+    path = ~/dev/my-stuff/dotfiles/git/work-config/.gitconfig
 
-[includeIf "gitdir:~/Dev/kedro/"]
-    path = ~/Dev/my-stuff/dotfiles/git/work-config/.gitconfig
+[includeIf "gitdir:~/dev/kedro/"]
+    path = ~/dev/my-stuff/dotfiles/git/work-config/.gitconfig
 
-[includeIf "gitdir:~/Dev/rdp/"]
-    path = ~/Dev/my-stuff/dotfiles/git/work-config/.gitconfig
+[includeIf "gitdir:~/dev/rdp/"]
+    path = ~/dev/my-stuff/dotfiles/git/work-config/.gitconfig
 
-[includeIf "gitdir:~/Dev/kd/"]
-    path = ~/Dev/my-stuff/dotfiles/git/work-config/.gitconfig
+[includeIf "gitdir:~/dev/kd/"]
+    path = ~/dev/my-stuff/dotfiles/git/work-config/.gitconfig
 
-[includeIf "gitdir:~/Dev/scratchpad/"]
-    path = ~/Dev/my-stuff/dotfiles/git/work-config/.gitconfig
+[includeIf "gitdir:~/dev/scratchpad/"]
+    path = ~/dev/my-stuff/dotfiles/git/work-config/.gitconfig
 
 [mailmap]
 	file = ~/.mailmap

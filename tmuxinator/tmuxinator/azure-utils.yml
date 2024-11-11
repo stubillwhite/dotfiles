@@ -1,5 +1,5 @@
 name: azure-utils
-root: ~/Dev/scratchpad/azure-utils/
+root: ~/dev/scratchpad/azure-utils/
 
 windows:
   - azure:

@@ -1,5 +1,5 @@
 name: security-vulnerabilities
-root: ~/Dev/scratchpad/security-vulnerabilities
+root: ~/dev/scratchpad/security-vulnerabilities
 
 windows:
   - security-vulnerabilities:
