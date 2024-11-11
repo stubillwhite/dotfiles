@@ -1,5 +1,5 @@
 name: concept
-root: ~/Dev/rdp/concept/
+root: ~/dev/rdp/concept/
 
 windows:
   - cef:

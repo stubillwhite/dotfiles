@@ -1,5 +1,5 @@
 name: recs-gdpr
-root: ~/Dev/recommenders/kd-recs-utils/gdpr
+root: ~/dev/recommenders/kd-recs-utils/gdpr
 
 windows:
   - recs-gdpr:

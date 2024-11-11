@@ -78,19 +78,6 @@ export VISUAL=nvim
 setopt BASH_REMATCH             # Bash regex support
 setopt menu_complete            # Tab autocompletes first option even if ambiguous
 
-# ZScaler                                                                   {{{1
-# ==============================================================================
-
-export SSL_CERT_FILE=~/Dev/certificates/ZscalerRootCertificate-2048-SHA256.crt
-#export SSL_CERT_FILE=/usr/local/etc/openssl@3/certs
-#export SSL_CERT_FILE="${SSL_CERT_FILE}"        # openssl
-#export REQUESTS_CA_BUNDLE="${SSL_CERT_FILE}"   # requests
-#export AWS_CA_BUNDLE="${SSL_CERT_FILE}"        # botocore
-#export CURL_CA_BUNDLE="${SSL_CERT_FILE}"       # curl
-#export HTTPLIB2_CA_CERTS="${SSL_CERT_FILE}"    # httplib2
-#export NODE_EXTRA_CA_CERTS="${SSL_CERT_FILE}"  # node
-
-
 # Aliases                                                                   {{{1
 # ==============================================================================
 

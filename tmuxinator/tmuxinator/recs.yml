@@ -1,5 +1,5 @@
 name: recs
-root: ~/Dev/recommenders/
+root: ~/dev/recommenders/
 
 windows:
   - recs:

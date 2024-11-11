@@ -1,5 +1,5 @@
 name: spirograph
-root: ~/Dev/kd/spirograph/
+root: ~/dev/kd/spirograph/
 
 windows:
   - recs:
