@@ -23,26 +23,36 @@ function clone-if-not-present() {
     if [ -d "${repoPath}" ]; then
         msg_success "${repoPath} exists"
     else
+        echo "Cloining ${repoPath}"
         git clone "${flags}" "${repoUrl}"
     fi
 }
 
-REPOS=(
+SHALLOW_REPOS=(
     .emacs.d
+    advent-of-code-2023
     cookiecutters
     llm-dnd
     llm-scratchpad
     nvim
-    prezto
     shell-utils
     tech-radar
 )
 
+RECURSIVE_REPOS=(
+    prezto
+)
+
 pushd .. 
 
-for repo in "${REPOS[@]}"
+for repo in "${SHALLOW_REPOS[@]}"
 do
-    clone-if-not-present "git@github-personal:stubillwhite/${repo}.git"
+    clone-if-not-present "git@github-personal:stubillwhite/${repo}.git" "-q"
+done
+
+for repo in "${RECURSIVE_REPOS[@]}"
+do
+    clone-if-not-present "git@github-personal:stubillwhite/${repo}.git" "-q --recursive"
 done
 
 popd
