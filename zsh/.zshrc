@@ -447,7 +447,9 @@ function() clock() {
 
     local currTime=$(date ${currTimeArgs})
 
+    # gfind -H /usr/share/zoneinfo/ -type f | gsed 's|/usr/share/zoneinfo/||g' | sort
     local TIMEZONES=(
+        "America/Mexico_City:Mexico"
         "EST:East US"
         "GMT:London"
         "CET:Amsterdam"
