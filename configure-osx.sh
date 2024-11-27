@@ -27,19 +27,19 @@ function configure-setting-if-exists() {
 function configure-osx-preferences() {
     echo 'Configuring OSX preferences'
 
+    # UI minimum is 15, but 10 can be configured (though a reboot is required for this to take effect)
     echo "- Keyboard repeat should start instantly"
     configure-setting-if-exists 'Apple Global Domain' InitialKeyRepeat -int 15
 
+    # UI minimum is 2, but 1 can be configured (though a reboot is required for this to take effect)
     echo "- Keyboard repeat should be as fast as possible"
-    configure-setting-if-exists 'Apple Global Domain' KeyRepeat -int 2
+    configure-setting-if-exists 'Apple Global Domain' KeyRepeat -int 1
 
     # echo "- AppSwitcher should display on all monitors"
     # defaults write com.apple.dock appswitcher-all-displays -bool true
 
     echo "- Operating system should be silent"
-    #defaults write com.apple.sound.beep.flash      -int 0
-    # defaults write com.apple.sound.beep.volume     -int 0
-    # defaults write com.apple.sound.uiaudio.enabled -int 0
+    configure-setting-if-exists 'Apple Global Domain' com.apple.sound.beep.volume -int 0
 
     # # Hot corners
     # # Possible values:
@@ -67,16 +67,17 @@ function configure-osx-preferences() {
     # echo
     # echo "Killing affected applications"
 
-    # APPS=(
-    #     "Finder"
-    #     "SystemUIServer"
-    #     "Dock"
-    # )
+    APPS=(
+        "Finder"
+        "SystemUIServer"
+        "Sound"
+        "Dock"
+    )
 
-    # for app in "${APPS[@]}"; do
-    #     echo "- ${app}"
-    #     killall "$app" >/dev/null 2>&1
-    # done
+    for app in "${APPS[@]}"; do
+        echo "- ${app}"
+        killall "$app" >/dev/null 2>&1
+    done
 
     echo
     echo "Note that some settings require a restart to take effect"
