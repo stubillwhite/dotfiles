@@ -33,15 +33,13 @@ function configure-osx-preferences() {
 
     # UI minimum is 2, but 1 can be configured (though a reboot is required for this to take effect)
     echo "- Keyboard repeat should be as fast as possible"
-    configure-setting-if-exists 'Apple Global Domain' KeyRepeat -int 2
+    configure-setting-if-exists 'Apple Global Domain' KeyRepeat -int 1
 
     # echo "- AppSwitcher should display on all monitors"
     # defaults write com.apple.dock appswitcher-all-displays -bool true
 
     echo "- Operating system should be silent"
-    #defaults write com.apple.sound.beep.flash      -int 0
-    # defaults write com.apple.sound.beep.volume     -int 0
-    # defaults write com.apple.sound.uiaudio.enabled -int 0
+    configure-setting-if-exists 'Apple Global Domain' com.apple.sound.beep.volume -int 0
 
     # # Hot corners
     # # Possible values:
