@@ -26,6 +26,11 @@ cask "iterm2"                                   # Terminal emulator as alternati
 cask "orion"                                    # WebKit based web browser
 cask "syncthing"                                # Open source continuous file synchronization application
 
+# IDEs
+cask "intellij-idea-ce"                         # IDE for Java programming - Community Edition
+cask "pycharm-ce"                               # IDE for Python programming - Community Edition
+cask "visual-studio-code"                       # Open-source code editor
+
 # Database clients
 cask 'dbeaver-community'                        # Free universal database tool and SQL client
 
@@ -77,11 +82,10 @@ brew "ncdu"                                     # NCurses Disk Usage
 brew "neovim"                                   # Ambitious Vim-fork focused on extensibility and agility
 brew "openssh"                                  # OpenBSD freely-licensed SSH connectivity tools
 brew "parallel"                                 # Shell command parallelization utility
-brew "parquet-tools"                            # Apache Parquet command-line tools and utilities
 brew "pkg-config"                               # Manage compile and link flags for libraries
 brew "pygments"                                 # Generic syntax highlighter
 brew "python-yq"                                # Command-line YAML and XML processor that wraps jq
-brew "q"                                        # Run SQL directly on CSV or TSV files
+#brew "q"                                        # Run SQL directly on CSV or TSV files
 brew "ripgrep"                                  # Search tool like grep and The Silver Searcher
 brew "sampler"                                  # Tool for shell commands execution, visualization and alerting
 brew "slackcat"                                 # Command-line utility for posting snippets to Slack
@@ -185,7 +189,6 @@ brew "duckdb"                                   # Embeddable SQL OLAP Database M
 
 # Javascript
 brew "node"                                     # platform built on v8 to build network applications
-cask "visual-studio-code"                       # Open-source code editor
 
 # AWS
 brew "awscli"                                   # Official Amazon AWS command-line interface
