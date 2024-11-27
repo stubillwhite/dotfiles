@@ -32,6 +32,7 @@ SHALLOW_REPOS=(
     .emacs.d
     advent-of-code-2023
     cookiecutters
+    jira-reporter-python
     llm-dnd
     llm-scratchpad
     nvim
