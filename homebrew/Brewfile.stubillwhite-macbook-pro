@@ -2,6 +2,7 @@
 # Applications
 ################################################################################
 
+# Video conferencing
 cask "zoom"                                     # Video communication and virtual meeting platform
 cask "homebrew/cask-drivers/garmin-express"     # Garmin desktop tool
 
