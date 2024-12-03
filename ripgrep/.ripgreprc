@@ -13,3 +13,6 @@ properties:*.{properties}*
 
 --type-add
 clojure:*.{clj}*
+
+--type-add
+terraform:*.{tf,tfvars}*
