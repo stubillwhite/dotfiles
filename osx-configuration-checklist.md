@@ -1,5 +1,17 @@
 # OSX configuration checklist #
 
+Last tested on OSX Sequoia
+
+## Clone ##
+
+- Manually clone `stubillwhite/dotfiles`
+- `./bootstrap.sh`
+- `./clone-active-repos.sh`
+- `./install-global-npm-packages.sh`
+- `./install-global-pipx-packages.sh`
+
+## Configure Raycast ##
+
 ## Disable OSX system shortcuts ##
 
 - `System Settings` > `Keyboard` > `Shortcuts` > `App Shortcuts`
@@ -12,4 +24,3 @@
         - Menu title: (see above)
         - Keyboard shortcut: (something you'll never use)
     - Log out and in again
-
