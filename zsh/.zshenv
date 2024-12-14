@@ -38,13 +38,31 @@ function source-or-warn() {
     source "${fnam}" > /dev/null 2>&1 || echo "Skipping ${fnam} as it does not exist"
 }
 
+# Paths                                                                     {{{1
+# ==============================================================================
+
+export PATH=~/Dev/tools/bin:$PATH
+export PATH=/usr/local/opt/ruby/bin:$PATH
+export PATH=/usr/local/opt/coreutils/libexec/gnubin:$PATH
+export PATH=/usr/local/opt/make/libexec/gnubin:$PATH
+export PATH=/Applications/Emacs.app/Contents/MacOS:$PATH
+
+export PATH=$PATH:/usr/local/lib/ruby/gems/3.0.0/bin
+export PATH=$PATH:/Applications/Beyond\ Compare.app/Contents/MacOS
+export PATH=$PATH:/Applications/PyCharm\ CE.app/Contents/MacOS
+export PATH=$PATH:/Applications/IntelliJ\ IDEA\ CE.app/Contents/MacOS
+export PATH=$PATH:~/Dev/my-stuff/shell-utils
+export PATH=$PATH:/usr/bin
+export PATH=$PATH:~/.local/bin
+
 # Included scripts                                                          {{{1
 # ==============================================================================
 
 # GNU parallel
 source-or-warn /opt/homebrew/bin/env_parallel.zsh
 
-# Include common configuration
+# TODO: Fix ordering; still needed
+# Include common configuration 
 source-or-warn $HOME/.commonrc
 
 # Secrets                           {{{2
@@ -88,6 +106,18 @@ export OPENAI_API_KEY=${SECRET_OPENAI_API_KEY}
 # General settings                                                          {{{1
 # ==============================================================================
 
+# GCC
+export LDFLAGS="-L/usr/local/opt/ruby/lib"
+export CPPFLAGS="-I/usr/local/opt/ruby/include"
+export PKG_CONFIG_PATH="/usr/local/opt/ruby/lib/pkgconfig"
+
+# Leiningen
+export LEIN_JVM_OPTS='-Xms4G -Xmx4G'
+
+# Spark
+export SPARK_LOCAL_IP=127.0.0.1
+
+# Shell
 export COLOR_RED='\033[0;31m'
 export COLOR_GREEN='\033[0;32m'
 export COLOR_YELLOW='\033[0;33m'
@@ -111,3 +141,24 @@ function msg-error() {
     printf "${CLEAR_LINE}${COLOR_RED}✘ ${msg}${COLOR_NONE}\n"
 }
 
+# SSH                                                                       {{{1
+# ==============================================================================
+
+SSH_ENV_FILE="$HOME/.ssh/environment"
+
+function ssh-start-agent {
+    echo "Initialising new SSH agent..."
+    /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV_FILE}"
+    /bin/chmod 600 "${SSH_ENV_FILE}"
+    . "${SSH_ENV_FILE}" > /dev/null
+    /usr/bin/ssh-add;
+}
+
+if [ -f "${SSH_ENV_FILE}" ]; then
+    . "${SSH_ENV_FILE}" > /dev/null
+    /bin/ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
+    ssh-start-agent;
+}
+else
+    ssh-start-agent;
+fi
