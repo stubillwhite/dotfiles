@@ -1656,6 +1656,11 @@ function gh-open-prs-mine () {
 function git-generate-stats() {
     local awkScript
 
+    # Use ASCII unit separator character "^_" as a separator
+
+    # Generate hash-to-file mapping
+    hashToFileCsvFilename=dataset-hash-to-file.csv
+ 
     read-heredoc awkScript <<'HEREDOC'
     {
         loc = match($0, /^[a-f0-9]{40}$/)
@@ -1664,35 +1669,35 @@ function git-generate-stats() {
         }
         else {
             if (match($0, /^$/) == 0) {
-                print hash "," $0
+                print hash "" $0
             }
         }
     }
 HEREDOC
 
-    hashToFileCsvFilename=dataset-hash-to-file.csv
-
-    echo 'hash,file' > "${hashToFileCsvFilename}"
+    echo 'hashfile' > "${hashToFileCsvFilename}"
     git --no-pager log --format='%H' --name-only \
         | gawk "${awkScript}" \
         >> "${hashToFileCsvFilename}"
 
+    # Generate hash-to-author mapping
     hashToAuthorCsvFilename=dataset-hash-to-author.csv
 
     local repoName=$(pwd | xargs basename)
 
-    echo 'hash,author,repo_name,commit_date,comment' > "${hashToAuthorCsvFilename}"
-    git --no-pager log --format="%H,%aN,${repoName},%cI,'%s'" \
+    echo 'hashauthorrepo_namecommit_datecomment' > "${hashToAuthorCsvFilename}"
+    git --no-pager log --format="%H%aN${repoName}%cI'%s'" \
         >> "${hashToAuthorCsvFilename}"
 
+    # Join on hash to extract the full data
     local sqlScript
     read-heredoc sqlScript <<HEREDOC
         SELECT cf.hash, file, author, repo_name, commit_date, comment
-        FROM ${hashToFileCsvFilename} cf INNER JOIN ${hashToAuthorCsvFilename} ca
+        FROM read_csv('${hashToFileCsvFilename}', delim='') cf INNER JOIN read_csv('${hashToAuthorCsvFilename}', delim='') ca
         ON ca.hash = cf.hash
 HEREDOC
 
-    q -d ',' -H -O "${sqlScript}" \
+    duckdb -csv -c "${sqlScript}" \
         > .git-stats.csv
 
     rm "${hashToAuthorCsvFilename}" "${hashToFileCsvFilename}"
@@ -1848,9 +1853,19 @@ function git-stats-authors() {
 # For the Git stats in the current directory, display the most recent commits
 # by each author
 function git-stats-most-recent-commits-by-authors() {
-    q 'select max(commit_date), author from .git-stats.csv group by author order by commit_date desc' \
-        | q -D "$(printf '\t')" 'select * from -' \
-        | tabulate-by-tab
+    local sqlScript
+    read-heredoc sqlScript <<HEREDOC
+        |.mode columns
+        |select commit_date, author from (
+        |    select max(commit_date) as commit_date, author 
+        |    from '.git-stats.csv' group by author
+        |) d 
+        |order by commit_date desc;
+HEREDOC
+
+    print ${sqlScript} | gsed 's/^ \+|//' > .script
+    duckdb < .script
+    rm .script
 }
 
 # For the Git stats in the current directory, display the total number of
@@ -1863,10 +1878,19 @@ function git-stats-total-commits-by-author() {
 
     local authorName=$1
 
-    q 'select repo_name, author, count(*) as total from .git-stats.csv group by repo_name, author' \
-        | q "select repo_name, total from - where author in ('"${authorName}"')" \
-        | q -D "$(printf '\t')" 'select * from -' \
-        | tabulate-by-tab
+    local sqlScript
+    read-heredoc sqlScript <<HEREDOC
+        |.mode columns
+        |select repo_name, total from (
+        |    select repo_name, author, count(*) as total 
+        |    from '.git-stats.csv' group by repo_name, author
+        |) d
+        |where author = '${authorName}'
+HEREDOC
+
+    print ${sqlScript} | gsed 's/^ \+|//' > .script
+    duckdb < .script
+    rm .script
 }
 
 # For the Git stats in the current directory, list the commits for a given author
@@ -1878,10 +1902,16 @@ function git-stats-list-commits-by-author() {
 
     local authorName=$1
 
-    q "select * from .git-stats.csv where author in ('"${authorName}"')" \
-        | q "select distinct repo_name, commit_date, comment from - order by commit_date desc" \
-        | q -D "$(printf '\t')" 'select * from -' \
-        | tabulate-by-tab
+    local sqlScript
+    read-heredoc sqlScript <<HEREDOC
+        |.mode columns
+        |select distinct repo_name, commit_date, comment
+        |from '.git-stats.csv' order by commit_date desc
+HEREDOC
+
+    print ${sqlScript} | gsed 's/^ \+|//' > .script
+    duckdb < .script
+    rm .script
 }
 
 # For the Git stats in the current directory, list the commits for a given
@@ -1894,19 +1924,35 @@ function git-stats-total-commits-by-author-per-month() {
 
     local authorName=$1
 
-    q "select * from .git-stats.csv where author in ('"${authorName}"')" \
-        | q "select distinct repo_name, commit_date from -" \
-        | q "select strftime('%Y-%m', commit_date) as 'year_month', count(*) as total from - group by year_month order by year_month desc" \
-        | q -D "$(printf '\t')" 'select * from -' \
-        | tabulate-by-tab
+    local sqlScript
+    read-heredoc sqlScript <<HEREDOC
+        |.mode columns
+        |select strftime('%Y-%m', commit_date) as 'year_month', count(*) as total from (
+        |    select distinct repo_name, commit_date, comment
+        |    from '.git-stats.csv' 
+        |) d
+        |group by year_month order by year_month desc
+HEREDOC
+
+    print ${sqlScript} | gsed 's/^ \+|//' > .script
+    duckdb < .script
+    rm .script
 }
 
 # For the Git stats in the current directory, list the most recent commits for
 # each repo
 function git-stats-most-recent-commits-by-repo() {
-    q -O "select max(commit_date) as last_commit, repo_name from .git-stats.csv where file not in ('version.sbt') group by repo_name order by last_commit desc" \
-        | q -D "$(printf '\t')" 'select * from -' \
-        | tabulate-by-tab
+    local sqlScript
+    read-heredoc sqlScript <<HEREDOC
+        |.mode columns
+        |select max(commit_date) as last_commit, repo_name
+        |from '.git-stats.csv' where file not in ('version.sbt')
+        |group by repo_name order by last_commit desc
+HEREDOC
+
+    print ${sqlScript} | gsed 's/^ \+|//' > .script
+    duckdb < .script
+    rm .script
 }
 
 # GitHub                            {{{2
@@ -2002,6 +2048,7 @@ _java-version() {
   _files -/ -W installedJDKs -g '*'
 }
 
+java-version temurin-23.jdk/
 
 # JIRA                              {{{2
 # ======================================
@@ -2076,8 +2123,6 @@ export RIPGREP_CONFIG_PATH=~/.ripgreprc
 
 # SBT                               {{{2
 # ======================================
-
-export SBT_OPTS='-Xmx2G'
 
 alias sbt-no-test='sbt "set test in assembly := {}"'
 alias sbt-test='sbt test it:test'
