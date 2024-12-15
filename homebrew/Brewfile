@@ -9,7 +9,6 @@ tap "homebrew/bundle"
 ################################################################################
 
 # Java
-tap "homebrew/cask-versions"
 cask "temurin@8"                                # JDK 8 LTS from https://adoptium.net/
 cask "temurin@11"                               # JDK 11 LTS from https://adoptium.net/
 cask "temurin@17"                               # JDK 17 LTS from https://adoptium.net/
@@ -41,8 +40,6 @@ cask "licecap"                                  # Animated screen capture applic
 brew "gnupg"                                    # GNU Pretty Good Privacy (PGP) package
 cask "gpg-suite"                                # GPG Suite
 cask "keepassxc"                                # Password manager app
-# Currently broken on Big Sur; application is untrusted
-# cask "keybase"                                  # End-to-end encryption software
 
 # Notebook
 cask "evernote"                                 # App for note taking, organizing, task lists, and archiving
@@ -124,7 +121,6 @@ cask "hammerspoon"                              # Desktop automation application
 ################################################################################
 
 # Fonts
-tap "homebrew/cask-fonts"
 cask "font-fantasque-sans-mono"                 # A font family with a great monospaced variant for programmers
 
 # Version control
@@ -224,6 +220,8 @@ cask "anki"                                     # Memory training application
 cask "spotify"                                  # Spotify client
 
 brew "nethack"                                  # Single-player roguelike video game
-brew "stone-soup"                               # Dungeon Crawl Stone Soup: a roguelike game
 brew "brogue"                                   # Roguelike game
 brew "angband"                                  # Dungeon exploration game
+
+# Currently disabled -- required obsolete Lua
+# brew "stone-soup"                               # Dungeon Crawl Stone Soup: a roguelike game
