@@ -23,11 +23,15 @@ function clone-if-not-present() {
     if [ -d "${repoPath}" ]; then
         msg_success "${repoPath} exists"
     else
+<<<<<<< HEAD
         echo "Cloining ${repoPath}"
+=======
+>>>>>>> a7ca844 (OSX Sequoia migration)
         git clone "${flags}" "${repoUrl}"
     fi
 }
 
+<<<<<<< HEAD
 SHALLOW_REPOS=(
     .emacs.d
     advent-of-code-2023
@@ -36,10 +40,20 @@ SHALLOW_REPOS=(
     llm-dnd
     llm-scratchpad
     nvim
+=======
+REPOS=(
+    .emacs.d
+    cookiecutters
+    llm-dnd
+    llm-scratchpad
+    nvim
+    prezto
+>>>>>>> a7ca844 (OSX Sequoia migration)
     shell-utils
     tech-radar
 )
 
+<<<<<<< HEAD
 RECURSIVE_REPOS=(
     prezto
 )
@@ -54,6 +68,13 @@ done
 for repo in "${RECURSIVE_REPOS[@]}"
 do
     clone-if-not-present "git@github-personal:stubillwhite/${repo}.git" "-q --recursive"
+=======
+pushd .. 
+
+for repo in "${REPOS[@]}"
+do
+    clone-if-not-present "git@github-personal:stubillwhite/${repo}.git"
+>>>>>>> a7ca844 (OSX Sequoia migration)
 done
 
 popd
