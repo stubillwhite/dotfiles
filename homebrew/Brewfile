@@ -121,6 +121,10 @@ cask "hammerspoon"                              # Desktop automation application
 ################################################################################
 
 # Fonts
+<<<<<<< HEAD
+=======
+tap "homebrew/cask-fonts"
+>>>>>>> a7ca844 (OSX Sequoia migration)
 cask "font-fantasque-sans-mono"                 # A font family with a great monospaced variant for programmers
 
 # Version control
