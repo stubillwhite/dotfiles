@@ -74,9 +74,6 @@
 [includeIf "gitdir:~/Dropbox/Private/org/"]
     path = ~/dev/my-stuff/dotfiles/git/personal-config/.gitconfig
 
-[includeIf "gitdir:~/Dropbox/Private/org/"]
-    path = ~/Dev/my-stuff/dotfiles/git/personal-config/.gitconfig
-
 [includeIf "gitdir:~/Dropbox/Private/obsidian/"]
     path = ~/dev/my-stuff/dotfiles/git/personal-config/.gitconfig
 
