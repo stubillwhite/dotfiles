@@ -33,13 +33,23 @@ function configure-osx-preferences() {
 
     # UI minimum is 2, but 1 can be configured (though a reboot is required for this to take effect)
     echo "- Keyboard repeat should be as fast as possible"
+<<<<<<< HEAD
     configure-setting-if-exists 'Apple Global Domain' KeyRepeat -int 1
+=======
+    configure-setting-if-exists 'Apple Global Domain' KeyRepeat -int 2
+>>>>>>> a7ca844 (OSX Sequoia migration)
 
     # echo "- AppSwitcher should display on all monitors"
     # defaults write com.apple.dock appswitcher-all-displays -bool true
 
     echo "- Operating system should be silent"
+<<<<<<< HEAD
     configure-setting-if-exists 'Apple Global Domain' com.apple.sound.beep.volume -int 0
+=======
+    #defaults write com.apple.sound.beep.flash      -int 0
+    # defaults write com.apple.sound.beep.volume     -int 0
+    # defaults write com.apple.sound.uiaudio.enabled -int 0
+>>>>>>> a7ca844 (OSX Sequoia migration)
 
     # # Hot corners
     # # Possible values:
@@ -67,17 +77,25 @@ function configure-osx-preferences() {
     # echo
     # echo "Killing affected applications"
 
+<<<<<<< HEAD
     APPS=(
         "Finder"
         "SystemUIServer"
         "Sound"
         "Dock"
     )
+=======
+    # APPS=(
+    #     "Finder"
+    #     "SystemUIServer"
+    #     "Dock"
+    # )
+>>>>>>> a7ca844 (OSX Sequoia migration)
 
-    for app in "${APPS[@]}"; do
-        echo "- ${app}"
-        killall "$app" >/dev/null 2>&1
-    done
+    # for app in "${APPS[@]}"; do
+    #     echo "- ${app}"
+    #     killall "$app" >/dev/null 2>&1
+    # done
 
     echo
     echo "Note that some settings require a restart to take effect"
