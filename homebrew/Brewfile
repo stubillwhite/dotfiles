@@ -92,6 +92,7 @@ brew "wget"                                     # Internet file retriever
 brew "xsv"                                      # Fast CSV toolkit written in Rust
 brew "zsh"                                      # UNIX shell (command interpreter)
 cask "mitmproxy"                                # Intercept, modify, replay, save HTTP/S traffic
+cask "raycast"                                  # Control your tools with a few keystrokes
 cask "scroll-reverser"                          # Tool to reverse the direction of scrolling
 
 # Document and image manipulation
