@@ -1567,15 +1567,15 @@ function git-update-projects() {
         ~/Dev/kd/butter-chicken
         ~/Dev/kd/misc
         ~/Dev/kd/spirograph
-        ~/Dev/rdp/architecture
-        #~/Dev/rdp/bos
-        ~/Dev/rdp/concept 
-        ~/Dev/rdp/consumption
-        ~/Dev/rdp/core
-        ~/Dev/rdp/dkp 
-        ~/Dev/rdp/foundations
-        ~/Dev/rdp/scibite
         ~/Dev/recommenders 
+        #~/Dev/rdp/architecture
+        ##~/Dev/rdp/bos
+        #~/Dev/rdp/concept 
+        #~/Dev/rdp/consumption
+        #~/Dev/rdp/core
+        #~/Dev/rdp/dkp 
+        #~/Dev/rdp/foundations
+        #~/Dev/rdp/scibite
     )
 
     for project in "${projects[@]}"
@@ -1816,7 +1816,8 @@ function git-stats-top-team-committers-by-repo() {
     [ "${team}" = 'recs-extended' ]      && teamMembers="'Anamaria Mocanu', 'Rich Lyne', 'Reinder Verlinde', 'Tess Hoad', 'Luci Curnow', 'Andy Nguyen', 'Jerry Yang', 'Stu White', 'Dimi Alexiou', 'Ligia Stan'"
     [ "${team}" = 'butter-chicken' ]     && teamMembers="'Asmaa Shoala', 'Carmen Mester', 'Colin Zhang', 'Hamid Haghayegh', 'Henry Cleland', 'Karthik Jaganathan', 'Krishna', 'Rama Sane'"
     [ "${team}" = 'spirograph' ]         && teamMembers="'Paul Meyrick', 'Fraser Reid', 'Nancy Goyal', 'Richard Snoad', 'Ayce Keskinege'"
-    [ "${team}" = 'dkp' ]                && teamMembers="'Ryan Moquin', 'Gautam Chakrabarty', 'Prakruthy Dhoopa Harish', 'Arun Kumar Kalahastri', 'Sangavi Durairaj', 'Vidhya Shaghar A P', 'Suganya Moorthy', 'Chinar Jaiswal'"
+    [ "${team}" = 'dkp-legacy' ]         && teamMembers="'Ryan Moquin', 'Gautam Chakrabarty', 'Prakruthy Dhoopa Harish', 'Arun Kumar Kalahastri', 'Sangavi Durairaj', 'Vidhya Shaghar A P', 'Suganya Moorthy', 'Chinar Jaiswal'"
+    [ "${team}" = 'dkp' ]                && teamMembers="'Prakruthy Dhoopa Harish', 'Arun Kumar Kalahastri', 'Sangavi Durairaj', 'Vidhya Shaghar A P', 'Suganya Moorthy', 'Chinar Jaiswal'"
     [ "${team}" = 'foundations' ]        && teamMembers="'Adrian Musial', 'Alex Harris', 'Prasann Grampurohit', 'Syeeda Banu C', 'Ashish Wakchaure', 'Pavel Ryzhov', 'Sachin Kumar', 'Shantanu Sinha', 'Prasanth Rave', 'Pavel Kashmin'"
     [ "${team}" = 'consumption' ]        && teamMembers="'Nitin Dumbre', 'Narasimha Reddybhumireddygari', 'Delia Bute', 'Mustafa Toplu', 'Talvinder Matharu', 'Bikramjit Singh', 'Harprit Singh', 'Parimala Balaraju'"
     [ "${team}" = 'concept' ]            && teamMembers="'Saad Rashid', 'Benoit Pasquereau', 'Adam Ladly', 'Jeremy Scadding', 'Anique von Berne', 'Nishant Singh', 'Neil Stevens', 'Dominicano Luciano', 'Kanaga Ganesan', 'Akhil Babu', 'Gintautas Sulskus'"
@@ -1851,7 +1852,7 @@ function git-stats-top-team-committers-by-repo() {
         | q 'select distinct stats.repo_name from .git-stats.csv stats where stats.repo_name not in (select distinct repo_name from -)'
 }
 compdef "_arguments \
-    '1:team arg:(recs recs-extended butter-chicken foundations spirograph dkp concept consumption scibite-ai scibite-centree scibite-ds scibite-ontologies scibite-search scibite-termite-6 scibite-termite-7 scibite-workbench)'" \
+    '1:team arg:(recs recs-extended butter-chicken foundations spirograph dkp dkp-legacy concept consumption scibite-ai scibite-centree scibite-ds scibite-ontologies scibite-search scibite-termite-6 scibite-termite-7 scibite-workbench)'" \
     git-stats-top-team-committers-by-repo
     
 # For the Git stats in the current directory, display all authors
@@ -2017,6 +2018,29 @@ _java-version() {
   _files -/ -W installedJDKs -g '*'
 }
 
+function java-version-infer() {
+    local currDir=$(pwd)
+
+    case "${currDir}" in
+        */recommenders|*/recommenders/*)
+            java-version temurin-8.jdk/
+        ;;
+
+        */dkp|*/dkp/*)
+            java-version temurin-17.jdk/
+        ;;
+
+        */rdp/sandbox|*/rdp/sandbox/*)
+            java-version temurin-17.jdk/
+        ;;
+
+        *)
+            echo "Unrecognised path ${currDir}, Java version unchanged "
+        ;;
+    esac
+
+    java -version
+}
 
 # JIRA                              {{{2
 # ======================================
