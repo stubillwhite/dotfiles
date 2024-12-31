@@ -36,7 +36,9 @@ compinit -C
 # Included scripts                                                          {{{1
 # ==============================================================================
 
-# Prezto
+# Prezto                            {{{2
+# ======================================
+
 source-or-warn ~/Dev/my-stuff/prezto/runcoms/zshenv
 
 # Include Prezto, but remove unhelpful configuration
@@ -60,6 +62,11 @@ unsetopt PATH_DIRS                   # Don't automcomplete foo/bar to my_path_di
 #zstyle ':completion:*:*:*:users' ignored-patterns '*'
 zstyle ':completion:*' use-cache on
 zstyle ':completion:*' cache-path ~/.zsh/cache
+
+# direnv                            {{{2
+# ======================================
+
+eval "$(direnv hook zsh)"
 
 # General preferences                                                       {{{1
 # ==============================================================================
