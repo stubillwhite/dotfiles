@@ -2058,7 +2058,6 @@ _java-version() {
   _files -/ -W installedJDKs -g '*'
 }
 
-<<<<<<< HEAD
 function java-version-infer() {
     local currDir=$(pwd)
 
@@ -2082,9 +2081,6 @@ function java-version-infer() {
 
     java -version
 }
-=======
-java-version temurin-23.jdk/
->>>>>>> 266a14c (Switch from q to duckdb)
 
 # JIRA                              {{{2
 # ======================================
