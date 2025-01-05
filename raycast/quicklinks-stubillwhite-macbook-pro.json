@@ -28,7 +28,11 @@
         "link": "https://calendar.google.com/calendar/u/0/r"
     },
     {
-        "name": "aws",
-        "link": "https://elsevier-sso.awsapps.com/start/#/?tab=accounts"
+        "name": "Slack",
+        "link": "https://app.slack.com/client/EBXJ2S080/C07SQ6E7M17"
+    },
+    {
+        "name": "Outlook",
+        "link": "https://outlook.office.com/owa/?realm=regn.net"
     }
 ]
