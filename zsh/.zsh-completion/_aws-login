@@ -18,10 +18,8 @@ case "${state}" in
             'sc-content'
             'sd-content'
             'newsflo'
-            'consumption'
             'dkp'
             'cef'
-            'taxonomy'
             'innovation'
          )
 
@@ -82,15 +80,6 @@ case "${state}" in
                 )
             ;;
 
-            (consumption)
-                envs=(
-                    'sc-non-prod'
-                    'sc-prod'
-                    'sd-non-prod'
-                    'sd-prod'
-                )
-            ;;
-
             (dkp)
                 envs=(
                     'non-prod'
@@ -103,14 +92,7 @@ case "${state}" in
                     'prod'
                     'embase'
                     'backup'
-                    'networkstorage'
                     'candi'
-                )
-            ;;
-
-            (taxonomy)
-                envs=(
-                    'prod'
                 )
             ;;
 
