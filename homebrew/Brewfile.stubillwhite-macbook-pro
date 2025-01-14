@@ -18,6 +18,9 @@ brew "libopusenc"                               # Convenience library for creati
 brew "sfml@2"                                   # Multi-media library with bindings for multiple languages
 brew "glm"                                      # C++ mathematics library for graphics software
 
+# Game development
+cask "unity"                                    # Unity Editor
+
 # Containers
 brew "lazydocker"                               # The lazier way to manage everything docker
 
