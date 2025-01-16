@@ -20,6 +20,7 @@ brew "glm"                                      # C++ mathematics library for gr
 
 # Game development
 cask "unity"                                    # Unity Editor
+cask "dotnet"                                   # .NET Core
 
 # Containers
 brew "lazydocker"                               # The lazier way to manage everything docker
