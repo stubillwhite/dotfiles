@@ -19,8 +19,9 @@ brew "sfml@2"                                   # Multi-media library with bindi
 brew "glm"                                      # C++ mathematics library for graphics software
 
 # Game development
-cask "unity"                                    # Unity Editor
+cask "blender"                                  # 3D creation suite
 cask "dotnet"                                   # .NET Core
+cask "unity"                                    # Unity Editor
 
 # Containers
 brew "lazydocker"                               # The lazier way to manage everything docker
