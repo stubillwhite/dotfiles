@@ -21,6 +21,7 @@ case "${state}" in
             'dkp'
             'cef'
             'innovation'
+            'dp'
          )
 
          _describe -t prjs 'project' prjs && ret=0
@@ -99,6 +100,14 @@ case "${state}" in
             (innovation)
                 envs=(
                     'bedrock'
+                )
+            ;;
+
+            (dp)
+                envs=(
+                    'nonprod'
+                    'prod'
+                    'sandbox-nonprod'
                 )
             ;;
         esac
