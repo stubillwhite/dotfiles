@@ -16,8 +16,8 @@ cask "temurin@21"                               # JDK 21 LTS from https://adopti
 cask "temurin"                                  # Latest JDK from https://adoptium.net/
 
 # Basics
-cask "bartender"                                # Take control of your menu bar
-cask "beyond-compare@beta"                      # Compare files and folders
+cask "jordanbaird-ice"                          # Powerful menu bar manager for macOS 
+cask "beyond-compare"                           # Compare files and folders
 cask "dropbox"                                  # Client for the Dropbox cloud storage service
 cask "firefox"                                  # Mozilla Firefox
 cask "google-chrome"                            # Cross-platform web browser
