@@ -20,7 +20,7 @@ brew "glm"                                      # C++ mathematics library for gr
 
 # Game development
 cask "blender"                                  # 3D creation suite
-cask "dotnet"                                   # .NET Core
+cask "dotnet-sdk"                               # .NET SDK
 cask "unity"                                    # Unity Editor
 
 # Containers
