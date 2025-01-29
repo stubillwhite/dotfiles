@@ -129,6 +129,9 @@ brew "git-filter-repo"                          # Quickly rewrite git repository
 brew "git-lfs"                                  # Git extension for versioning large files
 brew "git-secret"                               # Bash-tool to store the private data inside a git repo
 
+tap "stubillwhite/homebrew-formulae"
+cask "gitup"                                    # Git interface focused on visual interaction
+
 # Java
 brew "gradle"                                   # Open-source build automation tool based on the Groovy and Kotlin DSL
 brew "maven"                                    # Java-based project management
