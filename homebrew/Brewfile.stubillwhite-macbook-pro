@@ -22,6 +22,7 @@ brew "glm"                                      # C++ mathematics library for gr
 cask "blender"                                  # 3D creation suite
 cask "dotnet-sdk"                               # .NET SDK
 cask "unity"                                    # Unity Editor
+cask "unity-hub"                                # Unity Hub
 
 # Containers
 brew "lazydocker"                               # The lazier way to manage everything docker
