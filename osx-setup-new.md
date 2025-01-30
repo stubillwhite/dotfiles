@@ -48,11 +48,28 @@
 
 ## Configure OSX ##
 
+### Automated settings ###
+
 - Configure settings
     - `cd ~/dev/my-stuff/dotfiles`
     - `./configure-osx.sh`
     - Restart
-    - TODO: Manual steps
+
+### Manual settings ###
+
+- `System Settings` > `Keyboard` > `Keyboard Shortcutske`
+    - Turn off everything except:
+        - `Keyboard` > `Move focus to next window`
+        - `Screenshots` > Everything, except `Screenshot and recording options`
+    - `Function Keys`
+        - Enable using function keys as standard function keys
+    - `Modifier Keys`
+        - Change `Caps Lock` to `Control`
+
+TODO:
+
+Redefine shortcuts to
+- `Cmd-shift-§`
 
 ## Configure tools ##
 
