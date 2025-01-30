@@ -1,0 +1,34 @@
+[
+    {
+        "name": "Search Google",
+        "link": "https://google.com/search?q={argument}"
+    },
+    {
+        "name": "Search DuckDuckGo",
+        "link": "https://duckduckgo.com/?q={argument}"
+    },
+    {
+        "name": "Search Confluence",
+        "link": "https://elsevier.atlassian.net/wiki/search?text={argument}"
+    },
+    {
+        "name": "Workday",
+        "link": "https://wd3.myworkday.com/relx/d/home.htmld"
+    },
+    {
+        "name": "Confluence",
+        "link": "https://elsevier.atlassian.net/wiki/spaces/~706552179/overview"
+    },
+    {
+        "name": "JIRA",
+        "link": "https://elsevier.atlassian.net/jira/software/c/projects/SDPR/boards/2874"
+    },
+    {
+        "name": "Calendar",
+        "link": "https://calendar.google.com/calendar/u/0/r"
+    },
+    {
+        "name": "aws",
+        "link": "https://elsevier-sso.awsapps.com/start/#/?tab=accounts"
+    }
+]

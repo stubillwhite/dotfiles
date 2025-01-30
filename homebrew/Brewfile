@@ -20,7 +20,6 @@ cask "jordanbaird-ice"                          # Powerful menu bar manager for 
 cask "beyond-compare"                           # Compare files and folders
 cask "dropbox"                                  # Client for the Dropbox cloud storage service
 cask "firefox"                                  # Mozilla Firefox
-cask "google-chrome"                            # Cross-platform web browser
 cask "iterm2"                                   # Terminal emulator as alternative to Apple's Terminal app
 cask "orion"                                    # WebKit based web browser
 cask "syncthing"                                # Open source continuous file synchronization application
@@ -199,7 +198,6 @@ brew "azd"                                      # Azure Developer CLI
 brew "azure-cli"                                # Microsoft Azure CLI 2.0
 
 # SQL
-cask "sequel-pro"                               # MySQL/MariaDB database management platform
 cask "sqlworkbenchj"                            # Java-based SQL client
 
 # Shell

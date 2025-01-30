@@ -27,7 +27,6 @@ FILES=(
     "tig/.tigrc"
     "tmux/.tmux.conf"
     "vale/.vale.ini"
-    "zsh/.bashrc"
     "zsh/.commonrc"
     "zsh/.zsh-completion"
     "zsh/.zshenv"

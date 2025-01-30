@@ -2,6 +2,9 @@
 # Applications
 ################################################################################
 
+# Basics
+cask "google-chrome"                            # Cross-platform web browser
+
 # Video conferencing
 cask "zoom"                                     # Video communication and virtual meeting platform
 
