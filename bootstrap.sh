@@ -131,9 +131,15 @@ create-links-for-files $HOME/.config "$CONFIG_DIRS[@]"
 
 create-links-for-files-at-path ~/Library/Application\ Support/k9s k9s
 
-
-
-git clone https://github.com/plexus/chemacs2.git ~/.emacs.d
-
-
-
+if [ -d ~/.emacs.d ]; then
+    pushd ~/.emacs.d > /dev/null
+    remoteUrl=$(git remote get-url origin)
+    if [ "${remoteUrl}" = "https://github.com/plexus/chemacs2.git" ]; then
+        msg_success "Exists:  ~/.emacs.d -> ${remoteUrl}"
+    else
+        msg_error "Exists:  ~/.emacs.d exists and does not point to ${remoteUrl}"
+    fi
+    popd
+else
+    git clone https://github.com/plexus/chemacs2.git ~/.emacs.d
+fi
