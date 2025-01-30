@@ -66,10 +66,16 @@
     - `Modifier Keys`
         - Change `Caps Lock` to `Control`
 
-TODO:
-
-Redefine shortcuts to
-- `Cmd-shift-§`
+- `System Settings` > `Keyboard` > `Shortcuts` > `App Shortcuts`
+    - Define new shortcuts for each of the following, which should match exactly what you see in the Apple menu:
+        - `Log Out`
+        - `Log Out Stu White…` (`alt-;` to enter `…`)
+        - `Lock Screen`
+    - Create the shortcuts with the following settings:
+        - Application: All Applications
+        - Menu title: (see above)
+        - Keyboard shortcut: (something you'll never use, like `Cmd-shift-§`)
+    - Log out and in again
 
 ## Configure tools ##
 
