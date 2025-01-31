@@ -75,6 +75,10 @@
 
 ## Configure tools ##
 
+### DBeaver ###
+
+- TODO
+
 ### iTerm2 ###
 
 - iTerm2 > Settings

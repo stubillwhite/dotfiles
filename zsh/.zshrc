@@ -2213,7 +2213,7 @@ function certificate-java-install() {
         echo 'Usage: certificate-java-install FILE'
         echo
         echo 'Example:'
-        echo 'certificate-java-install /Users/white1/Dev/certificates/ZscalerRootCertificate-2048-SHA256.crt'
+        echo 'certificate-java-install /Users/white1/dev/certificates/ZscalerRootCertificate-2048-SHA256.crt'
         echo 'Default keystore password is changeit'
         return 1
     fi
