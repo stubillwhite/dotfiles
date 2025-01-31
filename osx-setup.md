@@ -41,10 +41,6 @@
     - `cd ~/dev/my-stuff/dotfiles`
     - `./install-global-npm-packages.sh`
     - `./install-global-pipx-packages.sh`
-- Configure NVim
-    - `nvim`
-    - `:PlugInstall`
-    - TODO: Install compatible Python version
 
 ## Configure OSX ##
 
@@ -86,7 +82,26 @@
 - `Import All Settings and Data...`
 - Load from `~/dev/dotfiles/iterm2`
 
+### NVim ###
+
+- `cd ~/dev/my-stuff/nvim`
+- `./bootstrap.sh`
+- Run NVim with `nvim` then type `:PlugInstall` to install plugins
+- `pushd ~/.config/vim-plug/YouCompleteMe`
+- `./install.py`
+
+### Obsidian ###
+
+- Run Obsidian
+- Open the vault at `~/Dropbox/Private/obsidian`
+
 ### Raycast ###
 
-- TODO: Settings
+- Run Raycast
+- `Cmd-,` to open settings > Advanced > Import
+- Import from `~/dev/dotfiles/raycast`
+
+### ScrollReverser ###
+
+- Run ScrollReverser and grant permissions when prompted
 

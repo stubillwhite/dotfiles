@@ -77,34 +77,13 @@
 [includeIf "gitdir:~/Dropbox/Private/obsidian/"]
     path = ~/dev/my-stuff/dotfiles/git/personal-config/.gitconfig
 
-[includeIf "gitdir:~/dev/recommenders/"]
-    path = ~/dev/my-stuff/dotfiles/git/work-config/.gitconfig
-
-[includeIf "gitdir:~/dev/code-review/recommenders/"]
-    path = ~/dev/my-stuff/dotfiles/git/work-config/.gitconfig
-
-[includeIf "gitdir:~/dev/code-review/rdp/"]
-    path = ~/dev/my-stuff/dotfiles/git/work-config/.gitconfig
-
-[includeIf "gitdir:~/dev/code-review/mentoring/"]
-    path = ~/dev/my-stuff/dotfiles/git/work-config/.gitconfig
-
-[includeIf "gitdir:~/dev/newsflo/"]
-    path = ~/dev/my-stuff/dotfiles/git/work-config/.gitconfig
-
 [includeIf "gitdir:~/dev/scratchpad/"]
-    path = ~/dev/my-stuff/dotfiles/git/work-config/.gitconfig
-
-[includeIf "gitdir:~/dev/kedro/"]
     path = ~/dev/my-stuff/dotfiles/git/work-config/.gitconfig
 
 [includeIf "gitdir:~/dev/rdp/"]
     path = ~/dev/my-stuff/dotfiles/git/work-config/.gitconfig
 
 [includeIf "gitdir:~/dev/kd/"]
-    path = ~/dev/my-stuff/dotfiles/git/work-config/.gitconfig
-
-[includeIf "gitdir:~/dev/scratchpad/"]
     path = ~/dev/my-stuff/dotfiles/git/work-config/.gitconfig
 
 [mailmap]
