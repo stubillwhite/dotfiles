@@ -56,7 +56,7 @@ DKP_REPOS=(
 )
 
 DKP_INFRA_REPOS=(
-    elsevier-centraltechnology/core-aws-idc-custom-permissions
+    #elsevier-centraltechnology/core-aws-idc-custom-permissions
     elsevier-research/ces-terraformcontrol-cef
     elsevier-research/dkp-ami-security-updates
     elsevier-research/dkp-ansible-rest
@@ -356,7 +356,6 @@ CORE_REPOS=(
     elsevier-research/dp-core-jenkins
     elsevier-research/dp-core-jenkins-scripts
     elsevier-research/dp-core-jfrog-tokens
-    elsevier-research/dp-core-kafka-stream.g8
     elsevier-research/dp-core-kibana-proxy
     elsevier-research/dp-core-spinnaker
 )
@@ -584,7 +583,6 @@ SCIBITE_INFRA_REPOS=(
 SANDBOX_REPOS=(
     elsevier-research/dp-simulator
 )
-
 
 # KD repos                                                                  {{{1
 # ==============================================================================
