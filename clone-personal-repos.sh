@@ -31,11 +31,15 @@ function clone-if-not-present() {
 
 SHALLOW_REPOS=(
     .emacs.d
+    advent-of-code-2024
+    advent-of-code-2024-python
+    advent-of-code-2024-scala
     cookiecutters
+    dotfiles
     jira-reporter-python
     llm-dnd
-    llm-scratchpad
     nvim
+    prezto
     shell-utils
     tech-radar
 )
