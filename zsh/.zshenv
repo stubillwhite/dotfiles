@@ -61,10 +61,6 @@ export PATH=$PATH:~/.local/bin
 # GNU parallel
 source-or-warn /opt/homebrew/bin/env_parallel.zsh
 
-# TODO: Fix ordering; still needed
-# Include common configuration 
-source-or-warn $HOME/.commonrc
-
 # Secrets                           {{{2
 # ======================================
 
