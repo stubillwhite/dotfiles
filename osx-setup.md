@@ -62,7 +62,7 @@
 
 - `System Settings`
     - `Keyboard`
-        - `Keyboard Shortcutske`
+        - `Keyboard Shortcuts`
             - Turn off everything except:
                 - `Keyboard` > `Move focus to next window`
                 - `Screenshots` > Everything, except `Screenshot and recording options`
