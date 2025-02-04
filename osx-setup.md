@@ -31,6 +31,10 @@
 
 - Install SSH keys
     - These are in your key vault and live in `~/.ssh/keys`
+    - Link default keys to the SSH directory
+        - `cd ~/.ssh`
+        - `ln -s ~/.ssh/keys/id_rsa`
+        - `ln -s ~/.ssh/keys/id_rsa.pub`
 - Install packages
     - `cd ~/dev/my-stuff/dotfiles/homebrew`
     - `./install`
@@ -83,9 +87,26 @@
 
 ## Configure tools ##
 
+### AWS ###
+
+- `~/.aws/config` configuration is in your key vault
+
 ### DBeaver ###
 
 - TODO
+
+### Firefox ###
+
+- Browse to https://kagi.com/
+- Right-click in the address bar and choose `Add "Kagi Search"`
+- `Firefox` > `Settings` > `Search`
+- Change the shortcut to `@kagi`
+
+### IntelliJ ###
+
+- `Settings` 
+    - `Version Control` > `Commit`, disable `Use non-modal commit interface`
+    - `Editor` > `General` > `Appearance`, disable `Show hard wrap and visual guides`
 
 ### iTerm2 ###
 
@@ -111,7 +132,9 @@
 
 - Run Outlook
 - `Outlook` > `Settings...`
-    - `General` > Enable compact view
+    - `General` 
+        - Enable compact view
+        - Disable transparency
     - `Reading` > Mark email as read only after five seconds
     - `Composing` > Set wait to send messages to the maximum
     - `Calendar`

@@ -976,7 +976,7 @@ pushd ~/dev
 # RDP                               {{{2
 # ======================================
 
-clone-projects-into rdp/architecture        "${ARCHITECTURE_REPOS[@]}"
+#clone-projects-into rdp/architecture        "${ARCHITECTURE_REPOS[@]}"
 
 clone-projects-into rdp/dkp                 "${DKP_REPOS[@]}"
 clone-projects-into rdp/dkp/infra           "${DKP_INFRA_REPOS[@]}"

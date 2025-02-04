@@ -6,74 +6,74 @@
 
 # Perl
 
-PATH="/Users/white1/perl5/bin${PATH:+:${PATH}}"; export PATH;
-PERL5LIB="/Users/white1/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
-PERL_LOCAL_LIB_ROOT="/Users/white1/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
-PERL_MB_OPT="--install_base \"/Users/white1/perl5\""; export PERL_MB_OPT;
-PERL_MM_OPT="INSTALL_BASE=/Users/white1/perl5"; export PERL_MM_OPT;
+## PATH="/Users/white1/perl5/bin${PATH:+:${PATH}}"; export PATH;
+## PERL5LIB="/Users/white1/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
+## PERL_LOCAL_LIB_ROOT="/Users/white1/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
+## PERL_MB_OPT="--install_base \"/Users/white1/perl5\""; export PERL_MB_OPT;
+## PERL_MM_OPT="INSTALL_BASE=/Users/white1/perl5"; export PERL_MM_OPT;
 
 # Node legacy while we're running Mojave
-export PATH=/usr/local/opt/node@14/bin:$PATH
+## export PATH=/usr/local/opt/node@14/bin:$PATH
 
 # Other tools
 
-export PATH=~/Dev/tools/bin:$PATH
-export PATH=/usr/local/opt/ruby/bin:$PATH
-export PATH=/usr/local/opt/coreutils/libexec/gnubin:$PATH
-export PATH=/usr/local/opt/make/libexec/gnubin:$PATH
-export PATH=/Applications/Emacs.app/Contents/MacOS:$PATH
-
-export PATH=$PATH:/usr/local/lib/ruby/gems/3.0.0/bin
-export PATH=$PATH:/Applications/Beyond\ Compare.app/Contents/MacOS
-export PATH=$PATH:/Applications/PyCharm\ CE.app/Contents/MacOS
-export PATH=$PATH:/Applications/IntelliJ\ IDEA\ CE.app/Contents/MacOS
-export PATH=$PATH:~/Dev/my-stuff/shell-utils
-export PATH=$PATH:/usr/bin
-export PATH=$PATH:~/.local/bin
+## export PATH=~/Dev/tools/bin:$PATH
+## export PATH=/usr/local/opt/ruby/bin:$PATH
+## export PATH=/usr/local/opt/coreutils/libexec/gnubin:$PATH
+## export PATH=/usr/local/opt/make/libexec/gnubin:$PATH
+## export PATH=/Applications/Emacs.app/Contents/MacOS:$PATH
+## 
+## export PATH=$PATH:/usr/local/lib/ruby/gems/3.0.0/bin
+## export PATH=$PATH:/Applications/Beyond\ Compare.app/Contents/MacOS
+## export PATH=$PATH:/Applications/PyCharm\ CE.app/Contents/MacOS
+## export PATH=$PATH:/Applications/IntelliJ\ IDEA\ CE.app/Contents/MacOS
+## export PATH=$PATH:~/Dev/my-stuff/shell-utils
+## export PATH=$PATH:/usr/bin
+## export PATH=$PATH:~/.local/bin
 
 # GCC
 # ==============================================================================
 
-export LDFLAGS="-L/usr/local/opt/ruby/lib"
-export CPPFLAGS="-I/usr/local/opt/ruby/include"
-export PKG_CONFIG_PATH="/usr/local/opt/ruby/lib/pkgconfig"
+## export LDFLAGS="-L/usr/local/opt/ruby/lib"
+## export CPPFLAGS="-I/usr/local/opt/ruby/include"
+## export PKG_CONFIG_PATH="/usr/local/opt/ruby/lib/pkgconfig"
 
 # Java                                                                      {{{1
 # ==============================================================================
 
-export JAVA_HOME=/Library/Java/JavaVirtualMachines/temurin-8.jdk/Contents/Home/
-export PATH=$JAVA_HOME:$PATH
+## export JAVA_HOME=/Library/Java/JavaVirtualMachines/temurin-8.jdk/Contents/Home/
+## export PATH=$JAVA_HOME:$PATH
 
 # Leiningen
 
-export LEIN_JVM_OPTS='-Xms4G -Xmx4G'
+## export LEIN_JVM_OPTS='-Xms4G -Xmx4G'
 
 # Spark
 
-export SPARK_LOCAL_IP=127.0.0.1
+## export SPARK_LOCAL_IP=127.0.0.1
 
 # TODO: Move these to .zshrc
 # SSH                                                                       {{{1
 # ==============================================================================
 
-SSH_ENV_FILE="$HOME/.ssh/environment"
-
-function ssh-start-agent {
-    echo "Initialising new SSH agent..."
-    /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV_FILE}"
-    /bin/chmod 600 "${SSH_ENV_FILE}"
-    . "${SSH_ENV_FILE}" > /dev/null
-    /usr/bin/ssh-add;
-}
-
-if [ -f "${SSH_ENV_FILE}" ]; then
-    . "${SSH_ENV_FILE}" > /dev/null
-    /bin/ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
-    ssh-start-agent;
-}
-else
-    ssh-start-agent;
-fi
+## SSH_ENV_FILE="$HOME/.ssh/environment"
+## 
+## function ssh-start-agent {
+##     echo "Initialising new SSH agent..."
+##     /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV_FILE}"
+##     /bin/chmod 600 "${SSH_ENV_FILE}"
+##     . "${SSH_ENV_FILE}" > /dev/null
+##     /usr/bin/ssh-add;
+## }
+## 
+## if [ -f "${SSH_ENV_FILE}" ]; then
+##     . "${SSH_ENV_FILE}" > /dev/null
+##     /bin/ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
+##     ssh-start-agent;
+## }
+## else
+##     ssh-start-agent;
+## fi
 
 # 1}}}
 

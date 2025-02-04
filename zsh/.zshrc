@@ -2043,8 +2043,16 @@ function java-version() {
     fi
 
     local NEW_JAVA_HOME=/Library/Java/JavaVirtualMachines/${1}/Contents/Home/
-    export PATH=$(echo $PATH | sed "s|${JAVA_HOME}|${NEW_JAVA_HOME}|")
-    export JAVA_HOME=${NEW_JAVA_HOME}
+
+    if [[ -v JAVA_HOME ]]; then
+        echo "Switching JAVA_HOME from ${JAVA_HOME} to ${NEW_JAVA_HOME}"
+        export PATH=$(echo $PATH | sed "s|${JAVA_HOME}|${NEW_JAVA_HOME}|")
+        export JAVA_HOME=${NEW_JAVA_HOME}
+    else
+        echo "Setting JAVA_HOME to ${NEW_JAVA_HOME}"
+        export PATH=$PATH:${NEW_JAVA_HOME}
+        export JAVA_HOME=${NEW_JAVA_HOME}
+    fi
 }
 compdef _java-version java-version
 
@@ -2077,6 +2085,9 @@ function java-version-infer() {
 
     java -version
 }
+
+# Default Java version
+java-version temurin-17.jdk > /dev/null
 
 # JIRA                              {{{2
 # ======================================

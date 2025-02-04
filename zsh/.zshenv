@@ -41,7 +41,7 @@ function source-or-warn() {
 # Paths                                                                     {{{1
 # ==============================================================================
 
-export PATH=~/Dev/tools/bin:$PATH
+export PATH=~/dev/tools/bin:$PATH
 export PATH=/usr/local/opt/ruby/bin:$PATH
 export PATH=/usr/local/opt/coreutils/libexec/gnubin:$PATH
 export PATH=/usr/local/opt/make/libexec/gnubin:$PATH
@@ -51,7 +51,7 @@ export PATH=$PATH:/usr/local/lib/ruby/gems/3.0.0/bin
 export PATH=$PATH:/Applications/Beyond\ Compare.app/Contents/MacOS
 export PATH=$PATH:/Applications/PyCharm\ CE.app/Contents/MacOS
 export PATH=$PATH:/Applications/IntelliJ\ IDEA\ CE.app/Contents/MacOS
-export PATH=$PATH:~/Dev/my-stuff/shell-utils
+export PATH=$PATH:~/dev/my-stuff/shell-utils
 export PATH=$PATH:/usr/bin
 export PATH=$PATH:~/.local/bin
 
