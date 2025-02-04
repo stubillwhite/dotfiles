@@ -578,7 +578,7 @@ function artefact-config () {
     done
 }
 compdef "_arguments \
-    '1:environment arg:(recs recs-cleanroom dkp scibite)'" \
+    '1:environment arg:(recs recs-cleanroom dkp)'" \
     artefact-config
 
 # Clean all artefacts from the current configuration
@@ -1558,18 +1558,17 @@ function git-prompt-help() {
 
 function git-update-projects() {
     local projects=(
-        ~/Dev/kd/butter-chicken
-        ~/Dev/kd/misc
-        ~/Dev/kd/spirograph
-        ~/Dev/recommenders 
-        #~/Dev/rdp/architecture
-        ##~/Dev/rdp/bos
-        #~/Dev/rdp/concept 
-        #~/Dev/rdp/consumption
-        #~/Dev/rdp/core
-        #~/Dev/rdp/dkp 
-        #~/Dev/rdp/foundations
-        #~/Dev/rdp/scibite
+        #~/dev/kd/butter-chicken
+        #~/dev/kd/misc
+        ~/dev/kd/recs 
+        #~/dev/kd/spirograph
+        #~/dev/rdp/architecture
+        ~/dev/rdp/concept 
+        ~/dev/rdp/consumption
+        ~/dev/rdp/core
+        ~/dev/rdp/dkp 
+        ~/dev/rdp/foundations
+        #~/dev/rdp/scibite
     )
 
     for project in "${projects[@]}"
@@ -1770,39 +1769,6 @@ function git-mailmap-update() {
     vim -d .authors.txt ~/.mailmap
 }
 
-# TODO: WIP - autoecomplete author names
-function _git_stats_authors() {
-    q 'select distinct author from .git-stats.csv limit 100' \
-        | tail -n +2 \
-        | sed -r 's/^(.*)$/"\1"/g' \
-        | tr '\n' ' '
-}
-
-# TODO: WIP
-function whitetest() {
-    if [[ $# -ne 1 ]] ; then
-        echo 'Usage: git-stats-recent-commits-by-author AUTHOR'
-        return 1
-    fi
-
-    local authorName="$1"
-    local cutoff=$(gdate --iso-8601=seconds -u -d "70 days ago")
-
-    q "select * from .git-stats.csv where commit_date > '"${cutoff}"'" \
-        | q "select * from - where author in ('"${authorName}"')" \
-        | q "select repo_name, file, commit_date from - order by commit_date desc" \
-        | q -D "$(printf '\t')" 'select * from -' \
-        | tabulate-by-tab
-}
-compdef _whitetest whitetest
-#compdef "_alternative \
-#    'arguments:author:($(_git_stats_authors))'" \
-#    whitetest
-    #
-#compdef '_alternative \
-#    "arguments:custom arg:(red green yellow blue magenta cyan)"' \
-#    whitetest
-
 # For the Git stats in the current directory, display who on the team knows most about a repo
 function git-stats-top-team-committers-by-repo() {
     if [[ $# -ne 1 ]] ; then
@@ -1838,17 +1804,39 @@ function git-stats-top-team-committers-by-repo() {
 
     echo
     echo 'Repos with authors in the team'
-    q 'select repo_name, author, count(*) as total from .git-stats.csv group by repo_name, author' \
-        | q "select * from - where author in (${teamMembers})" \
-        | q 'select *, row_number() over (partition by repo_name order by total desc) as idx from -' \
-        | q 'select repo_name, author, total from - where idx <= 5' \
-        | q -D "$(printf '\t')" 'select * from -' \
-        | tabulate-by-tab
+    read-heredoc sqlScript <<HEREDOC
+        |.mode columns
+        |select repo_name, rank, author, total from (
+        |   select *, row_number() over (partition by repo_name order by total desc) as rank 
+        |   from (
+        |      select repo_name, author, count(*) as total
+        |      from '.git-stats.csv' 
+        |      where author in (${teamMembers})
+        |      group by (repo_name, author)
+        |   ) d
+        |) e
+        |where rank <= 5
+        |order by repo_name, rank;
+HEREDOC
 
-    echo
-    echo 'Repos with no authors in the team'
-    q "select distinct repo_name from .git-stats.csv where author in (${teamMembers})" \
-        | q 'select distinct stats.repo_name from .git-stats.csv stats where stats.repo_name not in (select distinct repo_name from -)'
+    read-heredoc sqlScript <<HEREDOC
+        |.mode columns
+        |select repo_name, idx, author, total from (
+        |   select *, row_number() over (partition by repo_name order by total desc) as idx 
+        |   from (
+        |      select repo_name, author, count(*) as total
+        |      from '.git-stats.csv' 
+        |      where author in (${teamMembers})
+        |      group by (repo_name, author)
+        |   ) d
+        |) e
+        |where idx <= 5
+        |order by repo_name, idx;
+HEREDOC
+
+    print ${sqlScript} | gsed 's/^ \+|//' > .script
+    duckdb < .script
+    rm .script
 }
 compdef "_arguments \
     '1:team arg:(recs recs-extended butter-chicken foundations spirograph dkp dkp-legacy concept consumption scibite-ai scibite-centree scibite-ds scibite-ontologies scibite-search scibite-termite-6 scibite-termite-7 scibite-workbench)'" \
@@ -1856,8 +1844,16 @@ compdef "_arguments \
     
 # For the Git stats in the current directory, display all authors
 function git-stats-authors() {
-    q 'select distinct author from .git-stats.csv order by author asc' \
-        | tail -n +2
+    local sqlScript
+    read-heredoc sqlScript <<HEREDOC
+        |.mode columns
+        |select distinct author 
+        |from '.git-stats.csv' order by author asc;
+HEREDOC
+
+    print ${sqlScript} | gsed 's/^ \+|//' > .script
+    duckdb < .script
+    rm .script
 }
 
 # For the Git stats in the current directory, display the most recent commits

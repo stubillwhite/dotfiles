@@ -14,6 +14,7 @@ function configure-setting-if-exists() {
     shift
     local value=$*
 
+    echo "${domain} ${key} ${value}"
     if defaults read "${domain}" "${key}" > /dev/null 2>&1 ; then 
         echo "Old setting: " $(defaults read "${domain}" "${key}")
         defaults write "${domain}" "${key}" ${value}
@@ -31,6 +32,7 @@ function configure-setting() {
     shift
     local value=$*
 
+    echo "${domain} ${key} ${value}"
     defaults write "${domain}" "${key}" ${value}
     echo "New setting: " $(defaults read "${domain}" "${key}")
     echo
@@ -51,9 +53,9 @@ function configure-osx-preferences() {
     configure-setting com.apple.dock appswitcher-all-displays -bool true
 
     echo "- Operating system should be silent"
-    #defaults write com.apple.sound.beep.flash      -int 0
-    # defaults write com.apple.sound.beep.volume     -int 0
-    # defaults write com.apple.sound.uiaudio.enabled -int 0
+    configure-setting-if-exists 'Apple Global Domain' com.apple.sound.beep.flash      -int 0
+    configure-setting-if-exists 'Apple Global Domain' com.apple.sound.uiaudio.enabled -int 0
+    configure-setting 'Apple Global Domain' com.apple.sound.beep.volume     -int 0
 
     # Hot corners
     # Possible values:

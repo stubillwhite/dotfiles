@@ -41,6 +41,9 @@
     - `cd ~/dev/my-stuff/dotfiles`
     - `./install-global-npm-packages.sh`
     - `./install-global-pipx-packages.sh`
+- Install `prezto`
+    - `cd ~/dev/my-stuff/prezto`
+    - `./bootstrap.sh`
 
 ## Configure OSX ##
 
@@ -53,25 +56,30 @@
 
 ### Manual settings ###
 
-- `System Settings` > `Keyboard` > `Keyboard Shortcutske`
-    - Turn off everything except:
-        - `Keyboard` > `Move focus to next window`
-        - `Screenshots` > Everything, except `Screenshot and recording options`
-    - `Function Keys`
-        - Enable using function keys as standard function keys
-    - `Modifier Keys`
-        - Change `Caps Lock` to `Control`
+- `System Settings`
+    - `Keyboard`
+        - `Keyboard Shortcutske`
+            - Turn off everything except:
+                - `Keyboard` > `Move focus to next window`
+                - `Screenshots` > Everything, except `Screenshot and recording options`
+            - `Function Keys`
+                - Enable using function keys as standard function keys
+            - `Modifier Keys`
+                - Change `Caps Lock` to `Control`
 
-- `System Settings` > `Keyboard` > `Shortcuts` > `App Shortcuts`
-    - Define new shortcuts for each of the following, which should match exactly what you see in the Apple menu:
-        - `Log Out`
-        - `Log Out Stu White…` (`alt-;` to enter `…`)
-        - `Lock Screen`
-    - Create the shortcuts with the following settings:
-        - Application: All Applications
-        - Menu title: (see above)
-        - Keyboard shortcut: (something you'll never use, like `Cmd-shift-§`)
-    - Log out and in again
+        - `Shortcuts` > `App Shortcuts`
+            - Define new shortcuts for each of the following, which should match exactly what you see in the Apple menu:
+                - `Log Out`
+                - `Log Out Stu White…` (`alt-;` to enter `…`)
+                - `Lock Screen`
+            - Create the shortcuts with the following settings:
+                - Application: All Applications
+                - Menu title: (see above)
+                - Keyboard shortcut: (something you'll never use, like `Cmd-shift-§`)
+            - Log out and in again
+
+    - `Sound`
+        - Disable `Play user interface sound effects`
 
 ## Configure tools ##
 
@@ -98,6 +106,20 @@
 
 - Run Obsidian
 - Open the vault at `~/Dropbox/Private/obsidian`
+
+### Outlook ###
+
+- Run Outlook
+- `Outlook` > `Settings...`
+    - `General` > Enable compact view
+    - `Reading` > Mark email as read only after five seconds
+    - `Composing` > Set wait to send messages to the maximum
+    - `Calendar`
+        - Second timezone `-5:00` EST
+        - Third timezone `+5:30` India
+        - Turn off weather
+- Go to Calendar
+    - `View` > `Timescale` > 12 hours
 
 ### Raycast ###
 
