@@ -10,6 +10,8 @@ setopt EXTENDED_GLOB
 # Constants                                                                 {{{1
 # ==============================================================================
 
+computerName=$(scutil --get ComputerName)
+
 # Files to link to in $HOME
 FILES=(
     "ctags/.ctags"
@@ -31,7 +33,7 @@ FILES=(
     "zsh/.zshenv"
     "zsh/.zshenv.no-commit"
     "zsh/.zshrc"
-    "zsh/.zshrc.ELSLAPM-156986"
+    "zsh/.zshrc.${computerName}"
     "zsh/.zshrc.darwin"
     "zsh/.zshrc.no-commit"
 )
