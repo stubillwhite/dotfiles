@@ -102,11 +102,14 @@
 - `Firefox` > `Settings` > `Search`
 - Change the shortcut to `@kagi`
 
-### IntelliJ ###
+### IntelliJ and PyCharm ###
 
 - `Settings` 
-    - `Version Control` > `Commit`, disable `Use non-modal commit interface`
-    - `Editor` > `General` > `Appearance`, disable `Show hard wrap and visual guides`
+    - `Version Control` > `Commit`
+        - Disable `Use non-modal commit interface`
+    - `Editor` > `General` > `Appearance`
+        - Disable `Show hard wrap and visual guides`
+        - Enable `Compact mode`
 
 ### iTerm2 ###
 
