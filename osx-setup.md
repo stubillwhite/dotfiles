@@ -7,9 +7,19 @@
     - [Prerequisites](#prerequisites)
     - [Bootstrap and configure](#bootstrap-and-configure)
     - [Configure OSX](#configure-osx)
+        - [Automated settings](#automated-settings)
+        - [Manual settings](#manual-settings)
     - [Configure tools](#configure-tools)
+        - [AWS](#aws)
+        - [DBeaver](#dbeaver)
+        - [Firefox](#firefox)
+        - [IntelliJ and PyCharm](#intellij-and-pycharm)
         - [iTerm2](#iterm2)
+        - [NVim](#nvim)
+        - [Obsidian](#obsidian)
+        - [Outlook](#outlook)
         - [Raycast](#raycast)
+        - [ScrollReverser](#scrollreverser)
 
 <!-- markdown-toc end -->
 
