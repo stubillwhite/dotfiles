@@ -1,5 +1,7 @@
 /leiningen/.lein/self-installs
 /leiningen/.lein/repl-port
+/ssh/.ssh/id_rsa*
+/ssh/.ssh/known_hosts*
 /ssh/.ssh/environment
 /ssh/.ssh/keys
 /homebrew/Brewfile.lock.json
@@ -10,3 +12,4 @@
 /vale/styles/Readability
 .gitconfig.local
 **/*.no-commit
+
