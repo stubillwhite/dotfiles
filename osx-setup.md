@@ -102,6 +102,9 @@
 - `Firefox` > `Settings` > `Search`
 - Change the shortcut to `@kagi`
 
+Possibly need to set `security.external_protocol_requires_permission` in `about:config` to false to enable Emacs
+org-mode protocol to run without prompting.
+
 ### IntelliJ and PyCharm ###
 
 - `Settings` 
