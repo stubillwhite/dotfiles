@@ -1,5 +1,5 @@
-(("default"   . ((user-emacs-directory . "~/Dev/my-stuff/.emacs.d")))
- ("bankrupcy" . ((user-emacs-directory . "~/Dev/my-stuff/emacs-new/.emacs.d")))
- ("doom"      . ((user-emacs-directory . "~/Dev/tools/doom-emacs")
+(("default"   . ((user-emacs-directory . "~/dev/my-stuff/.emacs.d")))
+ ("bankrupcy" . ((user-emacs-directory . "~/dev/my-stuff/emacs-new/.emacs.d")))
+ ("doom"      . ((user-emacs-directory . "~/dev/tools/doom-emacs")
                  (env . (("DOOMDIR" . "~/.doom.d")))))
  )
