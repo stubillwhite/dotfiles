@@ -1033,3 +1033,8 @@ HEREDOC
     q "${query}" | tabulate-by-comma
 }
 
+# Terraform                                                                 {{{1
+# ==============================================================================
+
+# Apple silicon Terraform providers
+TFENV_ARCH=amd64
