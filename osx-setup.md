@@ -170,3 +170,8 @@ org-mode protocol to run without prompting.
 
 - Run ScrollReverser and grant permissions when prompted
 
+### Visual Studio Code ###
+
+- Run Visual Studio Code
+- `Code` > `Settings...` > `Settings`
+    - Search for `Sticky Scroll` and set `Editor: Sticky Scroll` to disabled
