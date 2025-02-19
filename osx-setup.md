@@ -103,7 +103,8 @@
 
 ### DBeaver ###
 
-- TODO
+- Install project configuration
+    - This is in your key vault and is loaded in `File` > `Import` > `DBeaver Project`
 
 ### Firefox ###
 
@@ -130,6 +131,11 @@ org-mode protocol to run without prompting.
 - In the General tab select > Settings
 - `Import All Settings and Data...`
 - Load from `~/dev/dotfiles/iterm2`
+
+### Mailmap ###
+
+- Install configuration
+    - This is in your key vault and lives in `~/.mailmap`
 
 ### NVim ###
 

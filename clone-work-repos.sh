@@ -358,6 +358,7 @@ CORE_REPOS=(
     elsevier-research/dp-core-jfrog-tokens
     elsevier-research/dp-core-kibana-proxy
     elsevier-research/dp-core-spinnaker
+    elsevier-research/dp-mvn-archetype-kafka-service
 )
 
 CORE_INFRA_REPOS=(
