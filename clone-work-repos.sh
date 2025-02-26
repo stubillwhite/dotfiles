@@ -19,25 +19,24 @@ ARCHITECTURE_REPOS=(
 
 DKP_REPOS=(
     elsevier-research/dkp-aws-scripts
-    elsevier-research/dkp-base-image
     elsevier-research/dkp-batch-rest-tests
     elsevier-research/dkp-core
     elsevier-research/dkp-core-authentication
     elsevier-research/dkp-core-batch
     elsevier-research/dkp-core-dereferencing-service
     elsevier-research/dkp-core-imagefinder
-    elsevier-research/dkp-core-infra
     elsevier-research/dkp-core-platform
     elsevier-research/dkp-core-resources-service
     elsevier-research/dkp-core-vtw-integration
-    elsevier-research/dkp-dist-docker
     elsevier-research/dkp-ewii-pcmt
     elsevier-research/dkp-image-finder-rest-tests
+    elsevier-research/dkp-imagefinder-logging
     elsevier-research/dkp-imagefinder-service
     elsevier-research/dkp-imagefinder-tests
     elsevier-research/dkp-imagefinder-ui
     elsevier-research/dkp-ldr-dependencies
     elsevier-research/dkp-linked-data-browser
+    elsevier-research/dkp-linked-data-browser-tests
     elsevier-research/dkp-qa-elasticjmeter
     elsevier-research/dkp-qa-ldr-performance
     elsevier-research/dkp-qa-ldr-regression
@@ -45,18 +44,15 @@ DKP_REPOS=(
     elsevier-research/dkp-qa-ui-functional
     elsevier-research/dkp-rest-tests
     elsevier-research/dkp-sct-application
-    elsevier-research/dkp-sct-deployment
     elsevier-research/dkp-sct-e2e-tests
     elsevier-research/dkp-sct-tests
     elsevier-research/dkp-taxonomy-conversion-lambda
     elsevier-research/dkp-taxonomy-exporter
-    elsevier-research/linked-data-gateway
     elsevier-research/sct-services
     elsevier-research/taxonomies-ctm-prototype
 )
 
 DKP_INFRA_REPOS=(
-    #elsevier-centraltechnology/core-aws-idc-custom-permissions
     elsevier-research/ces-terraformcontrol-cef
     elsevier-research/dkp-ami-security-updates
     elsevier-research/dkp-ansible-rest
@@ -84,7 +80,6 @@ DKP_INFRA_REPOS=(
     elsevier-research/dkp-puppet-maven
     elsevier-research/dkp-puppet-tomcat
     elsevier-research/dkp-puppetcontrol
-    elsevier-research/dkp-rest-tests
     elsevier-research/dkp-sct-deployment
     elsevier-research/dkp-sct-terraform
     elsevier-research/dkp-solr-deployment
@@ -185,6 +180,9 @@ CONCEPT_REPOS=(
     elsevier-research/dp-classification-sdg-quality-test
     elsevier-research/dp-classifications-lookup-service
     elsevier-research/dp-concept-processor
+    elsevier-research/dp-document-dataset-pdf-head-sequence-classification
+    elsevier-research/dp-enrich-classification-monitor-quality-moe
+    elsevier-research/dp-enrich-classification-monitor-quality-sdg
     elsevier-research/dp-enrich-classification-response-s3-sink
     elsevier-research/dp-enrich-classification-sdg-cafe-harvester
     elsevier-research/dp-enrich-classification-sdg-orchestrator
@@ -207,39 +205,6 @@ CONCEPT_INFRA_REPOS=(
     # elsevier-research/cef-puppet-ckan
     # elsevier-research/cef-puppet-mlapp
     # elsevier-research/cef-puppet-solr
-    # elsevier-research/ces-annotations-spi
-    # elsevier-research/ces-cef-aws-gateway
-    # elsevier-research/ces-cef-aws-gateway
-    # elsevier-research/ces-cef-fci-ksf-aws-api-gateway-sdk
-    # elsevier-research/ces-cef-fci-ksf-aws-api-gateway-sdk
-    # elsevier-research/ces-cef-mlwb
-    # elsevier-research/ces-cef-mlwb
-    # elsevier-research/ces-jenkins-config
-    # elsevier-research/ces-jenkins-libraries
-    # elsevier-research/ces-jenkins-scripts
-    # elsevier-research/ces-jenkinscontrol
-    # elsevier-research/ces-jenkinscontrol-network-storage
-    # elsevier-research/ces-jfasttext-0-2-0
-    # elsevier-research/ces-puppet-ckan
-    # elsevier-research/ces-puppet-ckan
-    # elsevier-research/ces-puppetcontrol
-    # elsevier-research/ces-puppetcontrol
-    # elsevier-research/ces-puppetcontrol-network-storage
-    # elsevier-research/ces-py-brat-tools
-    # elsevier-research/ces-python-utility-scripts
-    # elsevier-research/ces-rref-disambiguation-project
-    # elsevier-research/ces-terraform-cef-asg
-    # elsevier-research/ces-terraform-cef-asg
-    # elsevier-research/ces-terraform-cef-elb
-    # elsevier-research/ces-terraform-cef-elb
-    # elsevier-research/ces-terraform-cef-iam-role
-    # elsevier-research/ces-terraform-cef-iam-role
-    # elsevier-research/ces-terraform-cef-sqs
-    # elsevier-research/ces-terraform-cef-sqs
-    # elsevier-research/ces-terraformcontrol-cef
-    # elsevier-research/ces-terraformcontrol-cef
-    # elsevier-research/ces-terraformcontrol-network-storage
-    # elsevier-research/ces-xocs-parser
     # elsevier-research/dp-concept-domain-adrs
     # elsevier-research/dp-concept-terraform-config
 )
@@ -260,6 +225,8 @@ CONSUMPTION_REPOS=(
     elsevier-research/dp-consumption-lib-occ-to-entity-store
     elsevier-research/dp-consumption-lib-occ-to-occ-store
     elsevier-research/dp-consumption-lib-relationship-store
+    elsevier-research/dp-consumption-spark-occ-linked-parquet-store
+    elsevier-research/dp-consumption-spark-opinion-resolver
     elsevier-research/dp-consumption-parent-pom
     elsevier-research/dp-consumption-pipeline-dataset-parquet
     elsevier-research/dp-consumption-regression-test-suite
@@ -318,6 +285,8 @@ FOUNDATIONS_REPOS=(
     elsevier-research/rdp-foundations-kafka-stream-application
     elsevier-research/rdp-foundations-meta-service-hello-world
     elsevier-research/rdp-foundations-perf-test
+    elsevier-research/rdp-foundations-playground-service
+    elsevier-research/rdp-foundations-python-playground-service
     elsevier-research/rdp-foundations-s3-bucket-review-service
     elsevier-research/rdp-foundations-service-hello-world
     elsevier-research/rdp-works-mlops-distributed-training
@@ -592,8 +561,6 @@ SANDBOX_REPOS=(
 # ======================================
 
 RECOMMENDERS_REPOS=(
-    # elsevier-research/kd-architecture-n-design
-    elsevier-research/kd-recs-airflow-dags
     elsevier-research/kd-recs-api
     elsevier-research/kd-recs-api-common
     elsevier-research/kd-recs-api-jobs
@@ -610,6 +577,7 @@ RECOMMENDERS_REPOS=(
     elsevier-research/kd-recs-data-access-lib
     elsevier-research/kd-recs-data-access-spark-for-recs-lib
     elsevier-research/kd-recs-data-access-spark-lib
+    elsevier-research/kd-recs-dataset-pruner
     elsevier-research/kd-recs-domain-lib
     elsevier-research/kd-recs-event-log-processor
     elsevier-research/kd-recs-event-logger-lambda
@@ -643,9 +611,6 @@ RECOMMENDERS_REPOS=(
     elsevier-research/kd-recs-s3-to-kinesis-lambda
     elsevier-research/kd-recs-scopus-access-lib
     elsevier-research/kd-recs-scopus-article-metadata-extractor
-    elsevier-research/kd-work-recommendations-graphql
-    elsevier-research/kd-work-recommendations-graphql-test
-    elsevier-research/kd-work-recommendations-graphql-infra
     elsevier-research/kd-recs-scripts
     elsevier-research/kd-recs-sd-article-metadata-extractor
     elsevier-research/kd-recs-sd-article-recommender-api
@@ -660,6 +625,9 @@ RECOMMENDERS_REPOS=(
     elsevier-research/kd-recs-sutd-user-signals-generator
     elsevier-research/kd-recs-tech-spikes
     elsevier-research/kd-recs-test-data
+    elsevier-research/kd-work-recommendations-graphql
+    elsevier-research/kd-work-recommendations-graphql-infra
+    elsevier-research/kd-work-recommendations-graphql-test
     elsevier-research/kd-recs-utils
     elsevier-research/kd-recs-validation
     elsevier-research/kd-recs-validation-app
@@ -732,13 +700,15 @@ RECOMMENDERS_INFRA_REPOS=(
 # ======================================
 
 BUTTER_CHICKEN_REPOS=(
-    # elsevier-research/kd-search-test
+    # elsevier-research/kd-python-app-test
+    # elsevier-research/kd-queruintent-analysis
+    # elsevier-research/kd-shared-genai-service-test
     elsevier-research/kd-apollo-router
     elsevier-research/kd-app-framework
     elsevier-research/kd-app-template
     elsevier-research/kd-artefacts
     elsevier-research/kd-automation-autocomplete
-    elsevier-research/kd-automation-document-embeddings
+    elsevier-research/kd-automation-embeddings
     elsevier-research/kd-automation-enricher
     elsevier-research/kd-automation-genai
     elsevier-research/kd-automation-splitter
@@ -766,6 +736,9 @@ BUTTER_CHICKEN_REPOS=(
     elsevier-research/kd-genai-service
     elsevier-research/kd-graph-service-api-spec
     elsevier-research/kd-helm-charts
+    elsevier-research/kd-hydration-dynamodb-client
+    elsevier-research/kd-hydration-graphql-app
+    elsevier-research/kd-hydration-ingestion
     elsevier-research/kd-ingestion-performance-poc
     elsevier-research/kd-jenkins-pipelines
     elsevier-research/kd-kafka-common
@@ -778,8 +751,6 @@ BUTTER_CHICKEN_REPOS=(
     elsevier-research/kd-person-finder-service
     elsevier-research/kd-personfinder-performance
     elsevier-research/kd-pf-tools
-    elsevier-research/kd-python-app-test
-    elsevier-research/kd-queruintent-analysis
     elsevier-research/kd-query-intent
     elsevier-research/kd-query-simulation
     elsevier-research/kd-queryintent-analysis
@@ -788,6 +759,7 @@ BUTTER_CHICKEN_REPOS=(
     elsevier-research/kd-scripts-etc
     elsevier-research/kd-sda-batch-full-ingestion-poc
     elsevier-research/kd-sebright-app
+    elsevier-research/kd-shared-genai-service
     elsevier-research/kd-shared-search-api
     elsevier-research/kd-similarsearch-automation
     elsevier-research/kd-similarsearch-performancetesting
@@ -804,6 +776,7 @@ BUTTER_CHICKEN_REPOS=(
     elsevier-research/kd-tio-terraform-neo4j-enterprise
     elsevier-research/kd-vector-calculation-service
     elsevier-research/kd-vector-dbs
+    elsevier-research/kd-work-hydration-graphql
     elsevier-research/kd-xocs-feed-translator-test
     elsevier-research/poc-kd-genai-multiagent
 )
@@ -859,7 +832,6 @@ MISC_REPOS=(
     elsevier-research/kd-automation-shared-search
     elsevier-research/kd-ds-pagerank-graph
     elsevier-research/kd-performance-shared-search
-    elsevier-research/kd-scopus-search
     elsevier-research/kd-scopus-search2
     elsevier-research/kd-search-akka-healthcheck
     elsevier-research/kd-search-autocomplete-indexer
