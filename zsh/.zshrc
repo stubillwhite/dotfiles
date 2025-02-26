@@ -2105,40 +2105,13 @@ function xq-paths() {
 # KeePassXC                         {{{2
 # ======================================
 
-alias keepassxc='/Applications/KeePassXC.app/Contents/MacOS/KeePassXC --allow-screencapture'
+alias keepassxc='/Applications/KeePassXC.app/Contents/MacOS/KeePassXC --allow-screencapture &'
 
 alias keepassxc-cli='/Applications/KeePassXC.app/Contents/MacOS/keepassxc-cli'
 
 alias keepassxc-get-ssh='keepassxc-cli clip ~/Dropbox/Private/keepassx/personal.kdbx /Personal/SSH'
 
 alias keepassxc-get-gpg='keepassxc-cli clip ~/Dropbox/Private/keepassx/elsevier.kdbx /Elsevier/GPG'
-
-# Python                            {{{2
-# ======================================
-
-alias py-env-activate='source ./bin/activate'
-
-alias py-env-deactivate='deactivate'
-
-function py-env-init() {
-    touch requirements.txt
-    touch app.py
-    cp -n ~/Dev/my-stuff/dotfiles/misc/makefile.python   makefile
-    cp -n ~/Dev/my-stuff/dotfiles/misc/.gitignore.python .gitignore
-
-    ## print 'truststore'                                        >> requirements.txt
-    ## print 'import truststore\ntruststore.inject_into_ssl()\n' >> app.py
-
-	## # TODO: Certificates still seem iffy
-	## local certificate=/Users/white1/Dev/certificates/ZscalerRootCertificate-2048-SHA256.crt
-    ## py-env-activate \
-    ## 	&& pip3 config set global.cert ${certificate}
-
-    #echo cat ${certificate} >> `python -c 'import certifi; print(certifi.where())'`
-}
-
-# Should no longer be required
-# alias py-env-install='pip3 install --trusted-host files.pythonhosted.org --trusted-host pypi.org --trusted-host pypi.python.org --default-timeout=1000'
 
 # Ripgrep                           {{{2
 # ======================================
