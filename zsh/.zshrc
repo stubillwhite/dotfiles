@@ -623,7 +623,7 @@ function ssh-config () {
     fi
 }
 compdef "_arguments \
-    '1:environment arg:(recs newsflo steel-thread)'" \
+    '1:environment arg:(recs personal)'" \
     ssh-config
 
 # Specific tools                                                            {{{1
@@ -1558,7 +1558,7 @@ function git-prompt-help() {
 
 function git-update-projects() {
     local projects=(
-        #~/dev/kd/butter-chicken
+        ~/dev/kd/butter-chicken
         #~/dev/kd/misc
         ~/dev/kd/recs 
         #~/dev/kd/spirograph
@@ -1806,7 +1806,7 @@ function git-stats-top-team-committers-by-repo() {
     echo 'Repos with authors in the team'
     read-heredoc sqlScript <<HEREDOC
         |.mode columns
-        |select repo_name, rank, author, total from (
+        |select repo_name, author, total from (
         |   select *, row_number() over (partition by repo_name order by total desc) as rank 
         |   from (
         |      select repo_name, author, count(*) as total
@@ -1817,21 +1817,6 @@ function git-stats-top-team-committers-by-repo() {
         |) e
         |where rank <= 5
         |order by repo_name, rank;
-HEREDOC
-
-    read-heredoc sqlScript <<HEREDOC
-        |.mode columns
-        |select repo_name, idx, author, total from (
-        |   select *, row_number() over (partition by repo_name order by total desc) as idx 
-        |   from (
-        |      select repo_name, author, count(*) as total
-        |      from '.git-stats.csv' 
-        |      where author in (${teamMembers})
-        |      group by (repo_name, author)
-        |   ) d
-        |) e
-        |where idx <= 5
-        |order by repo_name, idx;
 HEREDOC
 
     print ${sqlScript} | gsed 's/^ \+|//' > .script
@@ -2371,3 +2356,5 @@ function days-between() {
 function age() {
     days-between $1 $(date --iso-8601=s)
 }
+
+TFENV_ARCH=amd64
