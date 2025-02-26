@@ -124,12 +124,21 @@ function create-links-for-files-at-path() {
 # Installation                                                              {{{1
 # ==============================================================================
 
+# General                           {{{2
+# ======================================
+
 create-links-for-files $HOME         "$FILES[@]"
 
 mkdir -p $HOME/.config/
 create-links-for-files $HOME/.config "$CONFIG_DIRS[@]"
 
+# K9s                               {{{2
+# ======================================
+
 create-links-for-files-at-path ~/Library/Application\ Support/k9s k9s
+
+# Emacs                             {{{2
+# ======================================
 
 if [ -d ~/.emacs.d ]; then
     pushd ~/.emacs.d > /dev/null
@@ -143,3 +152,9 @@ if [ -d ~/.emacs.d ]; then
 else
     git clone https://github.com/plexus/chemacs2.git ~/.emacs.d
 fi
+
+# SSH                               {{{2
+# ======================================
+
+# Default to personal config until reconfigured
+ln -s ./ssh/.ssh/ssh-configs/personal-ssh-config "${HOME}/.ssh/config"

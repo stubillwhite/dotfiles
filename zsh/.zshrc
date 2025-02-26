@@ -1897,7 +1897,9 @@ function git-stats-list-commits-by-author() {
     read-heredoc sqlScript <<HEREDOC
         |.mode columns
         |select distinct repo_name, commit_date, comment
-        |from '.git-stats.csv' order by commit_date desc
+        |from '.git-stats.csv' 
+        |where author = '${authorName}'
+        |order by commit_date desc
 HEREDOC
 
     print ${sqlScript} | gsed 's/^ \+|//' > .script
@@ -1921,6 +1923,7 @@ function git-stats-total-commits-by-author-per-month() {
         |select strftime('%Y-%m', commit_date) as 'year_month', count(*) as total from (
         |    select distinct repo_name, commit_date, comment
         |    from '.git-stats.csv' 
+        |    where author = '${authorName}'
         |) d
         |group by year_month order by year_month desc
 HEREDOC

@@ -157,7 +157,9 @@ org-mode protocol to run without prompting.
     - `General` 
         - Enable compact view
         - Disable transparency
-    - `Reading` > Mark email as read only after five seconds
+    - `Reading` 
+        - Mark email as read only after five seconds
+        - Disable focused inbox
     - `Composing` > Set wait to send messages to the maximum
     - `Calendar`
         - Second timezone `-5:00` EST
