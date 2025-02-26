@@ -1,5 +1,6 @@
 /leiningen/.lein/self-installs
 /leiningen/.lein/repl-port
+/ssh/.ssh/config
 /ssh/.ssh/id_rsa*
 /ssh/.ssh/known_hosts*
 /ssh/.ssh/environment
