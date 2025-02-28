@@ -1,16 +1,17 @@
 /leiningen/.lein/self-installs
 /leiningen/.lein/repl-port
+
 /ssh/.ssh/config
 /ssh/.ssh/id_rsa*
 /ssh/.ssh/known_hosts*
 /ssh/.ssh/environment
 /ssh/.ssh/keys
+
 /homebrew/Brewfile.lock.json
 /homebrew/Brewfile.*.lock.json
-/vale/styles/alex
-/vale/styles/proselint
-/vale/styles/write-good
-/vale/styles/Readability
-.gitconfig.local
-**/*.no-commit
 
+/ncspot/ncspot/userstate.cbor
+
+.gitconfig.local
+
+**/*.no-commit

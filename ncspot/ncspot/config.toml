@@ -1,0 +1,97 @@
+# vim:fdm=marker
+
+# https://github.com/hrkfdn/ncspot/blob/main/doc/users.md#configuration
+
+# Basic settings                                                            {{{1
+# ==============================================================================
+
+hide_display_names = true # Hide usernames on playlists
+
+# Full list ["tracks", "albums", "artists", "playlists", "podcasts", "browse"]
+library_tabs = ["browse", "playlists", "artists", "albums", "tracks"]
+
+# Visuals                                                                   {{{1
+# ==============================================================================
+
+statusbar_format = "%title - %artists - %album"
+
+track_format.left = "%title"
+track_format.center = "%artists"
+track_format.right = "%album saved"
+
+# Theme                                                                     {{{1
+# ==============================================================================
+
+[theme]
+
+background              = "#262626"   # LightBlack
+primary                 = "#bcbcbc"   # LightGrey
+secondary               = "#464646"   # VeryDarkGrey
+title                   = "#5f8787"   # BlueGreen
+statusbar               = "#5f8787"   # BlueGreen
+statusbar_progress      = "#5f8787"   # BlueGreen
+statusbar_bg            = "#262626"   # LightBlack
+highlight               = "#ffffff"   # White
+highlight_bg            = "#464646"   # VeryDarkGrey
+playing                 = "#5f8787"   # BlueGreen
+playing_selected        = "#5f8787"   # BlueGreen
+playing_bg              = "#262626"   # LightBlack
+cmdline                 = "#262626"   # LightBlack
+cmdline_bg              = "#bcbcbc"   # LightGrey
+search_match            = "#5f8787"   # BlueGreen
+error                   = "#af5f5f"   # LightGrey
+error_bg                = "#262626"   # LightBlack
+
+# Keybindings                                                               {{{1
+# ==============================================================================
+
+[keybindings]
+
+# Navigation                        {{{2
+# ======================================
+
+"h"      = "move left 1"
+"j"      = "move down 1"
+"k"      = "move up 1"
+"l"      = "move right 1"
+"Ctrl+f" = "pagedown 1"
+"Ctrl+b" = "pageup 1"
+
+"p" = "move playing"
+
+"F1"   = "focus library"
+"F2"   = "focus queue"
+"F3"   = "focus search"
+
+"Ctrl+h" = "back"
+
+"Shift+o" = "open current"
+"o"       = "open selected"
+"Shift+a" = "goto artist"
+"a"       = "goto album"
+"m"       = "similar selected"
+
+
+# Playback                          {{{2
+# ======================================
+
+"Space"   = "playpause"
+"Enter"   = "play"
+"q"       = "queue"
+"s"       = "stop"
+
+"Shift+h" = "seek -10000"
+"Shift+l" = "seek +10000"
+
+"="       = "volup 5"
+"-"       = "voldown 5"
+
+"f"       = "next"
+"b"       = "previous"
+
+# Queue                             {{{2
+# ======================================
+
+"Shift+c" = "clear"
+"Shift+j" = "shift down 1"
+"Shift+k" = "shift up 1"

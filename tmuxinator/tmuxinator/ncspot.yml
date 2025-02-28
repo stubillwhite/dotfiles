@@ -1,0 +1,8 @@
+name: ncspot
+
+windows:
+  - ncspot:
+      layout: even-horizontal
+      panes:
+        - ncspot:
+            - ncspot

@@ -43,6 +43,7 @@ CONFIG_DIRS=(
     "htop/htop"
     "tmuxinator/tmuxinator"
     "yamllint/yamllint"
+    "ncspot/ncspot"
 )
 
 RED='\033[0;31m'
