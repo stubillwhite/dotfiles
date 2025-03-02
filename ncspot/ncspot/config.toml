@@ -63,6 +63,8 @@ error_bg                = "#262626"   # LightBlack
 "F2"   = "focus queue"
 "F3"   = "focus search"
 
+"Esc"    = "back"
+"Ctrl+g" = "back"
 "Ctrl+h" = "back"
 
 "Shift+o" = "open current"

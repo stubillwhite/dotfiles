@@ -2,7 +2,9 @@ name: ncspot
 
 windows:
   - ncspot:
-      layout: even-horizontal
+      layout: even-vertical
       panes:
         - ncspot:
             - ncspot
+  - muti-scrobbler:
+      - ~/dev/tools/multi-scrobbler/run.sh
