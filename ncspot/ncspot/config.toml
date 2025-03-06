@@ -17,7 +17,7 @@ statusbar_format = "%title - %artists - %album"
 
 track_format.left = "%title"
 track_format.center = "%artists"
-track_format.right = "%album saved"
+track_format.right = "%album %saved"
 
 # Theme                                                                     {{{1
 # ==============================================================================
@@ -57,8 +57,6 @@ error_bg                = "#262626"   # LightBlack
 "Ctrl+f" = "pagedown 1"
 "Ctrl+b" = "pageup 1"
 
-"p" = "move playing"
-
 "F1"   = "focus library"
 "F2"   = "focus queue"
 "F3"   = "focus search"
@@ -89,7 +87,9 @@ error_bg                = "#262626"   # LightBlack
 "-"       = "voldown 5"
 
 "f"       = "next"
+"n"       = "next"
 "b"       = "previous"
+"p"       = "previous"
 
 # Queue                             {{{2
 # ======================================
