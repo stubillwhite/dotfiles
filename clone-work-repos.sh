@@ -700,17 +700,17 @@ RECOMMENDERS_INFRA_REPOS=(
 # ======================================
 
 BUTTER_CHICKEN_REPOS=(
-    # elsevier-research/kd-python-app-test
-    # elsevier-research/kd-queruintent-analysis
-    # elsevier-research/kd-shared-genai-service-test
     elsevier-research/kd-apollo-router
+    elsevier-research/kd-apollo-router-perf-test
     elsevier-research/kd-app-framework
     elsevier-research/kd-app-template
     elsevier-research/kd-artefacts
     elsevier-research/kd-automation-autocomplete
+    elsevier-research/kd-automation-document-embeddings
     elsevier-research/kd-automation-embeddings
     elsevier-research/kd-automation-enricher
     elsevier-research/kd-automation-genai
+    elsevier-research/kd-automation-shared-genai
     elsevier-research/kd-automation-splitter
     elsevier-research/kd-automation-stitcher
     elsevier-research/kd-cto-legacy-rest-test
@@ -742,6 +742,10 @@ BUTTER_CHICKEN_REPOS=(
     elsevier-research/kd-ingestion-performance-poc
     elsevier-research/kd-jenkins-pipelines
     elsevier-research/kd-kafka-common
+    elsevier-research/kd-labs-genai-query-logs-analysis
+    elsevier-research/kd-labs-sret-backend-nestjs
+    elsevier-research/kd-labs-sret-frontend
+    elsevier-research/kd-labs-webapp-search-relevance
     elsevier-research/kd-mic-lambda
     elsevier-research/kd-multibranch-test
     elsevier-research/kd-performance-embeddings

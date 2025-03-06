@@ -1095,7 +1095,7 @@ function git-for-each-repo-parallel() {
     local dirs=$(find . -maxdepth 1 -type d)
 
     echo "$dirs" \
-        | env_parallel --env "$1" -j5 \
+        | env_parallel --env "$1" -j10 \
             "
             pushd {} > /dev/null;                               \
             if git rev-parse --git-dir > /dev/null 2>&1; then   \
@@ -2333,4 +2333,10 @@ function age() {
     days-between $1 $(date --iso-8601=s)
 }
 
-TFENV_ARCH=amd64
+colors () {
+    for i in {0..255}
+    do
+        print -Pn "%K{$i}  %k%F{$i}${(l:3::0:)i}%f " ${${(M)$((i%6)):#3}:+$'\n'}
+    done
+}
+

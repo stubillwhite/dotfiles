@@ -118,6 +118,7 @@ cask "hammerspoon"                              # Desktop automation application
 
 # Fonts
 cask "font-fantasque-sans-mono"                 # A font family with a great monospaced variant for programmers
+cask "font-fantasque-sans-mono-nerd-font"       # FantasqueSansM Nerd Font (Fantasque Sans Mono)
 
 # Version control
 brew "bfg"                                      # Remove large files or passwords from Git history like git-filter-branch

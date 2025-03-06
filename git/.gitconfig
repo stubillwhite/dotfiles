@@ -59,11 +59,17 @@
 [mergetool "vimmmerge"]
     cmd = nvim -d $BASE $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'
 
+# For GitHub integration in IntelliJ
 [url "github-work"]
     insteadOf = git@github.com/elsevier-research
 
-[includeIf "gitdir:~/dev/bassc/"]
-    path = ~/dev/my-stuff/dotfiles/git/bassc-config/.gitconfig
+[mailmap]
+	file = ~/.mailmap
+
+[log]
+	mailmap = true
+
+# Personal
 
 [includeIf "gitdir:~/dev/my-stuff/"]
     path = ~/dev/my-stuff/dotfiles/git/personal-config/.gitconfig
@@ -77,6 +83,8 @@
 [includeIf "gitdir:~/Dropbox/Private/obsidian/"]
     path = ~/dev/my-stuff/dotfiles/git/personal-config/.gitconfig
 
+# Work
+
 [includeIf "gitdir:~/dev/scratchpad/"]
     path = ~/dev/my-stuff/dotfiles/git/work-config/.gitconfig
 
@@ -86,8 +94,3 @@
 [includeIf "gitdir:~/dev/kd/"]
     path = ~/dev/my-stuff/dotfiles/git/work-config/.gitconfig
 
-[mailmap]
-	file = ~/.mailmap
-
-[log]
-	mailmap = true
