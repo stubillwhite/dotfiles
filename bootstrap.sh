@@ -44,6 +44,7 @@ CONFIG_DIRS=(
     "tmuxinator/tmuxinator"
     "yamllint/yamllint"
     "ncspot/ncspot"
+    "lazygit/lazygit"
 )
 
 RED='\033[0;31m'

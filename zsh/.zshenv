@@ -19,7 +19,7 @@ function if-darwin() { [[ "$(uname)" == "Darwin" ]]; }
 function if-linux() { [[ "$(uname)" == "Linux" ]]; }
 
 # Usage: if-work-machine && { echo foo }
-function if-work-machine() { [[ "$(scutil --get ComputerName)" == "ELSLAPM-156986" ]]; }
+function if-work-machine() { [[ "$(scutil --get ComputerName)" == "ELSLOWM-404903" ]]; }
 function if-personal-machine() { [[ "$(scutil --get ComputerName)" == "stubillwhite-macbook-pro" ]] || [[ "$(scutil --get ComputerName)" == "stubillwhite-ThinkPad-X240" ]] ; }
 
 # Source script if it exists
@@ -54,6 +54,8 @@ export PATH=$PATH:/Applications/IntelliJ\ IDEA\ CE.app/Contents/MacOS
 export PATH=$PATH:~/dev/my-stuff/shell-utils
 export PATH=$PATH:/usr/bin
 export PATH=$PATH:~/.local/bin
+
+export XDG_CONFIG_HOME="$HOME/.config"
 
 # Included scripts                                                          {{{1
 # ==============================================================================

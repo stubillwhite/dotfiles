@@ -1,0 +1,10 @@
+name: upgrade
+
+windows:
+  - brew:
+      - brew upgrade
+      - exit
+  - git-repos:
+      - pushd ~/dev/my-stuff && git-repos-pull
+      - pushd ~/dev/rdp && git-repos-pull
+      - exit
