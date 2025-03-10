@@ -2,7 +2,7 @@
 
 ## Basics ##
 
-- `Ctrl+|` - Leader
+- `Ctrl+\` - Leader
 - `:` - Command
 - `d` - Disconnect
 
