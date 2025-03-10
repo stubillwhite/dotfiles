@@ -1,9 +1,0 @@
-name: my-stuff
-root: ~/dev/my-stuff/
-
-windows:
-  - my-stuff:
-      layout: even-vertical
-      panes:
-        - main:
-            - git-repos-pull

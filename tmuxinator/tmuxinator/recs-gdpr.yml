@@ -1,9 +1,0 @@
-name: recs-gdpr
-root: ~/dev/recommenders/kd-recs-utils/gdpr
-
-windows:
-  - recs-gdpr:
-      layout: even-vertical
-      panes:
-        - main:
-            - py-env-activate

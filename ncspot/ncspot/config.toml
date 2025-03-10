@@ -64,6 +64,7 @@ error_bg                = "#262626"   # LightBlack
 "Esc"    = "back"
 "Ctrl+g" = "back"
 "Ctrl+h" = "back"
+"Ctrl+o" = "back"
 
 "Shift+o" = "open current"
 "o"       = "open selected"

@@ -1,9 +1,0 @@
-name: spirograph
-root: ~/dev/kd/spirograph/
-
-windows:
-  - recs:
-      layout: even-vertical
-      panes:
-        - main:
-            - git-repos-pull

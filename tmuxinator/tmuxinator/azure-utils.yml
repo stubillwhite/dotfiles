@@ -8,4 +8,4 @@ windows:
         - code:
             - vim src/azure_utils/app.py
         - output:
-            - git ls-files | entr -s 'make run'
+            - git ls-files | entr -s 'make run-all'

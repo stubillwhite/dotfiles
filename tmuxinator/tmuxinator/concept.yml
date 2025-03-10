@@ -1,9 +1,0 @@
-name: concept
-root: ~/dev/rdp/concept/
-
-windows:
-  - cef:
-      layout: even-vertical
-      panes:
-        - main:
-            - git-repos-pull

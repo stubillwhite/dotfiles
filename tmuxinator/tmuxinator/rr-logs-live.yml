@@ -6,8 +6,8 @@ windows:
       layout: even-vertical
       panes:
         - data-pump:
-            - aws-recs-prod > /dev/null
+            - aws-login recs prod > /dev/null
             - awslogs get --no-group --no-stream --timestamp /aws/lambda/recs-rev-manuscripts-data-pump-lambda-live
         - manuscripts:
-            - aws-recs-prod > /dev/null
+            - aws-login recs prod > /dev/null
             - awslogs get --no-group --no-stream --timestamp /aws/lambda/recs-reviewers-recommender-lambda-live

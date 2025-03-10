@@ -1,9 +1,0 @@
-name: consumption
-root: ~/dev/rdp/consumption
-
-windows:
-  - consumption:
-      layout: even-vertical
-      panes:
-        - main:
-            - git-repos-pull

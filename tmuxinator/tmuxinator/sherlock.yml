@@ -1,9 +1,0 @@
-name: sherlock
-root: ~/trash/random-repos/sherlock/
-
-windows:
-  - sherlock:
-      layout: even-vertical
-      panes:
-        - main:
-            - py-env-activate
