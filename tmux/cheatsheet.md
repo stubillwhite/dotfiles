@@ -6,11 +6,18 @@
 - `:` - Command
 - `d` - Disconnect
 
+## Config reloading ##
+
+- `I` - Install plugins
+- `r` - Reload config
+
 ## Panes ##
 
 - `|` - Split pane vertically
 - `-` - Split pane horizontally
 - `x` - Kill current pane
+
+Alt and arrow keys, or prefix and Vim keys for navigating panes
 
 ## Windows ##
 
