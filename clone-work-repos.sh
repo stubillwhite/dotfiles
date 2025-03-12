@@ -735,6 +735,7 @@ BUTTER_CHICKEN_REPOS=(
     elsevier-research/kd-genai-java-service
     elsevier-research/kd-genai-service
     elsevier-research/kd-graph-service-api-spec
+    elsevier-research/kd-hallucination-detection
     elsevier-research/kd-helm-charts
     elsevier-research/kd-hydration-dynamodb-client
     elsevier-research/kd-hydration-graphql-app
@@ -755,6 +756,8 @@ BUTTER_CHICKEN_REPOS=(
     elsevier-research/kd-person-finder-service
     elsevier-research/kd-personfinder-performance
     elsevier-research/kd-pf-tools
+    elsevier-research/kd-python-app-framework
+    elsevier-research/kd-python-app-test
     elsevier-research/kd-query-intent
     elsevier-research/kd-query-simulation
     elsevier-research/kd-queryintent-analysis
@@ -791,6 +794,8 @@ BUTTER_CHICKEN_INFRA_REPOS=(
     elsevier-research/kd-cto-legacy-rest-infra
     elsevier-research/kd-document-relations-store-infra
     elsevier-research/kd-evaluation-service-infra
+    elsevier-research/kd-shared-genai-infra
+    elsevier-research/kd-genai-service-infra
     elsevier-research/kd-hydration-graphql-infra
     elsevier-research/kd-organization-hydration-graphql-infra
     elsevier-research/kd-person-hydration-graphql-infra
@@ -807,6 +812,8 @@ BUTTER_CHICKEN_INFRA_REPOS=(
 # ======================================
 
 SPIROGRAPH_REPOS=(
+    elsevier-research/kd-concept-traversal-graphql
+    elsevier-research/kd-conflict-of-interest
     elsevier-research/kd-graph-airflow
     elsevier-research/kd-graph-automation
     elsevier-research/kd-graph-comparer
@@ -816,7 +823,9 @@ SPIROGRAPH_REPOS=(
     elsevier-research/kd-graph-neo4j-poc
     elsevier-research/kd-graph-performance-test
     elsevier-research/kd-graph-quality-notebooks
+    elsevier-research/kd-graph-service-api-test
     elsevier-research/kd-graph-service-test-automation
+    elsevier-research/kd-graph-spark-scripts
     elsevier-research/kd-graph-updater
     elsevier-research/kd-graph-version-manager
     elsevier-research/kd-graphql-gateway
@@ -835,6 +844,8 @@ MISC_REPOS=(
     elsevier-research/kd-automation-graphql-mendeley-search
     elsevier-research/kd-automation-shared-search
     elsevier-research/kd-ds-pagerank-graph
+    elsevier-research/kd-graph-service-infra
+    elsevier-research/kd-graphql-gateway-infra
     elsevier-research/kd-performance-shared-search
     elsevier-research/kd-scopus-search2
     elsevier-research/kd-search-akka-healthcheck
