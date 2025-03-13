@@ -1,1 +1,26 @@
 promptToReturnFromSubprocess: false
+
+gui:
+  theme:
+    activeBorderColor:
+      - '#585858'
+      - bold
+    inactiveBorderColor:
+      - '#464646'
+    optionsTextColor:
+      - '#1e66f5'
+    selectedLineBgColor:
+      - '#5f8787'
+    cherryPickedCommitBgColor:
+      - '#8fafd7'
+    cherryPickedCommitFgColor:
+      - '#179299'
+    unstagedChangesColor:
+      - '#5f8787'
+    defaultFgColor:
+      - '#bcbcbc'
+    searchingActiveBorderColor:
+      - '#8787af'
+
+  authorColors:
+    '*': '#5f8787'

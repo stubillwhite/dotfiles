@@ -1,0 +1,7 @@
+name: stagekick
+
+windows:
+  - stagekick:
+      root: ~/dev/my-stuff/stagekick
+      panes:
+        - make run-append-to-db

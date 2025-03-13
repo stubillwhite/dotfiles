@@ -1,0 +1,9 @@
+name: emptyepsilon
+
+windows:
+  - workspace:
+      root: ~/dev/for-nat/clockwork-dog-fork
+  - emptyepsilon:
+      root: ~/dev/for-nat/clockwork-dog-fork/workspace/EmptyEpsilon
+  - seriousproton:
+      root: ~/dev/for-nat/clockwork-dog-fork/workspace/SeriousProton
