@@ -223,6 +223,7 @@ CONSUMPTION_REPOS=(
     elsevier-research/dp-consumption-lib-dataset-builder
     elsevier-research/dp-consumption-lib-metadata-store
     elsevier-research/dp-consumption-lib-occ-to-entity-store
+    elsevier-research/dp-consumption-databricks-report-generator
     elsevier-research/dp-consumption-lib-occ-to-occ-store
     elsevier-research/dp-consumption-lib-relationship-store
     elsevier-research/dp-consumption-spark-occ-linked-parquet-store
@@ -242,6 +243,7 @@ CONSUMPTION_REPOS=(
     elsevier-research/dp-consumption-service-test-data-producer
     elsevier-research/dp-consumption-spark-cdb-relationships-producer
     elsevier-research/dp-consumption-spark-template
+    elsevier-research/dp-consumption-lib-spark
     elsevier-research/dp-consumption-test-automation
     elsevier-research/dp-consumption-test-end-to-end
     elsevier-research/dp-consumption-test-relationship-store
@@ -288,6 +290,7 @@ FOUNDATIONS_REPOS=(
     elsevier-research/rdp-foundations-playground-service
     elsevier-research/rdp-foundations-python-playground-service
     elsevier-research/rdp-foundations-s3-bucket-review-service
+    elsevier-research/rdp-foundations-scala-demo-service
     elsevier-research/rdp-foundations-service-hello-world
     elsevier-research/rdp-works-mlops-distributed-training
     elsevier-research/rdp-works-mlops-example-bert-model-kserve-predictor
@@ -565,6 +568,7 @@ RECOMMENDERS_REPOS=(
     elsevier-research/kd-recs-api-common
     elsevier-research/kd-recs-api-jobs
     elsevier-research/kd-recs-api-performance
+    elsevier-research/kd-recs-genai-explanations-invitations
     elsevier-research/kd-recs-api-system-tests
     elsevier-research/kd-recs-app-common
     elsevier-research/kd-recs-auth-common
@@ -740,7 +744,12 @@ BUTTER_CHICKEN_REPOS=(
     elsevier-research/kd-hydration-dynamodb-client
     elsevier-research/kd-hydration-graphql-app
     elsevier-research/kd-hydration-ingestion
+    elsevier-research/kd-ingestion-components-configuration
     elsevier-research/kd-ingestion-performance-poc
+    elsevier-research/kd-ingestion-scripts
+    elsevier-research/kd-ingestion-sync
+    elsevier-research/kd-java-app-framework
+    elsevier-research/kd-java-app-template
     elsevier-research/kd-jenkins-pipelines
     elsevier-research/kd-kafka-common
     elsevier-research/kd-labs-genai-query-logs-analysis

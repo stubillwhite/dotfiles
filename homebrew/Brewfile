@@ -28,6 +28,7 @@ cask "syncthing"                                # Open source continuous file sy
 cask "intellij-idea-ce"                         # IDE for Java programming - Community Edition
 cask "pycharm-ce"                               # IDE for Python programming - Community Edition
 cask "visual-studio-code"                       # Open-source code editor
+cask "visual-studio-code@insiders"              # Open-source code editor - Preview version
 
 # Database clients
 cask 'dbeaver-community'                        # Free universal database tool and SQL client
