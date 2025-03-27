@@ -70,6 +70,7 @@ brew "gnu-sed"                                  # GNU implementation of the famo
 brew "gnuplot"                                  # Command-driven, interactive function plotting
 brew "graphviz"                                 # Graph visualization software from AT&T and Bell Labs
 brew "htop"                                     # Improved top (interactive process viewer)
+brew "jc"                                       # Serializes the output of command-line tools to structured JSON output
 brew "jq"                                       # Lightweight and flexible command-line JSON processor
 brew "miller"                                   # Like sed, awk, cut, join & sort for name-indexed data such as CSV
 brew "ncdu"                                     # NCurses Disk Usage
@@ -79,7 +80,6 @@ brew "parallel"                                 # Shell command parallelization 
 brew "pkg-config"                               # Manage compile and link flags for libraries
 brew "pygments"                                 # Generic syntax highlighter
 brew "python-yq"                                # Command-line YAML and XML processor that wraps jq
-#brew "q"                                        # Run SQL directly on CSV or TSV files
 brew "ripgrep"                                  # Search tool like grep and The Silver Searcher
 brew "sampler"                                  # Tool for shell commands execution, visualization and alerting
 brew "slackcat"                                 # Command-line utility for posting snippets to Slack

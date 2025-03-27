@@ -3,6 +3,7 @@
 ################################################################################
 
 # Basics
+cask 'microsoft-auto-update'                    # Microsoft Auto Update
 cask 'microsoft-edge'                           # Web browser
 
 # Drawing
@@ -35,9 +36,6 @@ brew 'rockymadden/rockymadden/slack-cli'        # Powerful Slack CLI via pure ba
 # Development
 ################################################################################
 
-# Conda
-cask 'miniconda'                                # Lighter version of Conda
-
 # Containers
 brew 'aws-iam-authenticator'                    # Use AWS IAM credentials to authenticate to Kubernetes
 brew 'dive'                                     # Tool for exploring each layer in a docker image
@@ -68,3 +66,6 @@ brew 'sonar-scanner'                            # Launcher to analyze a project 
 
 # Load tools
 brew 'hey'                                      # HTTP load generator, ApacheBench (ab) replacement
+
+# JIRA
+brew 'jira-cli'                                 # Feature-rich interactive Jira CLI
