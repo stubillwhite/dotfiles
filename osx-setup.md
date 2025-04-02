@@ -80,6 +80,8 @@
                 - Enable using function keys as standard function keys
             - `Modifier Keys`
                 - Change `Caps Lock` to `Control`
+        - `Dictation`
+            - Change `Shortcut` to `Press Microphone`
 
         - `Shortcuts` > `App Shortcuts`
             - Define new shortcuts for each of the following, which should match exactly what you see in the Apple menu:
