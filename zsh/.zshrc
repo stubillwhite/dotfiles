@@ -1051,6 +1051,12 @@ function docker-rm-images() {
     fi
 }
 
+function docker-update() {
+    docker desktop start
+    docker desktop update
+    docker desktop stop
+}
+
 # FZF                               {{{2
 # ======================================
 
@@ -1883,6 +1889,46 @@ HEREDOC
     duckdb < .script
     rm .script
 }
+
+# For the Git stats in the current directory, list the commits
+function git-stats-list-commits() {
+    local sqlScript
+    read-heredoc sqlScript <<HEREDOC
+        |.mode columns
+        |select distinct repo_name, commit_date, comment
+        |from '.git-stats.csv' 
+        |order by commit_date desc
+HEREDOC
+
+    print ${sqlScript} | gsed 's/^ \+|//' > .script
+    duckdb < .script
+    rm .script
+}
+
+# For the Git stats in the current directory, list the author commits in the last week
+function git-stats-list-author-commits-in-n-days() {
+    if [[ $# -ne 1 ]] ; then
+        echo 'Usage: git-stats-list-author commits-in-n-days N'
+        return 1
+    fi
+
+    local numDays=$1
+
+    local sqlScript
+    read-heredoc sqlScript <<HEREDOC
+        |.mode columns
+        |select distinct repo_name, author, commit_date, comment
+        |from '.git-stats.csv' 
+        |where date_diff('day', commit_date, current_date) <= ${numDays}
+        |  and author not in ('Jenkins')
+        |order by commit_date desc
+HEREDOC
+
+    print ${sqlScript} | gsed 's/^ \+|//' > .script
+    duckdb < .script
+    rm .script
+}
+
 
 # For the Git stats in the current directory, list the commits for a given author
 function git-stats-list-commits-by-author() {

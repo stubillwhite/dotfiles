@@ -42,6 +42,7 @@ SHALLOW_REPOS=(
     prezto
     shell-utils
     tech-radar
+    linked-data-explorer
 )
 
 RECURSIVE_REPOS=(

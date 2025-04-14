@@ -1,0 +1,11 @@
+name: rdp
+
+windows:
+  - dkp:
+      root: ~/dev/rdp/dkp/
+  - concept:
+      root: ~/dev/rdp/concept/
+  - consumption:
+      root: ~/dev/rdp/consumption/
+  - foundations:
+      root: ~/dev/rdp/foundations/

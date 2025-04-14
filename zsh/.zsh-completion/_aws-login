@@ -23,6 +23,7 @@ case "${state}" in
             'innovation'
             'dp'
             'databricks'
+            'linked-data'
          )
 
          _describe -t prjs 'project' prjs && ret=0
@@ -117,6 +118,12 @@ case "${state}" in
                 envs=(
                     'nonprod'
                     'prod'
+                )
+            ;;
+
+            (linked-data)
+                envs=(
+                    'hackday'
                 )
             ;;
         esac

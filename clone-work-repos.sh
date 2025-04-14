@@ -231,6 +231,7 @@ CONSUMPTION_REPOS=(
     elsevier-research/dp-consumption-parent-pom
     elsevier-research/dp-consumption-pipeline-dataset-parquet
     elsevier-research/dp-consumption-regression-test-suite
+    elsevier-research/dp-consumption-lib-spark
     elsevier-research/dp-consumption-service-dataset-builder
     elsevier-research/dp-consumption-service-exhibit-found-store
     elsevier-research/dp-consumption-service-occ-to-entity-store
@@ -243,10 +244,11 @@ CONSUMPTION_REPOS=(
     elsevier-research/dp-consumption-service-test-data-producer
     elsevier-research/dp-consumption-spark-cdb-relationships-producer
     elsevier-research/dp-consumption-spark-template
-    elsevier-research/dp-consumption-lib-spark
     elsevier-research/dp-consumption-test-automation
     elsevier-research/dp-consumption-test-end-to-end
     elsevier-research/dp-consumption-test-relationship-store
+    elsevier-research/dp-person-bingo-consumption-service
+    elsevier-research/dp-person-events-consumption-utils
 )
 
 CONSUMPTION_INFRA_REPOS=(
@@ -758,11 +760,14 @@ BUTTER_CHICKEN_REPOS=(
     elsevier-research/kd-labs-webapp-search-relevance
     elsevier-research/kd-mic-lambda
     elsevier-research/kd-multibranch-test
+    elsevier-research/kd-orgdb-parser
     elsevier-research/kd-performance-embeddings
     elsevier-research/kd-performance-genai
     elsevier-research/kd-performance-mendeley
     elsevier-research/kd-performance-sss
     elsevier-research/kd-person-finder-service
+    elsevier-research/kd-person-relations-store
+    elsevier-research/kd-person-traversal-graphql
     elsevier-research/kd-personfinder-performance
     elsevier-research/kd-pf-tools
     elsevier-research/kd-python-app-framework
@@ -777,6 +782,8 @@ BUTTER_CHICKEN_REPOS=(
     elsevier-research/kd-sebright-app
     elsevier-research/kd-shared-genai-service
     elsevier-research/kd-shared-search-api
+    elsevier-research/kd-shared-search-client
+    elsevier-research/kd-shared-search-graphql
     elsevier-research/kd-similarsearch-automation
     elsevier-research/kd-similarsearch-performancetesting
     elsevier-research/kd-sources-search-service-perf-test
