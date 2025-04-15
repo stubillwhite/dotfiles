@@ -119,6 +119,8 @@ alias find='gfind'                                                          # Us
 alias pygmentize='pygmentize -O style=nord-darker'                          # Default to nord-darker style for pygmentize
 alias rsync='rsync -r --progress'                                           # Default to recursive and show progress
 
+alias nvim-lua='NVIM_APPNAME=nvim-lua nvim'
+
 # Other useful stuff
 alias reload-zsh-config="exec zsh"                                          # Reload Zsh config
 alias zsh-startup='time zsh -i -c exit'                                     # Display Zsh start-up time
