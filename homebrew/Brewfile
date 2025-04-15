@@ -56,7 +56,6 @@ cask "deckset"                                  # Presentations from Markdown
 # Utilities
 ################################################################################
 
-brew "cmake"                                    # Cross-platform make
 brew "cookiecutter"                             # Utility that creates projects from templates
 brew "coreutils"                                # GNU File, Shell, and Text utilities
 brew "ctags"                                    # Reimplementation of ctags(1)

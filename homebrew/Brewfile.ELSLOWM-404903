@@ -32,6 +32,8 @@ brew 'eddieantonio/eddieantonio/imgcat'         # It's like cat(1), but for imag
 tap 'rockymadden/rockymadden'
 brew 'rockymadden/rockymadden/slack-cli'        # Powerful Slack CLI via pure bash
 
+brew "cmake"                                    # Cross-platform make
+
 ################################################################################
 # Development
 ################################################################################

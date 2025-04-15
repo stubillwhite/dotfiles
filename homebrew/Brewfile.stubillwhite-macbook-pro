@@ -13,7 +13,8 @@ cask "zoom"                                     # Video communication and virtua
 ################################################################################
 
 # EmptyEpsilon
-brew "cmake"                                    # Cross-platform make
+tap "stubillwhite/homebrew-formulae"
+brew "cmake@3.31"                               # Cross-platform make
 brew "sdl2"                                     # Low-level access to audio, keyboard, mouse, joystick, and graphics
 brew "mingw-w64"                                # Minimalist GNU for Windows and GCC cross-compilers
 brew "llvm"                                     # Next-gen compiler infrastructure
