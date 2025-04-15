@@ -570,7 +570,6 @@ RECOMMENDERS_REPOS=(
     elsevier-research/kd-recs-api-common
     elsevier-research/kd-recs-api-jobs
     elsevier-research/kd-recs-api-performance
-    elsevier-research/kd-recs-genai-explanations-invitations
     elsevier-research/kd-recs-api-system-tests
     elsevier-research/kd-recs-app-common
     elsevier-research/kd-recs-auth-common
@@ -590,6 +589,8 @@ RECOMMENDERS_REPOS=(
     elsevier-research/kd-recs-events-common
     elsevier-research/kd-recs-feature-store
     elsevier-research/kd-recs-funding-opportunities-processor
+    elsevier-research/kd-recs-genai-explanations-invitations
+    elsevier-research/kd-recs-integration-testing-utils
     elsevier-research/kd-recs-interview
     elsevier-research/kd-recs-kafka-connectors
     elsevier-research/kd-recs-kafka-performance
@@ -623,6 +624,7 @@ RECOMMENDERS_REPOS=(
     elsevier-research/kd-recs-sd-citation-snippets-generator
     elsevier-research/kd-recs-sd-generator
     elsevier-research/kd-recs-sd-learning-to-rank
+    elsevier-research/kd-recs-spark-emr-stack
     elsevier-research/kd-recs-spark-recommendation-evaluation
     elsevier-research/kd-recs-spark-test
     elsevier-research/kd-recs-sutd-kafka-producer
@@ -631,14 +633,13 @@ RECOMMENDERS_REPOS=(
     elsevier-research/kd-recs-sutd-user-signals-generator
     elsevier-research/kd-recs-tech-spikes
     elsevier-research/kd-recs-test-data
-    elsevier-research/kd-work-recommendations-graphql
-    elsevier-research/kd-work-recommendations-graphql-infra
-    elsevier-research/kd-work-recommendations-graphql-test
     elsevier-research/kd-recs-utils
     elsevier-research/kd-recs-validation
     elsevier-research/kd-recs-validation-app
-    elsevier-research/kd-recs-integration-testing-utils
-    elsevier-research/kd-recs-spark-emr-stack
+    elsevier-research/kd-work-recommendations-graphql
+    elsevier-research/kd-work-recommendations-graphql-infra
+    elsevier-research/kd-work-recommendations-graphql-test
+    elsevier-research/kd-work-recommendations-graphql-test
 )
 
 RECOMMENDERS_INFRA_REPOS=(

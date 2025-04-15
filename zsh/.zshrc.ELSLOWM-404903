@@ -883,7 +883,8 @@ function rr-lambda-backlog() {
             --end-time   $(date --iso-8601=seconds) \
             --period $(calc '60 * 60') \
             --statistics Sum \
-            | jq -r '["Time", "Total"], (.Datapoints | sort_by(.Timestamp) | .[] | [.Timestamp, .Sum]) | @csv'
+            | jq -r '(.Datapoints | sort_by(.Timestamp) | .[] | [.Timestamp, .Sum]) | @csv' \
+            | prepend "Time,Total"
     }
 
     local pumpDataFilename=.data-pump-invocations.csv
@@ -892,7 +893,7 @@ function rr-lambda-backlog() {
     local backlogImageFilename=backlog.png
 
     local recsEnv="${1}"
-    aws-recs-login "${recsEnv}" > /dev/null
+    # aws-recs-login "${recsEnv}" > /dev/null
 
     _lambda-invocations recs-rev-manuscripts-data-pump-lambda-${recsEnv} > ${pumpDataFilename}
     _lambda-invocations recs-reviewers-recommender-lambda-${recsEnv}     > ${lambdaDataFilename}
@@ -903,7 +904,7 @@ function rr-lambda-backlog() {
             dp.Time AS time,
             dp.Total AS pump_count,
             l.Total AS lambda_count
-        FROM ${pumpDataFilename} dp INNER JOIN ${lambdaDataFilename} l
+        FROM '${pumpDataFilename}' dp INNER JOIN '${lambdaDataFilename}' l
         ON dp.Time = l.Time
 HEREDOC
 
@@ -915,12 +916,12 @@ HEREDOC
             sum(pump_count) over (ORDER BY time ASC ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) as pump_total,
             lambda_count,
             sum(lambda_count) over (ORDER BY time ASC ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) as lambda_total
-        FROM -
+        FROM read_csv('/dev/stdin')
 HEREDOC
 
-    q -d ',' -H -O "${joinScript}" \
-        | q -d ',' -H -O "${metricsScript}" \
-        | q -d ',' -H -O "SELECT time, pump_total, lambda_total, pump_total - lambda_total as backlog_size FROM -" \
+    duckdb -csv -c "${joinScript}" \
+        | duckdb -csv -c "${metricsScript}" \
+        | duckdb -csv -c "SELECT time, pump_total, lambda_total, pump_total - lambda_total as backlog_size FROM read_csv('/dev/stdin')" \
         | tabulate-by-comma \
         > backlog.txt
 
@@ -928,7 +929,7 @@ HEREDOC
     read-heredoc gnuplotScript <<HEREDOC
         set style data line
         set xdata time
-        set timefmt "%Y-%m-%dT%H:%M:%S+00:00"
+        set timefmt "%Y-%m-%d %H:%M:%S+00:00"
         set terminal png size 800,600 enhanced
         set output 'backlog.png'
         plot \
