@@ -36,6 +36,7 @@ SHALLOW_REPOS=(
     advent-of-code-2024-scala
     cookiecutters
     dotfiles
+    homebrew-formulae
     jira-reporter-python
     llm-dnd
     nvim

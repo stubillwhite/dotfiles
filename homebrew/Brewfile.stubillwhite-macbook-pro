@@ -5,8 +5,17 @@
 # Basics
 cask "google-chrome"                            # Cross-platform web browser
 
+# IDEs
+cask "cursor"                                   # Write, edit, and chat about your code with AI
+
 # Video conferencing
 cask "zoom"                                     # Video communication and virtual meeting platform
+
+################################################################################
+# Utilities
+################################################################################
+
+cask "rar"                                      # Archive manager for data compression and backups
 
 ################################################################################
 # Development
@@ -23,6 +32,7 @@ brew "sfml@2"                                   # Multi-media library with bindi
 brew "glm"                                      # C++ mathematics library for graphics software
 
 # Game development
+brew "xcodes"                                   # Best command-line tool to install and switch between multiple versions of Xcode
 cask "blender"                                  # 3D creation suite
 cask "dotnet-sdk"                               # .NET SDK
 cask "unity"                                    # Unity Editor
