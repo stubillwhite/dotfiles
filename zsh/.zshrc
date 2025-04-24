@@ -1793,7 +1793,8 @@ function git-stats-top-team-committers-by-repo() {
     [ "${team}" = 'dkp' ]                && teamMembers="'Prakruthy Dhoopa Harish', 'Arun Kumar Kalahastri', 'Sangavi Durairaj', 'Vidhya Shaghar A P', 'Suganya Moorthy', 'Chinar Jaiswal'"
     [ "${team}" = 'foundations' ]        && teamMembers="'Adrian Musial', 'Alex Harris', 'Prasann Grampurohit', 'Syeeda Banu C', 'Ashish Wakchaure', 'Pavel Ryzhov', 'Sachin Kumar', 'Shantanu Sinha', 'Prasanth Rave', 'Pavel Kashmin'"
     [ "${team}" = 'consumption' ]        && teamMembers="'Nitin Dumbre', 'Narasimha Reddybhumireddygari', 'Delia Bute', 'Mustafa Toplu', 'Talvinder Matharu', 'Bikramjit Singh', 'Harprit Singh', 'Parimala Balaraju'"
-    [ "${team}" = 'concept' ]            && teamMembers="'Saad Rashid', 'Benoit Pasquereau', 'Adam Ladly', 'Jeremy Scadding', 'Anique von Berne', 'Nishant Singh', 'Neil Stevens', 'Dominicano Luciano', 'Kanaga Ganesan', 'Akhil Babu', 'Gintautas Sulskus'"
+    [ "${team}" = 'concept' ]            && teamMembers="'Saad Rashid', 'Adam Ladly', 'Jeremy Scadding', 'Nishant Singh', 'Neil Stevens', 'Dominicano Luciano', 'Kanaga Ganesan', 'Akhil Babu', 'Gintautas Sulskus'"
+    [ "${team}" = 'concept-extended' ]   && teamMembers="'Saad Rashid', 'Benoit Pasquereau', 'Adam Ladly', 'Jeremy Scadding', 'Anique von Berne', 'Nishant Singh', 'Neil Stevens', 'Dominicano Luciano', 'Kanaga Ganesan', 'Akhil Babu', 'Gintautas Sulskus'"
     [ "${team}" = 'scibite-centree' ]    && teamMembers="'Simon Jupp', 'Olivier Feller', 'Barry Wilks', 'Georgianna Dumitraica', 'Blessan Kunjumon', 'Tim Medcalf', 'Mohammad Haroon'"
     [ "${team}" = 'scibite-search' ]     && teamMembers="'Phil Verdemato', 'Andrew Cowley', 'Rob Martin', 'David Styles', 'Alex Biddle', 'Kieran Whiteman', 'Svetlana Taneva'"
     [ "${team}" = 'scibite-ai' ]         && teamMembers="'Brandon Walts', 'Mark McDowall', 'Oliver Giles', 'Olivia Watson'"
@@ -1832,7 +1833,7 @@ HEREDOC
     rm .script
 }
 compdef "_arguments \
-    '1:team arg:(recs recs-extended butter-chicken foundations spirograph dkp dkp-legacy concept consumption scibite-ai scibite-centree scibite-ds scibite-ontologies scibite-search scibite-termite-6 scibite-termite-7 scibite-workbench)'" \
+    '1:team arg:(recs recs-extended butter-chicken foundations spirograph dkp dkp-legacy concept concept-extended consumption scibite-ai scibite-centree scibite-ds scibite-ontologies scibite-search scibite-termite-6 scibite-termite-7 scibite-workbench)'" \
     git-stats-top-team-committers-by-repo
     
 # For the Git stats in the current directory, display all authors
