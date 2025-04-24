@@ -217,10 +217,3 @@ cask "anki"                                     # Memory training application
 
 brew "ncspot"                                   # Cross-platform ncurses Spotify client written in Rust
 cask "spotify"                                  # Spotify client
-
-brew "nethack"                                  # Single-player roguelike video game
-brew "brogue"                                   # Roguelike game
-brew "angband"                                  # Dungeon exploration game
-
-# Currently disabled -- required obsolete Lua
-# brew "stone-soup"                               # Dungeon Crawl Stone Soup: a roguelike game
