@@ -848,7 +848,7 @@ function rr-lambda-invocations() {
             --namespace 'AWS/Lambda' \
             --dimensions Name=FunctionName,Value="${lambda}" \
             --metric-name 'Invocations' \
-            --start-time $(date --iso-8601=seconds --date='7 days ago') \
+            --start-time $(date --iso-8601=seconds --date='14 days ago') \
             --end-time   $(date --iso-8601=seconds) \
             --period $(calc '60 * 60 * 24') \
             --statistics Sum \
@@ -946,7 +946,8 @@ HEREDOC
         set terminal png size 800,600 enhanced
         set output 'backlog.png'
         plot \
-            "backlog.txt" using 1:5 title "Delta" linewidth 3
+            "backlog.txt" using 1:5 title "Delta" linewidth 3, \
+            0 title "Zero" linewidth 3
 HEREDOC
 
     echo ${gnuplotScript} | gnuplot
