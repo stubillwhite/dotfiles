@@ -926,13 +926,16 @@ HEREDOC
     read-heredoc gnuplotScript <<HEREDOC
         set style data line
         set xdata time
-        set timefmt "%Y-%m-%d %H:%M:%S+00:00"
+        set timefmt "%Y-%m-%d %H:%M:%S"
+        set format x "%Y-%m-%d %H:%M"
+        set xtics rotate
         set terminal png size 800,600 enhanced
         set output 'backlog.png'
         plot \
-            "backlog.txt" using 1:2 title "Pump total"   linewidth 3, \
-            "backlog.txt" using 1:3 title "Lambda total" linewidth 3, \
-            "backlog.txt" using 1:4 title "Delta"        linewidth 3
+            "backlog.txt" using 1:3 title "Pump total"        linewidth 3, \
+            "backlog.txt" using 1:4 title "Recommender total" linewidth 3, \
+            "backlog.txt" using 1:5 title "Delta"             linewidth 3, \
+            0                       title "Zero"              linewidth 3
 HEREDOC
 
     echo ${gnuplotScript} | gnuplot
@@ -942,12 +945,14 @@ HEREDOC
     read-heredoc gnuplotScript <<HEREDOC
         set style data line
         set xdata time
-        set timefmt "%Y-%m-%d %H:%M:%S+00:00"
+        set timefmt "%Y-%m-%d %H:%M:%S"
+        set format x "%Y-%m-%d %H:%M"
+        set xtics rotate
         set terminal png size 800,600 enhanced
         set output 'backlog.png'
         plot \
             "backlog.txt" using 1:5 title "Delta" linewidth 3, \
-            0 title "Zero" linewidth 3
+            0                       title "Zero"  linewidth 3
 HEREDOC
 
     echo ${gnuplotScript} | gnuplot
