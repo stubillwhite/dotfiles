@@ -643,35 +643,44 @@ alias aws-clear-variables="for i in \$(aws-which | cut -d= -f1,1 | paste -); do 
 function aws-sso-login() {
     local profile=$1
 
-    aws sso login --profile ${profile}
-
-    local ssoCachePath=~/.aws/sso/cache
-
     local ssoAccountId=$(aws configure get --profile ${profile} sso_account_id)
     local ssoRoleName=$(aws configure get --profile ${profile} sso_role_name)
-    local mostRecentSSOLogin=$(ls -t1 ${ssoCachePath}/*.json | head -n 1)
 
-    local response=$(aws sso get-role-credentials \
-        --role-name ${ssoRoleName} \
-        --account-id ${ssoAccountId} \
-        --access-token "$(jq -r '.accessToken' ${mostRecentSSOLogin})" \
-        --region eu-west-1
-    )
+    if [[ ${AWS_LAST_SSO_PROFILE} = "${profile}" ]] && aws sts get-caller-identity > /dev/null 2>&1; then
+        echo "Already logged in as ${profile}"
+    else
+        aws sso login --profile ${profile}
 
-    local accessKeyId=$(echo "${response}" | jq -r '.roleCredentials | .accessKeyId')
-    local secretAccessKey=$(echo "${response}" | jq -r '.roleCredentials | .secretAccessKey')
-    local sessionToken=$(echo "${response}" | jq -r '.roleCredentials | .sessionToken')
+        local ssoCachePath=~/.aws/sso/cache
 
-    local expireAfter=$(date -d "+3 hours" --iso-8601=s)
+        local ssoAccountId=$(aws configure get --profile ${profile} sso_account_id)
+        local ssoRoleName=$(aws configure get --profile ${profile} sso_role_name)
+        local mostRecentSSOLogin=$(ls -t1 ${ssoCachePath}/*.json | head -n 1)
 
-    export AWS_ACCESS_KEY_ID="${accessKeyId}"
-    export AWS_SECRET_ACCESS_KEY="${secretAccessKey}"
-    export AWS_SESSION_TOKEN="${sessionToken}"
-    export AWS_DEFAULT_REGION="us-east-1"
-    export AWS_REGION="us-east-1"
+        local response=$(aws sso get-role-credentials \
+            --role-name ${ssoRoleName} \
+            --account-id ${ssoAccountId} \
+            --access-token "$(jq -r '.accessToken' ${mostRecentSSOLogin})" \
+            --region eu-west-1
+        )
 
-    echo
-    aws-which
+        local accessKeyId=$(echo "${response}" | jq -r '.roleCredentials | .accessKeyId')
+        local secretAccessKey=$(echo "${response}" | jq -r '.roleCredentials | .secretAccessKey')
+        local sessionToken=$(echo "${response}" | jq -r '.roleCredentials | .sessionToken')
+
+        local expireAfter=$(date -d "+3 hours" --iso-8601=s)
+
+        export AWS_ACCESS_KEY_ID="${accessKeyId}"
+        export AWS_SECRET_ACCESS_KEY="${secretAccessKey}"
+        export AWS_SESSION_TOKEN="${sessionToken}"
+        export AWS_DEFAULT_REGION="us-east-1"
+        export AWS_REGION="us-east-1"
+
+        export AWS_LAST_SSO_PROFILE="${profile}"
+
+        echo
+        aws-which
+    fi
 }
 
 function aws-recs-login() {
