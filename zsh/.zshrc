@@ -637,14 +637,11 @@ compdef "_arguments \
 alias aws-which="env | grep AWS | sort"
 alias aws-clear-variables="for i in \$(aws-which | cut -d= -f1,1 | paste -); do unset \$i; done"
 
-# Look at
+# This can be improved; look at
 #   https://ben11kehoe.medium.com/you-only-need-to-call-aws-sso-login-once-for-all-your-profiles-41a334e1b37e
 #   https://docs.aws.amazon.com/cli/latest/userguide/sso-configure-profile-token.html
 function aws-sso-login() {
     local profile=$1
-
-    local ssoAccountId=$(aws configure get --profile ${profile} sso_account_id)
-    local ssoRoleName=$(aws configure get --profile ${profile} sso_role_name)
 
     if [[ ${AWS_LAST_SSO_PROFILE} = "${profile}" ]] && aws sts get-caller-identity > /dev/null 2>&1; then
         echo "Already logged in as ${profile}"
