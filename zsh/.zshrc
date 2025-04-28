@@ -665,8 +665,6 @@ function aws-sso-login() {
         local secretAccessKey=$(echo "${response}" | jq -r '.roleCredentials | .secretAccessKey')
         local sessionToken=$(echo "${response}" | jq -r '.roleCredentials | .sessionToken')
 
-        local expireAfter=$(date -d "+3 hours" --iso-8601=s)
-
         export AWS_ACCESS_KEY_ID="${accessKeyId}"
         export AWS_SECRET_ACCESS_KEY="${secretAccessKey}"
         export AWS_SESSION_TOKEN="${sessionToken}"
