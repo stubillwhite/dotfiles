@@ -637,45 +637,43 @@ compdef "_arguments \
 alias aws-which="env | grep AWS | sort"
 alias aws-clear-variables="for i in \$(aws-which | cut -d= -f1,1 | paste -); do unset \$i; done"
 
-# This can be improved; look at
-#   https://ben11kehoe.medium.com/you-only-need-to-call-aws-sso-login-once-for-all-your-profiles-41a334e1b37e
-#   https://docs.aws.amazon.com/cli/latest/userguide/sso-configure-profile-token.html
 function aws-sso-login() {
     local profile=$1
 
-    if [[ ${AWS_LAST_SSO_PROFILE} = "${profile}" ]] && aws sts get-caller-identity > /dev/null 2>&1; then
-        echo "Already logged in as ${profile}"
-    else
+    # No need to log in if we are already authenticated; see:
+    #   https://ben11kehoe.medium.com/you-only-need-to-call-aws-sso-login-once-for-all-your-profiles-41a334e1b37e
+    #   https://docs.aws.amazon.com/cli/latest/userguide/sso-configure-profile-token.html
+    if ! aws sts get-caller-identity > /dev/null 2>&1; then
         aws sso login --profile ${profile}
-
-        local ssoCachePath=~/.aws/sso/cache
-
-        local ssoAccountId=$(aws configure get --profile ${profile} sso_account_id)
-        local ssoRoleName=$(aws configure get --profile ${profile} sso_role_name)
-        local mostRecentSSOLogin=$(ls -t1 ${ssoCachePath}/*.json | head -n 1)
-
-        local response=$(aws sso get-role-credentials \
-            --role-name ${ssoRoleName} \
-            --account-id ${ssoAccountId} \
-            --access-token "$(jq -r '.accessToken' ${mostRecentSSOLogin})" \
-            --region eu-west-1
-        )
-
-        local accessKeyId=$(echo "${response}" | jq -r '.roleCredentials | .accessKeyId')
-        local secretAccessKey=$(echo "${response}" | jq -r '.roleCredentials | .secretAccessKey')
-        local sessionToken=$(echo "${response}" | jq -r '.roleCredentials | .sessionToken')
-
-        export AWS_ACCESS_KEY_ID="${accessKeyId}"
-        export AWS_SECRET_ACCESS_KEY="${secretAccessKey}"
-        export AWS_SESSION_TOKEN="${sessionToken}"
-        export AWS_DEFAULT_REGION="us-east-1"
-        export AWS_REGION="us-east-1"
-
-        export AWS_LAST_SSO_PROFILE="${profile}"
-
-        echo
-        aws-which
     fi
+
+    local ssoCachePath=~/.aws/sso/cache
+
+    local ssoAccountId=$(aws configure get --profile ${profile} sso_account_id)
+    local ssoRoleName=$(aws configure get --profile ${profile} sso_role_name)
+    local mostRecentSSOLogin=$(ls -t1 ${ssoCachePath}/*.json | head -n 1)
+
+    local response=$(aws sso get-role-credentials \
+        --role-name ${ssoRoleName} \
+        --account-id ${ssoAccountId} \
+        --access-token "$(jq -r '.accessToken' ${mostRecentSSOLogin})" \
+        --region eu-west-1
+    )
+
+    local accessKeyId=$(echo "${response}" | jq -r '.roleCredentials | .accessKeyId')
+    local secretAccessKey=$(echo "${response}" | jq -r '.roleCredentials | .secretAccessKey')
+    local sessionToken=$(echo "${response}" | jq -r '.roleCredentials | .sessionToken')
+
+    export AWS_ACCESS_KEY_ID="${accessKeyId}"
+    export AWS_SECRET_ACCESS_KEY="${secretAccessKey}"
+    export AWS_SESSION_TOKEN="${sessionToken}"
+    export AWS_DEFAULT_REGION="us-east-1"
+    export AWS_REGION="us-east-1"
+
+    export AWS_LAST_SSO_PROFILE="${profile}"
+
+    echo
+    aws-which
 }
 
 function aws-recs-login() {
