@@ -191,11 +191,6 @@ brew "terraform", link: false                   # Tool to build, change, and ver
 brew "terragrunt"                               # Thin wrapper for Terraform e.g. for locking state
 brew "tfenv", link: true                        # Terraform version manager inspired by rbenv
 
-# Azure
-tap "azure/azd"
-brew "azd"                                      # Azure Developer CLI
-brew "azure-cli"                                # Microsoft Azure CLI 2.0
-
 # SQL
 cask "sqlworkbenchj"                            # Java-based SQL client
 

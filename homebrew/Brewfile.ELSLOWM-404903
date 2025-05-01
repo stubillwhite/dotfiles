@@ -38,6 +38,11 @@ brew "cmake"                                    # Cross-platform make
 # Development
 ################################################################################
 
+# Azure
+tap "azure/azd"
+brew "azd"                                      # Azure Developer CLI
+brew "azure-cli"                                # Microsoft Azure CLI 2.0
+
 # Containers
 brew 'aws-iam-authenticator'                    # Use AWS IAM credentials to authenticate to Kubernetes
 brew 'dive'                                     # Tool for exploring each layer in a docker image
