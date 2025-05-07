@@ -49,7 +49,7 @@ export PATH=/Applications/Emacs.app/Contents/MacOS:$PATH
 
 export PATH=$PATH:/usr/local/lib/ruby/gems/3.0.0/bin
 export PATH=$PATH:/Applications/Beyond\ Compare.app/Contents/MacOS
-export PATH=$PATH:/Applications/PyCharm\ CE.app/Contents/MacOS
+export PATH=$PATH:/Applications/PyCharm.app/Contents/MacOS
 export PATH=$PATH:/Applications/IntelliJ\ IDEA\ CE.app/Contents/MacOS
 export PATH=$PATH:~/dev/my-stuff/shell-utils
 export PATH=$PATH:/usr/bin
