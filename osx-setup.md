@@ -15,11 +15,13 @@
         - [Firefox](#firefox)
         - [IntelliJ and PyCharm](#intellij-and-pycharm)
         - [iTerm2](#iterm2)
+        - [Mailmap](#mailmap)
         - [NVim](#nvim)
         - [Obsidian](#obsidian)
         - [Outlook](#outlook)
         - [Raycast](#raycast)
         - [ScrollReverser](#scrollreverser)
+        - [Visual Studio Code](#visual-studio-code)
 
 <!-- markdown-toc end -->
 
@@ -126,6 +128,22 @@ org-mode protocol to run without prompting.
     - `Editor` > `General` > `Appearance`
         - Disable `Show hard wrap and visual guides`
         - Enable `Compact mode`
+
+To enable the old-style Git commit interface:
+
+- `Settings`
+    - `Advanced Settings` 
+        - `Enable commit tool window`
+            - Disable to merge the "commit" and "Git" panels and restores the "preview diff" toggle button for the panel
+        - `Toggle Commit Controls`
+            - Enable to add a "commit" button to the panel which toggles the per-file Git commit checkboxes and commit
+              message box in-place
+    - `Version Control` > `GitHub` > `Enable Staging Area`
+        - Disable to display your uncommited changes as a single list instead of staged/unstaged
+  
+- Open the `Git` panel
+    - Set the view mode to "windowed" if desired
+    - Enable "Preview Diff"
 
 ### iTerm2 ###
 
