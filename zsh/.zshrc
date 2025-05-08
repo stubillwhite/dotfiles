@@ -731,9 +731,7 @@ function aws-logout() {
     aws sso logout
 }
 
-alias aws-whoami='aws sts get-caller-identity | jq'
-
-function aws-account-info() {
+function aws-whoami() {
     print 'Account name:  ' $(aws iam list-account-aliases | jq -r ".AccountAliases[]")
     print 'Account number:' $(aws sts get-caller-identity  | jq -r ".Account")
 }
@@ -2228,8 +2226,10 @@ function certificate-java-list() {
     local defaultPassword=changeit
 
     local rootPathsToCheck=(
-        /Library
-        /Applications/DBeaver.app
+        "/Library"
+        "/Applications/DBeaver.app"
+        "/Applications/IntelliJ IDEA CE.app"
+        "/Applications/PyCharm.app"
     )
 
     for rootPath in "${rootPathsToCheck[@]}"
@@ -2259,8 +2259,10 @@ function certificate-java-install() {
     local defaultPassword=changeit
 
     local rootPathsToCheck=(
-        /Library
-        /Applications/DBeaver.app
+        "/Library"
+        "/Applications/DBeaver.app"
+        "/Applications/IntelliJ IDEA CE.app"
+        "/Applications/PyCharm.app"
     )
 
     for rootPath in "${rootPathsToCheck[@]}"
@@ -2276,7 +2278,7 @@ function certificate-java-install() {
                 msg-error "Certificate missing -- run the following to install"
                 echo sudo keytool \
                     -storepass ${defaultPassword} \
-                    -keystore "${keystore}" \
+                    -keystore "\"${keystore}\"" \
                     -importcert \
                     -file "${certFile}" \
                     -alias ${certAlias} \
