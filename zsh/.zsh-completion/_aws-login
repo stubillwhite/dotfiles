@@ -17,7 +17,6 @@ case "${state}" in
             'scopus-search'
             'sc-content'
             'sd-content'
-            'taxonomy'
             'newsflo'
             'dkp'
             'cef'
@@ -73,12 +72,6 @@ case "${state}" in
             (sd-content)
                 envs=(
                     'non-prod'
-                    'prod'
-                )
-            ;;
-
-            (taxonomy)
-                envs=(
                     'prod'
                 )
             ;;

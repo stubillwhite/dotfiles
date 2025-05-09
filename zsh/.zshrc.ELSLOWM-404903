@@ -863,6 +863,67 @@ compdef "_arguments \
     '1:environment arg:(dev staging live)'" \
     rr-lambda-invocations
 
+function rr-lambda-invocations-and-deltas() {
+    if [[ $# -ne 1 ]]; then
+        echo "Usage: rr-lambda-invocations-and-deltas (dev|staging|live)"
+        return 1
+    fi
+
+    local recsEnv="${1}"
+    aws-recs-login "${recsEnv}" > /dev/null
+
+    local _lambda-invocations() {
+        local lambda="${1}"
+
+        aws cloudwatch get-metric-statistics \
+            --namespace 'AWS/Lambda' \
+            --dimensions Name=FunctionName,Value="${lambda}" \
+            --metric-name 'Invocations' \
+            --start-time $(date --iso-8601=seconds --date='14 days ago') \
+            --end-time   $(date --iso-8601=seconds) \
+            --period $(calc '60 * 60 * 24') \
+            --statistics Sum \
+            | jq -r '(.Datapoints | sort_by(.Timestamp) | .[] | [.Timestamp, .Sum]) | @csv' \
+            | prepend "Time,Total"
+    }
+
+    local pumpDataFilename=.data-pump-invocations.csv
+    local recommenderDataFilename=.recommender-invocations.csv
+
+    _lambda-invocations recs-rev-manuscripts-data-pump-lambda-${recsEnv} > ${pumpDataFilename}
+    _lambda-invocations recs-reviewers-recommender-lambda-${recsEnv}     > ${recommenderDataFilename}
+
+    local joinScript
+    read-heredoc joinScript <<HEREDOC
+        SELECT
+            dp.Time AS time,
+            dp.Total AS pump_count,
+            l.Total AS rec_count
+        FROM '${pumpDataFilename}' dp INNER JOIN '${recommenderDataFilename}' l
+        ON dp.Time = l.Time
+HEREDOC
+
+    local metricsScript
+    read-heredoc metricsScript <<HEREDOC
+        SELECT
+            time,
+            pump_count,
+            rec_count,
+        FROM read_csv('/dev/stdin')
+HEREDOC
+
+    duckdb -csv -c "${joinScript}" \
+        | duckdb -csv -c "${metricsScript}" \
+        | duckdb -csv -c "SELECT time, pump_count, rec_count, pump_count - rec_count as delta, round_even(rec_count / pump_count * 100.0, 1) as percentage FROM read_csv('/dev/stdin')" \
+        | tabulate-by-comma
+
+    rm ${pumpDataFilename}
+    rm ${recommenderDataFilename}
+}
+compdef "_arguments \
+    '1:environment arg:(dev staging live)'" \
+    rr-lambda-invocations-and-deltas
+
 function rr-lambda-backlog() {
     if [[ $# -ne 1 ]]; then
         echo "Usage: rr-lambda-backlog (dev|staging|live)"

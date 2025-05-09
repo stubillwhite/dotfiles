@@ -7,4 +7,4 @@ windows:
         - ncspot:
             - ncspot
   - muti-scrobbler:
-      - pushd ~/dev/my-stuff/shell-utils/multi-scrobbler && make run
+      - echo pushd ~/dev/my-stuff/shell-utils/multi-scrobbler && make run

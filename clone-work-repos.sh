@@ -38,6 +38,7 @@ DKP_REPOS=(
     elsevier-research/dkp-linked-data-browser
     elsevier-research/dkp-linked-data-browser-tests
     elsevier-research/dkp-qa-elasticjmeter
+    elsevier-research/dkp-qa-ldr-functional
     elsevier-research/dkp-qa-ldr-performance
     elsevier-research/dkp-qa-ldr-regression
     elsevier-research/dkp-qa-sct-selenium
@@ -175,6 +176,8 @@ CONCEPT_REPOS=(
     elsevier-research/ces-urihandlers
     elsevier-research/ces-wordnet-definitions
     elsevier-research/ces-xocs-parser
+    elsevier-research/dp-concept-data-lake
+    elsevier-research/dp-award-concept-cluster-predictor
     elsevier-research/dp-classification-ondemand-sdg-service
     elsevier-research/dp-classification-performance-test-app
     elsevier-research/dp-classification-sdg-quality-test
@@ -190,6 +193,11 @@ CONCEPT_REPOS=(
     elsevier-research/dp-enrich-dummy-content-listener
     elsevier-research/dp-enrich-kafka-headers
     elsevier-research/dp-enrich-moe-classifier
+    elsevier-research/dp-enrich-india-ranking-classifier
+    elsevier-research/dp-enrich-query-classification
+    elsevier-research/dp-enrich-rdx-ml-inference
+    elsevier-research/dp-enrich-rdx-patents
+    elsevier-research/dp-enrich-sdg-classifier
     elsevier-research/dp-enrich-newrelic-monitoring
     elsevier-research/dp-enrich-sdg-ml-classifier
     elsevier-research/dp-enrich-sdg-sd-feed-harvester
@@ -709,8 +717,11 @@ RECOMMENDERS_INFRA_REPOS=(
 BUTTER_CHICKEN_REPOS=(
     elsevier-research/kd-apollo-router
     elsevier-research/kd-apollo-router-perf-test
+    elsevier-research/kd-apollo-router-test
     elsevier-research/kd-app-framework
+    elsevier-research/kd-app-infra-template
     elsevier-research/kd-app-template
+    elsevier-research/kd-app-test-template
     elsevier-research/kd-artefacts
     elsevier-research/kd-automation-autocomplete
     elsevier-research/kd-automation-document-embeddings
