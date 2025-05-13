@@ -658,10 +658,10 @@ function aws-sso-login() {
 
     local resultCode=$?
     
-    # No need to log in if we are already authenticated; see:
+    # Only force browser reauthentication if we failed to retrieve credentials. See:
     #   https://ben11kehoe.medium.com/you-only-need-to-call-aws-sso-login-once-for-all-your-profiles-41a334e1b37e
     #   https://docs.aws.amazon.com/cli/latest/userguide/sso-configure-profile-token.html
-    if [[ ! ${resultCode} = 0 ]]; then
+    if [[ ${resultCode} != 0 ]]; then
         aws sso login --profile ${profile}
 
         mostRecentSSOLogin=$(ls -t1 ${ssoCachePath}/*.json | head -n 1)
