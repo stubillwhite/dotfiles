@@ -644,7 +644,7 @@ function aws-sso-login() {
 
     local ssoAccountId=$(aws configure get --profile ${profile} sso_account_id)
     local ssoRoleName=$(aws configure get --profile ${profile} sso_role_name)
-    local mostRecentSSOLogin=$(ls -t1 ${ssoCachePath}/*.json | head -n 1)
+    local accessToken=$(ls -t1 ${ssoCachePath}/*.json | head -n 1 | xargs cat | jq -r '.accessToken')
 
     local tmpFile=$(mktemp)
     trap "rm -f ${tmpFile}" EXIT INT QUIT TERM
@@ -652,7 +652,7 @@ function aws-sso-login() {
     aws sso get-role-credentials \
         --role-name ${ssoRoleName} \
         --account-id ${ssoAccountId} \
-        --access-token "$(echo ${mostRecentSSOLogin} | jq -r '.accessToken' )" \
+        --access-token "${accessToken}" \
         --region eu-west-1 \
         > ${tmpFile} 2>&1
 
@@ -664,12 +664,12 @@ function aws-sso-login() {
     if [[ ${resultCode} != 0 ]]; then
         aws sso login --profile ${profile}
 
-        mostRecentSSOLogin=$(ls -t1 ${ssoCachePath}/*.json | head -n 1)
+        accessToken=$(ls -t1 ${ssoCachePath}/*.json | head -n 1 | xargs cat | jq -r '.accessToken')
 
         aws sso get-role-credentials \
             --role-name ${ssoRoleName} \
             --account-id ${ssoAccountId} \
-            --access-token "$(jq -r '.accessToken' ${mostRecentSSOLogin})" \
+            --access-token "${accessToken}" \
             --region eu-west-1 \
             > ${tmpFile} 2>&1
     fi
