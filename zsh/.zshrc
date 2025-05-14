@@ -652,7 +652,7 @@ function aws-sso-login() {
     aws sso get-role-credentials \
         --role-name ${ssoRoleName} \
         --account-id ${ssoAccountId} \
-        --access-token "$(jq -r '.accessToken' ${mostRecentSSOLogin})" \
+        --access-token "$(echo ${mostRecentSSOLogin} | jq -r '.accessToken' )" \
         --region eu-west-1 \
         > ${tmpFile} 2>&1
 
