@@ -78,6 +78,9 @@
 [includeIf "gitdir:~/dev/unity/"]
     path = ~/dev/my-stuff/dotfiles/git/personal-config/.gitconfig
 
+[includeIf "gitdir:~/dev/bridge-command/"]
+    path = ~/dev/my-stuff/dotfiles/git/personal-config/.gitconfig
+
 [includeIf "gitdir:~/dev/for-nat/"]
     path = ~/dev/my-stuff/dotfiles/git/personal-config/.gitconfig
 
