@@ -3,5 +3,7 @@ name: upgrade
 windows:
   - brew:
       - brew upgrade
-  - git-repos:
+  - personal-git-repos:
       - pushd ~/dev/my-stuff && git-repos-pull
+  - work-git-repos:
+      - git-update-projects

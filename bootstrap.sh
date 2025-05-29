@@ -26,7 +26,6 @@ FILES=(
     "pylint/.pylintrc"
     "q/.qrc"
     "ripgrep/.ripgreprc"
-    "tig/.tigrc"
     "tmux/.tmux.conf"
     "vale/.vale.ini"
     "zsh/.zsh-completion"
@@ -45,6 +44,7 @@ CONFIG_DIRS=(
     "yamllint/yamllint"
     "ncspot/ncspot"
     "lazygit/lazygit"
+    "ranger/ranger"
 )
 
 RED='\033[0;31m'
