@@ -1937,7 +1937,7 @@ function git-stats-list-author-commits-in-n-days() {
         |.mode columns
         |select distinct repo_name, author, commit_date, comment
         |from '.git-stats.csv' 
-        |where date_diff('day', commit_date, current_date) <= ${numDays}
+        |where date_diff('day', commit_date, current_timestamp) <= ${numDays}
         |  and author not in ('Jenkins')
         |order by commit_date desc
 HEREDOC
