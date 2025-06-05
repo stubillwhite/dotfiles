@@ -1,0 +1,19 @@
+name: jira
+
+root: ~/dev/my-stuff/jira-reporter-python/
+windows:
+  - consumption:
+      - make run-sprint-daily-report CONFIG_FILE=config.dataforce.toml
+  - foundations:
+      - make run-kanban-daily-report CONFIG_FILE=config.fdn.toml
+  - concept:
+      - make run-sprint-daily-report CONFIG_FILE=config.brioche.toml
+  - xmt:
+      - make run-kanban-daily-report CONFIG_FILE=config.xmt.toml
+  - dkp:
+      layout: even-vertical
+      panes:
+        - dkp:
+            - make run-kanban-daily-report CONFIG_FILE=config.dkp.toml
+        - voice:
+            - make run-sprint-daily-report CONFIG_FILE=config.voice.toml
