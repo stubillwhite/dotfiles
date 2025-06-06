@@ -7,7 +7,7 @@ windows:
   - foundations:
       - make run-kanban-daily-report CONFIG_FILE=config.fdn.toml
   - concept:
-      - make run-sprint-daily-report CONFIG_FILE=config.brioche.toml
+      - make run-kanban-daily-report CONFIG_FILE=config.brioche.toml
   - xmt:
       - make run-kanban-daily-report CONFIG_FILE=config.xmt.toml
   - dkp:
