@@ -297,7 +297,6 @@ function dkp-api-statuses() {
         https://collections-dev.elsevier.com/
         https://imagefinder.elsevier.com/
         https://imagefinder-dev.elsevier.com/
-        https://prod.topbraid.elsevier.net
     )
     (
         printf "%s|%s|%s|%s\n" "API" "Status" "Endpoint"
@@ -322,7 +321,6 @@ function dkp-certificate-statuses() {
         data.elsevier.com
         collections.elsevier.com
         imagefinder.elsevier.com
-        prod.topbraid.elsevier.net
     )
     (
         printf "%s|%s\n" "Domain" "Expiry"
