@@ -237,7 +237,6 @@ function recs-api-statuses() {
         recs-focus-stats.api
         recs-reviewers-recommender.api
         sd-article-recommendations.api
-        sd-hpcc-related-articles.api
         sd-logged-email-events.api
         sd-related-articles.api
         sd-user-activity.api
