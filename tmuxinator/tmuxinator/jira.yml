@@ -17,3 +17,6 @@ windows:
             - make run-kanban-daily-report CONFIG_FILE=config.dkp.toml
         - voice:
             - make run-sprint-daily-report CONFIG_FILE=config.voice.toml
+  - sprint-summary:
+      - ./run-reports.sh
+      - vim reports.txt

@@ -409,7 +409,7 @@ function highlight() {
     colorOn=$(echo -e "${colors[$color]}")
     colorOff=$(echo -e "${colors[default]}")
 
-    gsed -u s"/$pattern/$colorOn\0$colorOff/g"
+    gsed -u -r s"/$pattern/$colorOn\0$colorOff/g"
 }
 compdef '_alternative \
     "arguments:custom arg:(red green yellow blue magenta cyan)"' \
