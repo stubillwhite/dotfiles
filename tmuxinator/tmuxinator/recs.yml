@@ -1,0 +1,7 @@
+name: recs
+
+windows:
+  - recs:
+      root: ~/dev/kd/recs/
+  - recs-infra:
+      root: ~/dev/kd/recs/infra/

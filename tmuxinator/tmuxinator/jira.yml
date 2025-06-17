@@ -10,6 +10,8 @@ windows:
       - make run-kanban-daily-report CONFIG_FILE=config.brioche.toml
   - xmt:
       - make run-kanban-daily-report CONFIG_FILE=config.xmt.toml
+  - ri:
+      - make run-kanban-daily-report CONFIG_FILE=config.metricflo.toml
   - dkp:
       layout: even-vertical
       panes:

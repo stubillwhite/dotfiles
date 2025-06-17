@@ -1,7 +1,0 @@
-name: hackathon
-
-windows:
-  - linked-data-hackathon:
-      root: ~/dev/rdp/core/linked-data-hackathon/
-  - architecture-data-hackathon:
-      root: ~/dev/rdp/core/architecture-data-hackathon/
