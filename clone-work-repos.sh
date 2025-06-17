@@ -926,7 +926,51 @@ MISC_REPOS=(
     elsevier-research/kd-tio-puppet-searchupdatefeedproducer
     elsevier-research/kd-tio-puppet-shared-search-api
 )
- 
+
+# Newsflo                           {{{2
+# ======================================
+
+NEWSFLO_REPOS=(
+    elsevier-research/rdp-newsflo-batch-dataset-analyser
+    elsevier-research/rdp-newsflo-batch-news-classifier
+    elsevier-research/rdp-newsflo-batch-news-clustering
+    elsevier-research/rdp-newsflo-batch-news-indexer
+    elsevier-research/rdp-newsflo-batch-news-mention-dataset
+    elsevier-research/rdp-newsflo-batch-plum-dataset-analyser
+    elsevier-research/rdp-newsflo-batch-plum-publish
+    elsevier-research/rdp-newsflo-batch-scopus-db-update
+    elsevier-research/rdp-newsflo-data-pipeline-airflow
+    elsevier-research/rdp-newsflo-dataset-monitoring
+    elsevier-research/rdp-newsflo-eks-cluster
+    elsevier-research/rdp-newsflo-elasticsearch-logs
+    elsevier-research/rdp-newsflo-emr-serverless
+    elsevier-research/rdp-newsflo-java-lambda-maven-archetype
+    elsevier-research/rdp-newsflo-java-service-maven-archetype
+    elsevier-research/rdp-newsflo-jenkins
+    elsevier-research/rdp-newsflo-lambda-batch-job-runner
+    elsevier-research/rdp-newsflo-lambda-helper
+    elsevier-research/rdp-newsflo-lambda-logs-publisher
+    elsevier-research/rdp-newsflo-lambda-news-api
+    elsevier-research/rdp-newsflo-lambda-news-feed-replay
+    elsevier-research/rdp-newsflo-lambda-news-index-housekeeper
+    elsevier-research/rdp-newsflo-lambda-news-retriever
+    elsevier-research/rdp-newsflo-lambda-newshistory-publisher
+    elsevier-research/rdp-newsflo-lambda-plum-publisher
+    elsevier-research/rdp-newsflo-mentions-and-feedback-poc
+    elsevier-research/rdp-newsflo-newrelic-monitoring
+    elsevier-research/rdp-newsflo-news-dataset-publisher
+    elsevier-research/rdp-newsflo-news-enricher-poc
+    elsevier-research/rdp-newsflo-opensearch-logs
+    elsevier-research/rdp-newsflo-opensearch-news-index
+    elsevier-research/rdp-newsflo-poc-eks-service-quarkus
+    elsevier-research/rdp-newsflo-service-news-api
+    elsevier-research/rdp-newsflo-service-news-indexer
+    elsevier-research/rdp-newsflo-service-news-ingestion
+    elsevier-research/rdp-newsflo-service-poc-eks-api
+    elsevier-research/rdp-newsflo-terraform-bootstrap
+    elsevier-research/rdp-newsflo-terraform-common
+)
+
 # Constants                                                                 {{{1
 # ==============================================================================
 
@@ -1016,6 +1060,8 @@ clone-projects-into rdp/scibite             "${SCIBITE_REPOS[@]}"
 clone-projects-into rdp/scibite/infra       "${SCIBITE_INFRA_REPOS[@]}"
 
 clone-projects-into rdp/sandbox             "${SANDBOX_REPOS[@]}"
+
+clone-projects-into rdp/newsflo             "${NEWSFLO_REPOS[@]}"
 
 # KD                                {{{2
 # ======================================

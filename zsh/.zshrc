@@ -1809,6 +1809,7 @@ function git-stats-top-team-committers-by-repo() {
     [ "${team}" = 'foundations' ]        && teamMembers="'Adrian Musial', 'Alex Harris', 'Prasann Grampurohit', 'Syeeda Banu C', 'Ashish Wakchaure', 'Pavel Ryzhov', 'Sachin Kumar', 'Shantanu Sinha', 'Prasanth Rave', 'Pavel Kashmin'"
     [ "${team}" = 'consumption' ]        && teamMembers="'Nitin Dumbre', 'Narasimha Reddybhumireddygari', 'Delia Bute', 'Mustafa Toplu', 'Talvinder Matharu', 'Bikramjit Singh', 'Harprit Singh', 'Parimala Balaraju'"
     [ "${team}" = 'concept' ]            && teamMembers="'Saad Rashid', 'Adam Ladly', 'Jeremy Scadding', 'Nishant Singh', 'Neil Stevens', 'Dominicano Luciano', 'Kanaga Ganesan', 'Akhil Babu', 'Gintautas Sulskus'"
+    [ "${team}" = 'newsflo' ]            && teamMembers="'Pankaj Rastogi', 'Vipin Madhavan', 'Keerthi Hassan', 'Ansar Sulaiman Kunju Noorumahal', 'Manisha Sistum', 'Sasikumar Periyasamy', 'Vinith Kadankote'"
     [ "${team}" = 'concept-extended' ]   && teamMembers="'Saad Rashid', 'Benoit Pasquereau', 'Adam Ladly', 'Jeremy Scadding', 'Anique von Berne', 'Nishant Singh', 'Neil Stevens', 'Dominicano Luciano', 'Kanaga Ganesan', 'Akhil Babu', 'Gintautas Sulskus'"
     [ "${team}" = 'scibite-centree' ]    && teamMembers="'Simon Jupp', 'Olivier Feller', 'Barry Wilks', 'Georgianna Dumitraica', 'Blessan Kunjumon', 'Tim Medcalf', 'Mohammad Haroon'"
     [ "${team}" = 'scibite-search' ]     && teamMembers="'Phil Verdemato', 'Andrew Cowley', 'Rob Martin', 'David Styles', 'Alex Biddle', 'Kieran Whiteman', 'Svetlana Taneva'"
@@ -1841,6 +1842,24 @@ function git-stats-top-team-committers-by-repo() {
         |) e
         |where rank <= 5
         |order by repo_name, rank;
+HEREDOC
+
+    print ${sqlScript} | gsed 's/^ \+|//' > .script
+    duckdb < .script
+    rm .script
+    
+    echo
+    echo 'Repos with no authors in the team'
+    read-heredoc sqlScript <<HEREDOC
+        |.mode columns
+        |select distinct repo_name 
+        |from '.git-stats.csv'
+        |where repo_name not in (
+        |   select distinct repo_name
+        |   from '.git-stats.csv' 
+        |   where author in (${teamMembers})
+        |)
+        |order by repo_name;
 HEREDOC
 
     print ${sqlScript} | gsed 's/^ \+|//' > .script
