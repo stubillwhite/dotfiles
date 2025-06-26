@@ -580,7 +580,7 @@ function artefact-config () {
     done
 }
 compdef "_arguments \
-    '1:environment arg:(recs recs-cleanroom dkp)'" \
+    '1:environment arg:(recs recs-cleanroom dkp consumption)'" \
     artefact-config
 
 # Clean all artefacts from the current configuration
