@@ -1,5 +1,5 @@
 {
-  "$schema": "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json",
+    "$schema": "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json",
     "palette": {
         "White":             "#ffffff",
         "LightGrey":         "#bcbcbc",
@@ -22,69 +22,82 @@
         "DiffBlue":          "#282838",
         "DiffLightBlue":     "#353545"
     },
-  "blocks": [
-    {
-      "alignment": "right",
-      "segments": [
+    "blocks": [
         {
-            "background": "p:VeryDarkGrey",
-            "foreground": "p:LightGrey",
-            "style": "diamond",
-            "leading_diamond": "\ue0b6",
-            "trailing_diamond": "\ue0b4",
+            "alignment": "right",
+            "segments": [
+                {
+                    "background": "p:VeryDarkGrey",
+                    "foreground": "p:LightGrey",
+                    "style": "diamond",
+                    "leading_diamond": "\ue0b6",
+                    "trailing_diamond": "\ue0b4",
 
-            "properties": {
-                "branch_icon": "",
-                "fetch_stash_count": true,
-                "fetch_status": false,
-                "fetch_upstream_icon": true
-            },
+                    "properties": {
+                        "branch_icon": "",
+                        "fetch_stash_count": true,
+                        "fetch_status": true,
+                        "fetch_upstream_icon": true
+                    },
 
-            "template": " {{ .HEAD }} ",
-            "type": "git"
+                    "template": " {{ .UpstreamIcon }}{{ .HEAD }}{{if .BranchStatus }} {{ .BranchStatus }}{{ end }}{{ if .Working.Changed }} \uf044 {{ .Working.String }}{{ end }}{{ if and (.Working.Changed) (.Staging.Changed) }} |{{ end }}{{ if .Staging.Changed }} \uf046 {{ .Staging.String }}{{ end }}{{ if gt .StashCount 0 }} \ueb4b {{ .StashCount }}{{ end }} ",
+                    "type": "git"
+                }
+            ],
+            "type": "rprompt"
+        },
+        {
+            "alignment": "left",
+            "segments": [
+                {
+                    "background": "#61AFEF",
+                    "foreground": "#ffffff",
+                    "properties": {
+                        "display_host": false,
+                        "style": "mixed"
+                    },
+                    "style": "diamond",
+                    "template": "{{if .Root}} \uf0e7 {{.UserName}} {{else}} {{.UserName}} {{end}}",
+                    "leading_diamond": "\ue0b6",
+                    "trailing_diamond": "\ue0b0",
+                    "type": "session"
+                },
+
+                {
+                    "background": "p:VeryDarkGrey",
+                    "foreground": "p:LightGrey",
+                    "style": "diamond",
+                    "trailing_diamond": "\ue0b4",
+                    "properties": {
+                        "folder_separator_icon": "/",
+                        "max_depth": 1,
+                        "style": "letter"
+                    },
+                    "template": " {{ .Path }} ",
+                    "type": "path"
+                },
+                {
+                    "style": "plain",
+                    "foreground": "red",
+                    "template": " ❯",
+                    "type": "text"
+                },
+                {
+                    "style": "plain",
+                    "foreground": "yellow",
+                    "template": "❯",
+                    "type": "text"
+                },
+                {
+                    "style": "plain",
+                    "foreground": "green",
+                    "template": "❯",
+                    "type": "text"
+                }
+            ],
+            "type": "prompt"
         }
-      ],
-      "type": "rprompt"
-    },
-    {
-      "alignment": "left",
-      "segments": [
-          {
-              "background": "p:VeryDarkGrey",
-              "foreground": "p:LightGrey",
-              "style": "diamond",
-              "leading_diamond": "\ue0b6",
-              "trailing_diamond": "\ue0b4",
-              "properties": {
-                  "folder_separator_icon": "/",
-                  "max_depth": 1,
-                  "style": "letter"
-              },
-              "template": " {{ .Path }} ",
-              "type": "path"
-          },
-          {
-              "style": "plain",
-              "foreground": "red",
-              "template": " ❯",
-              "type": "text"
-          },
-          {
-              "style": "plain",
-              "foreground": "yellow",
-              "template": "❯",
-              "type": "text"
-          },
-          {
-              "style": "plain",
-              "foreground": "green",
-              "template": "❯",
-              "type": "text"
-          }
-      ],
-      "type": "prompt"
-    }
-  ],
-  "final_space": true,
-  "version": 3
+    ],
+    "final_space": true,
+    "version": 3
 }

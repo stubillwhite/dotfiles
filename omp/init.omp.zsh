@@ -1,4 +1,4 @@
-export POSH_THEME=$'/Users/white1/dev/my-stuff/dotfiles/omp/config.omp.json'
+export POSH_THEME="$HOME/dev/my-stuff/dotfiles/omp/config.omp.json"
 export POSH_SHELL='zsh'
 export POSH_SHELL_VERSION=$ZSH_VERSION
 export POWERLINE_COMMAND='oh-my-posh'
