@@ -1,0 +1,90 @@
+{
+  "$schema": "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json",
+    "palette": {
+        "White":             "#ffffff",
+        "LightGrey":         "#bcbcbc",
+        "DarkGrey":          "#585858",
+        "VeryDarkGrey":      "#464646",
+        "LightBlack":        "#262626",
+        "Blue":              "#5f87af",
+        "Green":             "#87af87",
+        "Yellow":            "#ffffaf",
+        "LightBlue":         "#8fafd7",
+        "BlueGreen":         "#5f8787",
+        "Red":               "#af5f5f",
+        "Purple":            "#8787af",
+        "HighlighterRed":    "#432222",
+        "HighlighterGreen":  "#283C28",
+        "HighlighterBlue":   "#223243",
+        "HighlighterPurple": "#383855",
+        "DiffGreen":         "#2B3328",
+        "DiffRed":           "#43242B",
+        "DiffBlue":          "#282838",
+        "DiffLightBlue":     "#353545"
+    },
+  "blocks": [
+    {
+      "alignment": "right",
+      "segments": [
+        {
+            "background": "p:VeryDarkGrey",
+            "foreground": "p:LightGrey",
+            "style": "diamond",
+            "leading_diamond": "\ue0b6",
+            "trailing_diamond": "\ue0b4",
+
+            "properties": {
+                "branch_icon": "",
+                "fetch_stash_count": true,
+                "fetch_status": false,
+                "fetch_upstream_icon": true
+            },
+
+            "template": " {{ .HEAD }} ",
+            "type": "git"
+        }
+      ],
+      "type": "rprompt"
+    },
+    {
+      "alignment": "left",
+      "segments": [
+          {
+              "background": "p:VeryDarkGrey",
+              "foreground": "p:LightGrey",
+              "style": "diamond",
+              "leading_diamond": "\ue0b6",
+              "trailing_diamond": "\ue0b4",
+              "properties": {
+                  "folder_separator_icon": "/",
+                  "max_depth": 1,
+                  "style": "letter"
+              },
+              "template": " {{ .Path }} ",
+              "type": "path"
+          },
+          {
+              "style": "plain",
+              "foreground": "red",
+              "template": " ❯",
+              "type": "text"
+          },
+          {
+              "style": "plain",
+              "foreground": "yellow",
+              "template": "❯",
+              "type": "text"
+          },
+          {
+              "style": "plain",
+              "foreground": "green",
+              "template": "❯",
+              "type": "text"
+          }
+      ],
+      "type": "prompt"
+    }
+  ],
+  "final_space": true,
+  "version": 3
+}
