@@ -37,6 +37,7 @@ SHALLOW_REPOS=(
     cookiecutters
     dotfiles
     homebrew-formulae
+    jira-reporter
     jira-reporter-python
     llm-dnd
     nvim

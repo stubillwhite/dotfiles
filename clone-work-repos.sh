@@ -269,6 +269,9 @@ FOUNDATIONS_REPOS=(
     elsevier-research/dp-foundation-alerts-lambda
     elsevier-research/dp-foundation-bosapi-redis-monitoring
     elsevier-research/dp-foundation-capabilities-onboarding
+    elsevier-research/rdp-foundations-data-cost-model
+    elsevier-research/rdp-foundations-al2-scanner
+    elsevier-research/rdp-foundations-gradle-playground-service
     elsevier-research/dp-foundation-data-account-terraform
     elsevier-research/dp-foundation-data-ledger
     elsevier-research/dp-foundation-data-ledger-specs
@@ -298,6 +301,7 @@ FOUNDATIONS_REPOS=(
     elsevier-research/rdp-foundations-meta-service-hello-world
     elsevier-research/rdp-foundations-perf-test
     elsevier-research/rdp-foundations-playground-service
+    elsevier-research/rdp-foundations-python-demo-service
     elsevier-research/rdp-foundations-python-playground-service
     elsevier-research/rdp-foundations-s3-bucket-review-service
     elsevier-research/rdp-foundations-scala-demo-service
@@ -574,6 +578,7 @@ SANDBOX_REPOS=(
 # ======================================
 
 RECOMMENDERS_REPOS=(
+    elsevier-research/kd-graphql-documentation
     elsevier-research/kd-recs-api
     elsevier-research/kd-recs-api-common
     elsevier-research/kd-recs-api-jobs
