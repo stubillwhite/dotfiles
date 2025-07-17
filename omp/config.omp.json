@@ -79,19 +79,19 @@
                 {
                     "style": "plain",
                     "foreground": "red",
-                    "template": " ❯",
+                    "template": " <b>❯</b>",
                     "type": "text"
                 },
                 {
                     "style": "plain",
                     "foreground": "yellow",
-                    "template": "❯",
+                    "template": "<b>❯</b>",
                     "type": "text"
                 },
                 {
                     "style": "plain",
                     "foreground": "green",
-                    "template": "❯",
+                    "template": "<b>❯</b>",
                     "type": "text"
                 }
             ],
