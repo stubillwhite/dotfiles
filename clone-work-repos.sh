@@ -571,6 +571,13 @@ SANDBOX_REPOS=(
     elsevier-research/dp-simulator
 )
 
+# RDP Misc                          {{{2
+# ======================================
+
+RDP_MISC_REPOS=(
+    elsevier-research/rdm-md-be-dkp-categories
+)
+
 # KD repos                                                                  {{{1
 # ==============================================================================
 
@@ -869,10 +876,10 @@ SPIROGRAPH_REPOS=(
     elsevier-research/kd-work-traversal-graphql-test
 )
 
-# Misc                              {{{2
+# KD Misc                           {{{2
 # ======================================
 
-MISC_REPOS=(
+KD_MISC_REPOS=(
     elsevier-research/kd-architecture-n-design
     elsevier-research/kd-automation-graphql-mendeley-search
     elsevier-research/kd-automation-shared-search
@@ -1068,6 +1075,8 @@ clone-projects-into rdp/sandbox             "${SANDBOX_REPOS[@]}"
 
 clone-projects-into rdp/newsflo             "${NEWSFLO_REPOS[@]}"
 
+clone-projects-into rdp/misc                "${RDP_MISC_REPOS[@]}"
+
 # KD                                {{{2
 # ======================================
 
@@ -1078,6 +1087,6 @@ clone-projects-into kd/butter-chicken       "${BUTTER_CHICKEN_REPOS[@]}"
 clone-projects-into kd/butter-chicken/infra "${BUTTER_CHICKEN_INFRA_REPOS[@]}"
 
 clone-projects-into kd/spirograph           "${SPIROGRAPH_REPOS[@]}"
-clone-projects-into kd/misc                 "${MISC_REPOS[@]}"
+clone-projects-into kd/misc                 "${KD_MISC_REPOS[@]}"
 
 popd
