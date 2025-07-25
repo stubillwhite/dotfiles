@@ -2003,7 +2003,7 @@ function git-stats-total-commits-by-author-per-month() {
     local sqlScript
     read-heredoc sqlScript <<HEREDOC
         |.mode columns
-        |select strftime('%Y-%m', commit_date) as 'year_month', count(*) as total from (
+        |select strftime(commit_date, '%Y-%m') as 'year_month', count(*) as total from (
         |    select distinct repo_name, commit_date, comment
         |    from '.git-stats.csv' 
         |    where author = '${authorName}'

@@ -266,12 +266,23 @@ CONSUMPTION_INFRA_REPOS=(
 # ======================================
 
 FOUNDATIONS_REPOS=(
+    elsevier-research/dp-core-common
+    elsevier-research/dp-core-data-accounts-infra
+    elsevier-research/dp-core-eks
+    elsevier-research/dp-core-eks-library
+    elsevier-research/dp-core-gha-configurations
+    elsevier-research/dp-core-github-actions
+    elsevier-research/dp-core-helmcharts
+    elsevier-research/dp-core-infra
+    elsevier-research/dp-core-istio-ingress
+    elsevier-research/dp-core-jenkins
+    elsevier-research/dp-core-jenkins-scripts
+    elsevier-research/dp-core-jfrog-tokens
+    elsevier-research/dp-core-kibana-proxy
+    elsevier-research/dp-core-spinnaker
     elsevier-research/dp-foundation-alerts-lambda
     elsevier-research/dp-foundation-bosapi-redis-monitoring
     elsevier-research/dp-foundation-capabilities-onboarding
-    elsevier-research/rdp-foundations-data-cost-model
-    elsevier-research/rdp-foundations-al2-scanner
-    elsevier-research/rdp-foundations-gradle-playground-service
     elsevier-research/dp-foundation-data-account-terraform
     elsevier-research/dp-foundation-data-ledger
     elsevier-research/dp-foundation-data-ledger-specs
@@ -286,16 +297,20 @@ FOUNDATIONS_REPOS=(
     elsevier-research/dp-foundation-utils
     elsevier-research/dp-foundations-kubedump
     elsevier-research/dp-foundations-spinnaker
+    elsevier-research/dp-mvn-archetype-kafka-service
     elsevier-research/rdp-cck-selfservice-alpha
     elsevier-research/rdp-cck-selfservice-nonprod
     elsevier-research/rdp-cck-selfservice-prod
     elsevier-research/rdp-foundations-acler
+    elsevier-research/rdp-foundations-al2-scanner
     elsevier-research/rdp-foundations-cck-utilities
     elsevier-research/rdp-foundations-confluent-clients
+    elsevier-research/rdp-foundations-data-cost-model
     elsevier-research/rdp-foundations-demo-service
     elsevier-research/rdp-foundations-golden-signal-kafka-consumer
     elsevier-research/rdp-foundations-golden-signal-kafka-producer
     elsevier-research/rdp-foundations-gradle-demo-service
+    elsevier-research/rdp-foundations-gradle-playground-service
     elsevier-research/rdp-foundations-julie
     elsevier-research/rdp-foundations-kafka-stream-application
     elsevier-research/rdp-foundations-meta-service-hello-world
@@ -324,30 +339,6 @@ FOUNDATIONS_REPOS=(
 )
 
 FOUNDATIONS_INFRA_REPOS=(
-)
-
-# Core                              {{{2
-# ======================================
-
-CORE_REPOS=(
-    elsevier-research/dp-core-common
-    elsevier-research/dp-core-data-accounts-infra
-    elsevier-research/dp-core-eks
-    elsevier-research/dp-core-eks-library
-    elsevier-research/dp-core-gha-configurations
-    elsevier-research/dp-core-github-actions
-    elsevier-research/dp-core-helmcharts
-    elsevier-research/dp-core-infra
-    elsevier-research/dp-core-istio-ingress
-    elsevier-research/dp-core-jenkins
-    elsevier-research/dp-core-jenkins-scripts
-    elsevier-research/dp-core-jfrog-tokens
-    elsevier-research/dp-core-kibana-proxy
-    elsevier-research/dp-core-spinnaker
-    elsevier-research/dp-mvn-archetype-kafka-service
-)
-
-CORE_INFRA_REPOS=(
 )
 
 # Entellect                         {{{2
@@ -1061,9 +1052,6 @@ clone-projects-into rdp/consumption/infra   "${CONSUMPTION_INFRA_REPOS[@]}"
 
 clone-projects-into rdp/foundations         "${FOUNDATIONS_REPOS[@]}"
 clone-projects-into rdp/foundations/infra   "${FOUNDATIONS_INFRA_REPOS[@]}"
-
-clone-projects-into rdp/core                "${CORE_REPOS[@]}"
-clone-projects-into rdp/core/infra          "${CORE_INFRA_REPOS[@]}"
 
 clone-projects-into rdp/entellect           "${ENTELLECT_REPOS[@]}"
 clone-projects-into rdp/entellect/infra     "${ENTELLECT_INFRA_REPOS[@]}"
