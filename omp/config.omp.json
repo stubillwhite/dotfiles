@@ -50,14 +50,14 @@
             "alignment": "left",
             "segments": [
                 {
-                    "background": "#61AFEF",
-                    "foreground": "#ffffff",
+                    "background": "p:DarkGrey",
+                    "foreground": "p:LightGrey",
                     "properties": {
                         "display_host": false,
                         "style": "mixed"
                     },
                     "style": "diamond",
-                    "template": "{{if .Root}} \uf0e7 {{.UserName}} {{else}} {{.UserName}} {{end}}",
+                    "template": "{{if .Root}} \uf0e7 {{.UserName}} {{else}} {{.UserName}} {{end}} ",
                     "leading_diamond": "\ue0b6",
                     "trailing_diamond": "\ue0b0",
                     "type": "session"
@@ -76,6 +76,7 @@
                     "template": " {{ .Path }} ",
                     "type": "path"
                 },
+
                 {
                     "style": "plain",
                     "foreground": "red",
