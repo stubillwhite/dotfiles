@@ -50,23 +50,10 @@
             "alignment": "left",
             "segments": [
                 {
-                    "background": "p:DarkGrey",
-                    "foreground": "p:LightGrey",
-                    "properties": {
-                        "display_host": false,
-                        "style": "mixed"
-                    },
-                    "style": "diamond",
-                    "template": "{{if .Root}} \uf0e7 {{.UserName}} {{else}} {{.UserName}} {{end}} ",
-                    "leading_diamond": "\ue0b6",
-                    "trailing_diamond": "\ue0b0",
-                    "type": "session"
-                },
-
-                {
                     "background": "p:VeryDarkGrey",
                     "foreground": "p:LightGrey",
                     "style": "diamond",
+                    "leading_diamond": "\ue0b6",
                     "trailing_diamond": "\ue0b4",
                     "properties": {
                         "folder_separator_icon": "/",

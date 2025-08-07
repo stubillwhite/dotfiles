@@ -102,6 +102,7 @@ case "${state}" in
             (innovation)
                 envs=(
                     'bedrock'
+                    'claude'
                 )
             ;;
 
