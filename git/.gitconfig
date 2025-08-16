@@ -44,25 +44,16 @@
 	pager = git-split-diffs --color | less -RFX
 
 [diff]
-	tool = vimdiff
 	algorithm = minimal
-
-[difftool "vimdiff"]
-    ; cmd = nvim -d $BASE $LOCAL
-    cmd = nvim -f '+next' '+execute \"DirDiff\" argv(0) argv(1)' $LOCAL $REMOTE '+syntax off'
+	tool = vim
+	; tool = bc
 
 [merge]
-    tool = vimmmerge
+    tool = vim
+    ; tool = bc
 
 [mergetool]
     prompt = true
-
-[mergetool "vimmmerge"]
-    cmd = nvim -d $BASE $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'
-
-# For GitHub integration in IntelliJ
-[url "github-work"]
-    insteadOf = git@github.com/elsevier-research
 
 [mailmap]
 	file = ~/.mailmap
@@ -70,12 +61,44 @@
 [log]
 	mailmap = true
 
+;; =============================================================================
+;; Comparison tools
+;; =============================================================================
+
+[difftool "vim"]
+    ; cmd = nvim -d $BASE $LOCAL
+    cmd = nvim -f '+next' '+execute \"DirDiff\" argv(0) argv(1)' $LOCAL $REMOTE '+syntax off'
+
+[mergetool "vim"]
+    cmd = nvim -d $BASE $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'
+
+[difftool "bc"]
+    path = "bcomp"
+
+[mergetool "bc"]
+    cmd = "bcomp \"$LOCAL\" \"$REMOTE\" \"$BASE\" \"$MERGED\""
+    trustExitCode = true
+
+;; =============================================================================
+;; GitHub config          
+;; =============================================================================
+
+# For GitHub integration in IntelliJ
+[url "github-work"]
+    insteadOf = git@github.com/elsevier-research
+
 # Personal
 
 [includeIf "gitdir:~/dev/my-stuff/"]
     path = ~/dev/my-stuff/dotfiles/git/personal-config/.gitconfig
 
+[includeIf "gitdir:~/dev/embedded/"]
+    path = ~/dev/my-stuff/dotfiles/git/personal-config/.gitconfig
+
 [includeIf "gitdir:~/dev/unity/"]
+    path = ~/dev/my-stuff/dotfiles/git/personal-config/.gitconfig
+
+[includeIf "gitdir:~/dev/regulated-cacophonist/"]
     path = ~/dev/my-stuff/dotfiles/git/personal-config/.gitconfig
 
 [includeIf "gitdir:~/dev/bridge-command/"]
