@@ -133,6 +133,23 @@ alias fzv='fzf --bind "enter:become(nvim {})"'                              # Fu
 # No flow control, so C-s is free for C-r/C-s back/forward incremental search
 stty -ixon
 
+# Copilots and models                                                       {{{1
+# ==============================================================================
+
+function genai-openai-models() {
+    curl -s https://api.openai.com/v1/models -H "Authorization: Bearer ${OPENAI_API_KEY}" \
+        | jq -r ".data[].id" \
+        | sort
+}
+
+function genai-anthropic-models() {
+    curl -s https://api.anthropic.com/v1/models \
+            --header "x-api-key: ${SECRET_ANTHROPIC_API_KEY}" \
+            --header "anthropic-version: 2023-06-01" \
+        | jq -r ".data[].id" \
+        | sort
+}
+
 # IntelliJ and Pycharm                                                      {{{1
 # ==============================================================================
 

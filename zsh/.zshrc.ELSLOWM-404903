@@ -1118,7 +1118,7 @@ TFENV_ARCH=amd64
 # Claude Code                                                               {{{1
 # ==============================================================================
 
-function setup-claude() {
+function setup-claude-bedrock() {
     aws-login innovation claude
 
     export ANTHROPIC_MODEL=arn:aws:bedrock:us-east-1:295921714576:inference-profile/us.anthropic.claude-sonnet-4-20250514-v1:0
@@ -1134,5 +1134,5 @@ function setup-claude() {
     export MAX_THINKING_TOKENS=1024
 
     # aws bedrock-runtime invoke-model --region $AWS_REGION --model-id $ANTHROPIC_MODEL --accept application/json --body '{"messages": [{"role": "user", "content": "What is Elsevier?"}], "anthropic_version": "bedrock-2023-05-31", "max_tokens": 200}' --content-type application/json --cli-binary-format raw-in-base64-out tmp.json
-    # ANTHROPIC_LOG=debug claude -p "teste
+    # ANTHROPIC_LOG=debug claude -p "test
 }
