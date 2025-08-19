@@ -466,6 +466,7 @@ function() clock() {
         "US/Eastern:New York"
         "GMT:London"
         "CET:Amsterdam"
+        "Europe/Bucharest:Romania"
         "Asia/Kolkata:India"
     )
 
