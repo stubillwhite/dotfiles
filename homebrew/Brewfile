@@ -16,6 +16,7 @@ cask "temurin@21"                               # JDK 21 LTS from https://adopti
 cask "temurin"                                  # Latest JDK from https://adoptium.net/
 
 # Basics
+cask "alacritty"                                # GPU-accelerated terminal emulator
 cask "jordanbaird-ice"                          # Powerful menu bar manager for macOS 
 cask "beyond-compare"                           # Compare files and folders
 cask "dropbox"                                  # Client for the Dropbox cloud storage service
@@ -74,11 +75,13 @@ brew "jq"                                       # Lightweight and flexible comma
 brew "miller"                                   # Like sed, awk, cut, join & sort for name-indexed data such as CSV
 brew "ncdu"                                     # NCurses Disk Usage
 brew "neovim"                                   # Ambitious Vim-fork focused on extensibility and agility
+brew "oh-my-posh"                               # Prompt theme engine for any shell
 brew "openssh"                                  # OpenBSD freely-licensed SSH connectivity tools
 brew "parallel"                                 # Shell command parallelization utility
 brew "pkg-config"                               # Manage compile and link flags for libraries
 brew "pygments"                                 # Generic syntax highlighter
 brew "python-yq"                                # Command-line YAML and XML processor that wraps jq
+brew "ranger"                                   # File browser
 brew "ripgrep"                                  # Search tool like grep and The Silver Searcher
 brew "sampler"                                  # Tool for shell commands execution, visualization and alerting
 brew "slackcat"                                 # Command-line utility for posting snippets to Slack
@@ -117,8 +120,10 @@ cask "hammerspoon"                              # Desktop automation application
 ################################################################################
 
 # Fonts
-cask "font-fantasque-sans-mono"                 # A font family with a great monospaced variant for programmers
+cask "font-comic-shanns-mono-nerd-font"         # ComicShannsMono Nerd Font (Comic Shanns Mono)
 cask "font-fantasque-sans-mono-nerd-font"       # FantasqueSansM Nerd Font (Fantasque Sans Mono)
+cask "font-fantasque-sans-mono"                 # A font family with a great monospaced variant for programmers
+cask "font-iosevka-term-nerd-font"              # IosevkaTerm Nerd Font (Iosevka Term)
 
 # Version control
 brew "act"                                      # Run your GitHub Actions locally
@@ -183,6 +188,7 @@ brew "duckdb"                                   # Embeddable SQL OLAP Database M
 
 # Javascript
 brew "node"                                     # platform built on v8 to build network applications
+brew "yarn"                                     # JavaScript package manager
 
 # AWS
 brew "awscli"                                   # Official Amazon AWS command-line interface

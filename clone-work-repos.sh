@@ -647,6 +647,7 @@ RECOMMENDERS_REPOS=(
     elsevier-research/kd-recs-utils
     elsevier-research/kd-recs-validation
     elsevier-research/kd-recs-validation-app
+    elsevier-research/kd-work-recommender-jobs
     elsevier-research/kd-work-recommendations-graphql
     elsevier-research/kd-work-recommendations-graphql-infra
     elsevier-research/kd-work-recommendations-graphql-test
@@ -817,6 +818,7 @@ BUTTER_CHICKEN_REPOS=(
     elsevier-research/kd-work-hydration-graphql
     elsevier-research/kd-xocs-feed-translator-test
     elsevier-research/poc-kd-genai-multiagent
+    SDFE/rai-gpt-service
 )
 
 BUTTER_CHICKEN_INFRA_REPOS=(

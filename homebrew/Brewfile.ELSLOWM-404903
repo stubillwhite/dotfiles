@@ -21,6 +21,7 @@ brew 'mongodb-database-tools'                   # This package contains standard
 
 # Video conferencing
 cask 'amazon-chime'                             # Communications service
+cask 'zoom'                                     # Video communication and virtual meeting platform
 
 ################################################################################
 # Utilities
