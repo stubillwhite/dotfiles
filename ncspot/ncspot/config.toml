@@ -26,7 +26,7 @@ track_format.right = "%album %saved"
 
 background              = "#262626"   # LightBlack
 primary                 = "#bcbcbc"   # LightGrey
-secondary               = "#464646"   # VeryDarkGrey
+secondary               = "#5f8787"   # BlueGreen
 title                   = "#5f8787"   # BlueGreen
 statusbar               = "#5f8787"   # BlueGreen
 statusbar_progress      = "#5f8787"   # BlueGreen
