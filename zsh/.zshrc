@@ -280,6 +280,17 @@ function untarf() {
     tar -zxvf "$1"
 }
 
+# Rename file to lowercase and hyphens
+# fnam-canonicalise() FNAM
+function fnam-canonicalise() {
+    if [[ $# -ne 1 ]] ; then
+        echo 'Usage: fnam-canonicalise FNAM'
+        return 1
+    fi
+
+    mv "$1" "$(echo $1 | gsed 's/[ _]\+/-/g' | tr '[:upper:]' '[:lower:]')"
+}
+
 # Remove an entry from $PATH
 # path-remove "/usr/local/bin/python-old-version"
 function path-remove() {
