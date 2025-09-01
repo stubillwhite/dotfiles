@@ -894,7 +894,7 @@ function aws-lambda-statuses() {
 # List EMR statuses
 function aws-emr-status() {
     if [[ $# -ne 1 ]]; then
-        echo "Usage: aws-recs-login CLUSTER_ID"
+        echo "Usage: aws-emr-status CLUSTER_ID"
     else
         local clusterId=$1
         aws emr list-steps \

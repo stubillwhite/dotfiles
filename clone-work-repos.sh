@@ -98,6 +98,7 @@ DKP_INFRA_REPOS=(
     elsevier-research/dkp-terraform-zookeeper
     elsevier-research/dkp-terraformcontrol
     elsevier-research/dkp-vagrant-toolbox
+    elsevier-research/dkp-voice-terraform
     elsevier-research/linked-data-gateway
     elsevier-research/rdm-md-be-dkp-categories
 )
@@ -106,6 +107,7 @@ DKP_INFRA_REPOS=(
 # ======================================
 
 CONCEPT_REPOS=(
+    elsevier-research/cef-topic-pages-databricks
     elsevier-research/ces-annotations-spi
     elsevier-research/ces-brat-utility
     elsevier-research/ces-car-data-extractor
@@ -176,12 +178,12 @@ CONCEPT_REPOS=(
     elsevier-research/ces-urihandlers
     elsevier-research/ces-wordnet-definitions
     elsevier-research/ces-xocs-parser
-    elsevier-research/dp-concept-data-lake
     elsevier-research/dp-award-concept-cluster-predictor
     elsevier-research/dp-classification-ondemand-sdg-service
     elsevier-research/dp-classification-performance-test-app
     elsevier-research/dp-classification-sdg-quality-test
     elsevier-research/dp-classifications-lookup-service
+    elsevier-research/dp-concept-data-lake
     elsevier-research/dp-concept-processor
     elsevier-research/dp-document-dataset-pdf-head-sequence-classification
     elsevier-research/dp-enrich-classification-monitor-quality-moe
@@ -191,14 +193,14 @@ CONCEPT_REPOS=(
     elsevier-research/dp-enrich-classification-sdg-orchestrator
     elsevier-research/dp-enrich-core-service
     elsevier-research/dp-enrich-dummy-content-listener
+    elsevier-research/dp-enrich-india-ranking-classifier
     elsevier-research/dp-enrich-kafka-headers
     elsevier-research/dp-enrich-moe-classifier
-    elsevier-research/dp-enrich-india-ranking-classifier
+    elsevier-research/dp-enrich-newrelic-monitoring
     elsevier-research/dp-enrich-query-classification
     elsevier-research/dp-enrich-rdx-ml-inference
     elsevier-research/dp-enrich-rdx-patents
     elsevier-research/dp-enrich-sdg-classifier
-    elsevier-research/dp-enrich-newrelic-monitoring
     elsevier-research/dp-enrich-sdg-ml-classifier
     elsevier-research/dp-enrich-sdg-sd-feed-harvester
     elsevier-research/dp-enrich-solr-classifier
@@ -221,9 +223,11 @@ CONCEPT_INFRA_REPOS=(
 # ======================================
 
 CONSUMPTION_REPOS=(
+    elsevier-research/dp-consumption-airflow
     elsevier-research/dp-consumption-avro-schemas
     elsevier-research/dp-consumption-component-test-library
     elsevier-research/dp-consumption-data-confidential
+    elsevier-research/dp-consumption-databricks-report-generator
     elsevier-research/dp-consumption-domain-adrs
     elsevier-research/dp-consumption-infra
     elsevier-research/dp-consumption-lib-aws
@@ -231,15 +235,12 @@ CONSUMPTION_REPOS=(
     elsevier-research/dp-consumption-lib-dataset-builder
     elsevier-research/dp-consumption-lib-metadata-store
     elsevier-research/dp-consumption-lib-occ-to-entity-store
-    elsevier-research/dp-consumption-databricks-report-generator
     elsevier-research/dp-consumption-lib-occ-to-occ-store
     elsevier-research/dp-consumption-lib-relationship-store
-    elsevier-research/dp-consumption-spark-occ-linked-parquet-store
-    elsevier-research/dp-consumption-spark-opinion-resolver
+    elsevier-research/dp-consumption-lib-spark
     elsevier-research/dp-consumption-parent-pom
     elsevier-research/dp-consumption-pipeline-dataset-parquet
     elsevier-research/dp-consumption-regression-test-suite
-    elsevier-research/dp-consumption-lib-spark
     elsevier-research/dp-consumption-service-dataset-builder
     elsevier-research/dp-consumption-service-exhibit-found-store
     elsevier-research/dp-consumption-service-occ-to-entity-store
@@ -251,6 +252,8 @@ CONSUMPTION_REPOS=(
     elsevier-research/dp-consumption-service-status-updater
     elsevier-research/dp-consumption-service-test-data-producer
     elsevier-research/dp-consumption-spark-cdb-relationships-producer
+    elsevier-research/dp-consumption-spark-occ-linked-parquet-store
+    elsevier-research/dp-consumption-spark-opinion-resolver
     elsevier-research/dp-consumption-spark-template
     elsevier-research/dp-consumption-test-automation
     elsevier-research/dp-consumption-test-end-to-end
@@ -647,11 +650,11 @@ RECOMMENDERS_REPOS=(
     elsevier-research/kd-recs-utils
     elsevier-research/kd-recs-validation
     elsevier-research/kd-recs-validation-app
-    elsevier-research/kd-work-recommender-jobs
     elsevier-research/kd-work-recommendations-graphql
     elsevier-research/kd-work-recommendations-graphql-infra
     elsevier-research/kd-work-recommendations-graphql-test
     elsevier-research/kd-work-recommendations-graphql-test
+    elsevier-research/kd-work-recommender-jobs
 )
 
 RECOMMENDERS_INFRA_REPOS=(
@@ -665,6 +668,7 @@ RECOMMENDERS_INFRA_REPOS=(
     elsevier-research/kd-recs-github-actions
     elsevier-research/kd-recs-homebrew-tools
     elsevier-research/kd-recs-infra
+    elsevier-research/kd-recs-instance-scheduler
     elsevier-research/kd-recs-main-eks
     elsevier-research/kd-recs-newrelic-terraform-generator
     elsevier-research/kd-recs-packer-builds
@@ -676,7 +680,6 @@ RECOMMENDERS_INFRA_REPOS=(
     elsevier-research/kd-recs-util-eks
     elsevier-research/kd-recs-util-jenkins-jobs
     elsevier-research/kdp-recs-terraform-ec2
-    elsevier-research/kd-recs-instance-scheduler
 )
 
 # RECOMMENDERS_DS_REPOS=(
@@ -797,6 +800,7 @@ BUTTER_CHICKEN_REPOS=(
     elsevier-research/kd-sda-batch-full-ingestion-poc
     elsevier-research/kd-sebright-app
     elsevier-research/kd-shared-genai-service
+    elsevier-research/kd-shared-genai-service-test
     elsevier-research/kd-shared-search-api
     elsevier-research/kd-shared-search-client
     elsevier-research/kd-shared-search-graphql
