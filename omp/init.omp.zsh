@@ -13,7 +13,7 @@ export PYENV_VIRTUALENV_DISABLE_PROMPT=1
 _omp_executable=$'/opt/homebrew/bin/oh-my-posh'
 _omp_tooltip_command=''
 
-export POSH_SESSION_ID=$("$_omp_executable" get uuid)
+export POSH_SESSION_ID=3567d866-03ef-44a8-8793-ca465d4bb668
 
 # switches to enable/disable features
 _omp_cursor_positioning=0
@@ -139,6 +139,8 @@ function _omp_render_tooltip() {
     return
   fi
 
+  setopt local_options no_shwordsplit
+
   # Get the first word of command line as tip.
   local tooltip_command=${${(MS)BUFFER##[[:graph:]]*}%%[[:space:]]*}
 
@@ -239,3 +241,5 @@ function enable_poshtooltips() {
 # legacy functions
 function enable_poshtransientprompt() {}
 
+enable_poshtooltips
+_omp_create_widget zle-line-init _omp_zle-line-init

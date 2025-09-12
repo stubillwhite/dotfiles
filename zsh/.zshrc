@@ -1079,6 +1079,7 @@ function az-login() {
 # ======================================
 
 alias cookiecutter-new-python='cookiecutter https://github.com/stubillwhite/cookiecutters --directory python'
+alias cookiecutter-new-clojure='cookiecutter https://github.com/stubillwhite/cookiecutters --directory clojure-reloaded'
 
 #
 # Docker                            {{{2
@@ -2413,6 +2414,10 @@ function certificate-expiry-openssl() {
 # ======================================
 
 source-if-exists "$HOME/Dev/my-stuff/dotfiles/tmuxinator/tmuxinator.zsh"
+
+# Oh My Posh                        {{{2
+# ======================================
+alias init-omp='eval $(oh-my-posh init zsh --config ~/dev/my-stuff/dotfiles/omp/config.omp.json)'
 
 # Machine-specific configuration                                            {{{1
 # ==============================================================================
