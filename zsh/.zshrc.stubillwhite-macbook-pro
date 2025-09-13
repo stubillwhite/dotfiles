@@ -12,5 +12,9 @@ export SSL_CERT_FILE=/opt/homebrew/etc/openssl@3/cert.pem
 #export HTTPLIB2_CA_CERTS="${SSL_CERT_FILE}"    # httplib2
 #export NODE_EXTRA_CA_CERTS="${SSL_CERT_FILE}"  # node
 
+# XCode                                                                     {{{1
+# ==============================================================================
+
 alias xcode-brew='sudo xcode-select --switch /Library/Developer/CommandLineTools'
 alias xcode-appstore='sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer'
+alias xcode-legacy='sudo xcode-select --switch ~/dev/xcode/Xcode-15.2.0.app/Contents/Developer'
