@@ -1078,7 +1078,8 @@ function az-login() {
 # cookiecutter                      {{{2
 # ======================================
 
-alias cookiecutter-new-python='cookiecutter https://github.com/stubillwhite/cookiecutters --directory python'
+alias cookiecutter-new-python-poetry='cookiecutter https://github.com/stubillwhite/cookiecutters --directory python-poetry'
+alias cookiecutter-new-python-uv='cookiecutter https://github.com/stubillwhite/cookiecutters --directory python-uv'
 alias cookiecutter-new-clojure='cookiecutter https://github.com/stubillwhite/cookiecutters --directory clojure-reloaded'
 
 #
