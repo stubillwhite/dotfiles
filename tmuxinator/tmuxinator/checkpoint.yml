@@ -1,0 +1,16 @@
+name: checkpoint
+
+windows:
+  - checkpoint:
+      layout: even-horizontal
+      panes:
+        - org: >
+            cd ~/Dropbox/Private/org
+            && git add -A
+            && git commit -m 'Checkpoint'
+            && git push
+        - obsidian: >
+            cd ~/Dropbox/Private/obsidian
+            && git add -A
+            && git commit -m 'Checkpoint'
+            && git push

@@ -46,6 +46,7 @@ DKP_REPOS=(
     elsevier-research/dkp-rest-tests
     elsevier-research/dkp-sct-application
     elsevier-research/dkp-sct-e2e-tests
+    elsevier-research/dkp-sct-purge-tool
     elsevier-research/dkp-sct-tests
     elsevier-research/dkp-taxonomy-conversion-lambda
     elsevier-research/dkp-taxonomy-exporter
@@ -254,6 +255,8 @@ CONSUMPTION_REPOS=(
     elsevier-research/dp-consumption-spark-cdb-relationships-producer
     elsevier-research/dp-consumption-spark-occ-linked-parquet-store
     elsevier-research/dp-consumption-spark-opinion-resolver
+    elsevier-research/dp-core-config
+    elsevier-research/dp-consumption-spark-subscription-builder
     elsevier-research/dp-consumption-spark-template
     elsevier-research/dp-consumption-test-automation
     elsevier-research/dp-consumption-test-end-to-end
@@ -590,6 +593,7 @@ RECOMMENDERS_REPOS=(
     elsevier-research/kd-recs-aws
     elsevier-research/kd-recs-bos-api-common
     elsevier-research/kd-recs-build
+    elsevier-research/elsevier-research-kd-recs-scopus-personalization-experiment
     elsevier-research/kd-recs-collaborative-filtering-lib
     elsevier-research/kd-recs-common-config
     elsevier-research/kd-recs-core-contracts
@@ -718,10 +722,10 @@ RECOMMENDERS_INFRA_REPOS=(
 #     elsevier-research/kd-recs-sutd-recs-generator
 # )
 
-# Butter Chicken                    {{{2
+# KD Misc                           {{{2
 # ======================================
 
-BUTTER_CHICKEN_REPOS=(
+KD_MISC_REPOS=(
     elsevier-research/kd-apollo-router
     elsevier-research/kd-apollo-router-perf-test
     elsevier-research/kd-apollo-router-test
@@ -729,128 +733,95 @@ BUTTER_CHICKEN_REPOS=(
     elsevier-research/kd-app-infra-template
     elsevier-research/kd-app-template
     elsevier-research/kd-app-test-template
+    elsevier-research/kd-architecture-n-design
     elsevier-research/kd-artefacts
+    elsevier-research/kd-author-relations-store-infra
     elsevier-research/kd-automation-autocomplete
     elsevier-research/kd-automation-document-embeddings
     elsevier-research/kd-automation-embeddings
     elsevier-research/kd-automation-enricher
     elsevier-research/kd-automation-genai
+    elsevier-research/kd-automation-graphql-mendeley-search
+    elsevier-research/kd-automation-sagemaker
     elsevier-research/kd-automation-shared-genai
+    elsevier-research/kd-automation-shared-search
     elsevier-research/kd-automation-splitter
+    elsevier-research/kd-automation-sss
     elsevier-research/kd-automation-stitcher
+    elsevier-research/kd-automation-vectorcalculation
+    elsevier-research/kd-aws-kafka-msk-poc
+    elsevier-research/kd-aws-newrelic-infra
+    elsevier-research/kd-comparator-api-infra
+    elsevier-research/kd-concept-traversal-graphql
+    elsevier-research/kd-concept-traversal-graphql-infra
+    elsevier-research/kd-concept-traversal-graphql-test
+    elsevier-research/kd-conflict-of-interest
+    elsevier-research/kd-conversation-history-service
+    elsevier-research/kd-conversation-history-service-infra
+    elsevier-research/kd-conversation-history-service-test
+    elsevier-research/kd-covid-kg
+    elsevier-research/kd-cross-encoder-docker-image
+    elsevier-research/kd-cto-legacy-perf-test
+    elsevier-research/kd-cto-legacy-rest
+    elsevier-research/kd-cto-legacy-rest-infra
     elsevier-research/kd-cto-legacy-rest-test
+    elsevier-research/kd-cw-logs-to-os-infra
     elsevier-research/kd-docker-images
     elsevier-research/kd-document-embedding
     elsevier-research/kd-document-embedding-sagemaker-mme
+    elsevier-research/kd-document-relations-store
+    elsevier-research/kd-document-relations-store-infra
+    elsevier-research/kd-document-relations-store-test
     elsevier-research/kd-document-splitter
     elsevier-research/kd-document-stitcher
+    elsevier-research/kd-document-stitcher-mock-entity-view
+    elsevier-research/kd-document-stitcher-poc
+    elsevier-research/kd-document-stitcher-spring-integration-poc
+    elsevier-research/kd-ds-client-datacatalog
+    elsevier-research/kd-ds-client-fps
+    elsevier-research/kd-ds-client-topbraid
+    elsevier-research/kd-ds-docker-prodigy
+    elsevier-research/kd-ds-docker-shacl
     elsevier-research/kd-ds-embedding-service
     elsevier-research/kd-ds-experiment-template
     elsevier-research/kd-ds-experiments
+    elsevier-research/kd-ds-hierarchy-scripts
     elsevier-research/kd-ds-indextract
+    elsevier-research/kd-ds-lda-experimentation
+    elsevier-research/kd-ds-lemmatization-dictionary
+    elsevier-research/kd-ds-lemmatizer-eval
+    elsevier-research/kd-ds-neo4j-storage-test
+    elsevier-research/kd-ds-omniscience-neo4j-load
+    elsevier-research/kd-ds-pagerank-graph
+    elsevier-research/kd-ds-prodigy-training
+    elsevier-research/kd-ds-query-emb-similarity
+    elsevier-research/kd-ds-question-answering
+    elsevier-research/kd-ds-spellchecking
     elsevier-research/kd-ds-teddy
+    elsevier-research/kd-ds-test-opennlp
     elsevier-research/kd-eagle-sqs-publish
+    elsevier-research/kd-eks-cluster-autoscaler
+    elsevier-research/kd-eks-external-dns
+    elsevier-research/kd-eks-metric-server
+    elsevier-research/kd-elastic-cloud-kubernetes
+    elsevier-research/kd-elastic-cluster-infra
+    elsevier-research/kd-elasticsearch-testdata-loader
     elsevier-research/kd-enricher
     elsevier-research/kd-evaluation-framework
     elsevier-research/kd-evaluation-integration
     elsevier-research/kd-evaluation-service
+    elsevier-research/kd-evaluation-service-infra
+    elsevier-research/kd-expert-finder-poc
     elsevier-research/kd-facade-service
+    elsevier-research/kd-facade-service-infra
     elsevier-research/kd-facade-service-perf-test
     elsevier-research/kd-facade-service-test
+    elsevier-research/kd-funding-traversal-graphql
+    elsevier-research/kd-funding-traversal-graphql-infra
+    elsevier-research/kd-funding-traversal-graphql-test
     elsevier-research/kd-genai-java-service
     elsevier-research/kd-genai-service
-    elsevier-research/kd-graph-service-api-spec
-    elsevier-research/kd-hallucination-detection
-    elsevier-research/kd-helm-charts
-    elsevier-research/kd-hydration-dynamodb-client
-    elsevier-research/kd-hydration-graphql-app
-    elsevier-research/kd-hydration-ingestion
-    elsevier-research/kd-ingestion-components-configuration
-    elsevier-research/kd-ingestion-performance-poc
-    elsevier-research/kd-ingestion-scripts
-    elsevier-research/kd-ingestion-sync
-    elsevier-research/kd-java-app-framework
-    elsevier-research/kd-java-app-template
-    elsevier-research/kd-jenkins-pipelines
-    elsevier-research/kd-kafka-common
-    elsevier-research/kd-labs-genai-query-logs-analysis
-    elsevier-research/kd-labs-sret-backend-nestjs
-    elsevier-research/kd-labs-sret-frontend
-    elsevier-research/kd-labs-webapp-search-relevance
-    elsevier-research/kd-mic-lambda
-    elsevier-research/kd-multibranch-test
-    elsevier-research/kd-orgdb-parser
-    elsevier-research/kd-performance-embeddings
-    elsevier-research/kd-performance-genai
-    elsevier-research/kd-performance-mendeley
-    elsevier-research/kd-performance-sss
-    elsevier-research/kd-person-finder-service
-    elsevier-research/kd-person-relations-store
-    elsevier-research/kd-person-traversal-graphql
-    elsevier-research/kd-personfinder-performance
-    elsevier-research/kd-pf-tools
-    elsevier-research/kd-python-app-framework
-    elsevier-research/kd-python-app-test
-    elsevier-research/kd-query-intent
-    elsevier-research/kd-query-simulation
-    elsevier-research/kd-queryintent-analysis
-    elsevier-research/kd-queryintent-performancetesting
-    elsevier-research/kd-scopus-search
-    elsevier-research/kd-scripts-etc
-    elsevier-research/kd-sda-batch-full-ingestion-poc
-    elsevier-research/kd-sebright-app
-    elsevier-research/kd-shared-genai-service
-    elsevier-research/kd-shared-genai-service-test
-    elsevier-research/kd-shared-search-api
-    elsevier-research/kd-shared-search-client
-    elsevier-research/kd-shared-search-graphql
-    elsevier-research/kd-similarsearch-automation
-    elsevier-research/kd-similarsearch-performancetesting
-    elsevier-research/kd-sources-search-service-perf-test
-    elsevier-research/kd-sources-search-service-test
-    elsevier-research/kd-tio-ansible-es-config
-    elsevier-research/kd-tio-ansible-neo4j
-    elsevier-research/kd-tio-docker-neo4j
-    elsevier-research/kd-tio-jenkinscontrol
-    elsevier-research/kd-tio-kong-consumers-and-services
-    elsevier-research/kd-tio-puppetcontrol
-    elsevier-research/kd-tio-solr-docker
-    elsevier-research/kd-tio-terraform
-    elsevier-research/kd-tio-terraform-neo4j-enterprise
-    elsevier-research/kd-vector-calculation-service
-    elsevier-research/kd-vector-dbs
-    elsevier-research/kd-work-hydration-graphql
-    elsevier-research/kd-xocs-feed-translator-test
-    elsevier-research/poc-kd-genai-multiagent
-    SDFE/rai-gpt-service
-)
-
-BUTTER_CHICKEN_INFRA_REPOS=(
-    elsevier-research/kd-author-relations-store-infra
-    elsevier-research/kd-aws-newrelic-infra
-    elsevier-research/kd-cto-legacy-rest-infra
-    elsevier-research/kd-document-relations-store-infra
-    elsevier-research/kd-evaluation-service-infra
-    elsevier-research/kd-shared-genai-infra
     elsevier-research/kd-genai-service-infra
-    elsevier-research/kd-hydration-graphql-infra
-    elsevier-research/kd-organization-hydration-graphql-infra
-    elsevier-research/kd-person-hydration-graphql-infra
-    elsevier-research/kd-person-relations-store-infra
-    elsevier-research/kd-person-traversal-graphql-infra
-    elsevier-research/kd-scival-graphql-infra
-    elsevier-research/kd-shared-search-graphql-infra
-    elsevier-research/kd-sources-search-service-infra
-    elsevier-research/kd-tio-ansible-newrelic-infra-agent
-    elsevier-research/kd-work-hydration-graphql-infra
-)
-
-# Spirograph                        {{{2
-# ======================================
-
-SPIROGRAPH_REPOS=(
-    elsevier-research/kd-concept-traversal-graphql
-    elsevier-research/kd-conflict-of-interest
     elsevier-research/kd-graph-airflow
     elsevier-research/kd-graph-automation
     elsevier-research/kd-graph-comparer
@@ -860,31 +831,92 @@ SPIROGRAPH_REPOS=(
     elsevier-research/kd-graph-neo4j-poc
     elsevier-research/kd-graph-performance-test
     elsevier-research/kd-graph-quality-notebooks
+    elsevier-research/kd-graph-service-api-spec
     elsevier-research/kd-graph-service-api-test
+    elsevier-research/kd-graph-service-infra
     elsevier-research/kd-graph-service-test-automation
     elsevier-research/kd-graph-spark-scripts
     elsevier-research/kd-graph-updater
     elsevier-research/kd-graph-version-manager
+    elsevier-research/kd-graphql-documentation
     elsevier-research/kd-graphql-gateway
-    elsevier-research/kd-organization-hydration-graphql-test
-    elsevier-research/kd-person-hydration-graphql-test
-    elsevier-research/kd-person-traversal-graphql-test
-    elsevier-research/kd-work-hydration-graphql-test
-    elsevier-research/kd-work-traversal-graphql-test
-)
-
-# KD Misc                           {{{2
-# ======================================
-
-KD_MISC_REPOS=(
-    elsevier-research/kd-architecture-n-design
-    elsevier-research/kd-automation-graphql-mendeley-search
-    elsevier-research/kd-automation-shared-search
-    elsevier-research/kd-ds-pagerank-graph
-    elsevier-research/kd-graph-service-infra
     elsevier-research/kd-graphql-gateway-infra
+    elsevier-research/kd-hallucination-detection
+    elsevier-research/kd-helm-charts
+    elsevier-research/kd-hydration-dynamodb-client
+    elsevier-research/kd-hydration-graphql-app
+    elsevier-research/kd-hydration-graphql-infra
+    elsevier-research/kd-hydration-ingestion
+    elsevier-research/kd-ingestion-components-configuration
+    elsevier-research/kd-ingestion-performance-poc
+    elsevier-research/kd-ingestion-scripts
+    elsevier-research/kd-ingestion-scripts-test
+    elsevier-research/kd-ingestion-sync
+    elsevier-research/kd-java-app-framework
+    elsevier-research/kd-java-app-template
+    elsevier-research/kd-java-mcp-client
+    elsevier-research/kd-jenkins-pipelines
+    elsevier-research/kd-kafka-common
+    elsevier-research/kd-kong-internal-apis
+    elsevier-research/kd-labs-genai-query-logs-analysis
+    elsevier-research/kd-labs-sret-backend-nestjs
+    elsevier-research/kd-labs-sret-frontend
+    elsevier-research/kd-labs-webapp-search-relevance
+    elsevier-research/kd-mendeley-ingestion-choreographer
+    elsevier-research/kd-mic-lambda
+    elsevier-research/kd-multibranch-test
+    elsevier-research/kd-neo4j-gds
+    elsevier-research/kd-neo4j-infra
+    elsevier-research/kd-neo4j-pregel
+    elsevier-research/kd-organization-hydration-graphql
+    elsevier-research/kd-organization-hydration-graphql-infra
+    elsevier-research/kd-organization-hydration-graphql-perf-test
+    elsevier-research/kd-organization-hydration-graphql-test
+    elsevier-research/kd-organization-traversal-graphql
+    elsevier-research/kd-organization-traversal-graphql-infra
+    elsevier-research/kd-organization-traversal-graphql-test
+    elsevier-research/kd-organization-traversal-perf-test
+    elsevier-research/kd-orgdb-parser
+    elsevier-research/kd-performance-embeddings
+    elsevier-research/kd-performance-genai
+    elsevier-research/kd-performance-mendeley
+    elsevier-research/kd-performance-sagemaker
+    elsevier-research/kd-performance-shared-genai
     elsevier-research/kd-performance-shared-search
+    elsevier-research/kd-performance-sss
+    elsevier-research/kd-performance-vector-calculation
+    elsevier-research/kd-person-finder-api-automation
+    elsevier-research/kd-person-finder-bct
+    elsevier-research/kd-person-finder-pact-contract-test
+    elsevier-research/kd-person-finder-service
+    elsevier-research/kd-person-finder-service-infra
+    elsevier-research/kd-person-hydration-graphql
+    elsevier-research/kd-person-hydration-graphql-infra
+    elsevier-research/kd-person-hydration-graphql-perf-test
+    elsevier-research/kd-person-hydration-graphql-test
+    elsevier-research/kd-person-relations-store
+    elsevier-research/kd-person-relations-store-infra
+    elsevier-research/kd-person-relations-store-test
+    elsevier-research/kd-person-traversal-graphql
+    elsevier-research/kd-person-traversal-graphql-infra
+    elsevier-research/kd-person-traversal-graphql-test
+    elsevier-research/kd-personfinder-performance
+    elsevier-research/kd-pf-tools
+    elsevier-research/kd-platform-services-ui
+    elsevier-research/kd-pre-stitcher
+    elsevier-research/kd-python-app-framework
+    elsevier-research/kd-python-app-test
+    elsevier-research/kd-qst-logs-collector
+    elsevier-research/kd-queruintent-analysis
+    elsevier-research/kd-query-intent
+    elsevier-research/kd-query-simulation
+    elsevier-research/kd-queryintent-analysis
+    elsevier-research/kd-queryintent-performancetesting
+    elsevier-research/kd-scival-graphql-infra
+    elsevier-research/kd-scopus-search
     elsevier-research/kd-scopus-search2
+    elsevier-research/kd-scripts-etc
+    elsevier-research/kd-sda-batch-full-ingestion-poc
     elsevier-research/kd-search-akka-healthcheck
     elsevier-research/kd-search-autocomplete-indexer
     elsevier-research/kd-search-basistech-packaging
@@ -919,21 +951,54 @@ KD_MISC_REPOS=(
     elsevier-research/kd-search-test
     elsevier-research/kd-search-xml-tag-transformer
     elsevier-research/kd-search-xocs-parser
+    elsevier-research/kd-sebright-app
+    elsevier-research/kd-shared-genai-infra
+    elsevier-research/kd-shared-genai-service
+    elsevier-research/kd-shared-genai-service-test
+    elsevier-research/kd-shared-llm
+    elsevier-research/kd-shared-search-api
     elsevier-research/kd-shared-search-autocomplete-poc
+    elsevier-research/kd-shared-search-client
+    elsevier-research/kd-shared-search-graphql
+    elsevier-research/kd-shared-search-graphql-infra
     elsevier-research/kd-shared-search-kafka-connect
     elsevier-research/kd-shared-search-mapping-generation
     elsevier-research/kd-shared-search-performance
     elsevier-research/kd-shared-search-tools
     elsevier-research/kd-shared-search-tools-service
+    elsevier-research/kd-similarsearch-automation
+    elsevier-research/kd-similarsearch-performancetesting
+    elsevier-research/kd-sources-search-service-infra
+    elsevier-research/kd-sources-search-service-perf-test
+    elsevier-research/kd-sources-search-service-test
+    elsevier-research/kd-tio-ansible-es-config
+    elsevier-research/kd-tio-ansible-neo4j
+    elsevier-research/kd-tio-ansible-newrelic-infra-agent
     elsevier-research/kd-tio-ansible-shared-search-api
     elsevier-research/kd-tio-ansible-shared-search-es
     elsevier-research/kd-tio-ansible-shared-search-service
     elsevier-research/kd-tio-ansible-similar-search
+    elsevier-research/kd-tio-docker-neo4j
     elsevier-research/kd-tio-graph-docker
+    elsevier-research/kd-tio-jenkinscontrol
+    elsevier-research/kd-tio-kong-consumers-and-services
     elsevier-research/kd-tio-puppet-scopus-search-service
     elsevier-research/kd-tio-puppet-searchindexfeedproducer
     elsevier-research/kd-tio-puppet-searchupdatefeedproducer
     elsevier-research/kd-tio-puppet-shared-search-api
+    elsevier-research/kd-tio-puppetcontrol
+    elsevier-research/kd-tio-solr-docker
+    elsevier-research/kd-tio-terraform
+    elsevier-research/kd-tio-terraform-neo4j-enterprise
+    elsevier-research/kd-vector-calculation-service
+    elsevier-research/kd-vector-dbs
+    elsevier-research/kd-work-hydration-graphql
+    elsevier-research/kd-work-hydration-graphql-infra
+    elsevier-research/kd-work-hydration-graphql-test
+    elsevier-research/kd-work-traversal-graphql-test
+    elsevier-research/kd-xocs-feed-translator-test
+    elsevier-research/poc-kd-genai-multiagent
+    SDFE/rai-gpt-service
 )
 
 # Newsflo                           {{{2
@@ -1077,10 +1142,6 @@ clone-projects-into rdp/misc                "${RDP_MISC_REPOS[@]}"
 clone-projects-into kd/recs                 "${RECOMMENDERS_REPOS[@]}"
 clone-projects-into kd/recs/infra           "${RECOMMENDERS_INFRA_REPOS[@]}"
 
-clone-projects-into kd/butter-chicken       "${BUTTER_CHICKEN_REPOS[@]}"
-clone-projects-into kd/butter-chicken/infra "${BUTTER_CHICKEN_INFRA_REPOS[@]}"
-
-clone-projects-into kd/spirograph           "${SPIROGRAPH_REPOS[@]}"
 clone-projects-into kd/misc                 "${KD_MISC_REPOS[@]}"
 
 popd

@@ -1612,10 +1612,8 @@ function git-prompt-help() {
 
 function git-update-projects() {
     local projects=(
-        ~/dev/kd/butter-chicken
-        #~/dev/kd/misc
+        ~/dev/kd/misc
         ~/dev/kd/recs 
-        #~/dev/kd/spirograph
         #~/dev/rdp/architecture
         ~/dev/rdp/concept 
         ~/dev/rdp/consumption
