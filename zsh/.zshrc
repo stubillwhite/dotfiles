@@ -2246,7 +2246,7 @@ alias sbt-profile='sbt -Dsbt.task.timings=true'
 export SHELLCHECK_OPTS=""
 SHELLCHECK_OPTS+="-e SC1091 "    # Allow sourcing files from paths that do not exist yet
 SHELLCHECK_OPTS+="-e SC2039 "    # Allow dash in function names
-# SHELLCHECK_OPTS+="-e SC2112 "    # Allow 'function' keyword
+SHELLCHECK_OPTS+="-e SC2112 "    # Allow 'function' keyword
 SHELLCHECK_OPTS+="-e SC2155 "    # Allow declare and assignment in the same statement
 SHELLCHECK_OPTS+="-e SC3011 "    # Allow here-strings, not in POSIX sh
 SHELLCHECK_OPTS+="-e SC3033 "    # Allow dashes in functionn names, not in POSIX sh

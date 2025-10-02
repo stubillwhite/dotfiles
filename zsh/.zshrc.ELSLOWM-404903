@@ -1134,7 +1134,6 @@ function setup-claude-bedrock() {
     export CLAUDE_CODE_MAX_OUTPUT_TOKENS=4096
     export MAX_THINKING_TOKENS=1024
 
-    echo aws bedrock-runtime invoke-model --region $AWS_REGION --model-id $ANTHROPIC_MODEL --accept application/json --body '{"messages": [{"role": "user", "content": "What is Elsevier?"}], "anthropic_version": "bedrock-2023-05-31", "max_tokens": 200}' --content-type application/json --cli-binary-format raw-in-base64-out tmp.json
     # aws bedrock-runtime invoke-model --region $AWS_REGION --model-id $ANTHROPIC_MODEL --accept application/json --body '{"messages": [{"role": "user", "content": "What is Elsevier?"}], "anthropic_version": "bedrock-2023-05-31", "max_tokens": 200}' --content-type application/json --cli-binary-format raw-in-base64-out tmp.json
     # ANTHROPIC_LOG=debug claude -p "test
 }
