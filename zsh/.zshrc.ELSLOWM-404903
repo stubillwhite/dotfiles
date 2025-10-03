@@ -371,10 +371,10 @@ function recs-reviewers-dashboards() {
     # Obtain the dashboard's GUID:
     #  - Click the "tag" icon by the dashboard's name to access the See metadata and manage tags modal and see the dashboard's GUID.
     local dashboards=(
-        "MjA5OTI0M3xWSVp8REFTSEJPQVJEfGRhOjgyNzA4ODk"   # https://onenr.io/0OQM7dGXeRG
-        "MjA5OTI0M3xWSVp8REFTSEJPQVJEfGRhOjgyNzA4ODI"   # https://onenr.io/0PwJxmd6Dj7
-        "MjA5OTI0M3xWSVp8REFTSEJPQVJEfGRhOjgyNzA4ODQ"   # https://onenr.io/0EjOE9G6Dw6
-        "MjA5OTI0M3xWSVp8REFTSEJPQVJEfGRhOjgyNzA4ODY"   # https://onenr.io/08wpgE036QO
+        "MjA5OTI0M3xWSVp8REFTSEJPQVJEfGRhOjgyNzA4ODk"   # https://onenr.io/0OQM7dGXeRG - Gender
+        "MjA5OTI0M3xWSVp8REFTSEJPQVJEfGRhOjgyNzA4ODQ"   # https://onenr.io/0EjOE9G6Dw6 - Statistics
+        "MjA5OTI0M3xWSVp8REFTSEJPQVJEfGRhOjEwNjIxNDEy"  # https://onenr.io/0VjYzaDO3Q0 - Seniority
+        "MjA5OTI0M3xWSVp8REFTSEJPQVJEfGRhOjEwNjE5ODQ1"  # https://onenr.io/0MR2JPG6JRY - Geography
     )
 
     for dashboard in $dashboards[@]; do

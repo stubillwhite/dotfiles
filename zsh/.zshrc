@@ -1620,6 +1620,7 @@ function git-update-projects() {
         ~/dev/rdp/core
         ~/dev/rdp/dkp 
         ~/dev/rdp/foundations
+        ~/dev/rdp/newsflo
         #~/dev/rdp/scibite
     )
 
