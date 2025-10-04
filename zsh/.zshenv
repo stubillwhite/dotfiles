@@ -42,12 +42,12 @@ function source-or-warn() {
 # ==============================================================================
 
 export PATH=~/dev/tools/bin:$PATH
-export PATH=/usr/local/opt/ruby/bin:$PATH
-export PATH=/usr/local/opt/coreutils/libexec/gnubin:$PATH
-export PATH=/usr/local/opt/make/libexec/gnubin:$PATH
+export PATH=/opt/homebrew/opt/ruby/bin:$PATH
+export PATH=/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH
+export PATH=/opt/homebrew/opt/make/libexec/gnubin:$PATH
 export PATH=/Applications/Emacs.app/Contents/MacOS:$PATH
 
-export PATH=$PATH:/usr/local/lib/ruby/gems/3.0.0/bin
+export PATH=$PATH:/opt/homebrew/lib/ruby/gems/3.4.0/bin
 export PATH=$PATH:/Applications/Beyond\ Compare.app/Contents/MacOS
 export PATH=$PATH:/Applications/PyCharm.app/Contents/MacOS
 export PATH=$PATH:/Applications/IntelliJ\ IDEA\ CE.app/Contents/MacOS
