@@ -124,3 +124,8 @@
 [includeIf "gitdir:~/dev/kd/"]
     path = ~/dev/my-stuff/dotfiles/git/work-config/.gitconfig
 
+[filter "lfs"]
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
