@@ -73,6 +73,9 @@
 ### Manual settings ###
 
 - `System Settings`
+    - `Accessibility`
+        - `Display`
+            - `Reduce transparency`
     - `Keyboard`
         - `Keyboard Shortcuts`
             - Turn off everything except:
