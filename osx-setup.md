@@ -76,6 +76,8 @@
     - `Accessibility`
         - `Display`
             - `Reduce transparency`
+    - `Appearance`
+        - `Icon & widget style`: `Dark`
     - `Keyboard`
         - `Keyboard Shortcuts`
             - Turn off everything except:
