@@ -2,6 +2,11 @@ name: stagekick
 
 windows:
   - stagekick:
-      root: ~/dev/my-stuff/stagekick
+      layout: even-vertical
       panes:
-        - make run-append-to-db
+        - server: |
+            cd ~/dev/my-stuff/stagekick/server
+            make run-api
+        - client: |
+            cd ~/dev/my-stuff/stagekick/client
+            make run
