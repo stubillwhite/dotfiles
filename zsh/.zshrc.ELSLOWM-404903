@@ -20,7 +20,7 @@ function start-printer-service() {
 # Certificates                                                              {{{1
 # ==============================================================================
 
-export SSL_CERT_FILE=~/dev/certificates/ZscalerRootCertificate-2048-SHA256.crt
+export SSL_CERT_FILE=~/dev/certificates/Zscaler-Root-cert-2025.cer
 
 #export SSL_CERT_FILE="${SSL_CERT_FILE}"        # openssl
 #export REQUESTS_CA_BUNDLE="${SSL_CERT_FILE}"   # requests
