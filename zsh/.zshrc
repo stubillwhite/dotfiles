@@ -1773,7 +1773,7 @@ function git-stats-merge-files() {
     for f in $(gfind . -name ${fnam}); do
         echo "Merging ${f} into ${fnam}"
 
-        if [[ -f "./${fnam}" ]]; then
+        if [[ -s "./${fnam}" ]]; then
             cat "${f}" | tail -n +2 >> "./${fnam}"
         else
             cat "${f}" > "./${fnam}"
@@ -1789,13 +1789,13 @@ function git-repos-generate-stats() {
 
         local fnam=".git-stats.csv"
 
-        if [[ -f "../${fnam}" ]]; then
+        if [[ -s "../${fnam}" ]]; then
             cat "${fnam}" | tail -n +2 >> "../${fnam}"
         else
             cat "${fnam}" > "../${fnam}"
         fi
 
-        rm "${fnam}"
+        # rm "${fnam}"
     }
 
     rm -f ".git-stats.csv"
