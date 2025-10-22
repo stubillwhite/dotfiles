@@ -15,8 +15,9 @@ zmodload zsh/zprof
 # ==============================================================================
 
 # Usage: if-darwin && { echo foo }
-function if-darwin() { [[ "$(uname)" == "Darwin" ]]; }
-function if-linux() { [[ "$(uname)" == "Linux" ]]; }
+export OS_NAME=$(uname) 
+function if-darwin() { [[ "${OS_NAME}" == "Darwin" ]]; }
+function if-linux() { [[ "${OS_NAME}" == "Linux" ]]; }
 
 # Usage: if-work-machine && { echo foo }
 function if-work-machine() { [[ "$(scutil --get ComputerName)" == "ELSLOWM-404903" ]]; }
