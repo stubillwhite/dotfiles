@@ -41,9 +41,6 @@ case "${state}" in
 
             (bos)
                 envs=(
-                    'utility'
-                    'dev'
-                    'staging'
                     'prod'
                 )
             ;;
