@@ -113,6 +113,9 @@
 [includeIf "gitdir:~/Dropbox/Private/obsidian/"]
     path = ~/dev/my-stuff/dotfiles/git/personal-config/.gitconfig
 
+[includeIf "gitdir:~/dev/unreal/"]
+    path = ~/dev/my-stuff/dotfiles/git/personal-config/.gitconfig
+
 # Work
 
 [includeIf "gitdir:~/dev/scratchpad/"]
