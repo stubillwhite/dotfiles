@@ -15,5 +15,5 @@ if [ ${hasGitLFS} -ne 0 ]; then
     printf "${COLOR_RED}WARNING: This repository is configured for Git LFS but 'git-lfs' was not found on your path.${COLOR_NONE}\n"
     exit 2
 else
-    git lfs pre-push "$@"
+    git lfs post-commit "$@"
 fi

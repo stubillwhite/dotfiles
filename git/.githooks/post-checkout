@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 if [[ "$TERM" == "dumb" ]]; then
     COLOR_RED=''
@@ -13,3 +13,14 @@ branchName=$(git rev-parse --abbrev-ref HEAD)
 if [[ "${branchName}" == "master" ]]; then
     printf "${COLOR_RED}WARNING: Checking out master is deprecated${COLOR_NONE}\n"
 fi
+
+command -v git-lfs >/dev/null 2>&1
+hasGitLFS=$?
+
+if [ ${hasGitLFS} -ne 0 ]; then
+    printf "${COLOR_RED}WARNING: This repository is configured for Git LFS but 'git-lfs' was not found on your path.${COLOR_NONE}\n"
+    exit 2
+else
+    git lfs post-checkout "$@"
+fi
+
