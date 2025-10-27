@@ -6,13 +6,13 @@ windows:
       panes:
         - org: >
             cd ~/Dropbox/Private/org
-            && git pull -r
+            && git pull -r --autostash
             && git add -A
             && git commit -m 'Checkpoint'
             && git push
         - obsidian: >
             cd ~/Dropbox/Private/obsidian
-            && git pull -r
+            && git pull -r --autostash
             && git add -A
             && git commit -m 'Checkpoint'
             && git push
