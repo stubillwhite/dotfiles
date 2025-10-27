@@ -43,6 +43,8 @@ SHALLOW_REPOS=(
     prezto
     shell-utils
     tech-radar
+    org
+    obsidian
 )
 
 RECURSIVE_REPOS=(
