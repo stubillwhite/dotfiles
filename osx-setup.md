@@ -208,3 +208,10 @@ To enable the old-style Git commit interface:
 - Run Visual Studio Code
 - `Code` > `Settings...` > `Settings`
     - Search for `Sticky Scroll` and set `Editor: Sticky Scroll` to disabled
+
+### Camera ###
+
+- Turn off Centre Stage which keeps you centred in the frame
+    - Start a call
+    - Click on the green camera icon in the top bar
+    - Untick the "Center Stage" icon
