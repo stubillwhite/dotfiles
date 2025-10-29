@@ -16,14 +16,11 @@ cask "temurin@21"                               # JDK 21 LTS from https://adopti
 cask "temurin"                                  # Latest JDK from https://adoptium.net/
 
 # Basics
-cask "alacritty"                                # GPU-accelerated terminal emulator
 cask "beyond-compare"                           # Compare files and folders
 cask "dropbox"                                  # Client for the Dropbox cloud storage service
 cask "firefox"                                  # Mozilla Firefox
-cask "hyper"                                    # Terminal built on web technologies
 cask "iterm2"                                   # Terminal emulator as alternative to Apple's Terminal app
 cask "jordanbaird-ice"                          # Powerful menu bar manager for macOS 
-cask "kitty"                                    # GPU-based terminal emulator
 cask "orion"                                    # WebKit based web browser
 cask "syncthing"                                # Open source continuous file synchronization application
 
