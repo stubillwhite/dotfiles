@@ -2,7 +2,7 @@ name: checkpoint
 
 windows:
   - checkpoint:
-      layout: even-horizontal
+      layout: even-vertical
       panes:
         - org: >
             cd ~/Dropbox/Private/org
