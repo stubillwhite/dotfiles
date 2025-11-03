@@ -1071,7 +1071,7 @@ function white-test() {
 # ======================================
 
 function az-login() {
-     az login -u white1@science.regn.net -o table
+     az login -u white1@science.regn.net -o table --tenant e4da3038-e444-43f8-b90a-283479ce8d16
 }
 
 #
