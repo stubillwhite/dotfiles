@@ -13,6 +13,7 @@ cask "temurin@8"                                # JDK 8 LTS from https://adoptiu
 cask "temurin@11"                               # JDK 11 LTS from https://adoptium.net/
 cask "temurin@17"                               # JDK 17 LTS from https://adoptium.net/
 cask "temurin@21"                               # JDK 21 LTS from https://adoptium.net/
+cask "temurin@25"                               # JDK 25 LTS from https://adoptium.net/
 cask "temurin"                                  # Latest JDK from https://adoptium.net/
 
 # Basics
