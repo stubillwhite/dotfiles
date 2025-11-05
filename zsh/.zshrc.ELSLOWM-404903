@@ -1,10 +1,5 @@
 # vim:fdm=marker
 
-# Aliases                                                                   {{{1
-# ==============================================================================
-
-alias daily-update='mux upgrade --no-attach ; mux jira --no-attach ; tmux attach'
-
 # Printing                                                                  {{{1
 # ==============================================================================
 
@@ -1142,3 +1137,17 @@ function setup-claude-bedrock() {
     # aws bedrock-runtime invoke-model --region $AWS_REGION --model-id $ANTHROPIC_MODEL --accept application/json --body '{"messages": [{"role": "user", "content": "What is Elsevier?"}], "anthropic_version": "bedrock-2023-05-31", "max_tokens": 200}' --content-type application/json --cli-binary-format raw-in-base64-out tmp.json
     # ANTHROPIC_LOG=debug claude -p "test
 }
+
+# Admin functions                                                           {{{1
+# ==============================================================================
+
+# Aliases                                                                   {{{1
+# ==============================================================================
+
+function daily-update() {
+    open 'https://fa-ewqc-saasfaprod1.fa.ocs.oraclecloud.com/'
+    mux upgrade --no-attach
+    mux jira --no-attach
+    tmux attach
+}
+
