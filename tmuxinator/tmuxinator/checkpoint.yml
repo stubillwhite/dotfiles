@@ -13,7 +13,7 @@ windows:
             - clear
             - git status
         - obsidian:
-            - cd ~/Dropbox/Private/obsidian
+            - cd ~/dev/my-stuff/obsidian
             - git pull -r --autostash
             - git add -A
             - git commit -m 'Checkpoint'
