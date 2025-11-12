@@ -2,6 +2,13 @@
 
 # vim:fdm=marker
 
+# DEng repos                                                                {{{1
+# ==============================================================================
+
+DENG_REPOS=(
+    elsevier-centraltechnology/core-backstage-contributors
+)
+
 # RDP repos                                                                 {{{1
 # ==============================================================================
 
@@ -846,7 +853,6 @@ KD_MISC_REPOS=(
     elsevier-research/kd-hydration-dynamodb-client
     elsevier-research/kd-hydration-graphql-app
     elsevier-research/kd-hydration-graphql-infra
-    elsevier-research/kd-hydration-ingestion
     elsevier-research/kd-ingestion-components-configuration
     elsevier-research/kd-ingestion-performance-poc
     elsevier-research/kd-ingestion-scripts
@@ -864,7 +870,6 @@ KD_MISC_REPOS=(
     elsevier-research/kd-labs-webapp-search-relevance
     elsevier-research/kd-mendeley-ingestion-choreographer
     elsevier-research/kd-mic-lambda
-    elsevier-research/kd-multibranch-test
     elsevier-research/kd-neo4j-gds
     elsevier-research/kd-neo4j-infra
     elsevier-research/kd-neo4j-pregel
@@ -918,6 +923,7 @@ KD_MISC_REPOS=(
     elsevier-research/kd-scripts-etc
     elsevier-research/kd-sda-batch-full-ingestion-poc
     elsevier-research/kd-search-akka-healthcheck
+    elsevier-research/kd-search-and-ai-platform-docs
     elsevier-research/kd-search-autocomplete-indexer
     elsevier-research/kd-search-basistech-packaging
     elsevier-research/kd-search-components
@@ -1106,6 +1112,11 @@ function clone-projects-into() {
 # ==============================================================================
 
 pushd ~/dev
+
+# KD                                {{{2
+# ======================================
+
+clone-projects-into deng                    "${DENG_REPOS[@]}"
 
 # RDP                               {{{2
 # ======================================
