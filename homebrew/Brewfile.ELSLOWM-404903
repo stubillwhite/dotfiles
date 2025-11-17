@@ -51,6 +51,7 @@ brew 'docker'                                   # Pack, ship and run any applica
 brew 'docker-compose'                           # Isolated development environments using Docker
 brew 'docker-machine'                           # Create Docker hosts locally and on cloud providers
 brew 'lazydocker'                               # The lazier way to manage everything docker
+brew 'podman'                                   # Tool for managing OCI containers and pods
 
 # Kubernetes
 brew 'kubectl'                                  # Kubernetes command-line interface

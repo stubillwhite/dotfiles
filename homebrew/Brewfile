@@ -119,6 +119,9 @@ cask "hammerspoon"                              # Desktop automation application
 # Development
 ################################################################################
 
+# XCode
+brew "xcodes"                                   # Best command-line tool to install and switch between multiple versions of Xcode
+
 # Fonts
 cask "font-comic-shanns-mono-nerd-font"         # ComicShannsMono Nerd Font (Comic Shanns Mono)
 cask "font-fantasque-sans-mono-nerd-font"       # FantasqueSansM Nerd Font (Fantasque Sans Mono)
@@ -159,6 +162,10 @@ brew "cabal-install"                            # Command-line interface for Cab
 brew "ghcup"                                    # Installer for the general purpose language Haskell
 brew "haskell-stack"                            # The Haskell Tool Stack
 
+# C/C++
+brew "conan"                                    # Distributed, open source, package manager for C/C++
+brew "doxygen"                                  # Generate documentation for several programming languages
+
 # Groovy
 brew "groovy"                                   # Java-based scripting language
 
@@ -189,7 +196,7 @@ brew "ruby"                                     # Powerful, clean, object-orient
 brew "duckdb"                                   # Embeddable SQL OLAP Database Management System
 
 # Javascript
-brew "node"                                     # platform built on v8 to build network applications
+brew "node"                                     # Open-source, cross-platform JavaScript runtime environment
 brew "yarn"                                     # JavaScript package manager
 
 # AWS
