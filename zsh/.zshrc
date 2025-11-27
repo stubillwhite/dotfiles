@@ -1081,6 +1081,7 @@ function az-login() {
 alias cookiecutter-new-python-poetry='cookiecutter https://github.com/stubillwhite/cookiecutters --directory python-poetry'
 alias cookiecutter-new-python-uv='cookiecutter https://github.com/stubillwhite/cookiecutters --directory python-uv'
 alias cookiecutter-new-clojure='cookiecutter https://github.com/stubillwhite/cookiecutters --directory clojure-reloaded'
+alias cookiecutter-new-cpp='cookiecutter https://github.com/stubillwhite/cookiecutters --directory cpp'
 
 #
 # Docker                            {{{2

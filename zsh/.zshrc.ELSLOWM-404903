@@ -55,6 +55,14 @@ function ssh-find-username() {
     return 1
 }
 
+# Backstage                                                                 {{{1
+# ==============================================================================
+
+function backstage-preview-docs() {
+    open 'http://localhost:8000'
+    docker run -it --rm -w /content -v ${PWD}:/content -p 8000:8000 spotify/techdocs serve -a 0.0.0.0:8000
+}
+
 # Kubernetes                                                                {{{1
 # ==============================================================================
 
