@@ -110,11 +110,6 @@ export OPENAI_API_KEY=${SECRET_OPENAI_API_KEY}
 # General settings                                                          {{{1
 # ==============================================================================
 
-# GCC
-export LDFLAGS="-L/usr/local/opt/ruby/lib"
-export CPPFLAGS="-I/usr/local/opt/ruby/include"
-export PKG_CONFIG_PATH="/usr/local/opt/ruby/lib/pkgconfig"
-
 # Leiningen
 export LEIN_JVM_OPTS='-Xms4G -Xmx4G'
 
