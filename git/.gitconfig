@@ -36,6 +36,8 @@
     recent-branches = !git reflog show --pretty=format:'%gs ~ %gd' --date=relative | grep 'checkout:' | grep -oE '[^ ]+ ~ .*' | awk -F~ '!seen[$1]++' | gsed -r 's/(.+) ~ HEAD@\\{([^\\}]+)\\}$/\\2,\\1/g' | gsed 's/,,/,-,/g' | column -t -s '',''
     find-deleted-file = log --full-history -1 -- 
     track-all = "!for remote in $(git branch -r | grep -v -- '->'); do git branch --track ${remote##origin/} $remote; done"
+    stash-show = stash show -p 0
+    submodules-reset = submodule foreach --recursive git reset --hard
 
 [core]
 	editor = nvim
