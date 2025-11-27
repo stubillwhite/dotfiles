@@ -128,6 +128,14 @@ cask "font-fantasque-sans-mono-nerd-font"       # FantasqueSansM Nerd Font (Fant
 cask "font-fantasque-sans-mono"                 # A font family with a great monospaced variant for programmers
 cask "font-iosevka-term-nerd-font"              # IosevkaTerm Nerd Font (Iosevka Term)
 
+# Containers
+brew "docker"                                   # Pack, ship and run any application as a lightweight container
+brew "docker-compose"                           # Isolated development environments using Docker
+brew "docker-machine"                           # Create Docker hosts locally and on cloud providers
+brew "lazydocker"                               # The lazier way to manage everything docker
+brew "podman"                                   # Tool for managing OCI containers and pods
+brew "podman-compose"                           # Alternative to docker-compose using podman
+
 # Version control
 brew "act"                                      # Run your GitHub Actions locally
 brew "bfg"                                      # Remove large files or passwords from Git history like git-filter-branch
