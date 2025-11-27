@@ -22,6 +22,9 @@ brew "yt-dlp"                                   # Feature-rich command-line audi
 # Development
 ################################################################################
 
+# Copilots
+cask "claude-code"                              # Terminal-based AI coding assistant
+
 # EmptyEpsilon
 tap "stubillwhite/homebrew-formulae"
 brew "cmake@3.31"                               # Cross-platform make
