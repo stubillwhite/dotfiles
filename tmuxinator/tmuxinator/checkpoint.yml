@@ -6,17 +6,17 @@ windows:
       panes:
         - org:
             - cd ~/dev/my-stuff/org
-            - git pull -r --autostash
-            - git add -A
-            - git commit -m 'Checkpoint'
-            - git push
-            - clear
-            - git status
+            # - git pull -r --autostash
+            # - git add -A
+            # - git commit -m 'Checkpoint'
+            # - git push
+            # - clear
+            # - git status
         - obsidian:
             - cd ~/dev/my-stuff/obsidian
-            - git pull -r --autostash
-            - git add -A
-            - git commit -m 'Checkpoint'
-            - git push
-            - clear
-            - git status
+            # - git pull -r --autostash
+            # - git add -A
+            # - git commit -m 'Checkpoint'
+            # - git push
+            # - clear
+            # - git status

@@ -21,7 +21,7 @@ cask "beyond-compare"                           # Compare files and folders
 cask "dropbox"                                  # Client for the Dropbox cloud storage service
 cask "firefox"                                  # Mozilla Firefox
 cask "iterm2"                                   # Terminal emulator as alternative to Apple's Terminal app
-cask "jordanbaird-ice"                          # Powerful menu bar manager for macOS 
+cask "jordanbaird-ice"                          # Powerful menu bar manager for macOS
 cask "orion"                                    # WebKit based web browser
 cask "syncthing"                                # Open source continuous file synchronization application
 
@@ -163,7 +163,7 @@ brew "ammonite-repl"                            # Ammonite is a cleanroom re-imp
 brew "mill"                                     # Scala build tool
 brew "sbt"                                      # Build tool for Scala projects
 brew "scala"                                    # JVM-based programming language
-brew "coursier"                                 # Pure Scala Artifact Fetching 
+brew "coursier"                                 # Pure Scala Artifact Fetching
 
 # Haskell
 brew "cabal-install"                            # Command-line interface for Cabal and Hackage
@@ -176,6 +176,9 @@ brew "doxygen"                                  # Generate documentation for sev
 
 # Groovy
 brew "groovy"                                   # Java-based scripting language
+
+# Rust
+brew "rust"                                     # Safe, concurrent, practical language
 
 # Python
 brew "mypy"                                     # Experimental optional static type checker for Python
