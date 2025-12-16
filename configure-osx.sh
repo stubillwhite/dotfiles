@@ -55,7 +55,10 @@ function configure-osx-preferences() {
     echo "- Operating system should be silent"
     configure-setting-if-exists 'Apple Global Domain' com.apple.sound.beep.flash      -int 0
     configure-setting-if-exists 'Apple Global Domain' com.apple.sound.uiaudio.enabled -int 0
-    configure-setting 'Apple Global Domain' com.apple.sound.beep.volume     -int 0
+    configure-setting-if-exists 'Apple Global Domain' com.apple.sound.beep.volume     -int 0
+
+    echo "- Reduce transparency"
+    configure-setting-if-exists com.apple.universalaccess reduceTransparency -int 1
 
     # Hot corners
     # Possible values:
