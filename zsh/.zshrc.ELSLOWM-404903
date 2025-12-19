@@ -1156,6 +1156,7 @@ function daily-update() {
     open 'https://fa-ewqc-saasfaprod1.fa.ocs.oraclecloud.com/'
     open 'https://www.eventimapollo.com/events/expedition-33/'
     open 'https://www.eventim.co.uk/event/clair-obscur-expedition-33-eventim-apollo-21018039/'
+    open 'https://www.fansale.co.uk/tickets/all/clair-obscur-expedition-33/869494'
     mux upgrade --no-attach
     mux jira --no-attach
     tmux attach

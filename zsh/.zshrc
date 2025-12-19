@@ -126,6 +126,7 @@ alias reload-zsh-config="exec zsh"                                          # Re
 alias zsh-startup='time zsh -i -c exit'                                     # Display Zsh start-up time
 alias display-colours='msgcat --color=test'                                 # Display terminal colors
 alias ssh-add-keys='ssh-add ~/.ssh/keys/id_rsa_personal'                    # Add standard keys to SSH agent
+alias ssh-list-keys='ssh-add -l'                                            # List keys in SSH agent
 alias list-ports='netstat -anv'                                             # List active ports
 alias new-react-app='npx create-react-app'                                  # Shortcut to create a new React app
 alias fzv='fzf --bind "enter:become(nvim {})"'                              # Fuzzy-find a file and open Vim
@@ -973,6 +974,17 @@ function aws-secrets() {
             | jq -r ".SecretList[] | select(.Name == \"$secret\") | .Tags[] // [] | select(.Key == \"Description\") | .Value"
         aws secretsmanager get-secret-value --secret-id "$secret"\
             | jq '.SecretString | fromjson'
+        echo
+    done <<< "${secretsNames}"
+}
+
+# List AWS parameters in SSM
+function aws-ssm-list-parameters() {
+    local secretsNames=$(aws ssm get-parameters-by-path --path "/" --recursive --query "Parameters[*].Name" | jq -r '.[]')
+
+    while IFS= read -r secret ; do
+        echo ${secret}
+        aws ssm get-parameter --name "${secret}" | jq -r ".Parameter.Value"
         echo
     done <<< "${secretsNames}"
 }
@@ -1976,7 +1988,7 @@ HEREDOC
 # For the Git stats in the current directory, list the author commits in the last week
 function git-stats-list-author-commits-in-n-days() {
     if [[ $# -ne 1 ]] ; then
-        echo 'Usage: git-stats-list-author commits-in-n-days N'
+        echo 'Usage: git-stats-list-author-commits-in-n-days N'
         return 1
     fi
 
