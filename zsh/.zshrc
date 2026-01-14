@@ -1094,6 +1094,7 @@ alias cookiecutter-new-python-poetry='cookiecutter https://github.com/stubillwhi
 alias cookiecutter-new-python-uv='cookiecutter https://github.com/stubillwhite/cookiecutters --directory python-uv'
 alias cookiecutter-new-clojure='cookiecutter https://github.com/stubillwhite/cookiecutters --directory clojure-reloaded'
 alias cookiecutter-new-cpp='cookiecutter https://github.com/stubillwhite/cookiecutters --directory cpp'
+alias cookiecutter-new-rust='cookiecutter https://github.com/stubillwhite/cookiecutters --directory rust'
 
 #
 # Docker                            {{{2
