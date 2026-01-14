@@ -23,7 +23,7 @@ cask "firefox"                                  # Mozilla Firefox
 cask "iterm2"                                   # Terminal emulator as alternative to Apple's Terminal app
 cask "jordanbaird-ice"                          # Powerful menu bar manager for macOS
 cask "orion"                                    # WebKit based web browser
-cask "syncthing"                                # Open source continuous file synchronization application
+cask "syncthing-app"                            # Open source continuous file synchronization application
 
 # IDEs
 cask "intellij-idea-ce"                         # IDE for Java programming - Community Edition
@@ -148,7 +148,7 @@ brew "git-secret"                               # Bash-tool to store the private
 brew "lazygit"                                  # Simple terminal UI for git commands
 
 tap "stubillwhite/homebrew-formulae"
-cask "gitup"                                    # Git interface focused on visual interaction
+cask "gitup-app"                                # Git interface focused on visual interaction
 
 # Java
 brew "gradle"                                   # Open-source build automation tool based on the Groovy and Kotlin DSL
