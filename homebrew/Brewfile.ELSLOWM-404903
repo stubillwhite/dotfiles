@@ -39,6 +39,9 @@ brew "cmake"                                    # Cross-platform make
 # Development
 ################################################################################
 
+# Copilots
+cask "copilot-cli"                              # GitHub Copilot CLI
+
 # Azure
 tap "azure/azd"
 brew "azd"                                      # Azure Developer CLI
