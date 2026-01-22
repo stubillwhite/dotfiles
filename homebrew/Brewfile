@@ -86,8 +86,10 @@ brew "ripgrep"                                  # Search tool like grep and The 
 brew "sampler"                                  # Tool for shell commands execution, visualization and alerting
 brew "slackcat"                                 # Command-line utility for posting snippets to Slack
 brew "slackdump"                                # Export Slack data without admin privileges
+brew "snitch"                                   # Prettier way to inspect network connections
 brew "tesseract"                                # OCR (Optical Character Recognition) engine
 brew "tree"                                     # Display directories as trees (with optional color/HTML output)
+brew "tree-sitter-cli"                          # Parser generator tool
 brew "watch"                                    # Executes a program periodically, showing output fullscreen
 brew "wget"                                     # Internet file retriever
 brew "xsv"                                      # Fast CSV toolkit written in Rust
