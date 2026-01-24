@@ -149,7 +149,7 @@ brew "git-lfs"                                  # Git extension for versioning l
 brew "git-secret"                               # Bash-tool to store the private data inside a git repo
 brew "lazygit"                                  # Simple terminal UI for git commands
 
-tap "stubillwhite/homebrew-formulae"
+# tap "stubillwhite/homebrew-formulae"
 cask "gitup-app"                                # Git interface focused on visual interaction
 
 # Java

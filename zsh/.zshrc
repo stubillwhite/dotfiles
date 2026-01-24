@@ -1482,7 +1482,7 @@ function git-repos-remotes() {
 # lines of code files
 function git-repos-hacky-line-count() {
     display-hacky-line-count() {
-        lineCount=$(git ls-files | grep -e '\.\(scala\|py\|go\|java\|js\|ts\|sql\)$' | xargs -I{} cat {} | wc -l)
+        lineCount=$(git ls-files | grep -e '\.\(scala\|py\|go\|java\|js\|ts\|sql\|cpp\|hpp\|c\|h\)$' | xargs -I{} cat {} | wc -l)
         echo "$fnam $lineCount"
     }
 
@@ -2475,3 +2475,15 @@ colors () {
     done
 }
 
+
+function docs() {
+    local cmdType=$(whence -w "$1" | gsed 's/[^:]\+: \(.\+\)/\1/')
+    case ${cmdType} in
+    builtin|keyword)
+        run-help "$1"
+        ;;
+    *)
+        command man "$@"
+        ;;
+    esac
+}

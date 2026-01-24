@@ -34,6 +34,9 @@ SHALLOW_REPOS=(
     advent-of-code-2024
     advent-of-code-2024-python
     advent-of-code-2024-scala
+    advent-of-code-2025
+    advent-of-code-2025-python
+    advent-of-code-2025-rust
     cookiecutters
     dotfiles
     homebrew-formulae
@@ -62,5 +65,7 @@ for repo in "${RECURSIVE_REPOS[@]}"
 do
     clone-if-not-present "git@github-personal:stubillwhite/${repo}.git" '-q --recursive'
 done
+
+# clone-if-not-present "git@github-personal:bassc-org/bassc-admin-tool.git" '-q'
 
 popd

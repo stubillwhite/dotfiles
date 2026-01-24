@@ -48,7 +48,6 @@ export PATH=/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH
 export PATH=/opt/homebrew/opt/make/libexec/gnubin:$PATH
 export PATH=/Applications/Emacs.app/Contents/MacOS:$PATH
 
-export PATH=$PATH:/opt/homebrew/lib/ruby/gems/3.4.0/bin
 export PATH=$PATH:/Applications/Beyond\ Compare.app/Contents/MacOS
 export PATH=$PATH:/Applications/PyCharm.app/Contents/MacOS
 export PATH=$PATH:/Applications/IntelliJ\ IDEA\ CE.app/Contents/MacOS
@@ -57,6 +56,8 @@ export PATH=$PATH:/usr/bin
 export PATH=$PATH:~/.local/bin
 
 export XDG_CONFIG_HOME="$HOME/.config"
+
+# export FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
 
 # Included scripts                                                          {{{1
 # ==============================================================================
