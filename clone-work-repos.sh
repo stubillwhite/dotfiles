@@ -334,6 +334,7 @@ FOUNDATIONS_REPOS=(
     elsevier-research/rdp-foundations-s3-bucket-review-service
     elsevier-research/rdp-foundations-scala-demo-service
     elsevier-research/rdp-foundations-service-hello-world
+    elsevier-research/rdp-foundation-utilities
     elsevier-research/rdp-works-mlops-distributed-training
     elsevier-research/rdp-works-mlops-example-bert-model-kserve-predictor
     elsevier-research/rdp-works-mlops-example-bert-model-kserve-transformer

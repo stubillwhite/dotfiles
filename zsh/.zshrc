@@ -151,6 +151,12 @@ function genai-anthropic-models() {
         | sort
 }
 
+function genai-aws-bedrock-models() {
+    aws bedrock list-foundation-models \
+        | jq -r ".modelSummaries[].modelId" \
+        | sort
+}
+
 # IntelliJ and Pycharm                                                      {{{1
 # ==============================================================================
 

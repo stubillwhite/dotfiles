@@ -39,15 +39,16 @@ SHALLOW_REPOS=(
     advent-of-code-2025-rust
     cookiecutters
     dotfiles
+    genai-evaluation
     homebrew-formulae
     jira-reporter-python
     llm-dnd
     nvim
+    obsidian
+    org
     prezto
     shell-utils
     tech-radar
-    org
-    obsidian
 )
 
 RECURSIVE_REPOS=(
