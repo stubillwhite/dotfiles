@@ -36,11 +36,15 @@ brew 'rockymadden/rockymadden/slack-cli'        # Powerful Slack CLI via pure ba
 brew "cmake"                                    # Cross-platform make
 
 ################################################################################
-# Development
+# Must be manually installed through internal portal
 ################################################################################
 
 # Copilots
-cask "copilot-cli"                              # GitHub Copilot CLI
+## cask "copilot-cli"                              # GitHub Copilot CLI
+
+################################################################################
+# Development
+################################################################################
 
 # Azure
 tap "azure/azd"
