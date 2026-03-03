@@ -157,6 +157,13 @@ function genai-aws-bedrock-models() {
         | sort
 }
 
+function genai-portkey-models() {
+    curl -s 'https://nonprod.cerebus.tio.elsevier.systems/albus/v2/providers/models?workspace_id=5e166802-79c8-4e6b-8b41-3e0c7d6bae11&current_page=0&page_size=100' \
+            --header "x-portkey-api-key: ${SECRET_PORTKEY_API_KEY}" \
+        | jq -r ".data[].slug" \
+        | sort
+}
+
 # IntelliJ and Pycharm                                                      {{{1
 # ==============================================================================
 
