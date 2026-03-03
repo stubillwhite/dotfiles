@@ -15,6 +15,7 @@ zmodload zsh/zprof
 # ==============================================================================
 
 # Usage: if-darwin && { echo foo }
+# TODO: Possibly use $OSTYPE?
 export OS_NAME=$(uname) 
 function if-darwin() { [[ "${OS_NAME}" == "Darwin" ]]; }
 function if-linux() { [[ "${OS_NAME}" == "Linux" ]]; }

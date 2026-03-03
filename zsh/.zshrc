@@ -188,6 +188,7 @@ alias idea='_launch-jetbrains-tool idea'                                    # La
 
 if-darwin && {
     alias emacs='/Applications/Emacs.app/Contents/MacOS/Emacs & disown'
+    alias emacs-cli='/Applications/Emacs.app/Contents/MacOS/Emacs -nw'
     alias emacsclient='echo "When done with a buffer, type C-x #" && /Applications/Emacs.app/Contents/MacOS/bin/emacsclient'
     alias doom='emacs --with-profile doom'
     alias bankrupcy='emacs --with-profile bankrupcy'
@@ -391,6 +392,21 @@ function image-to-text() {
     local dest=${destName}.txt
     cat ${dest}
     rm ${dest}
+}
+
+# View a markdown file as HTML
+# markdown-view FNAM
+function markdown-view() {
+    if [[ $# -ne 1 ]] ; then
+        echo 'Usage: markdown-view FNAM'
+        return 1
+    fi
+
+    local tmpfile=$(mktemp -t markdown-view.XXXXXX.html)
+    trap 'rm -f "$tmpfile"' EXIT INT TERM
+
+    pandoc "$1" -o "$tmpfile" --filter mermaid-filter --from=gfm --to=html --metadata title='markdown-preview' --self-contained --css ~/dev/my-stuff/.emacs.d/lisp/package-config/markdown-light.css
+    open "$tmpfile"
 }
 
 # Prompt for confirmation
@@ -2500,3 +2516,4 @@ function docs() {
         ;;
     esac
 }
+
