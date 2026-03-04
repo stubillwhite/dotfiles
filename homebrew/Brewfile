@@ -200,6 +200,7 @@ brew "elm"                                      # Functional programming languag
 brew "go"                                       # Open source programming language to build simple/reliable/efficient software
 
 # Lua
+brew "lua"                                      # Powerful, lightweight programming language
 brew "lua-language-server"                      # Language Server for the Lua language
 
 # Ruby
