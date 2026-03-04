@@ -402,10 +402,18 @@ function markdown-view() {
         return 1
     fi
 
-    local tmpfile=$(mktemp -t markdown-view.XXXXXX.html)
+    local tmpfile=$(mktemp -t markdown-view.XXXXXX --suffix=.html)
     trap 'rm -f "$tmpfile"' EXIT INT TERM
 
-    pandoc "$1" -o "$tmpfile" --filter mermaid-filter --from=gfm --to=html --metadata title='markdown-preview' --self-contained --css ~/dev/my-stuff/.emacs.d/lisp/package-config/markdown-light.css
+    pandoc "$1" -o "$tmpfile" \
+        --filter mermaid-filter \
+        --from=gfm \
+        --to=html \
+        --metadata title='markdown-preview' \
+        --embed-resources \
+        --standalone \
+        --css ~/dev/my-stuff/.emacs.d/lisp/package-config/markdown-light.css
+
     open "$tmpfile"
 }
 
