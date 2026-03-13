@@ -112,6 +112,7 @@ alias vim='nvim'                                                            # Us
 alias python='python3'                                                      # Use Python 3
 alias pip='pip3'                                                            # Use Pip for Python 3
 alias sed='gsed'                                                            # Use gsed instead of sed
+alias mktemp='gmktemp'                                                      # Use gsed instead of sed
 alias touch='gtouch'                                                        # Use gtouch instead of touch
 alias echo='gecho'                                                          # Use gecho nstead of echo
 alias date='gdate'                                                          # Use gdate instead of date
@@ -137,31 +138,54 @@ stty -ixon
 # Copilots and models                                                       {{{1
 # ==============================================================================
 
-function genai-openai-models() {
-    curl -s https://api.openai.com/v1/models -H "Authorization: Bearer ${OPENAI_API_KEY}" \
-        | jq -r ".data[].id" \
-        | sort
-}
+function genai-models() {
+    if [[ $# -ne 1 ]]; then
+        echo "Usage: genai-models (openai|anthropic|bedrock|portkey)"
+    else
+        local provider=$1
 
-function genai-anthropic-models() {
-    curl -s https://api.anthropic.com/v1/models \
-            --header "x-api-key: ${SECRET_ANTHROPIC_API_KEY}" \
-            --header "anthropic-version: 2023-06-01" \
-        | jq -r ".data[].id" \
-        | sort
-}
+        case "${provider}" in
+            openai*)
+                curl -s https://api.openai.com/v1/models \
+                        -H "Authorization: Bearer ${OPENAI_API_KEY}" \
+                    | jq -r ".data[].id" \
+                    | sort
+            ;;
 
-function genai-aws-bedrock-models() {
-    aws bedrock list-foundation-models \
-        | jq -r ".modelSummaries[].modelId" \
-        | sort
-}
+            anthropic*)
+                curl -s https://api.anthropic.com/v1/models \
+                        -H "x-api-key: ${SECRET_ANTHROPIC_API_KEY}" \
+                        -H "anthropic-version: 2023-06-01" \
+                    | jq -r ".data[].id" \
+                    | sort
+            ;;
 
-function genai-portkey-models() {
-    curl -s 'https://nonprod.cerebus.tio.elsevier.systems/albus/v2/providers/models?workspace_id=5e166802-79c8-4e6b-8b41-3e0c7d6bae11&current_page=0&page_size=100' \
-            --header "x-portkey-api-key: ${SECRET_PORTKEY_API_KEY}" \
-        | jq -r ".data[].slug" \
-        | sort
+            bedrock*)
+                aws bedrock list-foundation-models \
+                    | jq -r ".modelSummaries[].modelId" \
+                    | sort
+            ;;
+
+            portkey*)
+                curl -s 'https://nonprod.cerebus.tio.elsevier.systems/albus/v2/providers/models?workspace_id=5e166802-79c8-4e6b-8b41-3e0c7d6bae11&current_page=0&page_size=100' \
+                        -H "x-portkey-api-key: ${SECRET_PORTKEY_API_KEY}" \
+                    | jq -r ".data[].slug" \
+                    | sort
+            ;;
+
+            *)
+                echo "ERROR: Unrecognised provider ${provider}"
+                return -1
+            ;;
+        esac
+    fi
+}
+compdef "_arguments \
+    '1:environment arg:(openai anthropic bedrock portkey)'" \
+    genai-models
+
+function copilot-watch-activity() {
+    watch 'git-list-file-changes | sort -r'
 }
 
 # IntelliJ and Pycharm                                                      {{{1
@@ -1926,7 +1950,7 @@ function git-stats-top-team-committers-by-repo() {
 HEREDOC
 
     print ${sqlScript} | gsed 's/^ \+|//' > .script
-    duckdb < .script
+    duckdb -f .script
     rm .script
     
     echo
@@ -1944,7 +1968,7 @@ HEREDOC
 HEREDOC
 
     print ${sqlScript} | gsed 's/^ \+|//' > .script
-    duckdb < .script
+    duckdb -f .script
     rm .script
 }
 compdef "_arguments \
@@ -1961,7 +1985,7 @@ function git-stats-authors() {
 HEREDOC
 
     print ${sqlScript} | gsed 's/^ \+|//' > .script
-    duckdb < .script
+    duckdb -f .script
     rm .script
 }
 
@@ -1979,7 +2003,7 @@ function git-stats-most-recent-commits-by-authors() {
 HEREDOC
 
     print ${sqlScript} | gsed 's/^ \+|//' > .script
-    duckdb < .script
+    duckdb -f .script
     rm .script
 }
 
@@ -2004,7 +2028,7 @@ function git-stats-total-commits-by-author() {
 HEREDOC
 
     print ${sqlScript} | gsed 's/^ \+|//' > .script
-    duckdb < .script
+    duckdb -f .script
     rm .script
 }
 
@@ -2019,7 +2043,7 @@ function git-stats-list-commits() {
 HEREDOC
 
     print ${sqlScript} | gsed 's/^ \+|//' > .script
-    duckdb < .script
+    duckdb -f .script
     rm .script
 }
 
@@ -2043,7 +2067,7 @@ function git-stats-list-author-commits-in-n-days() {
 HEREDOC
 
     print ${sqlScript} | gsed 's/^ \+|//' > .script
-    duckdb < .script
+    duckdb -f .script
     rm .script
 }
 
@@ -2067,7 +2091,7 @@ function git-stats-list-commits-by-author() {
 HEREDOC
 
     print ${sqlScript} | gsed 's/^ \+|//' > .script
-    duckdb < .script
+    duckdb -f .script
     rm .script
 }
 
@@ -2093,7 +2117,7 @@ function git-stats-total-commits-by-author-per-month() {
 HEREDOC
 
     print ${sqlScript} | gsed 's/^ \+|//' > .script
-    duckdb < .script
+    duckdb -f .script
     rm .script
 }
 
@@ -2109,7 +2133,7 @@ function git-stats-most-recent-commits-by-repo() {
 HEREDOC
 
     print ${sqlScript} | gsed 's/^ \+|//' > .script
-    duckdb < .script
+    duckdb -f .script
     rm .script
 }
 
