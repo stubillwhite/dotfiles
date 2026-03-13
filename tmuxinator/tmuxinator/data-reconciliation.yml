@@ -1,0 +1,11 @@
+name: data-reconciliation
+root: ~/dev/rdp/data-reconciliation
+
+windows:
+  - data-reconciliation:
+      layout: even-horizontal
+      panes:
+        - copilot:
+            - copilot --resume
+        - files:
+            - copilot-watch-activity
