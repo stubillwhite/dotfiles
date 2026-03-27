@@ -16,8 +16,11 @@
 - `|` - Split pane vertically
 - `-` - Split pane horizontally
 - `x` - Kill current pane
+- `C-j` - Join all panes into one window
 
 Alt and arrow keys, or prefix and Vim keys for navigating panes
+
+- `C-x` - Bind input into to all panes
 
 ## Windows ##
 

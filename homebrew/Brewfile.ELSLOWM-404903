@@ -55,6 +55,9 @@ brew "azure-cli"                                # Microsoft Azure CLI 2.0
 brew 'aws-iam-authenticator'                    # Use AWS IAM credentials to authenticate to Kubernetes
 brew 'dive'                                     # Tool for exploring each layer in a docker image
 
+# tap "databricks/homebrew-tap"
+# brew "databricks"
+
 # Kubernetes
 brew 'kubectl'                                  # Kubernetes command-line interface
 brew 'kubernetes-cli'                           # Kubernetes command-line interface
@@ -80,3 +83,6 @@ brew 'hey'                                      # HTTP load generator, ApacheBen
 
 # JIRA
 brew 'jira-cli'                                 # Feature-rich interactive Jira CLI
+
+# Jupyter
+brew 'jupyterlab'                               # Interactive environments for writing and running code
