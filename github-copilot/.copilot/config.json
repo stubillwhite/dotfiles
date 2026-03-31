@@ -1,0 +1,35 @@
+{
+  "banner": "never",
+  "last_logged_in_user": {
+    "host": "https://github.com",
+    "login": "stuw-els"
+  },
+  "logged_in_users": [
+    {
+      "host": "https://github.com",
+      "login": "stuw-els"
+    }
+  ],
+  "render_markdown": true,
+  "theme": "auto",
+  "trusted_folders": [
+    "/Users/white1/dev/rdp/dkp",
+    "/Users/white1/dev/my-stuff/jira-reporter-python",
+    "/Users/white1/dev/scratchpad/ai-hackathon",
+    "/Users/white1/dev/rdp/concept",
+    "/Users/white1/dev/my-stuff/genai-evaluation",
+    "/Users/white1/dev/rdp/data-reconciliation",
+    "/Users/white1/dev/my-stuff/my-project",
+    "/Users/white1/dev/my-stuff/career-tracks",
+    "/Users/white1/dev/scratchpad/deng-ai/ai-test",
+    "/Users/white1/dev/scratchpad/deng-ai/my-python-project",
+    "/Users/white1/dev/my-stuff/stagekick",
+    "/Users/white1/dev/scratchpad/data-flow-analysis",
+    "/Users/white1/dev/scratchpad/repo_graph",
+    "/Users/white1/dev/scratchpad/mikes-code",
+    "/Users/white1/dev/my-stuff/random-test",
+    "/Users/white1/dev/scratchpad/docs/data-reconciliation-docs"
+  ],
+  "firstLaunchAt": "2026-03-11T00:00:00.000Z",
+  "model": "gpt-5.4"
+}
