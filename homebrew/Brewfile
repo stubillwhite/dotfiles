@@ -101,6 +101,7 @@ cask "scroll-reverser"                          # Tool to reverse the direction 
 # Document and image manipulation
 brew "imagemagick"                              # Tools and libraries to manipulate images in many formats
 brew "pandoc"                                   # Swiss-army knife of markup format conversion
+brew "plantuml"                                 # Draw UML diagrams
 brew "pngpaste"                                 # Paste PNG into files
 cask "quarto"                                   # Scientific and technical publishing system built on Pandoc
 
