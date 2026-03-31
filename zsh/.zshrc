@@ -39,7 +39,7 @@ compinit -C
 # Prezto                            {{{2
 # ======================================
 
-source-or-warn ~/Dev/my-stuff/prezto/runcoms/zshenv
+source-or-warn "${PREZTO_ROOT}/runcoms/zshenv"
 
 # Include Prezto, but remove unhelpful configuration
 
@@ -131,12 +131,23 @@ alias ssh-list-keys='ssh-add -l'                                            # Li
 alias list-ports='netstat -anv'                                             # List active ports
 alias new-react-app='npx create-react-app'                                  # Shortcut to create a new React app
 alias fzv='fzf --bind "enter:become(nvim {})"'                              # Fuzzy-find a file and open Vim
+alias date-iso='date --iso-8601=minutes --utc'                              # ISO date stamp
 
 # No flow control, so C-s is free for C-r/C-s back/forward incremental search
 stty -ixon
 
 # Copilots and models                                                       {{{1
 # ==============================================================================
+
+alias copilot-libre=copilot \
+    --allow-tool 'shell(awk:*)' \
+    --allow-tool 'shell(printf:*)' \
+    --allow-tool 'shell(git:diff:*)' \
+    --allow-tool 'shell(git:log:*)' \
+    --allow-tool 'shell(go:*)' \
+    --allow-tool 'shell(make:*)' \
+    --allow-tool 'shell(npm:*)' \
+    --allow-tool 'shell(sed:*)'
 
 function genai-models() {
     if [[ $# -ne 1 ]]; then
@@ -567,7 +578,7 @@ function copy-skeleton-config() {
         return -1
     fi
 
-    pushd ~/Dev/my-stuff/dotfiles/skeleton-config || return 1
+    pushd "${DOTFILES_ROOT}/skeleton-config" || return 1
     echo "Uploading config to $1"
     rsync --progress -v . $1:.
     popd || return 1
@@ -2464,6 +2475,60 @@ function certificate-python-install() {
 # 
 # }
 
+function certificate-append() {
+    setopt pipefail null_glob
+
+    local cert="$1"
+    local bundle="${2:-$HOME/.conan2/cacert.pem}"
+    local fp tmpdir existing_fp f
+
+    [[ -n "$cert" ]] || { print -u2 "Usage: certificate-append /path/to/cert.pem [/path/to/bundle.pem]"; return 2; }
+    [[ -f "$cert" ]] || { print -u2 "certificate not found: $cert"; return 1; }
+
+    fp=$(openssl x509 -in "$cert" -noout -fingerprint -sha256 2>/dev/null | sed 's/.*=//') ||
+        { print -u2 "invalid PEM X.509 certificate: $cert"; return 1; }
+
+        mkdir -p "${bundle:h}" || return 1
+
+        if [[ -f "$bundle" ]]; then
+            tmpdir=$(mktemp -d "${TMPDIR:-/tmp}/cert-bundle.XXXXXX") || return 1
+
+            awk -v out="$tmpdir" '
+            /-----BEGIN CERTIFICATE-----/ {
+                in_cert=1
+                n++
+                file=sprintf("%s/cert-%06d.pem", out, n)
+            }
+            in_cert { print >> file }
+            /-----END CERTIFICATE-----/ {
+                close(file)
+                in_cert=0
+            }
+            ' "$bundle"
+
+    for f in "$tmpdir"/cert-*.pem; do
+        [[ -f "$f" ]] || continue
+        existing_fp=$(openssl x509 -in "$f" -noout -fingerprint -sha256 2>/dev/null | sed 's/.*=//') || continue
+        [[ "$existing_fp" == "$fp" ]] && {
+            rm -rf "$tmpdir"
+                    print "Certificate already present in $bundle"
+                    return 0
+                }
+        done
+
+        rm -rf "$tmpdir"
+        fi
+
+        {
+            print
+            print "# source: ${cert:t} sha256: $fp"
+            openssl x509 -in "$cert" -outform PEM
+            print
+        } >> "$bundle" || return 1
+
+    print "Appended certificate to $bundle"
+}
+
 function certificate-python-show-paths() {
     python -c "import ssl; print(ssl.get_default_verify_paths())" 
     echo "SSL_CERT_FILE: ${SSL_CERT_FILE}"
@@ -2488,11 +2553,12 @@ function certificate-expiry-openssl() {
 # Tmuxinator                        {{{2
 # ======================================
 
-source-if-exists "$HOME/Dev/my-stuff/dotfiles/tmuxinator/tmuxinator.zsh"
+source-if-exists "${DOTFILES_ROOT}/tmuxinator/tmuxinator.zsh"
 
 # Oh My Posh                        {{{2
 # ======================================
-alias init-omp='eval $(oh-my-posh init zsh --config ~/dev/my-stuff/dotfiles/omp/config.omp.json)'
+
+alias init-omp="eval \$(oh-my-posh init zsh --config ${DOTFILES_ROOT}/omp/config.omp.json)"
 
 # Machine-specific configuration                                            {{{1
 # ==============================================================================
@@ -2505,7 +2571,9 @@ if-darwin && {
     source-if-exists "$HOME/.zshrc.darwin"
 }
 
-source-if-exists "$HOME/.zshrc.$(scutil --get ComputerName)"
+if [[ -n "${COMPUTER_NAME}" ]]; then
+    source-if-exists "$HOME/.zshrc.${COMPUTER_NAME}"
+fi
 
 function camera-logs() {
     log show --last 5m --predicate '(sender == "VDCAssistant")' | grep kCameraStream
@@ -2548,4 +2616,3 @@ function docs() {
         ;;
     esac
 }
-

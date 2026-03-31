@@ -11,18 +11,49 @@ zmodload zsh/zprof
 # ...
 # ) }
 
+# Constants                                                                 {{{1
+# ==============================================================================
+
+case "${OSTYPE}" in
+    darwin*)
+        export OS_NAME="Darwin"
+        ;;
+    linux*)
+        export OS_NAME="Linux"
+        ;;
+    *)
+        export OS_NAME="$(uname -s)"
+        ;;
+esac
+
+export DOTFILES_ROOT="$HOME/Dev/my-stuff/dotfiles"
+
+export COMPUTER_NAME=""
+if [[ "${OS_NAME}" == "Darwin" ]] && command -v scutil > /dev/null 2>&1; then
+    export COMPUTER_NAME="$(scutil --get ComputerName 2> /dev/null)"
+fi
+
+HOMEBREW_PREFIX=""
+for candidate in /opt/homebrew /usr/local
+do
+    if [[ -d "${candidate}/opt" ]]; then
+        HOMEBREW_PREFIX="${candidate}"
+        break
+    fi
+done
+
+export PREZTO_ROOT="$HOME/Dev/my-stuff/prezto"
+
 # Conditional inclusion                                                     {{{1
 # ==============================================================================
 
 # Usage: if-darwin && { echo foo }
-# TODO: Possibly use $OSTYPE?
-export OS_NAME=$(uname) 
 function if-darwin() { [[ "${OS_NAME}" == "Darwin" ]]; }
 function if-linux() { [[ "${OS_NAME}" == "Linux" ]]; }
 
 # Usage: if-work-machine && { echo foo }
-function if-work-machine() { [[ "$(scutil --get ComputerName)" == "ELSLOWM-404903" ]]; }
-function if-personal-machine() { [[ "$(scutil --get ComputerName)" == "stubillwhite-macbook-pro" ]] || [[ "$(scutil --get ComputerName)" == "stubillwhite-ThinkPad-X240" ]] ; }
+function if-work-machine() { [[ "${COMPUTER_NAME}" == "ELSLOWM-404903" ]]; }
+function if-personal-machine() { [[ "${COMPUTER_NAME}" == "stubillwhite-macbook-pro" ]] || [[ "${COMPUTER_NAME}" == "stubillwhite-ThinkPad-X240" ]] ; }
 
 # Source script if it exists
 # Usage: source-if-exists ".my-functions"
@@ -43,18 +74,29 @@ function source-or-warn() {
 # Paths                                                                     {{{1
 # ==============================================================================
 
-export PATH=$PATH:/opt/homebrew/opt/ruby/bin
-export PATH=$PATH:/opt/homebrew/opt/coreutils/libexec/gnubin
-export PATH=$PATH:/opt/homebrew/opt/make/libexec/gnubin
-export PATH=$PATH:/Applications/Emacs.app/Contents/MacOS
-export PATH=$PATH:/Applications/Obsidian.app/Contents/MacOS
+typeset -U path
 
-export PATH=$PATH:/Applications/Beyond\ Compare.app/Contents/MacOS
-export PATH=$PATH:/Applications/PyCharm.app/Contents/MacOS
-export PATH=$PATH:/Applications/IntelliJ\ IDEA\ CE.app/Contents/MacOS
-export PATH=$PATH:~/dev/my-stuff/shell-utils
-export PATH=$PATH:/usr/bin
-export PATH=$PATH:~/.local/bin
+function append-path-if-exists() {
+    local dir=$1
+    [[ -d "${dir}" ]] && path+=("${dir}")
+}
+
+if [[ -n "${HOMEBREW_PREFIX}" ]]; then
+    append-path-if-exists "${HOMEBREW_PREFIX}/opt/ruby/bin"
+    append-path-if-exists "${HOMEBREW_PREFIX}/opt/coreutils/libexec/gnubin"
+    append-path-if-exists "${HOMEBREW_PREFIX}/opt/make/libexec/gnubin"
+fi
+
+append-path-if-exists "/Applications/Emacs.app/Contents/MacOS"
+append-path-if-exists "/Applications/Obsidian.app/Contents/MacOS"
+append-path-if-exists "/Applications/Beyond Compare.app/Contents/MacOS"
+append-path-if-exists "/Applications/PyCharm.app/Contents/MacOS"
+append-path-if-exists "/Applications/IntelliJ IDEA CE.app/Contents/MacOS"
+
+append-path-if-exists "$HOME/Dev/my-stuff/shell-utils"
+
+append-path-if-exists "/usr/bin"
+append-path-if-exists "$HOME/.local/bin"
 
 export XDG_CONFIG_HOME="$HOME/.config"
 
@@ -64,7 +106,7 @@ export XDG_CONFIG_HOME="$HOME/.config"
 # ==============================================================================
 
 # GNU parallel
-source-or-warn /opt/homebrew/bin/env_parallel.zsh
+source-or-warn "${HOMEBREW_PREFIX}/bin/env_parallel.zsh"
 
 # Secrets                           {{{2
 # ======================================
@@ -141,7 +183,7 @@ function msg-error() {
 
 SSH_ENV_FILE="$HOME/.ssh/environment"
 
-function ssh-start-agent {
+function ssh-agent-start {
     echo "Initialising new SSH agent..."
     /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV_FILE}"
     /bin/chmod 600 "${SSH_ENV_FILE}"
@@ -149,11 +191,16 @@ function ssh-start-agent {
     /usr/bin/ssh-add;
 }
 
+function ssh-agent-running() {
+    [[ -n "${SSH_AGENT_PID}" ]] \
+        && [[ -n "${SSH_AUTH_SOCK}" ]] \
+        && [[ -S "${SSH_AUTH_SOCK}" ]] \
+        && kill -0 "${SSH_AGENT_PID}" 2> /dev/null
+}
+
 if [ -f "${SSH_ENV_FILE}" ]; then
     . "${SSH_ENV_FILE}" > /dev/null
-    /bin/ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
-    ssh-start-agent;
-}
+    ssh-agent-running || ssh-agent-start
 else
-    ssh-start-agent;
+    ssh-agent-start;
 fi
