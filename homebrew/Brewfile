@@ -242,4 +242,3 @@ brew "yamllint"                                 # Linter for YAML files
 cask "anki"                                     # Memory training application
 
 brew "ncspot"                                   # Cross-platform ncurses Spotify client written in Rust
-cask "spotify"                                  # Spotify client

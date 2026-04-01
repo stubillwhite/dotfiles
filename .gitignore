@@ -14,4 +14,10 @@
 
 .gitconfig.local
 
+github-copilot/.copilot/command-history-state.json
+github-copilot/.copilot/logs
+github-copilot/.copilot/mcp-oauth-config
+github-copilot/.copilot/pkg
+github-copilot/.copilot/session-state
+
 **/*.no-commit
