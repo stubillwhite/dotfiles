@@ -196,7 +196,9 @@ compdef "_arguments \
     genai-models
 
 function copilot-watch-activity() {
-    watch 'git-list-file-changes | sort -r'
+    # Sort by timestamp in format "%d-%m-%Y %H:%M:%S"
+    # 01-04-2026 13:02:55
+    watch 'git-list-file-changes | sort -r -k1.7,1.10 -k1.4,1.5 -k1.1,1.2 -k2'
 }
 
 # IntelliJ and Pycharm                                                      {{{1
@@ -2293,15 +2295,43 @@ function jira-my-issues() {
 # Display the paths to the values in the JSON
 # cat foo.json | jq-paths
 function jq-paths() {
-    # Taken from https://github.com/stedolan/jq/issues/243
-    jq '[path(..)|map(if type=="number" then "[]" else tostring end)|join(".")|split(".[]")|join("[]")]|unique|map("."+.)|.[]'
+    jq -r '
+      def seg:
+        if type == "number" then
+          "[]"
+        else
+          tostring as $k
+          | if ($k | test("^[A-Za-z_][A-Za-z0-9_]*$")) then
+              "." + $k
+            else
+              "[" + ($k | @json) + "]"
+            end
+        end;
+      [path(..) | ((map(seg) | join("")) | if . == "" then "." elif startswith(".") then . else "." + . end)]
+      | unique
+      | .[]
+    '
 }
 
 # Display the paths to the values in the XML
 # cat foo.xml | xq-paths
 function xq-paths() {
-    # Taken from https://github.com/stedolan/jq/issues/243
-    xq '[path(..)|map(if type=="number" then "[]" else tostring end)|join(".")|split(".[]")|join("[]")]|unique|map("."+.)|.[]'
+    xq -r '
+      def seg:
+        if type == "number" then
+          "[]"
+        else
+          tostring as $k
+          | if ($k | test("^[A-Za-z_][A-Za-z0-9_]*$")) then
+              "." + $k
+            else
+              "[" + ($k | @json) + "]"
+            end
+        end;
+      [path(..) | ((map(seg) | join("")) | if . == "" then "." elif startswith(".") then . else "." + . end)]
+      | unique
+      | .[]
+    '
 }
 
 # KeePassXC                         {{{2
