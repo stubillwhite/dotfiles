@@ -16,6 +16,7 @@ computerName=$(scutil --get ComputerName)
 FILES=(
     "ctags/.ctags"
     "ssh/.ssh"
+    "claude-code/.claude"
     "chemacs/.emacs-profiles.el"
     "doom/.doom.d"
     "git/.gitconfig"

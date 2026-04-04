@@ -21,3 +21,17 @@ github-copilot/.copilot/pkg
 github-copilot/.copilot/session-state
 
 **/*.no-commit
+
+claude-code/.claude/backups/
+claude-code/.claude/cache/
+claude-code/.claude/debug/
+claude-code/.claude/file-history/
+claude-code/.claude/history.jsonl
+claude-code/.claude/plugins/
+claude-code/.claude/policy-limits.json
+claude-code/.claude/projects/
+claude-code/.claude/shell-snapshots/
+claude-code/.claude/stats-cache.json
+claude-code/.claude/statsig/
+claude-code/.claude/todos/
+claude-code/.claude/usage-data/
