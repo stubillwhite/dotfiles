@@ -1580,52 +1580,6 @@ function git-merged-branches() {
     git branch -r | xargs -t -n 1 git branch -r --contains
 }
 
-# Open the Git repo in the browser
-#   Open repo: git-open
-#   Open file: git-open foo/bar/baz.txt
-function git-open() {
-    local filename=$1
-
-    local pathInRepo
-    if [[ -n "${filename}" ]]; then
-        pushd $(dirname "${filename}")
-        pathInRepo=$(git ls-tree --full-name --name-only HEAD $(basename "${filename}"))
-    fi
-
-    local branch=$(git rev-parse --abbrev-ref HEAD 2> /dev/null)
-    ([[ $? -ne 0 ]] || [[ -z "$branch" ]]) && branch="main"
-
-    URL=$(git config remote.origin.url)
-    echo "Opening '$URL'"
-
-    if [[ $URL =~ ^git@ ]]; then
-        [[ -n "${pathInRepo}" ]] && pathInRepo="tree/${branch}/${pathInRepo}"
-
-        local hostAlias=$(echo "$URL" | sed -E "s|git@(.*):(.*).git|\1|")
-        local hostname=$(ssh -G "${hostAlias}" | gawk '$1 == "hostname" { print $2 }')
-
-        echo "$URL" \
-            | sed -E "s|git@(.*):(.*).git|https://${hostname}/\2/${pathInRepo}|" \
-            | xargs open
-
-    elif [[ $URL =~ ^https://bitbucket.org ]]; then
-        echo "$URL" \
-            | sed -E "s|(.*).git|\1/src/${branch}/${pathInRepo}|" \
-            | xargs open
-
-    elif [[ $URL =~ ^https://github.com ]]; then
-        [[ -n "${pathInRepo}" ]] && pathInRepo="tree/${branch}/${pathInRepo}"
-        echo "$URL" \
-            | sed -E "s|(.*).git|\1/${pathInRepo}|" \
-            | xargs open
-
-    else
-        echo "Failed to open due to unrecognised URL '$URL'"
-    fi
-
-    [[ -n "${filename}" ]] && popd > /dev/null 2>&1
-}
-
 # Archive the Git branch by tagging then deleting it
 function git-archive-branch() {
     if [[ $# -ne 1 ]] ; then
