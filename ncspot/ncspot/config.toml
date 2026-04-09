@@ -62,8 +62,6 @@ error_bg                = "#262626"   # LightBlack
 "F3"   = "focus search"
 
 "Esc"    = "back"
-"Ctrl+g" = "back"
-"Ctrl+h" = "back"
 "Ctrl+o" = "back"
 
 "Shift+o" = "open current"
@@ -71,7 +69,6 @@ error_bg                = "#262626"   # LightBlack
 "Shift+a" = "goto artist"
 "a"       = "goto album"
 "m"       = "similar selected"
-
 
 # Playback                          {{{2
 # ======================================
@@ -98,3 +95,9 @@ error_bg                = "#262626"   # LightBlack
 "Shift+c" = "clear"
 "Shift+j" = "shift down 1"
 "Shift+k" = "shift up 1"
+
+# Saving                            {{{2
+# ======================================
+
+# "Ctrl+a" = "save_album"
+# "Ctrl+t" = "save"

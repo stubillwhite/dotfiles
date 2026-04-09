@@ -299,6 +299,8 @@ alias csv-to-json="python3 -c 'import csv, json, sys; print(json.dumps([dict(r) 
 alias json-to-csv='jq -r "(.[0] | keys_unsorted), (.[] | to_entries | map(.value)) | @csv"'
 alias json-to-tsv='jq -r "(.[0] | keys_unsorted), (.[] | to_entries | map(.value)) | @tsv"'
 
+alias pdf-to-text="pdftotext"
+
 # File helpers                      {{{2
 # ======================================
 

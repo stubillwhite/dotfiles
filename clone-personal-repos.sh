@@ -37,6 +37,7 @@ SHALLOW_REPOS=(
     advent-of-code-2025
     advent-of-code-2025-python
     advent-of-code-2025-rust
+    career-tracks
     cookiecutters
     dotfiles
     genai-evaluation
@@ -48,6 +49,7 @@ SHALLOW_REPOS=(
     org
     prezto
     shell-utils
+    stagekick
     tech-radar
 )
 
