@@ -40,6 +40,7 @@ SHALLOW_REPOS=(
     career-tracks
     cookiecutters
     dotfiles
+    dumpster
     genai-evaluation
     homebrew-formulae
     jira-reporter-python

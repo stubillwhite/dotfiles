@@ -1,3 +1,3 @@
 ## Shell
 
-Always use zsh, not bash, for shell commands on this machine.
+Always use `zsh` as the default shell, never `bash`. All shell commands must use zsh syntax.
