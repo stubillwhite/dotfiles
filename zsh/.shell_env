@@ -119,7 +119,7 @@ _assert_variables_defined \
     SECRET_TABLEAU_API_KEY \
     SECRET_TABLEAU_API_USER
 
-# Shared tool environment                                                    {{{1
+# Shared tool environment                                                   {{{1
 # ==============================================================================
 
 if [ -n "${SECRET_OPENAI_API_KEY:-}" ]; then

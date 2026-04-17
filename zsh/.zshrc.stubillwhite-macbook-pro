@@ -3,8 +3,6 @@
 # Certificates                                                              {{{1
 # ==============================================================================
 
-# Shared via ~/.shell_env.stubillwhite-macbook-pro
-
 #export SSL_CERT_FILE="${SSL_CERT_FILE}"        # openssl
 #export REQUESTS_CA_BUNDLE="${SSL_CERT_FILE}"   # requests
 #export AWS_CA_BUNDLE="${SSL_CERT_FILE}"        # botocore

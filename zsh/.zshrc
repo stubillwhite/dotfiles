@@ -1178,7 +1178,7 @@ function docker-update() {
 # Git                               {{{2
 # ======================================
 
-# Shared via ~/.shell_env
+export GIT_TRUNK=main
 
 function git-set-trunk() {
     if [[ $# -ne 1 ]] ; then
@@ -2148,7 +2148,8 @@ function github-list-user-repos() {
 
 # Homebrew                          {{{2
 # ======================================
-# Shared via ~/.shell_env
+
+export HOMEBREW_NO_ENV_HINTS=1
 
 # Java                              {{{2
 # ======================================
@@ -2276,11 +2277,6 @@ alias keepassxc-get-ssh='keepassxc-cli clip ~/Dropbox/Private/keepassx/personal.
 
 alias keepassxc-get-gpg='keepassxc-cli clip ~/Dropbox/Private/keepassx/elsevier.kdbx /Elsevier/GPG'
 
-# Ripgrep                           {{{2
-# ======================================
-
-# Shared via ~/.shell_env
-
 # SBT                               {{{2
 # ======================================
 
@@ -2291,7 +2287,14 @@ alias sbt-profile='sbt -Dsbt.task.timings=true'
 # Shellcheck                        {{{2
 # ======================================
 
-# Shared via ~/.shell_env
+export SHELLCHECK_OPTS=""
+SHELLCHECK_OPTS+="-e SC1091 "    # Allow sourcing files from paths that do not exist yet
+SHELLCHECK_OPTS+="-e SC2039 "    # Allow dash in function names
+SHELLCHECK_OPTS+="-e SC2112 "    # Allow 'function' keyword
+SHELLCHECK_OPTS+="-e SC2155 "    # Allow declare and assignment in the same statement
+SHELLCHECK_OPTS+="-e SC3011 "    # Allow here-strings, not in POSIX sh
+SHELLCHECK_OPTS+="-e SC3033 "    # Allow dashes in functionn names, not in POSIX sh
+SHELLCHECK_OPTS+="-e SC3043 "    # Allow 'local', not in POSIX sh
 
 # SSL certificates                  {{{2
 # ======================================
