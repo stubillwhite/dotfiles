@@ -1,0 +1,5 @@
+# shellcheck shell=bash
+
+if [ -f "$HOME/.shell_env" ]; then
+    . "$HOME/.shell_env"
+fi

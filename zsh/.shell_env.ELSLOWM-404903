@@ -1,0 +1,1 @@
+export SSL_CERT_FILE="$HOME/dev/certificates/Zscaler-Root-cert-2025.cer"

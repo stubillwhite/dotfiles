@@ -30,13 +30,17 @@ FILES=(
     "ripgrep/.ripgreprc"
     "tmux/.tmux.conf"
     "vale/.vale.ini"
+    "zsh/.bash_env"
+    "zsh/.bash_profile"
+    "zsh/.bashrc"
+    "zsh/.shell_env.${computerName}"
+    "zsh/.shell_env"
+    "zsh/.shell_env.no-commit"
     "zsh/.zsh-completion"
     "zsh/.zshenv"
-    "zsh/.zshenv.no-commit"
     "zsh/.zshrc"
     "zsh/.zshrc.${computerName}"
     "zsh/.zshrc.darwin"
-    "zsh/.zshrc.no-commit"
 )
 
 # Files to link to in $HOME/.config

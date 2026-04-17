@@ -11,38 +11,12 @@ zmodload zsh/zprof
 # ...
 # ) }
 
-# Constants                                                                 {{{1
+# Shared environment                                                         {{{1
 # ==============================================================================
 
-case "${OSTYPE}" in
-    darwin*)
-        export OS_NAME="Darwin"
-        ;;
-    linux*)
-        export OS_NAME="Linux"
-        ;;
-    *)
-        export OS_NAME="$(uname -s)"
-        ;;
-esac
-
-export DOTFILES_ROOT="$HOME/Dev/my-stuff/dotfiles"
-
-export COMPUTER_NAME=""
-if [[ "${OS_NAME}" == "Darwin" ]] && command -v scutil > /dev/null 2>&1; then
-    export COMPUTER_NAME="$(scutil --get ComputerName 2> /dev/null)"
+if [ -f "$HOME/.shell_env" ]; then
+    . "$HOME/.shell_env"
 fi
-
-HOMEBREW_PREFIX=""
-for candidate in /opt/homebrew /usr/local
-do
-    if [[ -d "${candidate}/opt" ]]; then
-        HOMEBREW_PREFIX="${candidate}"
-        break
-    fi
-done
-
-export PREZTO_ROOT="$HOME/Dev/my-stuff/prezto"
 
 # Conditional inclusion                                                     {{{1
 # ==============================================================================
@@ -71,89 +45,11 @@ function source-or-warn() {
     source "${fnam}" > /dev/null 2>&1 || echo "Skipping ${fnam} as it does not exist"
 }
 
-# Paths                                                                     {{{1
-# ==============================================================================
-
-typeset -U path
-
-function append-path-if-exists() {
-    local dir=$1
-    [[ -d "${dir}" ]] && path+=("${dir}")
-}
-
-if [[ -n "${HOMEBREW_PREFIX}" ]]; then
-    append-path-if-exists "${HOMEBREW_PREFIX}/opt/ruby/bin"
-    append-path-if-exists "${HOMEBREW_PREFIX}/opt/coreutils/libexec/gnubin"
-    append-path-if-exists "${HOMEBREW_PREFIX}/opt/make/libexec/gnubin"
-fi
-
-append-path-if-exists "/Applications/Emacs.app/Contents/MacOS"
-append-path-if-exists "/Applications/Obsidian.app/Contents/MacOS"
-append-path-if-exists "/Applications/Beyond Compare.app/Contents/MacOS"
-append-path-if-exists "/Applications/PyCharm.app/Contents/MacOS"
-append-path-if-exists "/Applications/IntelliJ IDEA CE.app/Contents/MacOS"
-
-append-path-if-exists "$HOME/Dev/my-stuff/shell-utils"
-
-append-path-if-exists "/usr/bin"
-append-path-if-exists "$HOME/.local/bin"
-
-export XDG_CONFIG_HOME="$HOME/.config"
-
-# export FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
-
 # Included scripts                                                          {{{1
 # ==============================================================================
 
 # GNU parallel
 source-or-warn "${HOMEBREW_PREFIX}/bin/env_parallel.zsh"
-
-# Secrets                           {{{2
-# ======================================
-
-source-or-warn "$HOME/.zshenv.no-commit"
-
-function _assert-variables-defined() {
-    local variables=("$@")
-    for variable in "${variables[@]}"
-    do
-        if [[ -z "${(P)variable}" ]]; then
-            echo "${variable} is not defined -- please check ~/.zshenv.no-commit"
-        fi
-    done
-}
-
-EXPECTED_SECRETS=(
-    SECRET_ANTHROPIC_API_KEY
-    SECRET_GITHUB_TOKEN
-    SECRET_GITHUB_USERNAME
-    SECRET_JIRA_API_KEY
-    SECRET_JIRA_USER
-    SECRET_LASTFM_API_KEY
-    SECRET_LASTFM_SECRET
-    SECRET_NEWRELIC_API_KEY
-    SECRET_OPENAI_API_KEY
-    SECRET_PORTKEY_API_KEY
-    SECRET_SLACK_WEBHOOK_URL
-    SECRET_SPOTIFY_CLIENT_ID
-    SECRET_SPOTIFY_CLIENT_SECRET
-    SECRET_TABLEAU_API_KEY
-    SECRET_TABLEAU_API_USER
-)
-
-_assert-variables-defined "${EXPECTED_SECRETS[@]}"
-
-export OPENAI_API_KEY=${SECRET_OPENAI_API_KEY}
-
-# General settings                                                          {{{1
-# ==============================================================================
-
-# Leiningen
-export LEIN_JVM_OPTS='-Xms4G -Xmx4G'
-
-# Spark
-export SPARK_LOCAL_IP=127.0.0.1
-
 # Shell
 export COLOR_RED='\033[0;31m'
 export COLOR_GREEN='\033[0;32m'

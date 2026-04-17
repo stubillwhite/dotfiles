@@ -75,10 +75,6 @@ eval "$(direnv hook zsh)"
 # export HISTFILESIZE=
 # export HISTSIZE=
 
-# Use NVim
-export EDITOR=nvim
-export VISUAL=nvim
-
 # General options                                                           {{{1
 # ==============================================================================
 
@@ -121,6 +117,7 @@ alias pygmentize='pygmentize -O style=nord-darker'                          # De
 alias rsync='rsync -r --progress'                                           # Default to recursive and show progress
 
 alias nvim-lua='NVIM_APPNAME=nvim-lua nvim'
+alias nvim-legacy='NVIM_APPNAME=nvim-legacy nvim'
 
 # Other useful stuff
 alias reload-zsh-config="exec zsh"                                          # Reload Zsh config
@@ -199,6 +196,11 @@ function copilot-watch-activity() {
     # Sort by timestamp in format "%d-%m-%Y %H:%M:%S"
     # 01-04-2026 13:02:55
     watch 'git-list-file-changes | sort -r -k1.7,1.10 -k1.4,1.5 -k1.1,1.2 -k2'
+}
+
+function copilot-here() {
+  ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
+  copilot --resume -i "Project root: $ROOT. Treat this as the working directory and adjust context if needed."
 }
 
 # IntelliJ and Pycharm                                                      {{{1
@@ -301,6 +303,8 @@ alias json-to-tsv='jq -r "(.[0] | keys_unsorted), (.[] | to_entries | map(.value
 
 alias pdf-to-text="pdftotext"
 
+alias make-tags='ctags -f .tags -R *'
+
 # File helpers                      {{{2
 # ======================================
 
@@ -356,6 +360,9 @@ function path-remove() {
     local toRemove=$1
     export PATH=$(echo $PATH | tr ":" "\n" | grep -v "${toRemove}" | xargs | tr ' ' ':')
 }
+
+# Find broken symlinks in the current folder
+alias find-broken-links='gfind . -maxdepth 1 -xtype l'
 
 # Long running jobs                 {{{2
 # ======================================
@@ -610,33 +617,6 @@ function ps-kill() {
         }
     fi
 }
-
-# Fast AI course helpers            {{{2
-# ======================================
-
-function fast-ai-setup() {
-    export PATH=~/anaconda/bin:$PATH
-    export AWS_DEFAULT_PROFILE=stubillwhite
-    source-if-exists "/Users/white1/Dev/my-stuff/fast-ai/courses/setup/aws-alias.sh"
-    echo "Using anaconda tools and defaulting to AWS profile for fast-ai course"
-}
-
-function fast-ai-tunnel-open() {
-    if [[ $# -ne 3 ]] ; then
-        echo 'Usage: tunnel-open LOCALPORT SERVER SERVERPORT'
-        return -1
-    fi
-
-    localPort=$1
-    server=$2
-    serverPort=$3
-    connectionFile=~/.ssh-tunnel-localhost:${localPort}===${server:0:20}:${serverPort}
-
-    echo "Opening tunnel localhost:${localPort} -> ${server}:${serverPort}"
-    ssh -L ${localPort}:localhost:${serverPort} ${server} -i ~/.ssh/aws-key-fast-ai.pem -f -o ServerAliveInterval=30 -N -M -S ${connectionFile} || { echo "Failed to open tunnel"; return -1; }
-    echo "Tunnel open ${connectionFile}"
-}
-alias tunnel-fast-ai='fast-ai-tunnel-open 8888 fast-ai-server 8888'
 
 # Multi-project configurations      {{{2
 # ======================================
@@ -1195,15 +1175,10 @@ function docker-update() {
     docker desktop stop
 }
 
-# FZF                               {{{2
-# ======================================
-
-export FZF_DEFAULT_COMMAND="fd --exclude={.git,.idea,.vscode,target,node_modules,build} --type f --hidden"
-
 # Git                               {{{2
 # ======================================
 
-export GIT_TRUNK=main
+# Shared via ~/.shell_env
 
 function git-set-trunk() {
     if [[ $# -ne 1 ]] ; then
@@ -2173,7 +2148,7 @@ function github-list-user-repos() {
 
 # Homebrew                          {{{2
 # ======================================
-export HOMEBREW_NO_ENV_HINTS=1
+# Shared via ~/.shell_env
 
 # Java                              {{{2
 # ======================================
@@ -2304,7 +2279,7 @@ alias keepassxc-get-gpg='keepassxc-cli clip ~/Dropbox/Private/keepassx/elsevier.
 # Ripgrep                           {{{2
 # ======================================
 
-export RIPGREP_CONFIG_PATH=~/.ripgreprc
+# Shared via ~/.shell_env
 
 # SBT                               {{{2
 # ======================================
@@ -2316,14 +2291,7 @@ alias sbt-profile='sbt -Dsbt.task.timings=true'
 # Shellcheck                        {{{2
 # ======================================
 
-export SHELLCHECK_OPTS=""
-SHELLCHECK_OPTS+="-e SC1091 "    # Allow sourcing files from paths that do not exist yet
-SHELLCHECK_OPTS+="-e SC2039 "    # Allow dash in function names
-SHELLCHECK_OPTS+="-e SC2112 "    # Allow 'function' keyword
-SHELLCHECK_OPTS+="-e SC2155 "    # Allow declare and assignment in the same statement
-SHELLCHECK_OPTS+="-e SC3011 "    # Allow here-strings, not in POSIX sh
-SHELLCHECK_OPTS+="-e SC3033 "    # Allow dashes in functionn names, not in POSIX sh
-SHELLCHECK_OPTS+="-e SC3043 "    # Allow 'local', not in POSIX sh
+# Shared via ~/.shell_env
 
 # SSL certificates                  {{{2
 # ======================================

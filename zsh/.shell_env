@@ -1,0 +1,139 @@
+# shellcheck shell=sh
+# vim:fdm=marker
+
+# Inclusion guard                                                           {{{1
+# ==============================================================================
+
+if [ -n "${__SHELL_ENV_LOADED:-}" ]; then
+    return 0
+fi
+
+__SHELL_ENV_LOADED=1
+export __SHELL_ENV_LOADED
+
+# Constants                                                                 {{{1
+# ==============================================================================
+
+OS_NAME="$(uname -s)"
+export OS_NAME
+
+COMPUTER_NAME=""
+if [ "${OS_NAME}" = "Darwin" ] && command -v scutil > /dev/null 2>&1; then
+    COMPUTER_NAME="$(scutil --get ComputerName 2> /dev/null || true)"
+fi
+export COMPUTER_NAME
+
+export DOTFILES_ROOT="${DOTFILES_ROOT:-$HOME/Dev/my-stuff/dotfiles}"
+export PREZTO_ROOT="${PREZTO_ROOT:-$HOME/Dev/my-stuff/prezto}"
+export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+export BASH_ENV="${BASH_ENV:-$HOME/.bash_env}"
+
+HOMEBREW_PREFIX=""
+for candidate in /opt/homebrew /usr/local
+do
+    if [ -d "${candidate}/opt" ]; then
+        HOMEBREW_PREFIX="${candidate}"
+        break
+    fi
+done
+export HOMEBREW_PREFIX
+
+# Paths                                                                     {{{1
+# ==============================================================================
+
+append_path_if_exists() {
+    dir=$1
+
+    [ -d "${dir}" ] || return 0
+
+    case ":${PATH:-}:" in
+        *:"${dir}":*)
+            ;;
+        *)
+            if [ -n "${PATH:-}" ]; then
+                PATH="${PATH}:${dir}"
+            else
+                PATH="${dir}"
+            fi
+            export PATH
+            ;;
+    esac
+}
+
+if [ -n "${HOMEBREW_PREFIX}" ]; then
+    append_path_if_exists "${HOMEBREW_PREFIX}/bin"
+    append_path_if_exists "${HOMEBREW_PREFIX}/sbin"
+    append_path_if_exists "${HOMEBREW_PREFIX}/opt/ruby/bin"
+    append_path_if_exists "${HOMEBREW_PREFIX}/opt/coreutils/libexec/gnubin"
+    append_path_if_exists "${HOMEBREW_PREFIX}/opt/make/libexec/gnubin"
+fi
+
+append_path_if_exists "/Applications/Emacs.app/Contents/MacOS"
+append_path_if_exists "/Applications/Obsidian.app/Contents/MacOS"
+append_path_if_exists "/Applications/Beyond Compare.app/Contents/MacOS"
+append_path_if_exists "/Applications/PyCharm.app/Contents/MacOS"
+append_path_if_exists "/Applications/IntelliJ IDEA CE.app/Contents/MacOS"
+append_path_if_exists "$HOME/Dev/my-stuff/shell-utils"
+append_path_if_exists "/usr/bin"
+append_path_if_exists "$HOME/.local/bin"
+
+# Local overrides                                                            {{{1
+# ==============================================================================
+
+# shellcheck disable=SC1090
+if [ -n "${COMPUTER_NAME}" ] && [ -f "$HOME/.shell_env.${COMPUTER_NAME}" ]; then
+    . "$HOME/.shell_env.${COMPUTER_NAME}"
+fi
+
+# Secrets                           {{{2
+# ======================================
+
+if [ -f "$HOME/.shell_env.no-commit" ]; then
+    . "$HOME/.shell_env.no-commit"
+fi
+
+_assert_variables_defined() {
+    for variable in "$@"
+    do
+        eval "value=\${$variable-}"
+        if [ -z "${value}" ]; then
+            echo "${variable} is not defined -- please check ~/.shell_env.no-commit"
+        fi
+    done
+}
+
+_assert_variables_defined \
+    SECRET_ANTHROPIC_API_KEY \
+    SECRET_GITHUB_TOKEN \
+    SECRET_GITHUB_USERNAME \
+    SECRET_JIRA_API_KEY \
+    SECRET_JIRA_USER \
+    SECRET_LASTFM_API_KEY \
+    SECRET_LASTFM_SECRET \
+    SECRET_NEWRELIC_API_KEY \
+    SECRET_OPENAI_API_KEY \
+    SECRET_PORTKEY_API_KEY \
+    SECRET_SLACK_WEBHOOK_URL \
+    SECRET_SPOTIFY_CLIENT_ID \
+    SECRET_SPOTIFY_CLIENT_SECRET \
+    SECRET_TABLEAU_API_KEY \
+    SECRET_TABLEAU_API_USER
+
+# Shared tool environment                                                    {{{1
+# ==============================================================================
+
+if [ -n "${SECRET_OPENAI_API_KEY:-}" ]; then
+    export OPENAI_API_KEY="${SECRET_OPENAI_API_KEY}"
+fi
+
+# Neovim                            {{{2
+# ======================================
+
+export EDITOR=nvim
+export VISUAL=nvim
+
+# Ripgrep                           {{{2
+# ======================================
+
+export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
+

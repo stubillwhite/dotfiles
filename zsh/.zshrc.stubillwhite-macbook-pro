@@ -3,7 +3,7 @@
 # Certificates                                                              {{{1
 # ==============================================================================
 
-export SSL_CERT_FILE=/opt/homebrew/etc/openssl@3/cert.pem
+# Shared via ~/.shell_env.stubillwhite-macbook-pro
 
 #export SSL_CERT_FILE="${SSL_CERT_FILE}"        # openssl
 #export REQUESTS_CA_BUNDLE="${SSL_CERT_FILE}"   # requests
