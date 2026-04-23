@@ -193,9 +193,7 @@ compdef "_arguments \
     genai-models
 
 function copilot-watch-activity() {
-    # Sort by timestamp in format "%d-%m-%Y %H:%M:%S"
-    # 01-04-2026 13:02:55
-    watch 'git-list-file-changes | sort -r -k1.7,1.10 -k1.4,1.5 -k1.1,1.2 -k2'
+    watch 'git-list-file-changes'
 }
 
 function copilot-here() {
