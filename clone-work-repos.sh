@@ -12,6 +12,22 @@ DENG_REPOS=(
 # RDP repos                                                                 {{{1
 # ==============================================================================
 
+# AI metrics - Nexus                {{{2
+# ======================================
+
+NEXUS_REPOS=(
+    elsevier-research/dp-ui-coe-content-explorer-ingestion-pipeline 
+    elsevier-research/dp-ui-coe-content-explorer-service 
+    elsevier-research/dp-ui-coe-event-aggregator-service 
+    elsevier-research/dp-ui-coe-event-data-indexer 
+    elsevier-research/dp-ui-coe-nexus-backend-service 
+    elsevier-research/dp-ui-coe-rag-factory-backend 
+    elsevier-research/dp-ui-coe-rag-factory-callback-lambda 
+    elsevier-research/dp-ui-coe-rag-factory-configuration 
+    elsevier-research/dp-ui-coe-rdm-frontend 
+    elsevier-research/dp-ui-coe-user-management-service
+)
+
 # Architecture                      {{{2
 # ======================================
 
@@ -1123,6 +1139,8 @@ clone-projects-into deng                    "${DENG_REPOS[@]}"
 # ======================================
 
 #clone-projects-into rdp/architecture        "${ARCHITECTURE_REPOS[@]}"
+
+clone-projects-into ai/nexus                "${NEXUS_REPOS[@]}"
 
 clone-projects-into rdp/dkp                 "${DKP_REPOS[@]}"
 clone-projects-into rdp/dkp/infra           "${DKP_INFRA_REPOS[@]}"

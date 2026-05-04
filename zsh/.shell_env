@@ -9,7 +9,6 @@ if [ -n "${__SHELL_ENV_LOADED:-}" ]; then
 fi
 
 __SHELL_ENV_LOADED=1
-export __SHELL_ENV_LOADED
 
 # Constants                                                                 {{{1
 # ==============================================================================
@@ -136,4 +135,3 @@ export VISUAL=nvim
 # ======================================
 
 export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
-

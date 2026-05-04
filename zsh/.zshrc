@@ -107,6 +107,7 @@ alias vi='nvim'                                                             # Us
 alias vim='nvim'                                                            # Use nvim instead of vim
 alias python='python3'                                                      # Use Python 3
 alias pip='pip3'                                                            # Use Pip for Python 3
+alias awk='gawk'                                                            # Use gawk instead of awk
 alias sed='gsed'                                                            # Use gsed instead of sed
 alias mktemp='gmktemp'                                                      # Use gsed instead of sed
 alias touch='gtouch'                                                        # Use gtouch instead of touch
