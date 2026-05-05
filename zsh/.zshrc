@@ -2364,14 +2364,19 @@ function certificate-java-install() {
             if [[ ${output} =~ 'trustedCertEntry' ]]; then
                 msg-success "Certificate present"
             else
-                msg-error "Certificate missing -- run the following to install"
-                echo sudo keytool \
-                    -storepass ${defaultPassword} \
-                    -keystore "\"${keystore}\"" \
-                    -importcert \
-                    -file "${certFile}" \
-                    -alias ${certAlias} \
+                msg-error "Certificate missing -- installing"
+                local installCommand=(
+                    sudo
+                    keytool
+                    -storepass "${defaultPassword}"
+                    -keystore "${keystore}"
+                    -importcert
+                    -file "${certFile}"
+                    -alias "${certAlias}"
                     -noprompt
+                )
+                print -r -- ${(q)installCommand}
+                "${installCommand[@]}"
             fi
         done <<< "${keystores}"
     done
