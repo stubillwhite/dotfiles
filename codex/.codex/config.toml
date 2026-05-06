@@ -1,0 +1,15 @@
+check_for_update_on_startup = false
+
+[projects."/Users/white1/dev/my-stuff/github-repos"]
+trust_level = "trusted"
+
+[projects."/Users/white1/dev/scratchpad/testing"]
+trust_level = "trusted"
+
+[tui.model_availability_nux]
+"gpt-5.5" = 1
+
+[features]
+memories = true
+runtime_metrics = true
+multi_agent_v2 = true

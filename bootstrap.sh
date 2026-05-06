@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/zsh
 
 # vim:fdm=marker
 
@@ -16,8 +16,9 @@ computerName=$(scutil --get ComputerName)
 FILES=(
     "ctags/.ctags"
     "ssh/.ssh"
-    "claude-code/.claude"
     "chemacs/.emacs-profiles.el"
+    "claude-code/.claude"
+    "codex/.codex"
     "doom/.doom.d"
     "git/.gitconfig"
     "git/.githooks"
@@ -80,14 +81,22 @@ function relative-path() {
 }
 
 function create-link() {
-    declare targetDir=$1 file=$2
+    local targetDir=$1
+    local file=$2
+    local linkName=${3:-}
 
-    local localPath=$(relative-path $file)
-    local homePath="$targetDir/$(basename $localPath)"
+    local localPath=$(relative-path "$file")
+    local targetName=${linkName:-$(basename "$localPath")}
+    local homePath="$targetDir/$targetName"
+
+    if ! mkdir -p "$targetDir"; then
+        msg_error "Error:   could not create directory $targetDir"
+        return 1
+    fi
 
     if [[ -L "$homePath" ]]; then
         local linkTarget=$(readlink -- "$homePath")
-        if [ $linkTarget = $localPath ]; then
+        if [[ "$linkTarget" = "$localPath" ]]; then
             msg_success "Exists:  $homePath -> $localPath"
         else
             msg_error "Error:   $homePath -> $linkTarget exists (should point to $localPath)"
@@ -95,20 +104,24 @@ function create-link() {
     elif [[ -e "$homePath" ]]; then
         msg_error "Error:   $homePath cannot be created because a file exists at that path"
     else 
-        ln -s "$localPath" "$homePath"
-        msg_success "Created: $homePath -> $localPath"
+        if ln -s "$localPath" "$homePath"; then
+            msg_success "Created: $homePath -> $localPath"
+        else
+            msg_error "Error:   failed to create $homePath -> $localPath"
+            return 1
+        fi
     fi
 }
 
 function create-links-for-files() {
     local targetDir=$1 
     shift
-    local files=($@)
+    local files=("$@")
 
     for file in "${files[@]}"
     do
         if [[ -e $file ]]; then
-            create-link $targetDir $file
+            create-link "$targetDir" "$file"
         else
             msg_error "Error:   $file not found"
         fi
@@ -119,14 +132,14 @@ function create-links-for-files-at-path() {
     local targetDir=$1 
     local sourceDir=$2 
 
-    for file in $(find "${sourceDir}" -type f)
+    while IFS= read -r -d '' file
     do
         if [[ -e $file ]]; then
-            create-link $targetDir $file
+            create-link "$targetDir" "$file"
         else
             msg_error "Error:   $file not found"
         fi
-    done
+    done < <(find "$sourceDir" -type f -print0)
 }
 
 # Installation                                                              {{{1
@@ -135,28 +148,28 @@ function create-links-for-files-at-path() {
 # General                           {{{2
 # ======================================
 
-create-links-for-files $HOME         "$FILES[@]"
+create-links-for-files "$HOME"         "${FILES[@]}"
 
-mkdir -p $HOME/.config/
-create-links-for-files $HOME/.config "$CONFIG_DIRS[@]"
+mkdir -p "$HOME/.config/"
+create-links-for-files "$HOME/.config" "${CONFIG_DIRS[@]}"
 
 # K9s                               {{{2
 # ======================================
 
-create-links-for-files-at-path ~/Library/Application\ Support/k9s k9s
+create-links-for-files-at-path "$HOME/Library/Application Support/k9s" k9s
 
 # Emacs                             {{{2
 # ======================================
 
 if [ -d ~/.emacs.d ]; then
-    pushd ~/.emacs.d > /dev/null
+    pushd ~/.emacs.d > /dev/null || exit 1
     remoteUrl=$(git remote get-url origin)
     if [ "${remoteUrl}" = "https://github.com/plexus/chemacs2.git" ]; then
         msg_success "Exists:  ~/.emacs.d -> ${remoteUrl}"
     else
         msg_error "Exists:  ~/.emacs.d exists and does not point to ${remoteUrl}"
     fi
-    popd
+    popd > /dev/null || exit 1
 else
     git clone https://github.com/plexus/chemacs2.git ~/.emacs.d
 fi
@@ -165,4 +178,4 @@ fi
 # ======================================
 
 # Default to personal config until reconfigured
-ln -s ./ssh/.ssh/ssh-configs/personal-ssh-config "${HOME}/.ssh/config"
+create-link "$HOME/.ssh" "ssh/.ssh/ssh-configs/personal-ssh-config" config

@@ -1,0 +1,8 @@
+{
+  "renderMarkdown": true,
+  "theme": "auto",
+  "model": "gpt-5.4",
+  "allowedUrls": [
+    "https://docs.databricks.com"
+  ]
+}
