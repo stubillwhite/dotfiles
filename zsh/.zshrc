@@ -1264,8 +1264,9 @@ function git-repos-fetch() {
     git-repos-status
 }
 
-# Parse Git status into a Zsh associative array
+# Parse Git status into a tab-separated record
 function git-parse-repo-status() {
+    local branch
     local aheadAndBehind
     local ahead=0
     local behind=0
@@ -1280,9 +1281,9 @@ function git-parse-repo-status() {
     ([[ $? -ne 0 ]] || [[ -z "$branch" ]]) && branch="unknown"
 
     aheadAndBehind=$(git status --porcelain=v1 --branch | perl -ne '/\[(.+)\]/ && print $1' )
-    ahead=$(echo $aheadAndBehind | perl -ne '/ahead (\d+)/ && print $1' )
+    ahead=$(print -r -- "$aheadAndBehind" | perl -ne '/ahead (\d+)/ && print $1' )
     [[ -z "$ahead" ]] && ahead=0
-    behind=$(echo $aheadAndBehind | perl -ne '/behind (\d+)/ && print $1' )
+    behind=$(print -r -- "$aheadAndBehind" | perl -ne '/behind (\d+)/ && print $1' )
     [[ -z "$behind" ]] && behind=0
 
     # See https://git-scm.com/docs/git-status for output format
@@ -1297,47 +1298,69 @@ function git-parse-repo-status() {
 
     stashed=$(git stash list | wc -l)
 
-    unset gitRepoStatus
-    typeset -gA gitRepoStatus
-    gitRepoStatus[branch]=$branch
-    gitRepoStatus[ahead]=$ahead
-    gitRepoStatus[behind]=$behind
-    gitRepoStatus[added]=$added
-    gitRepoStatus[modified]=$modified
-    gitRepoStatus[deleted]=$deleted
-    gitRepoStatus[renamed]=$renamed
-    gitRepoStatus[untracked]=$untracked
-    gitRepoStatus[stashed]=$stashed
+    print -r -- "$branch"$'\t'"$ahead"$'\t'"$behind"$'\t'"$added"$'\t'"$modified"$'\t'"$deleted"$'\t'"$renamed"$'\t'"$untracked"$'\t'"$stashed"
 }
 
 # For each repo within the current directory, display the respository status
 function git-repos-status() {
     display-status() {
-        git-parse-repo-status
-        repo=$(basename $PWD)
+        local repoStatus
+        local repo=$(basename "$PWD")
+        local branch
+        local ahead
+        local behind
+        local added
+        local modified
+        local deleted
+        local renamed
+        local untracked
+        local stashed
+
+        repoStatus=$(git-parse-repo-status) || return 1
+
+        local IFS=$'\t'
+        read -r branch ahead behind added modified deleted renamed untracked stashed <<< "$repoStatus"
 
         local branchColor="${COLOR_RED}"
-        if [[ "$gitRepoStatus[branch]" =~ (^\(main\|master\)$) ]]; then
+        if [[ "$branch" == "main" || "$branch" == "master" ]]; then
             branchColor="${COLOR_GREEN}"
         fi
-        local branch="${branchColor}$gitRepoStatus[branch]${COLOR_NONE}"
+        branch="${branchColor}${branch}${COLOR_NONE}"
 
         local sync="${COLOR_GREEN}in-sync${COLOR_NONE}"
-        if (( $gitRepoStatus[ahead] > 0 )) && (( $gitRepoStatus[behind] > 0 )); then
+        if (( ahead > 0 )) && (( behind > 0 )); then
             sync="${COLOR_RED}ahead/behind${COLOR_NONE}"
-        elif (( $gitRepoStatus[ahead] > 0 )); then
+        elif (( ahead > 0 )); then
             sync="${COLOR_RED}ahead${COLOR_NONE}"
-        elif (( $gitRepoStatus[behind] > 0 )); then
+        elif (( behind > 0 )); then
             sync="${COLOR_RED}behind${COLOR_NONE}"
         fi
 
         local dirty="${COLOR_GREEN}clean${COLOR_NONE}"
-        (($gitRepoStatus[added] + $gitRepoStatus[modified] + $gitRepoStatus[deleted] + $gitRepoStatus[renamed] > 0)) && dirty="${COLOR_RED}dirty${COLOR_NONE}"
+        (( added + modified + deleted + renamed > 0 )) && dirty="${COLOR_RED}dirty${COLOR_NONE}"
 
         print "${branch},${sync},${dirty},${repo}\n"
     }
 
-    git-for-each-repo display-status | column -t -s ','
+    local dirs=$(find . -mindepth 1 -maxdepth 1 -type d)
+
+    echo "$dirs" \
+        | env_parallel \
+            --env display-status \
+            --env git-parse-repo-status \
+            --env COLOR_RED \
+            --env COLOR_GREEN \
+            --env COLOR_NONE \
+            -j10 \
+            "
+            pushd {} > /dev/null;                               \
+            if git rev-parse --git-dir > /dev/null 2>&1; then   \
+                display-status;                                  \
+            fi;                                                  \
+            popd > /dev/null;                                    \
+            " \
+        | sort -t ',' -k4,4 \
+        | column -t -s ','
 }
 
 # For each repo within the current directory, display whether the repo contains
@@ -2576,4 +2599,8 @@ function docs() {
         command man "$@"
         ;;
     esac
+}
+
+function ddb() {
+  duckdb "$1" < ~/dev/my-stuff/dotfiles/duckdb/duckdbrc.sql
 }

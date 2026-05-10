@@ -123,6 +123,9 @@
 [includeIf "gitdir:~/dev/scratchpad/"]
     path = ~/dev/my-stuff/dotfiles/git/work-config/.gitconfig
 
+[includeIf "gitdir:~/dev/deng/"]
+    path = ~/dev/my-stuff/dotfiles/git/work-config/.gitconfig
+
 [includeIf "gitdir:~/dev/rdp/"]
     path = ~/dev/my-stuff/dotfiles/git/work-config/.gitconfig
 
