@@ -1,0 +1,16 @@
+.codex/.codex-global-state.json
+.codex/.codex-global-state.json.bak
+.codex/.personality_migration
+.codex/.tmp/
+.codex/auth.json
+.codex/cache/
+.codex/computer-use/
+.codex/installation_id
+.codex/logs_*
+.codex/models_cache.json
+.codex/plugins/
+.codex/skills/
+.codex/sqlite/
+.codex/state_*
+.codex/tmp/
+.codex/vendor_imports/

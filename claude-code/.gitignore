@@ -1,0 +1,13 @@
+.claude/backups/
+.claude/cache/
+.claude/debug/
+.claude/file-history/
+.claude/history.jsonl
+.claude/plugins/
+.claude/policy-limits.json
+.claude/projects/
+.claude/shell-snapshots/
+.claude/stats-cache.json
+.claude/statsig/
+.claude/todos/
+.claude/usage-data/
