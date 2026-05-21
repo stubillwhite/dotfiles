@@ -108,12 +108,14 @@ alias vim='nvim'                                                            # Us
 alias python='python3'                                                      # Use Python 3
 alias pip='pip3'                                                            # Use Pip for Python 3
 alias awk='gawk'                                                            # Use gawk instead of awk
-alias sed='gsed'                                                            # Use gsed instead of sed
-alias mktemp='gmktemp'                                                      # Use gsed instead of sed
-alias touch='gtouch'                                                        # Use gtouch instead of touch
-alias echo='gecho'                                                          # Use gecho nstead of echo
 alias date='gdate'                                                          # Use gdate instead of date
+alias echo='gecho'                                                          # Use gecho nstead of echo
 alias find='gfind'                                                          # Use gfind instead of find
+alias head='ghead'                                                          # Use ghead instead of head
+alias mktemp='gmktemp'                                                      # Use gsed instead of sed
+alias sed='gsed'                                                            # Use gsed instead of sed
+alias tail='gtail'                                                          # Use gtail instead of tail
+alias touch='gtouch'                                                        # Use gtouch instead of touch
 alias pygmentize='pygmentize -O style=nord-darker'                          # Default to nord-darker style for pygmentize
 alias rsync='rsync -r --progress'                                           # Default to recursive and show progress
 
@@ -1172,6 +1174,18 @@ function docker-update() {
     docker desktop start
     docker desktop update
     docker desktop stop
+}
+
+# duckdb                            {{{2
+# ======================================
+
+function duckdb-load-helpers() {
+    if [[ $# -ne 1 ]] ; then
+        echo 'Usage: duckdb-load-helpers DB'
+        return 1
+    fi
+
+    duckdb "$1" < "${HOME}/dev/my-stuff/dotfiles/duckdb/duckdb-helpers.sql"
 }
 
 # Git                               {{{2
