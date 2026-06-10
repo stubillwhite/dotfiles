@@ -55,8 +55,9 @@ brew 'stern'                                    # Tail multiple Kubernetes pods 
 # Fun
 ################################################################################
 
-cask "steam"                                    # Steam client
+cask "crossover"                                # Tool to run Windows software
 cask "parsec"                                   # Online low latency gaming
+cask "steam"                                    # Steam client
 
 brew "nethack"                                  # Single-player roguelike video game
 brew "brogue"                                   # Roguelike game
