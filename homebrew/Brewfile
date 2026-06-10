@@ -222,9 +222,6 @@ brew "terraform", link: false                   # Tool to build, change, and ver
 brew "terragrunt"                               # Thin wrapper for Terraform e.g. for locking state
 brew "tfenv", link: true                        # Terraform version manager inspired by rbenv
 
-# SQL
-cask "sqlworkbenchj"                            # Java-based SQL client
-
 # Shell
 brew "bats-core"                                # Bash Automated Testing System
 

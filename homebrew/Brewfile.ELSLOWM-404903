@@ -14,11 +14,6 @@ cask 'microsoft-teams'                          # Microsoft Teams is your hub fo
 cask 'onedrive'                                 # Cloud storage client
 cask 'powershell'                               # Command-line shell and scripting language
 
-# MongoDB
-tap 'mongodb/brew'
-brew 'mongodb-community@4.4'                    # High-performance, schema-free, document-oriented database
-brew 'mongodb-database-tools'                   # This package contains standard utilities for interacting with MongoDB
-
 # Video conferencing
 cask 'amazon-chime'                             # Communications service
 cask 'zoom'                                     # Video communication and virtual meeting platform
