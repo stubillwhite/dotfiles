@@ -3,6 +3,7 @@
 ################################################################################
 
 # Basics
+cask "dropbox"                                  # Client for the Dropbox cloud storage service
 cask "google-chrome"                            # Cross-platform web browser
 
 # IDEs

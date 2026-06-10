@@ -18,7 +18,6 @@ cask "temurin"                                  # Latest JDK from https://adopti
 
 # Basics
 cask "beyond-compare"                           # Compare files and folders
-cask "dropbox"                                  # Client for the Dropbox cloud storage service
 cask "firefox"                                  # Mozilla Firefox
 cask "iterm2"                                   # Terminal emulator as alternative to Apple's Terminal app
 cask "jordanbaird-ice"                          # Powerful menu bar manager for macOS
