@@ -4,5 +4,5 @@ root: ~/dev/my-stuff/jira-reporter-python/
 windows:
   - daily-summary:
       - ./run-daily-reports.sh
-  - sprint-summary:
-      - ./run-summary-reports.sh
+  # - sprint-summary:
+  #     - ./run-summary-reports.sh

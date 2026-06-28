@@ -441,6 +441,19 @@ function image-to-text() {
     rm ${dest}
 }
 
+# Render a markdown file as HTML
+# _markdown-render-html SRC DEST
+function _markdown-render-html() {
+    pandoc "$1" -o "$2" \
+        --filter mermaid-filter \
+        --from=gfm \
+        --to=html \
+        --metadata title='markdown-preview' \
+        --embed-resources \
+        --standalone \
+        --css ~/dev/my-stuff/.emacs.d/lisp/package-config/markdown-light.css
+}
+
 # View a markdown file as HTML
 # markdown-view FNAM
 function markdown-view() {
@@ -452,16 +465,21 @@ function markdown-view() {
     local tmpfile=$(mktemp -t markdown-view.XXXXXX --suffix=.html)
     trap 'rm -f "$tmpfile"' EXIT INT TERM
 
-    pandoc "$1" -o "$tmpfile" \
-        --filter mermaid-filter \
-        --from=gfm \
-        --to=html \
-        --metadata title='markdown-preview' \
-        --embed-resources \
-        --standalone \
-        --css ~/dev/my-stuff/.emacs.d/lisp/package-config/markdown-light.css
+    _markdown-render-html "$1" "$tmpfile" || return $?
 
     open "$tmpfile"
+}
+
+# Render a markdown file to HTML
+# markdown-to-html FNAM
+function markdown-to-html() {
+    if [[ $# -ne 1 ]] ; then
+        echo 'Usage: markdown-to-html FNAM'
+        return 1
+    fi
+
+    local dest="${1:r}.html"
+    _markdown-render-html "$1" "$dest"
 }
 
 # Prompt for confirmation
@@ -1565,6 +1583,69 @@ function git-repos-remotes() {
     git-for-each-repo remotes
 }
 
+function git-remote-resolve-hostname() {
+    local host_alias=$1
+    local hostname=$(ssh -G "${host_alias}" 2>/dev/null | awk '$1 == "hostname" { print $2; exit }')
+
+    echo "${hostname:-${host_alias}}"
+}
+
+function git-github-repo-path-from-remote() {
+    local remote_url=$1
+
+    if [[ "${remote_url}" =~ ^git@([^:]+):(.+)$ ]]; then
+        local host_alias=${BASH_REMATCH[2]}
+        local repo_path=${BASH_REMATCH[3]%.git}
+        local hostname=$(git-remote-resolve-hostname "${host_alias}")
+
+        [[ "${hostname}" == "github.com" ]] && echo "${repo_path}"
+    elif [[ "${remote_url}" =~ ^ssh://git@([^/]+)/(.+)$ ]]; then
+        local host_alias=${BASH_REMATCH[2]}
+        local repo_path=${BASH_REMATCH[3]%.git}
+        local hostname=$(git-remote-resolve-hostname "${host_alias}")
+
+        [[ "${hostname}" == "github.com" ]] && echo "${repo_path}"
+    elif [[ "${remote_url}" =~ ^https?://([^/]+)/(.+)$ ]]; then
+        local hostname=${BASH_REMATCH[2]}
+        local repo_path=${BASH_REMATCH[3]%.git}
+
+        [[ "${hostname}" == "github.com" ]] && echo "${repo_path}"
+    fi
+}
+
+# For each repo within the current directory, check if the GitHub repo is archived
+function git-repos-archived() {
+    check-archived() {
+        local remote=$(git remote get-url origin 2>/dev/null)
+
+        if [[ -z "${remote}" ]]; then
+            echo "$fnam: remote 'origin' not found"
+            return 0
+        fi
+
+        local github_info=$(git-github-repo-path-from-remote "${remote}")
+
+        if [[ -n "${github_info}" ]]; then
+            local owner=${github_info%%/*}
+            local repo=${github_info#*/}
+
+            # Check if repo is archived using GitHub API
+            local archived=$(gh api "repos/$owner/$repo" --jq '.archived' 2>/dev/null || echo "error")
+
+            if [[ "${archived}" == "true" ]]; then
+                echo "$fnam: ARCHIVED"
+            elif [[ "${archived}" == "false" ]]; then
+                echo "$fnam: active"
+            elif [[ "${archived}" == "error" ]]; then
+                echo "$fnam: error accessing GitHub API"
+            fi
+        else
+            echo "$fnam: not a GitHub repo"
+        fi
+    }
+    git-for-each-repo check-archived
+}
+
 # For each directory within the current directory, generate a hacky count of
 # lines of code files
 function git-repos-hacky-line-count() {
@@ -2186,6 +2267,7 @@ function github-list-user-repos() {
 # ======================================
 
 export HOMEBREW_NO_ENV_HINTS=1
+export HOMEBREW_NO_ASK=1
 
 # Java                              {{{2
 # ======================================

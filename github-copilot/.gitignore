@@ -1,5 +1,8 @@
 .copilot/command-history-state.json
+.copilot/config.json
 .copilot/logs
 .copilot/mcp-oauth-config
+.copilot/permissions-config.json
 .copilot/pkg
 .copilot/session-state
+.copilot/session-store.db

@@ -44,45 +44,28 @@ DKP_REPOS=(
     elsevier-research/dkp-aws-scripts
     elsevier-research/dkp-batch-rest-tests
     elsevier-research/dkp-core
-    elsevier-research/dkp-core-authentication
     elsevier-research/dkp-core-batch
-    elsevier-research/dkp-core-dereferencing-service
     elsevier-research/dkp-core-imagefinder
     elsevier-research/dkp-core-platform
-    elsevier-research/dkp-core-resources-service
     elsevier-research/dkp-core-vtw-integration
-    elsevier-research/dkp-ewii-pcmt
     elsevier-research/dkp-image-finder-rest-tests
     elsevier-research/dkp-imagefinder-logging
     elsevier-research/dkp-imagefinder-service
     elsevier-research/dkp-imagefinder-tests
     elsevier-research/dkp-imagefinder-ui
     elsevier-research/dkp-ldr-dependencies
-    elsevier-research/dkp-linked-data-browser
     elsevier-research/dkp-linked-data-browser-tests
-    elsevier-research/dkp-qa-elasticjmeter
-    elsevier-research/dkp-qa-ldr-functional
-    elsevier-research/dkp-qa-ldr-performance
-    elsevier-research/dkp-qa-ldr-regression
-    elsevier-research/dkp-qa-sct-selenium
-    elsevier-research/dkp-qa-ui-functional
     elsevier-research/dkp-rest-tests
     elsevier-research/dkp-sct-application
-    elsevier-research/dkp-sct-e2e-tests
-    elsevier-research/dkp-sct-purge-tool
     elsevier-research/dkp-sct-tests
     elsevier-research/dkp-taxonomy-conversion-lambda
-    elsevier-research/dkp-taxonomy-exporter
     elsevier-research/sct-services
     elsevier-research/taxonomies-ctm-prototype
 )
 
 DKP_INFRA_REPOS=(
     elsevier-research/ces-terraformcontrol-cef
-    elsevier-research/dkp-ami-security-updates
-    elsevier-research/dkp-ansible-rest
     elsevier-research/dkp-base-image
-    elsevier-research/dkp-cicd-scripts
     elsevier-research/dkp-core-github-actions
     elsevier-research/dkp-core-infra
     elsevier-research/dkp-dist-docker
@@ -90,41 +73,20 @@ DKP_INFRA_REPOS=(
     elsevier-research/dkp-graphdb-image
     elsevier-research/dkp-if-terraform
     elsevier-research/dkp-imagefinder-deployment
-    elsevier-research/dkp-integrationserver
-    elsevier-research/dkp-irvs-event-framework
-    elsevier-research/dkp-jenkins-config
     elsevier-research/dkp-jenkins-libraries
     elsevier-research/dkp-jenkins-master-configuration
-    elsevier-research/dkp-jenkinscontrol
-    elsevier-research/dkp-ldr-batchprocess-deployment
-    elsevier-research/dkp-ldr-devops
-    elsevier-research/dkp-ldr-rest-deployment
-    elsevier-research/dkp-ldr-site
-    elsevier-research/dkp-prod-terraform
     elsevier-research/dkp-puppet-httpd24
-    elsevier-research/dkp-puppet-maven
-    elsevier-research/dkp-puppet-tomcat
     elsevier-research/dkp-puppetcontrol
     elsevier-research/dkp-sct-deployment
-    elsevier-research/dkp-sct-terraform
-    elsevier-research/dkp-solr-deployment
     elsevier-research/dkp-terraform
     elsevier-research/dkp-terraform-dkp-infra
     elsevier-research/dkp-terraform-ecs
-    elsevier-research/dkp-terraform-elasticsearch
-    elsevier-research/dkp-terraform-gravitee-ecs
     elsevier-research/dkp-terraform-if-infra
-    elsevier-research/dkp-terraform-kong
     elsevier-research/dkp-terraform-new-relic
-    elsevier-research/dkp-terraform-puppetserver
     elsevier-research/dkp-terraform-sct-infra
     elsevier-research/dkp-terraform-tags
-    elsevier-research/dkp-terraform-zookeeper
     elsevier-research/dkp-terraformcontrol
-    elsevier-research/dkp-vagrant-toolbox
     elsevier-research/dkp-voice-terraform
-    elsevier-research/linked-data-gateway
-    elsevier-research/rdm-md-be-dkp-categories
 )
 
 # Concept                           {{{2
@@ -597,6 +559,7 @@ SANDBOX_REPOS=(
 
 RDP_MISC_REPOS=(
     elsevier-research/rdm-md-be-dkp-categories
+    elsevier-centraltechnology/developer-ai-plugins
 )
 
 # KD repos                                                                  {{{1
@@ -750,6 +713,7 @@ RECOMMENDERS_INFRA_REPOS=(
 # ======================================
 
 KD_MISC_REPOS=(
+    elsevier-research/eval-labs
     elsevier-research/kd-apollo-router
     elsevier-research/kd-apollo-router-perf-test
     elsevier-research/kd-apollo-router-test

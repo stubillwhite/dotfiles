@@ -1,0 +1,8 @@
+name: docs
+
+windows:
+  - docs:
+      layout: even-vertical
+      panes:
+        - saip:
+            - cd ~/dev/kd/misc/kd-search-and-ai-platform-docs

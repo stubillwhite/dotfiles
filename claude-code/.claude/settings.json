@@ -14,5 +14,10 @@
                 ]
             }
         ]
+    },
+    "permissions": {
+        "allow": [
+            "Bash(duckdb *)"
+        ]
     }
 }
