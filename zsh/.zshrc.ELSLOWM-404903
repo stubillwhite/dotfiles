@@ -1129,6 +1129,7 @@ function setup-claude-bedrock() {
 
 function daily-update() {
     open 'https://fa-ewqc-saasfaprod1.fa.ocs.oraclecloud.com/'
+    open 'https://officevibe.workleap.com/portal/feedback/survey/teams?period=90&allTeams=true'
     mux upgrade --no-attach
     mux jira --no-attach
     tmux attach

@@ -265,34 +265,13 @@ FOUNDATIONS_REPOS=(
     elsevier-research/dp-core-github-actions
     elsevier-research/dp-core-helmcharts
     elsevier-research/dp-core-infra
-    elsevier-research/dp-core-istio-ingress
     elsevier-research/dp-core-jenkins
     elsevier-research/dp-core-jenkins-scripts
     elsevier-research/dp-core-jfrog-tokens
-    elsevier-research/dp-core-kibana-proxy
-    elsevier-research/dp-core-spinnaker
-    elsevier-research/dp-foundation-alerts-lambda
-    elsevier-research/dp-foundation-bosapi-redis-monitoring
-    elsevier-research/dp-foundation-capabilities-onboarding
-    elsevier-research/dp-foundation-data-account-terraform
-    elsevier-research/dp-foundation-data-ledger
-    elsevier-research/dp-foundation-data-ledger-specs
     elsevier-research/dp-foundation-databricks-mounter
-    elsevier-research/dp-foundation-dr
-    elsevier-research/dp-foundation-druid-poc
-    elsevier-research/dp-foundation-monitoring
-    elsevier-research/dp-foundation-prometheus
-    elsevier-research/dp-foundation-schema-registry-proxy
-    elsevier-research/dp-foundation-storage-management-service
-    elsevier-research/dp-foundation-topic-harvester
-    elsevier-research/dp-foundation-utils
     elsevier-research/dp-foundations-kubedump
-    elsevier-research/dp-foundations-spinnaker
     elsevier-research/dp-mvn-archetype-kafka-service
     elsevier-research/rdp-cck-selfservice-alpha
-    elsevier-research/rdp-cck-selfservice-nonprod
-    elsevier-research/rdp-cck-selfservice-prod
-    elsevier-research/rdp-foundations-acler
     elsevier-research/rdp-foundations-al2-scanner
     elsevier-research/rdp-foundations-cck-utilities
     elsevier-research/rdp-foundations-confluent-clients
@@ -302,32 +281,19 @@ FOUNDATIONS_REPOS=(
     elsevier-research/rdp-foundations-golden-signal-kafka-producer
     elsevier-research/rdp-foundations-gradle-demo-service
     elsevier-research/rdp-foundations-gradle-playground-service
-    elsevier-research/rdp-foundations-julie
     elsevier-research/rdp-foundations-kafka-stream-application
-    elsevier-research/rdp-foundations-meta-service-hello-world
     elsevier-research/rdp-foundations-perf-test
     elsevier-research/rdp-foundations-playground-service
     elsevier-research/rdp-foundations-python-demo-service
     elsevier-research/rdp-foundations-python-playground-service
     elsevier-research/rdp-foundations-s3-bucket-review-service
     elsevier-research/rdp-foundations-scala-demo-service
-    elsevier-research/rdp-foundations-service-hello-world
     elsevier-research/rdp-foundation-utilities
-    elsevier-research/rdp-works-mlops-distributed-training
-    elsevier-research/rdp-works-mlops-example-bert-model-kserve-predictor
     elsevier-research/rdp-works-mlops-example-bert-model-kserve-transformer
-    elsevier-research/rdp-works-mlops-example-bert-model-tensorrt-transformer
-    elsevier-research/rdp-works-mlops-example-dataset
-    elsevier-research/rdp-works-mlops-example-models
-    elsevier-research/rdp-works-mlops-example-models-v2
-    elsevier-research/rdp-works-mlops-infra
     elsevier-research/rdp-works-mlops-model-quantization-inferentia
     elsevier-research/rdp-works-mlops-model-quantization-tensorrt
     elsevier-research/rdp-works-mlops-peft
     elsevier-research/rdp-works-mlops-service-registry
-    elsevier-research/rdp-works-mlops-service-workflow-orchestrator
-    elsevier-research/rdp-works-mlops-toolkit
-    elsevier-research/rdp-works-mlops-webapp
 )
 
 FOUNDATIONS_INFRA_REPOS=(
