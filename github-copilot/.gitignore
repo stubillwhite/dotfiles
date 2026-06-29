@@ -5,4 +5,4 @@
 .copilot/permissions-config.json
 .copilot/pkg
 .copilot/session-state
-.copilot/session-store.db
+.copilot/session-store.db*

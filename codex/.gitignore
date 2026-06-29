@@ -8,6 +8,8 @@
 .codex/installation_id
 .codex/logs_*
 .codex/models_cache.json
+.codex/goals_*
+.codex/memories_*
 .codex/plugins/
 .codex/skills/
 .codex/sqlite/

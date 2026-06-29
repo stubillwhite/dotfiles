@@ -4,5 +4,19 @@
   "model": "gpt-5.4",
   "allowedUrls": [
     "https://docs.databricks.com"
-  ]
+  ],
+  "footer": {
+    "showModelEffort": false,
+    "showDirectory": true,
+    "showBranch": true,
+    "showContextWindow": false,
+    "showQuota": true,
+    "showAiUsed": true,
+    "showAgent": true,
+    "showCodeChanges": false,
+    "showUsername": false,
+    "showSandbox": true,
+    "showYolo": false,
+    "showCustom": true
+  }
 }
