@@ -4,7 +4,6 @@
 
 # Basics
 cask 'microsoft-auto-update'                    # Microsoft Auto Update
-cask 'microsoft-edge'                           # Web browser
 
 # Drawing
 cask 'drawio'                                   # draw.io Desktop
