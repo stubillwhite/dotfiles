@@ -133,6 +133,9 @@
 [includeIf "gitdir:~/dev/kd/"]
     path = ~/dev/my-stuff/dotfiles/git/work-config/.gitconfig
 
+[includeIf "gitdir:~/dev/tmp/"]
+    path = ~/dev/my-stuff/dotfiles/git/work-config/.gitconfig
+
 [filter "lfs"]
 	process = git-lfs filter-process
 	required = true

@@ -1,5 +1,82 @@
 # vim:fdm=marker
 
+# ZScaler debugging                                                         {{{1
+# ==============================================================================
+
+function zscaler-status() {
+    echo "=== ZScaler Processes ==="
+    pgrep -la -i zscaler 2>/dev/null || echo "No ZScaler processes found"
+
+    echo
+    echo "=== ZScaler Tunnel Interface ==="
+    ifconfig | grep -A4 -i 'utun\|zscaler' 2>/dev/null || networksetup -listallnetworkservices | grep -i zscaler
+
+    echo
+    echo "=== Active VPN/Proxy ==="
+    scutil --proxy | grep -E 'HTTPSEnable|HTTPEnable|ProxyAutoConfig|Enabled' | head -20
+
+    echo
+    echo "=== ZScaler Service Logs (last 50 lines) ==="
+    local log_path="/var/log/zscaler"
+    if [[ -d "$log_path" ]]; then
+        ls -lht "$log_path"/*.log 2>/dev/null | head -5
+        echo "  (use: sudo tail -f /var/log/zscaler/<log> to follow)"
+    else
+        log show --predicate 'process == "ZscalerTunnel" OR process == "zscaler"' --last 5m 2>/dev/null | tail -50
+    fi
+}
+
+function zscaler-watch() {
+    echo "Watching ZScaler tunnel reconnections (Ctrl-C to stop)..."
+    log stream --predicate 'process == "ZscalerTunnel" OR process == "zscaler" OR subsystem == "com.zscaler"' 2>/dev/null \
+        || log stream --predicate 'process CONTAINS[c] "zscaler"' 2>/dev/null
+}
+
+function zscaler-connectivity() {
+    local targets=(
+        "gateway.zscaler.net"
+        "gateway.zscloud.net"
+        "www.zscaler.net"
+        "google.com"
+    )
+
+    echo "=== DNS Resolution ==="
+    for t in $targets[@]; do
+        printf "%-35s -> %s\n" "$t" "$(dig +short "$t" 2>/dev/null | head -1 || echo 'FAILED')"
+    done
+
+    echo
+    echo "=== Reachability (HTTPS) ==="
+    for t in "${targets[@]}"; do
+        local result
+        result=$(curl -sS --max-time 5 -o /dev/null -w "%{http_code} (%{time_total}s)" "https://${t}" 2>&1)
+        printf "%-35s -> %s\n" "$t" "$result"
+    done
+
+    echo
+    echo "=== Active Network Interface ==="
+    route get default 2>/dev/null | grep -E 'interface|gateway'
+}
+
+function zscaler-cert-check() {
+    local host=${1:-"google.com"}
+    echo "=== TLS Certificate for ${host} (via ZScaler) ==="
+    echo | openssl s_client -connect "${host}:443" -servername "$host" 2>/dev/null \
+        | openssl x509 -noout -issuer -subject -dates 2>/dev/null
+}
+
+function zscaler-reconnect() {
+    echo "=== Restarting ZScaler ==="
+    local app="/Applications/Zscaler/Zscaler.app"
+    if [[ -d "$app" ]]; then
+        pkill -f "Zscaler" 2>/dev/null && sleep 2
+        open "$app"
+        echo "ZScaler restarted."
+    else
+        echo "ZScaler app not found at $app"
+    fi
+}
+
 # Printing                                                                  {{{1
 # ==============================================================================
 
@@ -1124,13 +1201,20 @@ function setup-claude-bedrock() {
 # Admin functions                                                           {{{1
 # ==============================================================================
 
-# Aliases                                                                   {{{1
-# ==============================================================================
-
 function daily-update() {
     open 'https://fa-ewqc-saasfaprod1.fa.ocs.oraclecloud.com/'
     open 'https://officevibe.workleap.com/portal/feedback/survey/teams?period=90&allTeams=true'
+    open 'https://wd3.myworkday.com/relx/d/inst/13102!CK5mGhIKBggDEMenAhIICgYI1A0QrAo~*vlhbvujzFuk~/cacheable-task/2998$36900.htmld#TABTASKID=2998%2437770'
     mux upgrade --no-attach
     mux jira --no-attach
     tmux attach
+}
+
+# Track down what keeps stealing focus
+function track-focus() {
+    while true
+    do 
+        osascript -e 'tell application "System Events" to get name of first application process whose frontmost is true'
+        sleep 0.2 
+    done | uniq
 }

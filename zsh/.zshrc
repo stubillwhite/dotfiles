@@ -112,7 +112,7 @@ alias date='gdate'                                                          # Us
 alias echo='gecho'                                                          # Use gecho nstead of echo
 alias find='gfind'                                                          # Use gfind instead of find
 alias head='ghead'                                                          # Use ghead instead of head
-alias mktemp='gmktemp'                                                      # Use gsed instead of sed
+alias mktemp='gmktemp'                                                      # Use gmktemp instead of mktemp
 alias sed='gsed'                                                            # Use gsed instead of sed
 alias tail='gtail'                                                          # Use gtail instead of tail
 alias touch='gtouch'                                                        # Use gtouch instead of touch
@@ -132,6 +132,7 @@ alias list-ports='netstat -anv'                                             # Li
 alias new-react-app='npx create-react-app'                                  # Shortcut to create a new React app
 alias fzv='fzf --bind "enter:become(nvim {})"'                              # Fuzzy-find a file and open Vim
 alias date-iso='date --iso-8601=minutes --utc'                              # ISO date stamp
+alias terminal-reset='printf "\033c"'                                       # Reset terminal to defaults, useful if theme is hijacked
 
 # No flow control, so C-s is free for C-r/C-s back/forward incremental search
 stty -ixon
@@ -752,14 +753,20 @@ function aws-sso-login() {
     local accessToken=$(ls -t1 ${ssoCachePath}/*.json | head -n 1 | xargs cat | jq -r '.accessToken')
 
     local tmpFile=$(mktemp)
-    trap "rm -f ${tmpFile}" EXIT INT QUIT TERM
+    local tmpErrFile=$(mktemp)
+    trap "rm -f ${tmpFile} ${tmpErrFile}" EXIT INT QUIT TERM
+
+    if [[ -z "${ssoAccountId}" ]] || [[ -z "${ssoRoleName}" ]]; then
+        echo "ERROR: Missing sso_account_id or sso_role_name for profile ${profile}"
+        return 1
+    fi
 
     aws sso get-role-credentials \
         --role-name ${ssoRoleName} \
         --account-id ${ssoAccountId} \
         --access-token "${accessToken}" \
         --region eu-west-1 \
-        > ${tmpFile} 2>&1
+        > ${tmpFile} 2> ${tmpErrFile}
 
     local resultCode=$?
     
@@ -776,12 +783,26 @@ function aws-sso-login() {
             --account-id ${ssoAccountId} \
             --access-token "${accessToken}" \
             --region eu-west-1 \
-            > ${tmpFile} 2>&1
+            > ${tmpFile} 2> ${tmpErrFile}
+
+        resultCode=$?
     fi
 
-    local accessKeyId=$(cat "${tmpFile}" | jq -r '.roleCredentials | .accessKeyId')
-    local secretAccessKey=$(cat "${tmpFile}" | jq -r '.roleCredentials | .secretAccessKey')
-    local sessionToken=$(cat "${tmpFile}" | jq -r '.roleCredentials | .sessionToken')
+    if [[ ${resultCode} != 0 ]]; then
+        echo "ERROR: Failed to retrieve AWS role credentials for profile ${profile}"
+        cat "${tmpErrFile}"
+        return 1
+    fi
+
+    if ! jq -e '.roleCredentials.accessKeyId and .roleCredentials.secretAccessKey and .roleCredentials.sessionToken' "${tmpFile}" > /dev/null; then
+        echo "ERROR: Unexpected response while retrieving AWS role credentials"
+        cat "${tmpFile}"
+        return 1
+    fi
+
+    local accessKeyId=$(jq -r '.roleCredentials | .accessKeyId' "${tmpFile}")
+    local secretAccessKey=$(jq -r '.roleCredentials | .secretAccessKey' "${tmpFile}")
+    local sessionToken=$(jq -r '.roleCredentials | .sessionToken' "${tmpFile}")
 
     export AWS_ACCESS_KEY_ID="${accessKeyId}"
     export AWS_SECRET_ACCESS_KEY="${secretAccessKey}"
@@ -1267,21 +1288,6 @@ function git-repos-pull() {
     git-repos-status
 }
 
-function git-repos-change-remote() {
-    pull-repo() {
-        local oldRemote=$(git remote -v | grep '(fetch)' | gsed -r 's/.*(git@github.*) .*/\1/g')
-        #local newRemote=$(echo ${oldRemote} | gsed -r 's/-work/.com/g')
-        local newRemote=$(echo ${oldRemote} | gsed -r 's/.com/-work/g')
-        git remote remove origin
-        git remote add origin ${newRemote}
-        echo git remote add origin ${newRemote}
-    }
-
-    git-for-each-repo-parallel pull-repo
-    git-repos-status
-}
-
-
 # For each repo within the current directory, fetch the repo
 function git-repos-fetch() {
     local args=$*
@@ -1482,6 +1488,29 @@ function git-repos-code-stashes() {
     }
 
     git-for-each-repo stashes
+}
+
+function git-repos-change-remote() {
+    pull-repo() {
+        local oldRemote=$(git remote -v | grep '(fetch)' | gsed -r 's/.*(git@github.*) .*/\1/g')
+        #local newRemote=$(echo ${oldRemote} | gsed -r 's/-work/.com/g')
+        local newRemote=$(echo ${oldRemote} | gsed -r 's/.com/-work/g')
+        git remote remove origin
+        git remote add origin ${newRemote}
+        echo git remote add origin ${newRemote}
+    }
+
+    git-for-each-repo-parallel pull-repo
+    git-repos-status
+}
+
+# For each repo within the current directory, display pull requests
+function git-repos-list-pull-requests() {
+    list-prs() {
+        github-list-pull-requests repo
+    }
+
+    git-for-each-repo list-prs
 }
 
 # For each repo within the current directory, display recent changes in the
@@ -2207,10 +2236,10 @@ function github-notify-when-reviewed() {
         while true
         do
             sleep 30
-            (github-list-pull-requests | grep -v 'Pull requests for' | grep -q -R '\(has-reviews\|has-comments\)') && break
+            (github-list-pull-requests mine | grep -v 'Pull requests for' | grep -q -R '\(has-reviews\|has-comments\)') && break
         done
 
-        if (github-list-pull-requests | grep -v 'Pull requests for' | grep -q -R '\(has-reviews\|has-comments\)') ; then
+        if (github-list-pull-requests mine | grep -v 'Pull requests for' | grep -q -R '\(has-reviews\|has-comments\)') ; then
             tell-me "GitHub PR reviewed or commented on"
         fi
     } > /dev/null 2>&1 & disown
@@ -2219,7 +2248,7 @@ function github-notify-when-reviewed() {
 # Notify me when my GitHub PR has changed
 function github-notify-on-change() {
     f() {
-        github-list-pull-requests
+        github-list-pull-requests mine
     }
 
     notify-on-change f 30 'GitHub PR changed'
