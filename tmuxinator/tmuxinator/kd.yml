@@ -1,9 +1,0 @@
-name: kd
-
-windows:
-  - recs:
-      root: ~/dev/kd/recs/
-  - spirograph:
-      root: ~/dev/kd/spirograph/
-  - butter-chicken:
-      root: ~/dev/kd/butter-chicken/
