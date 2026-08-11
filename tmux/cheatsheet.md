@@ -5,6 +5,7 @@
 - `Ctrl+\` - Leader
 - `:` - Command
 - `d` - Disconnect
+- `h` - Help
 
 ## Config reloading ##
 

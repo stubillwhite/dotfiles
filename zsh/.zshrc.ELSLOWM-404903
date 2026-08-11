@@ -1207,6 +1207,7 @@ function daily-update() {
     open 'https://wd3.myworkday.com/relx/d/inst/13102!CK5mGhIKBggDEMenAhIICgYI1A0QrAo~*vlhbvujzFuk~/cacheable-task/2998$36900.htmld#TABTASKID=2998%2437770'
     mux upgrade --no-attach
     mux jira --no-attach
+    mux metrics --no-attach
     tmux attach
 }
 

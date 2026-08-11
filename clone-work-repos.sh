@@ -535,7 +535,6 @@ RDP_MISC_REPOS=(
 # ======================================
 
 RECOMMENDERS_REPOS=(
-    elsevier-research/kd-graphql-documentation
     elsevier-research/kd-recs-api
     elsevier-research/kd-recs-api-common
     elsevier-research/kd-recs-api-jobs

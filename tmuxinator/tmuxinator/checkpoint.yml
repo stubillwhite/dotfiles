@@ -5,18 +5,16 @@ windows:
       layout: even-vertical
       panes:
         - org:
-            - cd ~/dev/my-stuff/org
-            # - git pull -r --autostash
-            # - git add -A
-            # - git commit -m 'Checkpoint'
-            # - git push
-            # - clear
-            # - git status
+            - |
+              cd ~/dev/my-stuff/org &&
+              git pull -r --autostash &&
+              git add -A &&
+              clear &&
+              git status
         - obsidian:
-            - cd ~/dev/my-stuff/obsidian
-            # - git pull -r --autostash
-            # - git add -A
-            # - git commit -m 'Checkpoint'
-            # - git push
-            # - clear
-            # - git status
+            - |
+              cd ~/dev/my-stuff/obsidian
+              git pull -r --autostash &&
+              git add -A &&
+              clear &&
+              git status

@@ -39,6 +39,7 @@
     stash-show = stash show -p 0
     submodules-reset = submodule foreach --recursive git reset --hard
     uncommit = reset HEAD~1
+    ls-untracked = status --untracked-files
 
 [core]
 	editor = nvim

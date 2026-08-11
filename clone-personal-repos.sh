@@ -49,6 +49,8 @@ SHALLOW_REPOS=(
     obsidian
     org
     prezto
+    russian
+    russian-tutor
     shell-utils
     stagekick
     tech-radar
