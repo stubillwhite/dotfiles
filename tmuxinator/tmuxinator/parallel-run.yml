@@ -1,0 +1,17 @@
+name: parallel-run
+root: ~
+
+windows:
+  - parallel-run:
+      layout: even-horizontal
+      panes:
+        - MHub:
+            - |
+              aws-login sc-content prod > /dev/null &&
+              clear &&
+              ~/dev/my-stuff/shell-utils/cc-list-mhub-data-sets.py
+        - RDP:
+            - |
+              aws-login sc-content prod > /dev/null &&
+              clear &&
+              ~/dev/my-stuff/shell-utils/cc-list-rdp-data-sets.py

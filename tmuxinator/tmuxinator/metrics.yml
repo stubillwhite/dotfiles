@@ -1,0 +1,8 @@
+name: metrics
+
+windows:
+  - metrics:
+      - |
+        pushd ~/dev/scratchpad/deng-engineering-observability-pilot &&
+        make run-sync &&
+        make run-analysis

@@ -40,6 +40,7 @@
     submodules-reset = submodule foreach --recursive git reset --hard
     uncommit = reset HEAD~1
     ls-untracked = status --untracked-files
+    unstage = restore --staged --
 
 [core]
 	editor = nvim

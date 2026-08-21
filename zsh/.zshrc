@@ -133,6 +133,7 @@ alias new-react-app='npx create-react-app'                                  # Sh
 alias fzv='fzf --bind "enter:become(nvim {})"'                              # Fuzzy-find a file and open Vim
 alias date-iso='date --iso-8601=minutes --utc'                              # ISO date stamp
 alias terminal-reset='printf "\033c"'                                       # Reset terminal to defaults, useful if theme is hijacked
+alias network-quality='networkQuality -s'                                   # Test upload/download speed and print a summary
 
 # No flow control, so C-s is free for C-r/C-s back/forward incremental search
 stty -ixon
