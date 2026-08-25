@@ -229,7 +229,7 @@ alias idea='_launch-jetbrains-tool idea'                                    # La
 # ==============================================================================
 
 if-darwin && {
-    alias emacs='/Applications/Emacs.app/Contents/MacOS/Emacs & disown'
+    alias emacs='/Applications/Emacs.app/Contents/MacOS/Emacs'
     alias emacs-cli='/Applications/Emacs.app/Contents/MacOS/Emacs -nw'
     alias emacsclient='echo "When done with a buffer, type C-x #" && /Applications/Emacs.app/Contents/MacOS/bin/emacsclient'
     alias doom='emacs --with-profile doom'
