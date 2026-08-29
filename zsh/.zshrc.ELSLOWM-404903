@@ -1206,6 +1206,7 @@ function daily-update() {
     open 'https://officevibe.workleap.com/portal/feedback/survey/teams?period=90&allTeams=true'
     open 'https://wd3.myworkday.com/relx/d/inst/13102!CK5mGhIKBggDEMenAhIICgYI1A0QrAo~*vlhbvujzFuk~/cacheable-task/2998$36900.htmld#TABTASKID=2998%2437770'
     open 'https://elsevier.atlassian.net/wiki/spaces/RDP/pages/119603034424187/August+12+2026+-+Parallel+Run+Daily+Stand-Up'
+    open 'https://elsevier.atlassian.net/issues/?filter=105061'
     mux upgrade --no-attach
     mux jira --no-attach
     mux metrics --no-attach

@@ -579,6 +579,7 @@ function() clock() {
     # gfind -H /usr/share/zoneinfo/ -type f | gsed 's|/usr/share/zoneinfo/||g' | sort
     local TIMEZONES=(
         "America/Mexico_City:Mexico"
+        "America/Winnipeg:Canada"
         "US/Eastern:New York"
         "GMT:London"
         "CET:Amsterdam"
@@ -637,6 +638,32 @@ function ps-kill() {
             kill ${processID}
         }
     fi
+}
+
+# Process semaphore
+# Usage: acquire-lock ~/.my-process-lock.d 90 || return 1
+# Requires POSIX compliant filesystem; do not use on network file systems
+function acquire-lock() {
+    local lockDir=$1
+    local maxWait=${2:-90}
+    local waited=0
+
+    while ! mkdir "${lockDir}" 2>/dev/null; do
+        local holderPid=$(cat "${lockDir}/pid" 2>/dev/null)
+        if [[ -n "${holderPid}" ]] && ! kill -0 "${holderPid}" 2>/dev/null; then
+            # Holder is dead -- lock is stale, reclaim it
+            rm -rf "${lockDir}"
+            continue
+        fi
+        if (( waited >= maxWait )); then
+            echo "ERROR: Timed out after ${maxWait}s waiting for lock (held by PID ${holderPid:-unknown})." >&2
+            return 1
+        fi
+        sleep 1
+        (( waited++ ))
+    done
+
+    echo $$ > "${lockDir}/pid"
 }
 
 # Multi-project configurations      {{{2
@@ -749,13 +776,16 @@ function aws-sso-login() {
 
     local ssoCachePath=~/.aws/sso/cache
 
+    local lockDir="${ssoCachePath}/.lock.d"
+    acquire-lock "${lockDir}" 90 || return 1
+
     local ssoAccountId=$(aws configure get --profile ${profile} sso_account_id)
     local ssoRoleName=$(aws configure get --profile ${profile} sso_role_name)
     local accessToken=$(ls -t1 ${ssoCachePath}/*.json | head -n 1 | xargs cat | jq -r '.accessToken')
 
     local tmpFile=$(mktemp)
     local tmpErrFile=$(mktemp)
-    trap "rm -f ${tmpFile} ${tmpErrFile}" EXIT INT QUIT TERM
+    trap "rm -f ${tmpFile} ${tmpErrFile}; rm -rf ${lockDir}" EXIT INT QUIT TERM
 
     if [[ -z "${ssoAccountId}" ]] || [[ -z "${ssoRoleName}" ]]; then
         echo "ERROR: Missing sso_account_id or sso_role_name for profile ${profile}"
