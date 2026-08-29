@@ -1,5 +1,6 @@
 name: parallel-run
 root: ~
+on_project_start: zsh -lic "aws-login sc-content prod > /dev/null"
 
 windows:
   - parallel-run:
