@@ -640,22 +640,45 @@ function ps-kill() {
     fi
 }
 
-# Process semaphore
-# Usage: acquire-lock ~/.my-process-lock.d 90 || return 1
+# Process semaphores                {{{2
+# ======================================
+
 # Requires POSIX compliant filesystem; do not use on network file systems
+
+function reclaim-stale-lock() {
+    local lockDir=$1
+
+    local holderPid=$(cat "${lockDir}/pid" 2>/dev/null)
+    [[ -n "${holderPid}" ]] || return 1
+    kill -0 "${holderPid}" 2>/dev/null && return 1
+
+    # Claim the suspect lock by atomic rename so that only one waiter can act on
+    # this instance of the lock directory
+    local stalePath="${lockDir}.stale.$$"
+    mv "${lockDir}" "${stalePath}" 2>/dev/null || return 1
+
+    # A live holder may have replaced the lock between the liveness check and the
+    # rename, so confirm we removed the instance we actually inspected
+    if [[ "$(cat "${stalePath}/pid" 2>/dev/null)" != "${holderPid}" ]]; then
+        mv "${stalePath}" "${lockDir}" 2>/dev/null || rm -rf "${stalePath}"
+        return 1
+    fi
+
+    rm -rf "${stalePath}"
+}
+
+# Usage: acquire-lock ~/.my-process-lock.d 90 || return 1
 function acquire-lock() {
     local lockDir=$1
     local maxWait=${2:-90}
     local waited=0
 
+    mkdir -p "${lockDir:h}" 2>/dev/null
+
     while ! mkdir "${lockDir}" 2>/dev/null; do
-        local holderPid=$(cat "${lockDir}/pid" 2>/dev/null)
-        if [[ -n "${holderPid}" ]] && ! kill -0 "${holderPid}" 2>/dev/null; then
-            # Holder is dead -- lock is stale, reclaim it
-            rm -rf "${lockDir}"
-            continue
-        fi
+        reclaim-stale-lock "${lockDir}" && continue
         if (( waited >= maxWait )); then
+            local holderPid=$(cat "${lockDir}/pid" 2>/dev/null)
             echo "ERROR: Timed out after ${maxWait}s waiting for lock (held by PID ${holderPid:-unknown})." >&2
             return 1
         fi
@@ -771,25 +794,56 @@ compdef "_arguments \
 alias aws-which="env | grep AWS | sort"
 alias aws-clear-variables="for i in \$(aws-which | cut -d= -f1,1 | paste -); do unset \$i; done"
 
+function aws-sso-access-token() {
+    local ssoCachePath=$1
+
+    local cacheFile
+    for cacheFile in ${ssoCachePath}/*.json(N.om); do
+        local token=$(jq -r 'select(.accessToken and .expiresAt)
+            | select((.expiresAt | fromdateiso8601) > now)
+            | .accessToken' "${cacheFile}" 2>/dev/null)
+
+        if [[ -n "${token}" ]]; then
+            print -r -- "${token}"
+            return 0
+        fi
+    done
+
+    return 1
+}
+
 function aws-sso-login() {
     local profile=$1
 
     local ssoCachePath=~/.aws/sso/cache
 
-    local lockDir="${ssoCachePath}/.lock.d"
-    acquire-lock "${lockDir}" 90 || return 1
-
     local ssoAccountId=$(aws configure get --profile ${profile} sso_account_id)
     local ssoRoleName=$(aws configure get --profile ${profile} sso_role_name)
-    local accessToken=$(ls -t1 ${ssoCachePath}/*.json | head -n 1 | xargs cat | jq -r '.accessToken')
+
+    if [[ -z "${ssoAccountId}" ]] || [[ -z "${ssoRoleName}" ]]; then
+        echo "ERROR: Missing sso_account_id or sso_role_name for profile ${profile}"
+        return 1
+    fi
+
+    local lockDir="${ssoCachePath}/.lock.d"
+    acquire-lock "${lockDir}" 180 || return 1
 
     local tmpFile=$(mktemp)
     local tmpErrFile=$(mktemp)
     trap "rm -f ${tmpFile} ${tmpErrFile}; rm -rf ${lockDir}" EXIT INT QUIT TERM
 
-    if [[ -z "${ssoAccountId}" ]] || [[ -z "${ssoRoleName}" ]]; then
-        echo "ERROR: Missing sso_account_id or sso_role_name for profile ${profile}"
-        return 1
+    local accessToken=$(aws-sso-access-token "${ssoCachePath}")
+    local didLogin=0
+
+    if [[ -z "${accessToken}" ]]; then
+        aws sso login --profile ${profile} || return 1
+        accessToken=$(aws-sso-access-token "${ssoCachePath}")
+        didLogin=1
+
+        if [[ -z "${accessToken}" ]]; then
+            echo "ERROR: No valid SSO access token after login for profile ${profile}"
+            return 1
+        fi
     fi
 
     aws sso get-role-credentials \
@@ -800,14 +854,14 @@ function aws-sso-login() {
         > ${tmpFile} 2> ${tmpErrFile}
 
     local resultCode=$?
-    
+
     # Only force browser reauthentication if we failed to retrieve credentials. See:
     #   https://ben11kehoe.medium.com/you-only-need-to-call-aws-sso-login-once-for-all-your-profiles-41a334e1b37e
     #   https://docs.aws.amazon.com/cli/latest/userguide/sso-configure-profile-token.html
-    if [[ ${resultCode} != 0 ]]; then
+    if [[ ${resultCode} != 0 ]] && (( didLogin == 0 )); then
         aws sso login --profile ${profile}
 
-        accessToken=$(ls -t1 ${ssoCachePath}/*.json | head -n 1 | xargs cat | jq -r '.accessToken')
+        accessToken=$(aws-sso-access-token "${ssoCachePath}")
 
         aws sso get-role-credentials \
             --role-name ${ssoRoleName} \
