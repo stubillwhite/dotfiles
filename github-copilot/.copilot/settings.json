@@ -3,7 +3,8 @@
   "theme": "auto",
   "model": "gpt-5.4",
   "allowedUrls": [
-    "https://docs.databricks.com"
+    "https://docs.databricks.com",
+    "https://docs.github.com"
   ],
   "footer": {
     "showModelEffort": false,
