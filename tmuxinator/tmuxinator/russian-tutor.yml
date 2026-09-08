@@ -1,0 +1,6 @@
+name: russian-tutor
+
+root: ~/dev/my-stuff/russian-tutor/
+windows:
+  - russian-tutor:
+      - make run
