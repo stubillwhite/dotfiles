@@ -507,6 +507,24 @@ function sonarqube-run() {
     fi
 }
 
+# Consumption                                                               {{{1
+# ==============================================================================
+
+function xocs-ani () {
+    if [[ $# -ne 1 ]] ; then
+        echo 'Usage: xocs-ani EID'
+        return 1
+    fi
+
+    local eid=$1
+
+     curl -s -X GET "https://sccontent.elsevier.com/cafe/?type=ANI&id=${eid}&download=true" \
+         | xmllint --format - \
+         > ~/trash/tmp.xml
+
+     nvim ~/trash/tmp.xml
+ }
+
 # Newsflo AWS                                                               {{{1
 # ==============================================================================
 
