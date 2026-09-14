@@ -1,5 +1,7 @@
 # vim:fdm=marker
 
+alias code='/Applications/Visual\ Studio\ Code.app/Contents/MacOS/Code'
+
 # ZScaler debugging                                                         {{{1
 # ==============================================================================
 
@@ -517,13 +519,35 @@ function xocs-ani () {
     fi
 
     local eid=$1
+    local outputFile=~/trash/tmp.xml
 
-     curl -s -X GET "https://sccontent.elsevier.com/cafe/?type=ANI&id=${eid}&download=true" \
-         | xmllint --format - \
-         > ~/trash/tmp.xml
+    local responseFile=$(mktemp)
+    local formattedFile=$(mktemp)
+    local httpCode=$(curl -s -X GET \
+        -o "${responseFile}" \
+        -w '%{http_code}' \
+        "https://sccontent.elsevier.com/cafe/?type=ANI&id=${eid}&download=true")
 
-     nvim ~/trash/tmp.xml
- }
+    if [[ "${httpCode}" != 200 ]]; then
+        echo "ERROR: Could not retrieve ANI document for EID ${eid} (HTTP ${httpCode})"
+        cat "${responseFile}"
+        echo
+        rm -f "${responseFile}" "${formattedFile}"
+        return 1
+    fi
+
+    if ! xmllint --format "${responseFile}" > "${formattedFile}" 2>/dev/null; then
+        echo "ERROR: Response for EID ${eid} was not valid XML"
+        head -c 500 "${responseFile}"
+        echo
+        rm -f "${responseFile}" "${formattedFile}"
+        return 1
+    fi
+
+    mv "${formattedFile}" "${outputFile}"
+    rm -f "${responseFile}"
+    nvim "${outputFile}"
+}
 
 # Newsflo AWS                                                               {{{1
 # ==============================================================================
@@ -1221,20 +1245,16 @@ function setup-claude-bedrock() {
 
 function daily-update() {
 
-    # Finance and invoicing
-    open 'https://fa-ewqc-saasfaprod1.fa.ocs.oraclecloud.com/'
+    echo "Opening tabs..."
+    echo 'Finance and invoicing' && open 'https://fa-ewqc-saasfaprod1.fa.ocs.oraclecloud.com/'
+    echo 'OfficeVibe'            && open 'https://officevibe.workleap.com/portal/feedback/survey/teams?period=90&allTeams=true'
+    echo 'Workday recruitment'   && open 'https://wd3.myworkday.com/relx/d/inst/13102!CK5mGhIKBggDEMenAhIICgYI1A0QrAo~*vlhbvujzFuk~/cacheable-task/2998$36900.htmld#TABTASKID=2998%2437770'
+    echo 'Issues to triage'      && open 'https://elsevier.atlassian.net/issues/?filter=105061'
+    echo 'My issues'             && open 'https://elsevier.atlassian.net/issues?filter=106979'
+    echo 'Security'              && open 'https://eu-west-1a.online.tableau.com/#/site/elseviertableau/views/SecurityVulnerabilityMetricsPerAWSAccount/AWSAccountVulnerabilityTrends?:iid=1'
 
-    # OfficeVibe
-    open 'https://officevibe.workleap.com/portal/feedback/survey/teams?period=90&allTeams=true'
-
-    # Workday recruitment
-    open 'https://wd3.myworkday.com/relx/d/inst/13102!CK5mGhIKBggDEMenAhIICgYI1A0QrAo~*vlhbvujzFuk~/cacheable-task/2998$36900.htmld#TABTASKID=2998%2437770'
-
-    # Issues to triage
-    open 'https://elsevier.atlassian.net/issues/?filter=105061'
-
-    # Security
-    open 'https://eu-west-1a.online.tableau.com/#/site/elseviertableau/views/SecurityVulnerabilityMetricsPerAWSAccount/AWSAccountVulnerabilityTrends?:iid=1'
+    # EOS
+    open 'https://app.powerbi.com/reportEmbed?reportId=54dd8187-5a12-4af3-9b31-05dc7da9ed1a&autoAuth=true&ctid=9274ee3f-9425-4109-a27f-9fb15c10675d&navContentPaneEnabled=false'
 
     mux upgrade --no-attach
     mux jira --no-attach
