@@ -6,9 +6,6 @@
 cask "dropbox"                                  # Client for the Dropbox cloud storage service
 cask "google-chrome"                            # Cross-platform web browser
 
-# IDEs
-cask "cursor"                                   # Write, edit, and chat about your code with AI
-
 # Video conferencing
 cask "zoom"                                     # Video communication and virtual meeting platform
 
@@ -24,7 +21,7 @@ brew "yt-dlp"                                   # Feature-rich command-line audi
 ################################################################################
 
 # Copilots
-brew "beads_viewer"                             # Terminal-based UI for the Beads issue tracker
+brew "dicklesworthstone/tap/bv"                 # Terminal-based UI for the Beads issue tracker
 brew "beads"                                    # Memory upgrade for your coding agent
 cask "claude-code"                              # Terminal-based AI coding assistant
 
@@ -48,16 +45,12 @@ cask "unity-hub"                                # Unity Hub
 # Game dev
 cask "godot"                                    # The game engine you waited for
 
-# Kubernetes
-brew 'kubectl'                                  # Kubernetes command-line interface
-brew 'kubernetes-cli'                           # Kubernetes command-line interface
-brew 'stern'                                    # Tail multiple Kubernetes pods & their containers
-
 ################################################################################
 # Fun
 ################################################################################
 
 cask "crossover"                                # Tool to run Windows software
+cask "inky"                                     # Editor for ink: inkle's narrative scripting language
 cask "parsec"                                   # Online low latency gaming
 cask "steam"                                    # Steam client
 
