@@ -248,6 +248,70 @@ CONSUMPTION_REPOS=(
     elsevier-research/dp-consumption-test-relationship-store
     elsevier-research/dp-person-bingo-consumption-service
     elsevier-research/dp-person-events-consumption-utils
+
+    elsevier-research/dp-techcontent-acceptance-test-suite
+    elsevier-research/techcontent-application-monitoring
+    elsevier-research/techcontent-awscommon
+    elsevier-research/techcontent-awsservices-clients
+    elsevier-research/techcontent-cloud-common
+    elsevier-research/techcontent-consumption
+    elsevier-research/techcontent-content-elsapi
+    elsevier-research/techcontent-content-relational-db-scripts
+    elsevier-research/techcontent-content-ssm-scripts
+    elsevier-research/techcontent-crowdstrike
+    elsevier-research/techcontent-ctorest
+    elsevier-research/techcontent-database-utils
+    elsevier-research/techcontent-docker
+    elsevier-research/techcontent-editcommon
+    elsevier-research/techcontent-elsapplite
+    elsevier-research/techcontent-elscommon
+    elsevier-research/techcontent-elsrslite
+    elsevier-research/techcontent-harvester
+    elsevier-research/techcontent-harvester-patent-reader
+    elsevier-research/techcontent-harvester-patent-writer
+    elsevier-research/techcontent-harvester-tasks
+    elsevier-research/techcontent-hub-common
+    elsevier-research/techcontent-interfolio
+    elsevier-research/techcontent-jenkins-deployment-iam-role
+    elsevier-research/techcontent-jenkins-pipelines
+    elsevier-research/techcontent-kafka-header
+    elsevier-research/techcontent-lambdas
+    elsevier-research/techcontent-marklogic-scripts-sciencedirectcontent
+    elsevier-research/techcontent-marklogic-scripts-scopuscontent
+    elsevier-research/techcontent-oauthtoken-service
+    elsevier-research/techcontent-patent-datatransformer
+    elsevier-research/techcontent-sc-authorproxy
+    elsevier-research/techcontent-sc-citescoretransparency
+    elsevier-research/techcontent-sc-hq-accuracy-estimator
+    elsevier-research/techcontent-sc-ohub
+    elsevier-research/techcontent-sc-profileretrieval
+    elsevier-research/techcontent-sc-source-service
+    elsevier-research/techcontent-sc-tools
+    elsevier-research/techcontent-sc-xabstractsmetadata
+    elsevier-research/techcontent-sc-xabstractsretrieval
+    elsevier-research/techcontent-scheduler
+    elsevier-research/techcontent-scopus-parsing-pipeline
+    elsevier-research/techcontent-sd-attachmentretrieval
+    elsevier-research/techcontent-sd-contentmetadata
+    elsevier-research/techcontent-sd-elsrslite
+    elsevier-research/techcontent-sd-ihub
+    elsevier-research/techcontent-sd-ihub-rest
+    elsevier-research/techcontent-sd-olpkservice
+    elsevier-research/techcontent-sd-textretrieval
+    elsevier-research/techcontent-service-univentio
+    elsevier-research/techcontent-source-api
+    elsevier-research/techcontent-spark
+    elsevier-research/techcontent-spring-boot-service-template
+    elsevier-research/techcontent-sysman-api
+    elsevier-research/techcontent-test-api-functional-test
+    elsevier-research/techcontent-test-api-performance-test
+    elsevier-research/techcontent-test-baccs-ui-testautomation
+    elsevier-research/techcontent-test-functional-testscripts
+    elsevier-research/techcontent-test-ws-xfab-testscripts
+    elsevier-research/techcontent-tools
+    elsevier-research/techcontent-usage-reporting
+    elsevier-research/techcontent-xfab
+    elsevier-research/techcontent-xocs-mica-convertors
 )
 
 CONSUMPTION_INFRA_REPOS=(

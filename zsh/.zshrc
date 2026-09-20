@@ -595,7 +595,7 @@ function() clock() {
 
         local currTimeInTimezone=$(TZ=${timezoneCode} date -d ${currTime} '+%Y-%m-%d %H:%M %Z')
         echo "${description},${currTimeInTimezone}"
-    done | tabulate-by-comma
+    done | LC_ALL=C sort -t, -k2,2 -k1,1 | tabulate-by-comma
 }
 
 # Calculate the result of an expression

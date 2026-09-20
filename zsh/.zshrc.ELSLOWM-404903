@@ -1243,18 +1243,48 @@ function setup-claude-bedrock() {
 # Admin functions                                                           {{{1
 # ==============================================================================
 
+function dashboard() {
+    if [[ $# -ne 1 ]]; then
+        echo "Usage: dashboard (core-complete|finance|management)"
+    else
+        local name=$1
+
+        case "${name}" in
+            finance*)
+                echo 'Finance - Oracle' && open 'https://fa-ewqc-saasfaprod1.fa.ocs.oraclecloud.com/'
+                echo 'Finance - Zip'    && open 'https://relx.zip.com/home?page=1&unread=true'
+            ;;
+
+            core-complete*)
+                echo 'Core Complete - Triage'       && open 'https://elsevier.atlassian.net/issues/?filter=105061'
+                echo 'Core Complete - My issues'    && open 'https://elsevier.atlassian.net/issues?filter=106979'
+            ;;
+
+            management*)
+                echo 'Recruitment - Workday' && open 'https://wd3.myworkday.com/relx/d/inst/13102!CK5mGhIKBggDEMenAhIICgYI1A0QrAo~*vlhbvujzFuk~/cacheable-task/2998$36900.htmld#TABTASKID=2998%2437770'
+                echo 'OfficeVibe'            && open 'https://officevibe.workleap.com/portal/feedback/survey/teams?period=90&allTeams=true'
+                echo 'Security'              && open 'https://eu-west-1a.online.tableau.com/#/site/elseviertableau/views/SecurityVulnerabilityMetricsPerAWSAccount/AWSAccountVulnerabilityTrends?:iid=1'
+                echo 'EOS'                   && open 'https://app.powerbi.com/reportEmbed?reportId=54dd8187-5a12-4af3-9b31-05dc7da9ed1a&autoAuth=true&ctid=9274ee3f-9425-4109-a27f-9fb15c10675d&navContentPaneEnabled=false'
+            ;;
+
+            *)
+                echo "ERROR: Unrecognised dashboard ${name}"
+                return -1
+            ;;
+        esac
+    fi
+}
+compdef "_arguments \
+    '1:environment arg:(core-complete finance management)'" \
+    dashboard
+}
+
+
 function daily-update() {
-
-    echo "Opening tabs..."
-    echo 'Finance and invoicing' && open 'https://fa-ewqc-saasfaprod1.fa.ocs.oraclecloud.com/'
-    echo 'OfficeVibe'            && open 'https://officevibe.workleap.com/portal/feedback/survey/teams?period=90&allTeams=true'
-    echo 'Workday recruitment'   && open 'https://wd3.myworkday.com/relx/d/inst/13102!CK5mGhIKBggDEMenAhIICgYI1A0QrAo~*vlhbvujzFuk~/cacheable-task/2998$36900.htmld#TABTASKID=2998%2437770'
-    echo 'Issues to triage'      && open 'https://elsevier.atlassian.net/issues/?filter=105061'
-    echo 'My issues'             && open 'https://elsevier.atlassian.net/issues?filter=106979'
-    echo 'Security'              && open 'https://eu-west-1a.online.tableau.com/#/site/elseviertableau/views/SecurityVulnerabilityMetricsPerAWSAccount/AWSAccountVulnerabilityTrends?:iid=1'
-
-    # EOS
-    open 'https://app.powerbi.com/reportEmbed?reportId=54dd8187-5a12-4af3-9b31-05dc7da9ed1a&autoAuth=true&ctid=9274ee3f-9425-4109-a27f-9fb15c10675d&navContentPaneEnabled=false'
+    echo 'Opening tabs...'
+    dashboard finance
+    dashboard core-complete
+    dashboard management
 
     mux upgrade --no-attach
     mux jira --no-attach
