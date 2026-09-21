@@ -574,15 +574,15 @@ function() clock() {
         currTimeArgs="--date=$1"
     fi
 
-    local currTime=$(date ${currTimeArgs})
+    local currTime=$(date ${currTimeArgs} +%s)
 
     # gfind -H /usr/share/zoneinfo/ -type f | gsed 's|/usr/share/zoneinfo/||g' | sort
     local TIMEZONES=(
         "America/Mexico_City:Mexico"
         "America/Winnipeg:Canada"
-        "US/Eastern:New York"
-        "GMT:London"
-        "CET:Amsterdam"
+        "America/New_York:New York"
+        "Europe/London:London"
+        "Europe/Amsterdam:Amsterdam"
         "Europe/Bucharest:Romania"
         "Asia/Kolkata:India"
     )
@@ -593,7 +593,7 @@ function() clock() {
         local timezoneCode=${fields[1]}
         local description=${fields[2]}
 
-        local currTimeInTimezone=$(TZ=${timezoneCode} date -d ${currTime} '+%Y-%m-%d %H:%M %Z')
+        local currTimeInTimezone=$(TZ=${timezoneCode} date -d "@${currTime}" '+%Y-%m-%d %H:%M %Z')
         echo "${description},${currTimeInTimezone}"
     done | LC_ALL=C sort -t, -k2,2 -k1,1 | tabulate-by-comma
 }

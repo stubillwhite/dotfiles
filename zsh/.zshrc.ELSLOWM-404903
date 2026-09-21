@@ -1256,8 +1256,10 @@ function dashboard() {
             ;;
 
             core-complete*)
-                echo 'Core Complete - Triage'       && open 'https://elsevier.atlassian.net/issues/?filter=105061'
-                echo 'Core Complete - My issues'    && open 'https://elsevier.atlassian.net/issues?filter=106979'
+                echo 'Core Complete - Parallel Run'    && open 'https://elsevier.atlassian.net/jira/software/c/projects/DPOP/boards/30660'
+                echo 'Core Complete - Data Comparison' && open 'https://elsevier.atlassian.net/jira/software/c/projects/DPOP/boards/26306'
+                echo 'Core Complete - Triage'          && open 'https://elsevier.atlassian.net/issues/?filter=105061'
+                echo 'Core Complete - My issues'       && open 'https://elsevier.atlassian.net/issues?filter=106979'
             ;;
 
             management*)
@@ -1277,8 +1279,6 @@ function dashboard() {
 compdef "_arguments \
     '1:environment arg:(core-complete finance management)'" \
     dashboard
-}
-
 
 function daily-update() {
     echo 'Opening tabs...'
