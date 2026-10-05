@@ -4,7 +4,9 @@
   "model": "gpt-5.4",
   "allowedUrls": [
     "https://docs.databricks.com",
-    "https://docs.github.com"
+    "https://docs.github.com",
+    "https://bts.artifactory.tio.systems",
+    "https://elsevier.atlassian.net"
   ],
   "footer": {
     "showModelEffort": false,

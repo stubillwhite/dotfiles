@@ -1,23 +1,34 @@
 {
-    "env": {
-        "DISABLE_AUTOUPDATER": "1"
-    },
-    "hooks": {
-        "Notification": [
-            {
-                "matcher": "",
-                "hooks": [
-                    {
-                        "type": "command",
-                        "command": "osascript -e 'display notification \"Claude Code needs your attention\" with title \"Claude Code\"'"
-                    }
-                ]
-            }
+  "env": {
+    "DISABLE_AUTOUPDATER": "1"
+  },
+  "hooks": {
+    "Notification": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "osascript -e 'display notification \"Claude Code needs your attention\" with title \"Claude Code\"'"
+          }
         ]
-    },
-    "permissions": {
-        "allow": [
-            "Bash(duckdb *)"
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "codegraph prompt-hook"
+          }
         ]
-    }
+      }
+    ]
+  },
+  "permissions": {
+    "allow": [
+      "Bash(duckdb *)",
+      "mcp__codegraph__*"
+    ]
+  }
 }
