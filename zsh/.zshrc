@@ -102,6 +102,7 @@ alias gg='rg'                                                               # Gr
 alias env='env | sort'                                                      # env should be sorted
 alias tree='tree -A'                                                        # tree should be ascii
 alias entr='entr -c'                                                        # entr should be colourised
+alias watch='watch -c'                                                      # watch should be colourised
 alias gh='NO_COLOR=1 gh'                                                    # gh should not be colourised
 alias vi='nvim'                                                             # Use nvim instead of vi
 alias vim='nvim'                                                            # Use nvim instead of vim
