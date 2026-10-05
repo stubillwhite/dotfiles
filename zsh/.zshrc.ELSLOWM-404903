@@ -553,6 +553,11 @@ compdef "_arguments \
     xocs-api
 
 function core-complete-compare() {
+    if [[ $# -ne 2 ]] ; then
+        echo 'Usage: core-complete-compare DATASET ID'
+        return 1
+    fi
+
     local dataProduct=$1
     local id=$2
 
@@ -1294,7 +1299,7 @@ function dashboard() {
                 echo 'Recruitment - Workday' && open 'https://wd3.myworkday.com/relx/d/inst/13102!CK5mGhIKBggDEMenAhIICgYI1A0QrAo~*vlhbvujzFuk~/cacheable-task/2998$36900.htmld#TABTASKID=2998%2437770'
                 echo 'OfficeVibe'            && open 'https://officevibe.workleap.com/portal/feedback/survey/teams?period=90&allTeams=true'
                 echo 'Security'              && open 'https://eu-west-1a.online.tableau.com/#/site/elseviertableau/views/SecurityVulnerabilityMetricsPerAWSAccount/AWSAccountVulnerabilityTrends?:iid=1'
-                echo 'EOS'                   && open 'https://app.powerbi.com/reportEmbed?reportId=54dd8187-5a12-4af3-9b31-05dc7da9ed1a&autoAuth=true&ctid=9274ee3f-9425-4109-a27f-9fb15c10675d&navContentPaneEnabled=false'
+                echo 'GHEMU'                 && open 'https://super-chainsaw-77jpw57.pages.github.io/'
             ;;
 
             *)

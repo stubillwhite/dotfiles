@@ -321,6 +321,7 @@ CONSUMPTION_INFRA_REPOS=(
 # ======================================
 
 FOUNDATIONS_REPOS=(
+    elsevier-research/deng-engineering-observability-pilot
     elsevier-research/dp-core-common
     elsevier-research/dp-core-data-accounts-infra
     elsevier-research/dp-core-eks
@@ -336,6 +337,7 @@ FOUNDATIONS_REPOS=(
     elsevier-research/dp-foundations-kubedump
     elsevier-research/dp-mvn-archetype-kafka-service
     elsevier-research/rdp-cck-selfservice-alpha
+    elsevier-research/rdp-foundation-utilities
     elsevier-research/rdp-foundations-al2-scanner
     elsevier-research/rdp-foundations-cck-utilities
     elsevier-research/rdp-foundations-confluent-clients
@@ -352,7 +354,6 @@ FOUNDATIONS_REPOS=(
     elsevier-research/rdp-foundations-python-playground-service
     elsevier-research/rdp-foundations-s3-bucket-review-service
     elsevier-research/rdp-foundations-scala-demo-service
-    elsevier-research/rdp-foundation-utilities
     elsevier-research/rdp-works-mlops-example-bert-model-kserve-transformer
     elsevier-research/rdp-works-mlops-model-quantization-inferentia
     elsevier-research/rdp-works-mlops-model-quantization-tensorrt
