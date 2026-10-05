@@ -512,24 +512,24 @@ function sonarqube-run() {
 # Consumption                                                               {{{1
 # ==============================================================================
 
-function xocs-ani () {
-    if [[ $# -ne 1 ]] ; then
-        echo 'Usage: xocs-ani EID'
-        return 1
-    fi
+function xocs-api () {
+    local dataProduct=$1
+    local id=$2
 
-    local eid=$1
-    local outputFile=~/trash/tmp.xml
+    local outputDir="${HOME}/trash/xocs-data"
+    local outputFile="${outputDir}/${dataProduct}-${id}.xml"
+
+    mkdir -p "${outputDir}"
 
     local responseFile=$(mktemp)
     local formattedFile=$(mktemp)
     local httpCode=$(curl -s -X GET \
         -o "${responseFile}" \
         -w '%{http_code}' \
-        "https://sccontent.elsevier.com/cafe/?type=ANI&id=${eid}&download=true")
+        "https://sccontent.elsevier.com/cafe/?type=${dataProduct}&id=${id}&download=true")
 
     if [[ "${httpCode}" != 200 ]]; then
-        echo "ERROR: Could not retrieve ANI document for EID ${eid} (HTTP ${httpCode})"
+        echo "ERROR: Could not retrieve ${dataProduct} document for ID ${id} (HTTP ${httpCode})"
         cat "${responseFile}"
         echo
         rm -f "${responseFile}" "${formattedFile}"
@@ -537,7 +537,7 @@ function xocs-ani () {
     fi
 
     if ! xmllint --format "${responseFile}" > "${formattedFile}" 2>/dev/null; then
-        echo "ERROR: Response for EID ${eid} was not valid XML"
+        echo "ERROR: Response for ID ${id} was not valid XML"
         head -c 500 "${responseFile}"
         echo
         rm -f "${responseFile}" "${formattedFile}"
@@ -546,7 +546,34 @@ function xocs-ani () {
 
     mv "${formattedFile}" "${outputFile}"
     rm -f "${responseFile}"
-    nvim "${outputFile}"
+    print "${outputFile}"
+}
+compdef "_arguments \
+    '1:data-product arg:(ANI APR)'" \
+    xocs-api
+
+function core-complete-compare() {
+    local dataProduct=$1
+    local id=$2
+
+    pushd $HOME/dev/my-stuff/shell-utils/parquet-lookup > /dev/null || return 1
+
+    datasetPath="example-data-${dataProduct}"
+
+    mkdir -p "${datasetPath}/mhub"
+    mkdir -p "${datasetPath}/rdp"
+
+    mhubPath="${datasetPath}/mhub/${id}.xml"
+    rdpPath="${datasetPath}/rdp/${id}.xml"
+
+    if [ ! -f "${mhubPath}" ] ; then
+        echo "Downloading record ${id}"
+        aws-login sc-content prod > /dev/null
+        ./query-dataset mhub-ani "${id}" | xmllint --format - > "${mhubPath}"
+        ./query-dataset rdp-ani  "${id}" | xmllint --format - > "${rdpPath}"
+    fi
+
+    vim -d "${mhubPath}" "${rdpPath}"
 }
 
 # Newsflo AWS                                                               {{{1
