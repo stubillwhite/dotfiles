@@ -553,29 +553,31 @@ compdef "_arguments \
     xocs-api
 
 function core-complete-compare() {
-    if [[ $# -ne 2 ]] ; then
-        echo 'Usage: core-complete-compare DATASET ID'
+    if [[ $# -ne 1 ]] ; then
+        echo 'Usage: core-complete-compare ID'
         return 1
     fi
 
-    local dataProduct=$1
-    local id=$2
+    local id=$1
+
+    local mhubDataset="mhub-ani-20260825"
+    local rdpDataset="rdp-ani-20261005"
 
     pushd $HOME/dev/my-stuff/shell-utils/parquet-lookup > /dev/null || return 1
 
-    datasetPath="example-data-${dataProduct}"
+    outputPath="example-data"
 
-    mkdir -p "${datasetPath}/mhub"
-    mkdir -p "${datasetPath}/rdp"
+    mkdir -p "${outputPath}/${mhubDataset}"
+    mkdir -p "${outputPath}/${rdpDataset}"
 
-    mhubPath="${datasetPath}/mhub/${id}.xml"
-    rdpPath="${datasetPath}/rdp/${id}.xml"
+    mhubPath="${outputPath}/${mhubDataset}/${id}.xml"
+    rdpPath="${outputPath}/${rdpDataset}/${id}.xml"
 
     if [ ! -f "${mhubPath}" ] ; then
         echo "Downloading record ${id}"
         aws-login sc-content prod > /dev/null
-        ./query-dataset mhub-ani "${id}" | xmllint --format - > "${mhubPath}"
-        ./query-dataset rdp-ani  "${id}" | xmllint --format - > "${rdpPath}"
+        ./query-dataset "${mhubDataset}" "${id}" | xmllint --format - > "${mhubPath}"
+        ./query-dataset "${rdpDataset}"  "${id}" | xmllint --format - > "${rdpPath}"
     fi
 
     vim -d "${mhubPath}" "${rdpPath}"
@@ -1293,6 +1295,7 @@ function dashboard() {
                 echo 'Core Complete - Triage'          && open 'https://elsevier.atlassian.net/issues/?filter=105061'
                 echo 'Core Complete - My issues'       && open 'https://elsevier.atlassian.net/issues?filter=106979'
                 echo 'Core Complete - Counts'          && open 'https://elsevier.atlassian.net/jira/dashboards/43816'
+                echo 'Core Complete - Nexus'           && open 'https://nexus-ui.prod.dp.elsevier.systems/'
             ;;
 
             management*)
