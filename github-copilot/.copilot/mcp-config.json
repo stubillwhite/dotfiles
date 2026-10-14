@@ -18,6 +18,14 @@
         "serve",
         "--mcp"
       ]
+    },
+    "CloudZero": {
+      "tools": [
+        "*"
+      ],
+      "type": "http",
+      "url": "https://czca-server.discovery.cloudzero.com/mcp",
+      "headers": {}
     }
   }
 }

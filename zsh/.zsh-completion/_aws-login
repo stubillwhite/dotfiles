@@ -96,10 +96,8 @@ case "${state}" in
 
             (cef)
                 envs=(
+                    'non-prod'
                     'prod'
-                    'embase'
-                    'backup'
-                    'candi'
                 )
             ;;
 
@@ -112,10 +110,7 @@ case "${state}" in
 
             (dp)
                 envs=(
-                    'nonprod'
-                    'prod'
                     'sandbox-nonprod'
-                    'tooling'
                 )
             ;;
 

@@ -552,36 +552,82 @@ compdef "_arguments \
     '1:data-product arg:(ANI APR)'" \
     xocs-api
 
-function core-complete-compare() {
-    if [[ $# -ne 1 ]] ; then
-        echo 'Usage: core-complete-compare ID'
+function core-complete-compare() (
+    if [[ $# -ne 2 ]] ; then
+        echo 'Usage: core-complete-compare DATASET ID'
         return 1
     fi
 
-    local id=$1
+    local dataset=$1
+    local id=$2
 
-    local mhubDataset="mhub-ani-20260825"
-    local rdpDataset="rdp-ani-20261005"
+    local mhubDataset
+    local rdpDataset
 
-    pushd $HOME/dev/my-stuff/shell-utils/parquet-lookup > /dev/null || return 1
+    case "${dataset}" in
+        ani*)
+            mhubDataset="mhub-ani-20260825"
+            rdpDataset="rdp-ani-20261005"
+            ;;
 
-    outputPath="example-data"
+        openalex-ani*)
+            mhubDataset="mhub-openalex-ani-20260629"
+            rdpDataset="rdp-openalex-ani-20261005"
+            ;;
 
-    mkdir -p "${outputPath}/${mhubDataset}"
-    mkdir -p "${outputPath}/${rdpDataset}"
+        apr*)
+            mhubDataset="mhub-apr-20260825"
+            rdpDataset="rdp-apr-20261005"
+            ;;
 
-    mhubPath="${outputPath}/${mhubDataset}/${id}.xml"
-    rdpPath="${outputPath}/${rdpDataset}/${id}.xml"
+        *)
+            echo "ERROR: Unrecognised dataset ${dataset}"
+            return -1
+            ;;
+    esac
 
-    if [ ! -f "${mhubPath}" ] ; then
-        echo "Downloading record ${id}"
-        aws-login sc-content prod > /dev/null
-        ./query-dataset "${mhubDataset}" "${id}" | xmllint --format - > "${mhubPath}"
-        ./query-dataset "${rdpDataset}"  "${id}" | xmllint --format - > "${rdpPath}"
+    cd "$HOME/dev/my-stuff/shell-utils/parquet-lookup" || return 1
+
+    local outputPath="example-data"
+    local mhubPath="${outputPath}/${mhubDataset}/${id}.xml"
+    local rdpPath="${outputPath}/${rdpDataset}/${id}.xml"
+
+    mkdir -p "${outputPath}/${mhubDataset}" "${outputPath}/${rdpDataset}" || return 1
+
+    if [[ ! -s "${mhubPath}" || ! -s "${rdpPath}" ]] ; then
+        aws-login sc-content prod > /dev/null || {
+            echo "ERROR: AWS login failed" >&2
+            return 1
+        }
+
+        local temporaryPath
+        temporaryPath=$(mktemp -d "${outputPath}/.compare.XXXXXX") || return 1
+        trap 'rm -f "${temporaryPath}/raw.xml" "${temporaryPath}/formatted.xml"; rmdir "${temporaryPath}"' EXIT
+
+        local currentDataset outputFile
+        for currentDataset in "${mhubDataset}" "${rdpDataset}" ; do
+            outputFile="${outputPath}/${currentDataset}/${id}.xml"
+            [[ -s "${outputFile}" ]] && continue
+
+            rm -f "${outputFile}" || return 1
+            echo "Downloading record ${id} from ${currentDataset}" >&2
+            if ! ./query-dataset "${currentDataset}" "${id}" > "${temporaryPath}/raw.xml" ; then
+                echo "ERROR: Failed to download record ${id} from ${currentDataset}" >&2
+                return 1
+            fi
+            if ! xmllint --format "${temporaryPath}/raw.xml" > "${temporaryPath}/formatted.xml" ; then
+                echo "ERROR: Invalid XML for record ${id} from ${currentDataset}" >&2
+                return 1
+            fi
+            mv "${temporaryPath}/formatted.xml" "${outputFile}" || return 1
+        done
     fi
 
     vim -d "${mhubPath}" "${rdpPath}"
-}
+)
+compdef "_arguments \
+    '1:environment arg:(ani apr openalex-ani)'" \
+    core-complete-compare
 
 # Newsflo AWS                                                               {{{1
 # ==============================================================================
