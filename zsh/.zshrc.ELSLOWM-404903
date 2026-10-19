@@ -567,7 +567,7 @@ function core-complete-compare() (
     case "${dataset}" in
         ani*)
             mhubDataset="mhub-ani-20260825"
-            rdpDataset="rdp-ani-20261005"
+            rdpDataset="rdp-ani-20261013"
             ;;
 
         openalex-ani*)
@@ -577,7 +577,7 @@ function core-complete-compare() (
 
         apr*)
             mhubDataset="mhub-apr-20260825"
-            rdpDataset="rdp-apr-20261005"
+            rdpDataset="rdp-apr-20261016"
             ;;
 
         *)
@@ -1349,6 +1349,7 @@ function dashboard() {
                 echo 'OfficeVibe'            && open 'https://officevibe.workleap.com/portal/feedback/survey/teams?period=90&allTeams=true'
                 echo 'Security'              && open 'https://eu-west-1a.online.tableau.com/#/site/elseviertableau/views/SecurityVulnerabilityMetricsPerAWSAccount/AWSAccountVulnerabilityTrends?:iid=1'
                 echo 'GHEMU'                 && open 'https://super-chainsaw-77jpw57.pages.github.io/'
+                echo 'GHEMU readiness'       && open 'https://super-chainsaw-77jpw57.pages.github.io/ghemu-custom-proprty-validation-dashboard/'
             ;;
 
             *)

@@ -8,6 +8,10 @@
 
 fpath=(~/.zsh-completion $fpath)
 
+if [[ -n "${HOMEBREW_PREFIX}" && -d "${HOMEBREW_PREFIX}/share/zsh/site-functions" ]]; then
+    fpath=("${HOMEBREW_PREFIX}/share/zsh/site-functions" $fpath)
+fi
+
 autoload -Uz compinit
 
 function maybe-regenerate-zcompdump() {
@@ -31,7 +35,7 @@ function maybe-regenerate-zcompdump() {
 }
 
 #maybe-regenerate-zcompdump
-compinit -C
+compinit
 
 # Included scripts                                                          {{{1
 # ==============================================================================
