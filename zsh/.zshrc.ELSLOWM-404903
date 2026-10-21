@@ -567,7 +567,7 @@ function core-complete-compare() (
     case "${dataset}" in
         ani*)
             mhubDataset="mhub-ani-20260825"
-            rdpDataset="rdp-ani-20261013"
+            rdpDataset="rdp-ani-20261016"
             ;;
 
         openalex-ani*)

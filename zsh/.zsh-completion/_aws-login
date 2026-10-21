@@ -17,6 +17,7 @@ case "${state}" in
             'scopus-search'
             'sc-content'
             'sd-content'
+            'works'
             'mhub'
             'newsflo'
             'dkp'
@@ -59,6 +60,12 @@ case "${state}" in
                     'prod'
                 )
             ;;
+            
+            (mhub)
+                envs=(
+                    'non-prod'
+                )
+            ;;
 
             (sc-content)
                 envs=(
@@ -74,9 +81,9 @@ case "${state}" in
                 )
             ;;
 
-            (mhub)
+            (works)
                 envs=(
-                    'non-prod'
+                    'prod'
                 )
             ;;
 
