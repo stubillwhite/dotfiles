@@ -67,6 +67,3 @@ brew 'hey'                                      # HTTP load generator, ApacheBen
 
 # JIRA
 brew 'jira-cli'                                 # Feature-rich interactive Jira CLI
-
-# Jupyter
-brew 'jupyterlab'                               # Interactive environments for writing and running code

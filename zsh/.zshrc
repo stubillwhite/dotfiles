@@ -459,6 +459,8 @@ function _markdown-render-html() {
         --embed-resources \
         --standalone \
         --css ~/dev/my-stuff/.emacs.d/lisp/package-config/markdown-light.css
+
+    rm .mermaid-filter.err
 }
 
 # View a markdown file as HTML
@@ -2594,7 +2596,7 @@ function certificate-java-install() {
 
     for rootPath in "${rootPathsToCheck[@]}"
     do
-        local keystores=$(find ${rootPath} -name cacerts)
+        local keystores=$(find ${rootPath} -name cacerts 2>/dev/null)
         while IFS= read -r keystore; do
             echo
             echo "Checking ${keystore}"
