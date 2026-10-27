@@ -460,7 +460,7 @@ function _markdown-render-html() {
         --standalone \
         --css ~/dev/my-stuff/.emacs.d/lisp/package-config/markdown-light.css
 
-    rm .mermaid-filter.err
+    rm -f .mermaid-filter.err
 }
 
 # View a markdown file as HTML

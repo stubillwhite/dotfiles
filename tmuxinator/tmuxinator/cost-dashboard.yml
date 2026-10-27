@@ -1,0 +1,15 @@
+name: cost-dashboard
+root: ~/dev/my-stuff/cost-dashboard
+
+windows:
+  - cost-dashboard:
+      layout: even-horizontal
+      panes:
+        - copilot:
+          - |
+            pushd ~/dev/my-stuff/cost-dashboard &&
+            copilot -i 'Refresh the Databricks cost snapshots.'
+        - ui:
+          - |
+            pushd ~/dev/my-stuff/cost-dashboard &&
+            make run

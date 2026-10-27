@@ -1376,6 +1376,11 @@ function daily-update() {
     tmux attach
 }
 
+function weekly-update() {
+    mux cost-dashboard --no-attach
+    tmux attach
+}
+
 # Track down what keeps stealing focus
 function track-focus() {
     while true
