@@ -38,7 +38,7 @@ cask "licecap"                                  # Animated screen capture applic
 # Encryption
 brew "gnupg"                                    # GNU Pretty Good Privacy (PGP) package
 cask "gpg-suite"                                # GPG Suite
-cask "keepassxc"                                # Password manager app
+cask "keepassxc@2.7.12"                         # Password manager app
 
 # Notebook
 cask "evernote"                                 # App for note taking, organizing, task lists, and archiving
@@ -91,7 +91,6 @@ brew "watch"                                    # Executes a program periodicall
 brew "wget"                                     # Internet file retriever
 brew "xsv"                                      # Fast CSV toolkit written in Rust
 brew "zsh"                                      # UNIX shell (command interpreter)
-cask "mitmproxy"                                # Intercept, modify, replay, save HTTP/S traffic
 cask "raycast"                                  # Control your tools with a few keystrokes
 cask "scroll-reverser"                          # Tool to reverse the direction of scrolling
 
@@ -121,9 +120,7 @@ cask "font-fantasque-sans-mono"                 # A font family with a great mon
 cask "font-iosevka-term-nerd-font"              # IosevkaTerm Nerd Font (Iosevka Term)
 
 # Containers
-brew "docker"                                   # Pack, ship and run any application as a lightweight container
-brew "docker-compose"                           # Isolated development environments using Docker
-brew "lazydocker"                               # The lazier way to manage everything docker
+# brew "lazydocker"                               # The lazier way to manage everything docker
 brew "podman"                                   # Tool for managing OCI containers and pods
 brew "podman-compose"                           # Alternative to docker-compose using podman
 
