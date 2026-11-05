@@ -195,10 +195,6 @@ brew "ruby"                                     # Powerful, clean, object-orient
 # DuckDB
 brew "duckdb"                                   # Embeddable SQL OLAP Database Management System
 
-# Javascript
-brew "node"                                     # Open-source, cross-platform JavaScript runtime environment
-brew "yarn"                                     # JavaScript package manager
-
 # AWS
 brew "awscli"                                   # Official Amazon AWS command-line interface
 brew "awslogs"                                  # Simple command-line tool to read AWS CloudWatch logs

@@ -564,20 +564,23 @@ function core-complete-compare() (
     local mhubDataset
     local rdpDataset
 
+    cd "$HOME/dev/my-stuff/shell-utils/parquet-lookup" || return 1
+    source ./data-versions || return 1
+
     case "${dataset}" in
         ani*)
-            mhubDataset="mhub-ani-20260825"
-            rdpDataset="rdp-ani-20261016"
+            mhubDataset="mhub-ani-${MHUB_VERSION[1,8]}"
+            rdpDataset="rdp-ani-${RDP_VERSION[1,8]}"
             ;;
 
         openalex-ani*)
-            mhubDataset="mhub-openalex-ani-20260629"
-            rdpDataset="rdp-openalex-ani-20261005"
+            mhubDataset="mhub-openalex-ani-${MHUB_OPENALEX_VERSION[1,8]}"
+            rdpDataset="rdp-openalex-ani-${RDP_OPENALEX_VERSION[1,8]}"
             ;;
 
         apr*)
-            mhubDataset="mhub-apr-20260825"
-            rdpDataset="rdp-apr-20261016"
+            mhubDataset="mhub-apr-${MHUB_VERSION[1,8]}"
+            rdpDataset="rdp-apr-${RDP_VERSION[1,8]}"
             ;;
 
         *)
@@ -585,8 +588,6 @@ function core-complete-compare() (
             return -1
             ;;
     esac
-
-    cd "$HOME/dev/my-stuff/shell-utils/parquet-lookup" || return 1
 
     local outputPath="example-data"
     local mhubPath="${outputPath}/${mhubDataset}/${id}.xml"

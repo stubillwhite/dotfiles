@@ -7,6 +7,7 @@
 
 DENG_REPOS=(
     elsevier-centraltechnology/core-backstage-contributors
+    elsevier-centraltechnology/technology-squads
 )
 
 # RDP repos                                                                 {{{1
@@ -1062,6 +1063,17 @@ NEWSFLO_REPOS=(
     elsevier-research/rdp-newsflo-terraform-common
 )
 
+# SciVal                            {{{2
+# ======================================
+
+SCIVAL_REPOS=(
+    elsevier-research/scival-spark
+    elsevier-research/scival-spark-common
+    elsevier-research/scival-spark-media-impact
+    elsevier-research/scival-spark-patents
+    elsevier-research/scival-spark-policydata
+)
+
 # Constants                                                                 {{{1
 # ==============================================================================
 
@@ -1157,6 +1169,8 @@ clone-projects-into rdp/scibite/infra       "${SCIBITE_INFRA_REPOS[@]}"
 clone-projects-into rdp/sandbox             "${SANDBOX_REPOS[@]}"
 
 clone-projects-into rdp/newsflo             "${NEWSFLO_REPOS[@]}"
+
+clone-projects-into rdp/scival              "${SCIVAL_REPOS[@]}"
 
 clone-projects-into rdp/misc                "${RDP_MISC_REPOS[@]}"
 
