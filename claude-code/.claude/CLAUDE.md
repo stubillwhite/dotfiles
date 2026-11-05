@@ -56,7 +56,7 @@ Bias: caution over speed on non-trivial work. Use judgment on trivial tasks.
 
 ## Rule 6 — Token budgets are not advisory
 
-- Per-task: 4,000 tokens. Per-session: 30,000 tokens.
+- Per-task: 10,000 tokens. Per-session: 30,000 tokens.
 - If approaching budget, summarize and start fresh.
 - Surface the breach. Do not silently overrun.
 
