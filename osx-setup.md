@@ -22,6 +22,7 @@
         - [Raycast](#raycast)
         - [ScrollReverser](#scrollreverser)
         - [Visual Studio Code](#visual-studio-code)
+        - [Camera](#camera)
 
 <!-- markdown-toc end -->
 
@@ -100,6 +101,14 @@
                 - Menu title: (see above)
                 - Keyboard shortcut: (something you'll never use, like `Cmd-shift-§`)
             - Log out and in again
+            
+        - `Shortcuts` > `App Shortcuts`
+            - Define new shortcuts for the following
+                - `Left` - `Ctrl+Alt+Cmd+Left`
+                - `Right` - `Ctrl+Alt+Cmd+Right`
+                - `Up` - `Ctrl+Alt+Cmd+Up`
+                - `Down` - `Ctrl+Alt+Cmd+Down`
+                - `Fill` - `Ctrl+Alt+Cmd+Space`
 
     - `Sound`
         - Disable `Play user interface sound effects`
