@@ -14,6 +14,7 @@ cask "zoom"                                     # Video communication and virtua
 ################################################################################
 
 cask "rar"                                      # Archive manager for data compression and backups
+cask "raycast"                                  # Control your tools with a few keystrokes
 brew "yt-dlp"                                   # Feature-rich command-line audio/video downloader
 
 ################################################################################

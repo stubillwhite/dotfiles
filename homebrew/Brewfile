@@ -90,7 +90,6 @@ brew "watch"                                    # Executes a program periodicall
 brew "wget"                                     # Internet file retriever
 brew "xsv"                                      # Fast CSV toolkit written in Rust
 brew "zsh"                                      # UNIX shell (command interpreter)
-cask "raycast"                                  # Control your tools with a few keystrokes
 cask "scroll-reverser"                          # Tool to reverse the direction of scrolling
 
 # Document and image manipulation
