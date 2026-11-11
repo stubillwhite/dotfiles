@@ -40,11 +40,10 @@ SHALLOW_REPOS=(
     career-tracks
     cookiecutters
     dotfiles
+    evernote
     dumpster
-    genai-evaluation
     homebrew-formulae
     jira-reporter-python
-    llm-dnd
     nvim
     obsidian
     org
