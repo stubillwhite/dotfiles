@@ -125,6 +125,10 @@ if [ -n "${SECRET_OPENAI_API_KEY:-}" ]; then
     export OPENAI_API_KEY="${SECRET_OPENAI_API_KEY}"
 fi
 
+# Codex                             {{{2
+# ======================================
+export CODEX_DISABLE_UPDATE_CHECK=1
+
 # Neovim                            {{{2
 # ======================================
 

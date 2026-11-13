@@ -17,7 +17,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/white1/dev/my-stuff/copilot-metrics/.venv/bin/python -m copilot_metrics record-interruption --provider claude --event Notification --output /Users/white1/.local/state/copilot-metrics/claude.jsonl"
+            "command": "/Users/white1/dev/my-stuff/shell-utils/copilot-metrics/.venv/bin/python -m copilot_metrics record-interruption --provider claude --event Notification --output /Users/white1/.local/state/copilot-metrics/claude.jsonl"
           }
         ],
         "matcher": "permission_prompt|elicitation_dialog|elicitation_url_dialog"
@@ -38,7 +38,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/white1/dev/my-stuff/copilot-metrics/.venv/bin/python -m copilot_metrics record-interruption --provider claude --event PermissionRequest --output /Users/white1/.local/state/copilot-metrics/claude.jsonl"
+            "command": "/Users/white1/dev/my-stuff/shell-utils/copilot-metrics/.venv/bin/python -m copilot_metrics record-interruption --provider claude --event PermissionRequest --output /Users/white1/.local/state/copilot-metrics/claude.jsonl"
           }
         ]
       }
@@ -48,7 +48,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/white1/dev/my-stuff/copilot-metrics/.venv/bin/python -m copilot_metrics record-interruption --provider claude --event PreToolUse --output /Users/white1/.local/state/copilot-metrics/claude.jsonl"
+            "command": "/Users/white1/dev/my-stuff/shell-utils/copilot-metrics/.venv/bin/python -m copilot_metrics record-interruption --provider claude --event PreToolUse --output /Users/white1/.local/state/copilot-metrics/claude.jsonl"
           }
         ],
         "matcher": "AskUserQuestion"
@@ -59,7 +59,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/white1/dev/my-stuff/copilot-metrics/.venv/bin/python -m copilot_metrics record-interruption --provider claude --event ElicitationResult --output /Users/white1/.local/state/copilot-metrics/claude.jsonl"
+            "command": "/Users/white1/dev/my-stuff/shell-utils/copilot-metrics/.venv/bin/python -m copilot_metrics record-interruption --provider claude --event ElicitationResult --output /Users/white1/.local/state/copilot-metrics/claude.jsonl"
           }
         ]
       }
