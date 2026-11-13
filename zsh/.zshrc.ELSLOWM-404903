@@ -1341,9 +1341,10 @@ function dashboard() {
         local name=$1
 
         case "${name}" in
-            finance*)
+            approvals*)
                 echo 'Finance - Oracle' && open 'https://fa-ewqc-saasfaprod1.fa.ocs.oraclecloud.com/'
                 echo 'Finance - Zip'    && open 'https://relx.zip.com/home?page=1&unread=true'
+                echo 'IDAM'             && open 'https://relx-idam.saviyntcloud.com/ECMv6/request/requestHome'
             ;;
 
             core-complete*)
@@ -1361,7 +1362,6 @@ function dashboard() {
                 echo 'Security'              && open 'https://eu-west-1a.online.tableau.com/#/site/elseviertableau/views/SecurityVulnerabilityMetricsPerAWSAccount/AWSAccountVulnerabilityTrends?:iid=1'
                 echo 'GHEMU'                 && open 'https://super-chainsaw-77jpw57.pages.github.io/'
                 echo 'GHEMU readiness'       && open 'https://ghemu-validation-dashboard.ehs.elsevier.net/'
-                echo 'IDAM'                  && open 'https://relx-idam.saviyntcloud.com/ECMv6/request/requestHome'
             ;;
 
             *)
@@ -1372,12 +1372,12 @@ function dashboard() {
     fi
 }
 compdef "_arguments \
-    '1:environment arg:(core-complete finance management)'" \
+    '1:environment arg:(approvals core-complete management)'" \
     dashboard
 
 function daily-update() {
     echo 'Opening tabs...'
-    dashboard finance
+    dashboard approvals
     dashboard core-complete
     dashboard management
 

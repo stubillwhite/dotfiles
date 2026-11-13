@@ -35,9 +35,7 @@ brew "cmake"                                    # Cross-platform make
 ################################################################################
 
 # Azure
-tap "azure/azd"
-brew "azd"                                      # Azure Developer CLI
-brew "azure-cli"                                # Microsoft Azure CLI 2.0
+cask "azure-cli", trust: true                   # Microsoft Azure CLI 2.0
 
 # Containers
 brew 'aws-iam-authenticator'                    # Use AWS IAM credentials to authenticate to Kubernetes

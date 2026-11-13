@@ -6,6 +6,9 @@
 cask "dropbox"                                  # Client for the Dropbox cloud storage service
 cask "google-chrome"                            # Cross-platform web browser
 
+# Notebook
+cask 'obsidian'                                 # Markdown note management
+
 # Video conferencing
 cask "zoom"                                     # Video communication and virtual meeting platform
 
