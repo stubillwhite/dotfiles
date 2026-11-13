@@ -1,0 +1,11 @@
+name: copilot-dashboard
+root: ~/dev/my-stuff/copilot-metrics
+
+windows:
+  - cost-dashboard:
+      layout: even-horizontal
+      panes:
+        - ui:
+          - |
+            pushd ~/dev/my-stuff/copilot-metrics &&
+            make run-dashboard

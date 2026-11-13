@@ -1,0 +1,25 @@
+{
+  "hooks": {
+    "PermissionRequest": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/white1/dev/my-stuff/copilot-metrics/.venv/bin/python -m copilot_metrics record-interruption --provider codex --event PermissionRequest --output /Users/white1/.local/state/copilot-metrics/codex.jsonl"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/white1/dev/my-stuff/copilot-metrics/.venv/bin/python -m copilot_metrics record-interruption --provider codex --event PreToolUse --output /Users/white1/.local/state/copilot-metrics/codex.jsonl"
+          }
+        ],
+        "matcher": "request_user_input"
+      }
+    ]
+  }
+}
