@@ -8,6 +8,9 @@ trust_level = "trusted"
 [projects."/Users/white1/dev/scratchpad/testing"]
 trust_level = "trusted"
 
+[tui]
+screen_reader_detection_done = true
+
 [tui.model_availability_nux]
 "gpt-5.5" = 1
 
@@ -22,10 +25,14 @@ last_updated = "2026-07-06T08:42:37Z"
 source_type = "local"
 source = "/Users/white1/dev/my-stuff/dotfiles/codex/.codex/.tmp/bundled-marketplaces/openai-bundled"
 
+[marketplaces.openai-primary-runtime]
+source_type = "local"
+source = "/Users/white1/.cache/codex-runtimes/codex-primary-runtime/plugins/openai-primary-runtime"
+
 [desktop]
 ambient-suggestions-enabled = false
 conversationDetailMode = "STEPS_COMMANDS"
-followUpQueueMode = "queue"
+migratedFollowUpQueueToSteer = true
 
 [mcp_servers.node_repl]
 args = []
@@ -47,6 +54,21 @@ BROWSER_USE_CODEX_APP_VERSION = "26.623.101652"
 CODEX_CLI_PATH = "/Applications/Codex.app/Contents/Resources/codex"
 
 [plugins."browser@openai-bundled"]
+enabled = true
+
+[plugins."documents@openai-primary-runtime"]
+enabled = true
+
+[plugins."pdf@openai-primary-runtime"]
+enabled = true
+
+[plugins."spreadsheets@openai-primary-runtime"]
+enabled = true
+
+[plugins."presentations@openai-primary-runtime"]
+enabled = true
+
+[plugins."template-creator@openai-primary-runtime"]
 enabled = true
 
 [mcp_servers.codegraph]
