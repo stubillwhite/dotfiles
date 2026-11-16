@@ -21,7 +21,6 @@ cask "beyond-compare"                           # Compare files and folders
 cask "firefox"                                  # Mozilla Firefox
 cask "iterm2"                                   # Terminal emulator as alternative to Apple's Terminal app
 cask "jordanbaird-ice"                          # Powerful menu bar manager for macOS
-cask "orion"                                    # WebKit based web browser
 cask "syncthing-app"                            # Open source continuous file synchronization application
 
 # IDEs
