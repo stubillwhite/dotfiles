@@ -552,6 +552,72 @@ compdef "_arguments \
     '1:data-product arg:(ANI APR)'" \
     xocs-api
 
+function obii-car() (
+    if [[ $# -ne 1 || -z "$1" || "$1" == */* ]] ; then
+        echo 'Usage: obii-car ID' >&2
+        return 1
+    fi
+
+    local loginOutputFile
+    loginOutputFile=$(mktemp) || return 1
+
+    if ! aws-login works prod > "${loginOutputFile}" 2>&1 ; then
+        cat "${loginOutputFile}" >&2
+        rm -f "${loginOutputFile}"
+        echo "ERROR: Could not log in to works prod" >&2
+        return 1
+    fi
+    rm -f "${loginOutputFile}" || return 1
+
+    local id=$1
+    local bucket="rdp-works-car-mica-confidential-prod-us-east-2"
+    local outputDir="${HOME}/trash/obii-car-data"
+    local outputFile="${outputDir}/${id}.xml"
+    local objects latestKey
+
+    if ! objects=$(aws s3api list-objects-v2 \
+        --bucket "${bucket}" \
+        --prefix "obii-car/${id}/" \
+        --region us-east-2 \
+        --output json \
+        --no-cli-pager) ; then
+        echo "ERROR: Could not list OBII CAR documents for ID ${id}" >&2
+        return 1
+    fi
+
+    latestKey=$(jq -r --arg suffix "/DATA/${id}.xml" '
+        [.Contents[]? | select(.Key | endswith($suffix))]
+        | sort_by(.LastModified, .Key)
+        | last
+        | .Key // empty
+    ' <<< "${objects}") || return 1
+
+    if [[ -z "${latestKey}" ]] ; then
+        echo "ERROR: No DATA/${id}.xml found under s3://${bucket}/obii-car/${id}/" >&2
+        return 1
+    fi
+
+    mkdir -p "${outputDir}" || return 1
+
+    local temporaryPath
+    temporaryPath=$(mktemp -d "${outputDir}/.obii-car.XXXXXX") || return 1
+    trap 'rm -f "${temporaryPath}/raw.xml" "${temporaryPath}/formatted.xml"; rmdir "${temporaryPath}"' EXIT
+
+    if ! aws s3 cp "s3://${bucket}/${latestKey}" "${temporaryPath}/raw.xml" \
+        --region us-east-2 --only-show-errors --no-cli-pager ; then
+        echo "ERROR: Could not download OBII CAR document for ID ${id}" >&2
+        return 1
+    fi
+
+    if ! xmllint --format "${temporaryPath}/raw.xml" > "${temporaryPath}/formatted.xml" ; then
+        echo "ERROR: OBII CAR document for ID ${id} was not valid XML" >&2
+        return 1
+    fi
+
+    mv "${temporaryPath}/formatted.xml" "${outputFile}" || return 1
+    print -r -- "${outputFile}"
+)
+
 function core-complete-compare() (
     if [[ $# -ne 2 ]] ; then
         echo 'Usage: core-complete-compare DATASET ID'
@@ -1390,6 +1456,7 @@ function daily-update() {
 
 function weekly-update() {
     mux cost-dashboard --no-attach
+    mux copilot-dashboard --no-attach
     tmux attach
 }
 
