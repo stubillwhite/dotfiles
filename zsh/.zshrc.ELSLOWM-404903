@@ -634,6 +634,11 @@ function core-complete-compare() (
     source ./data-versions || return 1
 
     case "${dataset}" in
+        ani-non-core*)
+            mhubDataset="mhub-ani-non-core-${MHUB_ANI_NON_CORE_VERSION[1,8]}"
+            rdpDataset="rdp-ani-non-core-${RDP_ANI_NON_CORE_VERSION[1,8]}"
+            ;;
+
         ani*)
             mhubDataset="mhub-ani-${MHUB_VERSION[1,8]}"
             rdpDataset="rdp-ani-${RDP_VERSION[1,8]}"
@@ -703,7 +708,7 @@ function core-complete-compare() (
     vim -d "${mhubPath}" "${rdpPath}"
 )
 compdef "_arguments \
-    '1:environment arg:(ani apr openalex-ani)'" \
+    '1:environment arg:(ani ani-non-core apr openalex-ani)'" \
     core-complete-compare
 
 # Newsflo AWS                                                               {{{1
@@ -1425,6 +1430,7 @@ function dashboard() {
             management*)
                 echo 'Recruitment - Workday' && open 'https://wd3.myworkday.com/relx/d/inst/13102!CK5mGhIKBggDEMenAhIICgYI1A0QrAo~*vlhbvujzFuk~/cacheable-task/2998$36900.htmld#TABTASKID=2998%2437770'
                 echo 'OfficeVibe'            && open 'https://officevibe.workleap.com/portal/feedback/survey/teams?period=90&allTeams=true'
+                echo 'Spotlight'             && open 'https://relx.achievers.com/recent_activity'
                 echo 'Security'              && open 'https://eu-west-1a.online.tableau.com/#/site/elseviertableau/views/SecurityVulnerabilityMetricsPerAWSAccount/AWSAccountVulnerabilityTrends?:iid=1'
                 echo 'GHEMU'                 && open 'https://super-chainsaw-77jpw57.pages.github.io/'
                 echo 'GHEMU readiness'       && open 'https://ghemu-validation-dashboard.ehs.elsevier.net/'

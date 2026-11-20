@@ -1,0 +1,11 @@
+name: biweekly-status-update
+root: ~/dev/my-stuff/obsidian
+
+windows:
+  - biweekly-status-update:
+      layout: even-horizontal
+      panes:
+        - copilot:
+          - |
+            pushd ~/dev/my-stuff/obsidian &&
+            copilot -i 'Use the biweekly-status-update skill to generate an update for the past two weeks.'
