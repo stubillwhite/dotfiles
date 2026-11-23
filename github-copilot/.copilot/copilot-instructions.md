@@ -56,9 +56,10 @@ Bias: caution over speed on non-trivial work. Use judgment on trivial tasks.
 
 ## Rule 6 — Token budgets are not advisory
 
-- Per-task: 10,000 tokens. Per-session: 30,000 tokens.
+- Per-task: 50,000 tokens (a feature with its tests is one task). Per-session: 175,000 tokens.
+- Checkpoint-summarize at each workflow phase boundary (design, tests, implementation, cleanup).
 - If approaching budget, summarize and start fresh.
-- Surface the breach. Do not silently overrun.
+- Surface the breach, treating it as a prompt to checkpoint rather than a hard stop. Do not silently overrun.
 
 ## Rule 7 — Surface conflicts, don't average them
 
@@ -102,4 +103,4 @@ Core principle: Functional programming with immutable data. Self-documenting cod
 - Avoid nested if/else - use early returns or composition
 - No comments - code should be self-documenting
 - Prefer options objects over positional parameters
-- Use functional idiom (map, filter, reduce) over loops
+- Use functional idioms (map, filter, reduce) over loops
