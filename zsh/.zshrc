@@ -346,6 +346,20 @@ function untarf() {
     tar -zxvf "$1"
 }
 
+# Zip a file
+# zipf my-dir
+function zipf() {
+    declare fnam=$1
+    zip -r "${fnam%/}".zip "$1"
+}
+
+# Unzip a file
+# unzipf my-dir.zip
+function unzipf() {
+    declare fnam=$1
+    unzip "$1"
+}
+
 # Rename file to lowercase and hyphens
 # fnam-canonicalise() FNAM
 function fnam-canonicalise() {

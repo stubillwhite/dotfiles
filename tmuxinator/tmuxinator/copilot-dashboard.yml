@@ -9,3 +9,7 @@ windows:
           - |
             pushd ~/dev/my-stuff/shell-utils/copilot-metrics &&
             make run-dashboard
+        - import:
+          - |
+            pushd ~/dev/my-stuff/shell-utils/copilot-metrics &&
+            make run-import
