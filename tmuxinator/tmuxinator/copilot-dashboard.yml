@@ -1,5 +1,5 @@
 name: copilot-dashboard
-root: ~/dev/my-stuff/shell-utils/copilot-metrics
+root: ~/dev/my-stuff/copilot-metrics
 
 windows:
   - cost-dashboard:
@@ -7,9 +7,9 @@ windows:
       panes:
         - ui:
           - |
-            pushd ~/dev/my-stuff/shell-utils/copilot-metrics &&
+            pushd ~/dev/my-stuff/copilot-metrics &&
             make run-dashboard
         - import:
           - |
-            pushd ~/dev/my-stuff/shell-utils/copilot-metrics &&
+            pushd ~/dev/my-stuff/copilot-metrics &&
             make run-import

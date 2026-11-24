@@ -39,6 +39,7 @@ SHALLOW_REPOS=(
     advent-of-code-2025-rust
     career-tracks
     cookiecutters
+    copilot-metrics
     dotfiles
     evernote
     dumpster
