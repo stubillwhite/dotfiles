@@ -9,6 +9,7 @@ else
 fi
 
 branchName="$(git branch --show-current)"
+remoteUrl="$(git remote get-url origin 2>/dev/null)"
 
 trunkRegex="^(main|master)*$"
 validBranchRegex="^(sdpr|news|dkp)-[0-9]+[a-z0-9.-]*$"
@@ -20,6 +21,6 @@ fi
 
 if [[ "${branchName}" =~ $trunkRegex ]]; then
     printf "${COLOR_RED}WARNING: Committing directly to '%s' instead of a branch${COLOR_NONE}\n" "${branchName}"
-elif [[ ! "${branchName}" =~ $validBranchRegex ]]; then
+elif [[ "${remoteUrl}" == git@github-work* && ! "${branchName}" =~ $validBranchRegex ]]; then
     printf "${COLOR_RED}WARNING: Branch name '%s' does not match expected format${COLOR_NONE}\n" "${branchName}"
 fi
