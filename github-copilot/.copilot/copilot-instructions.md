@@ -41,6 +41,7 @@ Bias: caution over speed on non-trivial work. Use judgment on trivial tasks.
 - Touch only what you must. Clean up only your own mess.
 - Don't "improve" adjacent code, comments, or formatting.
 - Don't refactor what isn't broken. Match existing style.
+- When explicitly asked to refactor, follow the agreed plan one step at a time; this rule then applies per step.
 
 ## Rule 4 — Goal-Driven Execution
 
@@ -99,8 +100,30 @@ Bias: caution over speed on non-trivial work. Use judgment on trivial tasks.
 Core principle: Functional programming with immutable data. Self-documenting code.
 
 - Avoid data mutation and use immutable data structures wherever possible
+- Local mutation is acceptable when callers cannot observe it (for example, building a collection inside one pure function); never mutate shared or passed-in data
 - Prefer small pure functions wherever possible
 - Avoid nested if/else - use early returns or composition
 - No comments - code should be self-documenting
 - Prefer options objects over positional parameters
 - Use functional idioms (map, filter, reduce) over loops
+
+# Architecture and structure
+
+Applies to new code and to explicitly requested refactors; in an existing codebase, Rule 11 still wins.
+
+- Dependencies point one way. Record layers in a map and enforce it with an architecture test that fails on a violation or an unassigned module. Apply the same rule inside packages.
+- Functional core, imperative shell: I/O (database, files, network, subprocess, UI framework) at the edges; logic as pure functions over plain values. Separate fetching from computing.
+- One concept, one home. Split functions that mix parsing, validation, state and output.
+- Only the owning package touches its resource handle (connection, client); others use intent-revealing methods. Enforce with a test.
+- Confine frameworks (UI, ORM) to the edge so the core is testable headless.
+- Replace type/provider if-chains with a registry of pure functions keyed by a closed enum.
+- Closed vocabularies are enums, not strings. Derive names (columns, keys) from one helper. Pin persisted values with a test.
+- Use frozen dataclasses or TypedDicts for data crossing layer boundaries, not dict[str, Any].
+- Prefer an executable rule to prose: if a convention matters, add a test that fails when it is broken. Prefer a small test to a new dependency.
+
+# Refactoring
+
+- Behaviour-preserving refactors start with characterization (golden) tests that pass before and after; only test import paths may change.
+- Separate mechanical moves from behaviour changes. Every commit leaves tests, linters and type checks green.
+- Pin tool configuration explicitly so upgrades cannot silently change what is enforced.
+- Work one plan step at a time and checkpoint between steps.
